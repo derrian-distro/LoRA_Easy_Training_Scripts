@@ -58,7 +58,7 @@ class ArgStore:
         self.xformers: bool = True
         self.use_8bit_adam: bool = True
         self.cache_latents: bool = True
-        self.color_aug: bool = False
+        self.color_aug: bool = False  # IMPORTANT: Clashes with cache_latents, only have one of the two on!
         self.unet_lr: Union[float, None] = None
         self.flip_aug: bool = False
         self.vae: Union[string, None] = None
@@ -108,6 +108,9 @@ class ArgStore:
             args.append("--xformers")
 
         if self.color_aug:
+            if self.cache_latents:
+                print("color_aug and cache_latents conflict with one another. Please select only one")
+                quit(1)
             args.append("--color_aug")
 
         if self.flip_aug:
@@ -142,6 +145,15 @@ class ArgStore:
         for folder in folders:
             if not os.path.isdir(os.path.join(self.img_folder, folder)):
                 continue
+            num_repeats = folder.split("_")
+            if len(num_repeats) < 2:
+                print(f"folder {folder} is not in the correct format. Format is x_name. skipping")
+                continue
+            try:
+                num_repeats = int(num_repeats[0])
+            except ValueError:
+                print(f"folder {folder} is not in the correct format. Format is x_name. skipping")
+                continue
             imgs = 0
             for file in os.listdir(os.path.join(self.img_folder, folder)):
                 if os.path.isdir(file):
@@ -149,8 +161,7 @@ class ArgStore:
                 ext = file.split(".")
                 if ext[-1] in {"png", "bmp", "gif", "jpeg", "jpg", "webp"}:
                     imgs += 1
-            num = folder.split("_")
-            total_steps += (int(num[0]) * imgs)
+            total_steps += (num_repeats * imgs)
         total_steps = (total_steps // self.batch_size) * self.num_epochs
         return total_steps
 
@@ -199,7 +210,8 @@ def ask_file(message, accepted_ext_list):
     res = ""
     while res == "":
         res = fd.askopenfilename(title=message)
-        if res == "":
+        if res == "" or not os.path.exists(res):
+            res = ""
             continue
         _, name = os.path.split(res)
         split_name = name.split(".")
@@ -213,6 +225,8 @@ def ask_dir(message):
     res = ""
     while res == "":
         res = fd.askdirectory(title=message)
+        if not os.path.exists(res):
+            res = ""
     return res
 
 
@@ -243,6 +257,12 @@ def ask_elements(args: ArgStore):
         args.num_epochs = 1
     else:
         args.num_epochs = ret
+    
+    ret = sd.askinteger(title="resolution", prompt="How large of a resolution do you want to train at?\nCancel will default to 512")
+    if ret is None:
+        args.train_resolution = 512
+    else:
+        args.train_resolution = ret
 
     ret = sd.askinteger(title="network_dim", prompt="What is the dim size you want to use?\nCancel will default to 128")
     if ret is None:
@@ -260,8 +280,9 @@ def ask_elements(args: ArgStore):
     if ret is None:
         args.scheduler = "cosine_with_restarts"
     else:
-        while ret not in {"linear", "cosine", "cosine_with_restarts", "polynomial", "constant", "constant_with_warmup"}:
-            mb.showwarning(message="scheduler isn't valid, try again.")
+        schedulers = {"linear", "cosine", "cosine_with_restarts", "polynomial", "constant", "constant_with_warmup"}
+        while ret not in schedulers:
+            mb.showwarning(message=f"scheduler isn't valid.\nvalid schedulers are: {schedulers}")
             ret = sd.askstring(title="scheduler", prompt="Which scheduler do you want?\n Cancel will default to \"cosine_with_restarts\"")
             if ret is None:
                 args.scheduler = "cosine_with_restarts"

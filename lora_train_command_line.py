@@ -10,7 +10,7 @@ import argparse
 class ArgStore:
     def __init__(self):
         # folder and path params
-        self.base_model: string = None
+        self.base_model: string = None  # example path, make sure to use \\ instead of \ if on windows -> "E:\\sd\\stable-diffusion-webui\\models\\Stable-diffusion\\nai.ckpt"
         self.img_folder: string = None
         self.output_folder: string = None
         self.reg_img_folder: Union[string, None] = None  # OPTIONAL, None to ignore
@@ -55,12 +55,15 @@ class ArgStore:
         self.xformers: bool = True
         self.use_8bit_adam: bool = True
         self.cache_latents: bool = True
-        self.color_aug: bool = False
+        self.color_aug: bool = False  # IMPORTANT: Clashes with cache_latents, only have one of the two on!
         self.unet_lr: Union[float, None] = None
         self.flip_aug: bool = False
         self.vae: Union[string, None] = None
 
     def create_arg_list(self):
+        ensure_path(self.base_model, "base_model", {"ckpt", "safetensors"})
+        ensure_path(self.img_folder, "img_folder")
+        ensure_path(self.output_folder, "output_folder")
         # This is the list of args that are to be used regardless of setup
         args = ["--network_module=networks.lora", f"--pretrained_model_name_or_path={self.base_model}",
                 f"--train_data_dir={self.img_folder}", f"--output_dir={self.output_folder}",
@@ -77,9 +80,11 @@ class ArgStore:
 
     def create_optional_args(self, args, steps):
         if self.reg_img_folder:
+            ensure_path(self.reg_img_folder, "reg_img_folder")
             args.append(f"--reg_data_dir={self.reg_img_folder}")
 
         if self.lora_model_for_resume:
+            ensure_path(self.lora_model_for_resume, "lora_model_for_resume", {"pt", "ckpt", "safetensors"})
             args.append(f"--network_weights={self.lora_model_for_resume}")
 
         if self.save_at_n_epochs:
@@ -105,6 +110,9 @@ class ArgStore:
             args.append("--xformers")
 
         if self.color_aug:
+            if self.cache_latents:
+                print("color_aug and cache_latents conflict with one another. Please select only one")
+                quit(1)
             args.append("--color_aug")
 
         if self.flip_aug:
@@ -139,6 +147,15 @@ class ArgStore:
         for folder in folders:
             if not os.path.isdir(os.path.join(self.img_folder, folder)):
                 continue
+            num_repeats = folder.split("_")
+            if len(num_repeats) < 2:
+                print(f"folder {folder} is not in the correct format. Format is x_name. skipping")
+                continue
+            try:
+                num_repeats = int(num_repeats[0])
+            except ValueError:
+                print(f"folder {folder} is not in the correct format. Format is x_name. skipping")
+                continue
             imgs = 0
             for file in os.listdir(os.path.join(self.img_folder, folder)):
                 if os.path.isdir(file):
@@ -146,8 +163,7 @@ class ArgStore:
                 ext = file.split(".")
                 if ext[-1] in {"png", "bmp", "gif", "jpeg", "jpg", "webp"}:
                     imgs += 1
-            num = folder.split("_")
-            total_steps += (int(num[0]) * imgs)
+            total_steps += (num_repeats * imgs)
         total_steps = (total_steps // self.batch_size) * self.num_epochs
         return total_steps
 
@@ -188,6 +204,24 @@ def setup_args(parser):
     util.add_dataset_arguments(parser, True, True)
     util.add_training_arguments(parser, True)
     add_misc_args(parser)
+
+
+def ensure_path(path, name, ext_list=None):
+    if ext_list is None:
+        ext_list = {}
+    folder = len(ext_list) == 0
+    if path is None or not os.path.exists(path):
+        print(f"Failed to find {name}, Please make sure path is correct.")
+        quit(1)
+    elif folder and os.path.isfile(path):
+        print(f"Path given for {name} is that of a file, please select a folder.")
+        quit(1)
+    elif not folder and os.path.isdir(path):
+        print(f"Path given for {name} is that of a folder, please select a file.")
+        quit(1)
+    elif not folder and path.split(".")[-1] not in ext_list:
+        print(f"Found a file for {name}, however it wasn't of the accepted types: {ext_list}")
+        quit(1)
 
 
 if __name__ == "__main__":
