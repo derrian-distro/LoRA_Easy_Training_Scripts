@@ -59,6 +59,7 @@ class ArgStore:
         self.unet_lr: Union[float, None] = None
         self.flip_aug: bool = False
         self.vae: Union[string, None] = None
+        self.no_meta: bool = False  # This removes the metadata that now gets saved into safetensors, (you should keep this on)
 
     def create_arg_list(self):
         ensure_path(self.base_model, "base_model", {"ckpt", "safetensors"})
@@ -139,6 +140,9 @@ class ArgStore:
 
         if self.vae:
             args.append(f"--vae={self.vae}")
+
+        if self.no_meta:
+            args.append("--no_metadata")
         return args
 
     def find_max_steps(self):
@@ -178,6 +182,8 @@ def main():
 
 
 def add_misc_args(parser):
+    parser.add_argument("--no_metadata", action='store_true',
+                        help="do not save metadata in output model / メタデータを出力先モデルに保存しない")
     parser.add_argument("--save_model_as", type=str, default="pt", choices=[None, "ckpt", "pt", "safetensors"],
                         help="format to save the model (default is .pt) / モデル保存時の形式（デフォルトはpt）")
 

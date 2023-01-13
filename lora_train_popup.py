@@ -62,6 +62,7 @@ class ArgStore:
         self.unet_lr: Union[float, None] = None
         self.flip_aug: bool = False
         self.vae: Union[string, None] = None
+        self.no_meta: bool = False  # This removes the metadata that now gets saved into safetensors, (you should keep this on)
 
     def create_arg_list(self):
         # This is the list of args that are to be used regardless of setup
@@ -137,6 +138,9 @@ class ArgStore:
 
         if self.vae:
             args.append(f"--vae={self.vae}")
+
+        if self.no_meta:
+            args.append("--no_metadata")
         return args
 
     def find_max_steps(self):
@@ -177,6 +181,8 @@ def main():
 
 
 def add_misc_args(parser):
+    parser.add_argument("--no_metadata", action='store_true',
+                        help="do not save metadata in output model / メタデータを出力先モデルに保存しない")
     parser.add_argument("--save_model_as", type=str, default="pt", choices=[None, "ckpt", "pt", "safetensors"],
                         help="format to save the model (default is .pt) / モデル保存時の形式（デフォルトはpt）")
 
@@ -257,18 +263,18 @@ def ask_elements(args: ArgStore):
         args.num_epochs = 1
     else:
         args.num_epochs = ret
-    
-    ret = sd.askinteger(title="resolution", prompt="How large of a resolution do you want to train at?\nCancel will default to 512")
-    if ret is None:
-        args.train_resolution = 512
-    else:
-        args.train_resolution = ret
 
     ret = sd.askinteger(title="network_dim", prompt="What is the dim size you want to use?\nCancel will default to 128")
     if ret is None:
         args.net_dim = 128
     else:
         args.net_dim = ret
+
+    ret = sd.askinteger(title="resolution", prompt="How large of a resolution do you want to train at?\nCancel will default to 512")
+    if ret is None:
+        args.train_resolution = 512
+    else:
+        args.train_resolution = ret
 
     ret = sd.askfloat(title="learning_rate", prompt="What learning rate do you want to use?\n Cancel will default to 1e-4")
     if ret is None:
