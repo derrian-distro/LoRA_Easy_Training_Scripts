@@ -1,6 +1,9 @@
 import string
+import time
 from typing import Union
 import os
+import json
+from json import JSONEncoder
 
 import train_network
 import library.train_util as util
@@ -9,54 +12,53 @@ import argparse
 
 class ArgStore:
     def __init__(self):
-        # folder and path params
+        # Important, these are the most likely things you will modify
         self.base_model: string = None  # example path, make sure to use \\ instead of \ if on windows -> "E:\\sd\\stable-diffusion-webui\\models\\Stable-diffusion\\nai.ckpt"
         self.img_folder: string = None
         self.output_folder: string = None
-        self.reg_img_folder: Union[string, None] = None  # OPTIONAL, None to ignore
-        self.lora_model_for_resume: Union[string, None] = None  # OPTIONAL, path for input lora to resume training
+        self.change_output_name: Union[string, None] = None  # OPTIONAL, changes how the output files are named
+        self.save_json_folder: Union[string, None] = None  # OPTIONAL, saves a json folder of your config to whatever location you set here.
+        self.load_json_path: Union[string, None] = None  # OPTIONAL, loads a json file partially changes the config to match. things like folder paths do not get modified.
 
-        # epoch, and learning rate params
+        self.net_dim: int = 128  # network dimension, 128 seems to work best, change if you want
+        # list of schedulers: linear, cosine, cosine_with_restarts, polynomial, constant, constant_with_warmup
+        self.scheduler: string = "cosine_with_restarts"
+        self.warmup_lr_ratio: Union[float, None] = None  # OPTIONAL, make sure to set this if you are using constant_with_warmup, None to ignore
+        self.learning_rate: float = 1e-4
+        self.text_encoder_lr: Union[float, None] = None  # OPTIONAL, None to ignore
+        self.unet_lr: Union[float, None] = None  # OPTIONAL, None to ignore
+
         self.batch_size: int = 1
         self.num_epochs: int = 1
-        self.save_at_n_epochs: Union[int, None] = None  # OPTIONAL, how often to save epochs, set to None if unwanted
-        self.net_dim: int = 128  # network dimension, 128 seems to work best, change if you want
-        self.learning_rate: float = 1e-4
-        self.prior_loss_weight: float = 1  # is the loss weight much like Dreambooth, is required for LoRA training
-        self.gradient_checkpointing: bool = False  # OPTIONAL, enables gradient checkpointing
-        self.gradient_acc_steps: Union[int, None] = None  # OPTIONAL, not sure exactly what this means
+        self.save_at_n_epochs: Union[int, None] = None  # OPTIONAL, how often to save epochs, None to ignore
+        self.shuffle_captions: bool = False  # OPTIONAL, False to ignore
+        self.keep_tokens: Union[int, None] = None  # OPTIONAL, None to ignore
 
-        # resolution, seed, and clip params
+        # These are the second most likely things you will modify
         self.train_resolution: int = 512
         self.min_bucket_resolution: int = 320
         self.max_bucket_resolution: int = 960
-        self.test_seed: int = 23
-        self.clip_skip: int = 2
+        self.lora_model_for_resume: Union[string, None] = None  # OPTIONAL, takes an input lora to continue training from, not exactly the way it *should* be, but it works, None to ignore
+        self.save_state: bool = False  # OPTIONAL, is the intended way to save a training state to use for continuing training, False to ignore
+        self.load_previous_save_state: Union[string, None] = None  # OPTIONAL, is the intended way to load a training state to use for continuing training, None to ignore
 
-        # misc params
+        # These are the least likely things you will modify
+        self.reg_img_folder: Union[string, None] = None  # OPTIONAL, None to ignore
+        self.clip_skip: int = 2
+        self.test_seed: int = 23
+        self.prior_loss_weight: float = 1  # is the loss weight much like Dreambooth, is required for LoRA training
+        self.gradient_checkpointing: bool = False  # OPTIONAL, enables gradient checkpointing
+        self.gradient_acc_steps: Union[int, None] = None  # OPTIONAL, not sure exactly what this means
         self.mixed_precision: string = "fp16"
         self.save_precision: string = "fp16"
         self.save_as: string = "safetensors"  # list is pt, ckpt, safetensors
-
-        # prompt params
-        self.shuffle_captions: bool = False  # OPTIONAL
-        self.keep_tokens: Union[int, None] = None  # OPTIONAL, None if you don't want to use it
         self.caption_extension: string = ".txt"
         self.max_clip_token_length = 150
-        self.text_encoder_lr: Union[float, None] = None  # OPTIONAL, if you want to change the learning rate, there you go
-
-        # Scheduler params
-        # list of schedulers: linear, cosine, cosine_with_restarts, polynomial, constant, constant_with_warmup
-        self.scheduler: string = "cosine_with_restarts"
-        self.warmup_lr_ratio: Union[float, None] = None  # OPTIONAL, make sure to set this if you are using constant_with_warmup
-
-        # OPTIONAL misc params
         self.buckets: bool = True  # enables/disables buckets
         self.xformers: bool = True
         self.use_8bit_adam: bool = True
         self.cache_latents: bool = True
         self.color_aug: bool = False  # IMPORTANT: Clashes with cache_latents, only have one of the two on!
-        self.unet_lr: Union[float, None] = None
         self.flip_aug: bool = False
         self.vae: Union[string, None] = None
         self.no_meta: bool = False  # This removes the metadata that now gets saved into safetensors, (you should keep this on)
@@ -143,6 +145,15 @@ class ArgStore:
 
         if self.no_meta:
             args.append("--no_metadata")
+
+        if self.save_state:
+            args.append("--save_state")
+
+        if self.load_previous_save_state:
+            args.append(f"--resume={self.load_previous_save_state}")
+
+        if self.change_output_name:
+            args.append(f"--output_name={self.change_output_name}")
         return args
 
     def find_max_steps(self):
@@ -172,16 +183,30 @@ class ArgStore:
         return total_steps
 
 
+class ArgsEncoder(JSONEncoder):
+    def default(self, o):
+        return o.__dict__
+
+
 def main():
     parser = argparse.ArgumentParser()
     setup_args(parser)
     arg_class = ArgStore()
+    pre_args = parser.parse_args()
+    if pre_args.load_json_path or arg_class.load_json_path:
+        load_json(pre_args.load_json_path if pre_args.load_json_path else arg_class.load_json_path, arg_class)
+    if pre_args.save_json_path or arg_class.save_json_folder:
+        save_json(pre_args.save_json_path if pre_args.save_json_path else arg_class.save_json_folder, arg_class)
     args = arg_class.create_arg_list()
     args = parser.parse_args(args)
     train_network.train(args)
 
 
 def add_misc_args(parser):
+    parser.add_argument("--save_json_path", type=str, default=None,
+                        help="Path to save a configuration json file to")
+    parser.add_argument("--load_json_path", type=str, default=None,
+                        help="Path to a json file to configure things from")
     parser.add_argument("--no_metadata", action='store_true',
                         help="do not save metadata in output model / メタデータを出力先モデルに保存しない")
     parser.add_argument("--save_model_as", type=str, default="pt", choices=[None, "ckpt", "pt", "safetensors"],
@@ -228,6 +253,82 @@ def ensure_path(path, name, ext_list=None):
     elif not folder and path.split(".")[-1] not in ext_list:
         print(f"Found a file for {name}, however it wasn't of the accepted types: {ext_list}")
         quit(1)
+
+
+def save_json(path, obj):
+    ensure_path(path, "save_json_path")
+    fp = open(os.path.join(path, f"config-{time.time()}.json"), "w")
+    json.dump(obj, fp=fp, indent=4, cls=ArgsEncoder)
+    fp.close()
+
+
+def load_json(path, obj):
+    ensure_path(path, "load_json_path", {"json"})
+    json_obj = None
+    with open(path) as f:
+        json_obj = json.loads(f.read())
+    print("json loaded, setting variables...")
+    obj.net_dim = json_obj["net_dim"]
+    obj.scheduler = json_obj["scheduler"]
+    obj.warmup_lr_ratio = json_obj["warmup_lr_ratio"]
+    obj.learning_rate = json_obj["learning_rate"]
+    obj.text_encoder_lr = json_obj["text_encoder_lr"]
+    obj.unet_lr = json_obj["unet_lr"]
+    obj.clip_skip = json_obj["clip_skip"]
+
+    if obj.train_resolution != json_obj["train_resolution"]:
+        ans = check_input("train_resolution", obj.train_resolution, json_obj["train_resolution"])
+        obj.train_resolution = process_input(ans, obj.train_resolution, json_obj["train_resolution"])
+
+    if obj.min_bucket_resolution != json_obj["min_bucket_resolution"]:
+        ans = check_input("min_bucket_resolution", obj.min_bucket_resolution, json_obj["min_bucket_resolution"])
+        obj.min_bucket_resolution = process_input(ans, obj.min_bucket_resolution, json_obj["min_bucket_resolution"])
+
+    if obj.max_bucket_resolution != json_obj["max_bucket_resolution"]:
+        ans = check_input("max_bucket_resolution", obj.max_bucket_resolution, json_obj["max_bucket_resolution"])
+        obj.max_bucket_resolution = process_input(ans, obj.max_bucket_resolution, json_obj["max_bucket_resolution"])
+
+    if obj.batch_size != json_obj["batch_size"]:
+        ans = check_input("batch_size", obj.batch_size, json_obj["batch_size"])
+        obj.batch_size = process_input(ans, obj.batch_size, json_obj["batch_size"])
+
+    if obj.num_epochs != json_obj["num_epochs"]:
+        ans = check_input("num_epochs", obj.num_epochs, json_obj["num_epochs"])
+        obj.num_epochs = process_input(ans, obj.num_epochs, json_obj["num_epochs"])
+
+    if obj.shuffle_captions != json_obj["shuffle_captions"]:
+        ans = check_input("shuffle_captions", obj.shuffle_captions, json_obj["shuffle_captions"], True)
+        obj.shuffle_captions = process_input(ans, obj.shuffle_captions, json_obj["shuffle_captions"])
+
+    if obj.keep_tokens != json_obj["keep_tokens"]:
+        ans = check_input("keep_tokens", obj.keep_tokens, json_obj["keep_tokens"])
+        obj.keep_tokens = process_input(ans, obj.keep_tokens, json_obj["keep_tokens"])
+    print("completed changing variables.")
+
+
+def check_input(name, oldval, newval, no_int: bool = False):
+    ans = None
+    while not ans:
+        ans = input(f"{name} is different old:{oldval} -> new:{newval}\n"
+                    f"Would you like to use the new value?\n" + ("Answer y/n or an int to overwrite both: " if not no_int else "Answer y/n: "))
+        if not no_int:
+            try:
+                ans = int(ans)
+                return ans
+            except ValueError:
+                pass
+        if ans and ans not in {'y', 'Y', 'n', 'N'}:
+            ans = None
+    return ans
+
+
+def process_input(value, oldval, newval):
+    if type(value) is int:
+        return value
+    elif value in {'y', 'Y'}:
+        return newval
+    else:
+        return oldval
 
 
 if __name__ == "__main__":

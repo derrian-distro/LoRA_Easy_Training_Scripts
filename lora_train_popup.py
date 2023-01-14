@@ -1,4 +1,7 @@
+import json
 import string
+import time
+from json import JSONEncoder
 from typing import Union
 import os
 from tkinter import filedialog as fd
@@ -12,54 +15,53 @@ import argparse
 
 class ArgStore:
     def __init__(self):
-        # folder and path params
-        self.base_model: string = None
+        # Important, these are the most likely things you will modify
+        self.base_model: string = None  # example path, make sure to use \\ instead of \ if on windows -> "E:\\sd\\stable-diffusion-webui\\models\\Stable-diffusion\\nai.ckpt"
         self.img_folder: string = None
         self.output_folder: string = None
-        self.reg_img_folder: Union[string, None] = None  # OPTIONAL, None to ignore
-        self.lora_model_for_resume: Union[string, None] = None  # OPTIONAL, path for input lora to resume training
+        self.change_output_name: Union[string, None] = None  # OPTIONAL, changes how the output files are named
+        self.save_json_folder: Union[string, None] = None  # OPTIONAL, saves a json folder of your config to whatever location you set here.
+        self.load_json_path: Union[string, None] = None  # OPTIONAL, loads a json file partially changes the config to match. things like folder paths do not get modified.
 
-        # epoch, and learning rate params
+        self.net_dim: int = 128  # network dimension, 128 seems to work best, change if you want
+        # list of schedulers: linear, cosine, cosine_with_restarts, polynomial, constant, constant_with_warmup
+        self.scheduler: string = "cosine_with_restarts"
+        self.warmup_lr_ratio: Union[float, None] = None  # OPTIONAL, make sure to set this if you are using constant_with_warmup, None to ignore
+        self.learning_rate: float = 1e-4
+        self.text_encoder_lr: Union[float, None] = None  # OPTIONAL, None to ignore
+        self.unet_lr: Union[float, None] = None  # OPTIONAL, None to ignore
+
         self.batch_size: int = 1
         self.num_epochs: int = 1
-        self.save_at_n_epochs: Union[int, None] = None  # OPTIONAL, how often to save epochs, set to None if unwanted
-        self.net_dim: int = 128  # network dimension, 128 seems to work best, change if you want
-        self.learning_rate: float = 1e-4
-        self.prior_loss_weight: float = 1  # is the loss weight much like Dreambooth, is required for LoRA training
-        self.gradient_checkpointing: bool = False  # OPTIONAL, enables gradient checkpointing
-        self.gradient_acc_steps: Union[int, None] = None  # OPTIONAL, not sure exactly what this means
+        self.save_at_n_epochs: Union[int, None] = None  # OPTIONAL, how often to save epochs, None to ignore
+        self.shuffle_captions: bool = False  # OPTIONAL, False to ignore
+        self.keep_tokens: Union[int, None] = None  # OPTIONAL, None to ignore
 
-        # resolution, seed, and clip params
+        # These are the second most likely things you will modify
         self.train_resolution: int = 512
         self.min_bucket_resolution: int = 320
         self.max_bucket_resolution: int = 960
-        self.test_seed: int = 23
-        self.clip_skip: int = 2
+        self.lora_model_for_resume: Union[string, None] = None  # OPTIONAL, takes an input lora to continue training from, not exactly the way it *should* be, but it works, None to ignore
+        self.save_state: bool = False  # OPTIONAL, is the intended way to save a training state to use for continuing training, False to ignore
+        self.load_previous_save_state: Union[string, None] = None  # OPTIONAL, is the intended way to load a training state to use for continuing training, None to ignore
 
-        # misc params
+        # These are the least likely things you will modify
+        self.reg_img_folder: Union[string, None] = None  # OPTIONAL, None to ignore
+        self.clip_skip: int = 2
+        self.test_seed: int = 23
+        self.prior_loss_weight: float = 1  # is the loss weight much like Dreambooth, is required for LoRA training
+        self.gradient_checkpointing: bool = False  # OPTIONAL, enables gradient checkpointing
+        self.gradient_acc_steps: Union[int, None] = None  # OPTIONAL, not sure exactly what this means
         self.mixed_precision: string = "fp16"
         self.save_precision: string = "fp16"
         self.save_as: string = "safetensors"  # list is pt, ckpt, safetensors
-
-        # prompt params
-        self.shuffle_captions: bool = False  # OPTIONAL
-        self.keep_tokens: Union[int, None] = None  # OPTIONAL, None if you don't want to use it
         self.caption_extension: string = ".txt"
         self.max_clip_token_length = 150
-        self.text_encoder_lr: Union[float, None] = None  # OPTIONAL, if you want to change the learning rate, there you go
-
-        # Scheduler params
-        # list of schedulers: linear, cosine, cosine_with_restarts, polynomial, constant, constant_with_warmup
-        self.scheduler: string = "cosine_with_restarts"
-        self.warmup_lr_ratio: Union[float, None] = None  # OPTIONAL, make sure to set this if you are using constant_with_warmup
-
-        # OPTIONAL misc params
         self.buckets: bool = True  # enables/disables buckets
         self.xformers: bool = True
         self.use_8bit_adam: bool = True
         self.cache_latents: bool = True
         self.color_aug: bool = False  # IMPORTANT: Clashes with cache_latents, only have one of the two on!
-        self.unet_lr: Union[float, None] = None
         self.flip_aug: bool = False
         self.vae: Union[string, None] = None
         self.no_meta: bool = False  # This removes the metadata that now gets saved into safetensors, (you should keep this on)
@@ -141,6 +143,9 @@ class ArgStore:
 
         if self.no_meta:
             args.append("--no_metadata")
+
+        if self.change_output_name:
+            args.append(f"--output_name={self.change_output_name}")
         return args
 
     def find_max_steps(self):
@@ -170,11 +175,23 @@ class ArgStore:
         return total_steps
 
 
+class ArgsEncoder(JSONEncoder):
+    def default(self, o):
+        return o.__dict__
+
+
 def main():
     parser = argparse.ArgumentParser()
     setup_args(parser)
     arg_class = ArgStore()
-    arg_class = ask_elements(arg_class)
+    ret = mb.askyesno(message="Do you want to load a json config file?")
+    if ret:
+        load_json(ask_file("json to load from", {"json"}), arg_class)
+        arg_class = ask_elements_trunc(arg_class)
+    else:
+        arg_class = ask_elements(arg_class)
+    if arg_class.save_json_folder:
+        save_json(arg_class.save_json_folder, arg_class)
     args = arg_class.create_arg_list()
     args = parser.parse_args(args)
     train_network.train(args)
@@ -236,6 +253,34 @@ def ask_dir(message):
     return res
 
 
+def ask_elements_trunc(args: ArgStore):
+    args.base_model = ask_file("Select your base model", {"ckpt", "safetensors"})
+    args.img_folder = ask_dir("Select your image folder")
+    args.output_folder = ask_dir("Select your output folder")
+
+    ret = mb.askyesno(message="Do you want to save a json of your configuration?")
+    if ret:
+        args.save_json_folder = ask_dir("Select the folder to save json files to")
+
+    ret = mb.askyesno(message="Do you want to use regularisation images?")
+    if ret:
+        args.reg_img_folder = ask_dir("Select your regularisation folder")
+
+    ret = mb.askyesno(message="Do you want to continue from an earlier version?")
+    if ret:
+        args.lora_model_for_resume = ask_file("Select your lora model", {"ckpt", "pt", "safetensors"})
+
+    ret = mb.askyesno(message="Do you want to change the name of output epochs?")
+    if ret:
+        ret = sd.askstring(title="output_name", prompt="What do you want your output name to be?\n"
+                                                       "Cancel keeps outputs the original")
+        if ret:
+            args.change_output_name = ret
+        else:
+            args.change_output_name = None
+    return args
+
+
 def ask_elements(args: ArgStore):
     # start with file dialog
     args.base_model = ask_file("Select your base model", {"ckpt", "safetensors"})
@@ -243,6 +288,10 @@ def ask_elements(args: ArgStore):
     args.output_folder = ask_dir("Select your output folder")
 
     # optional file dialog
+    ret = mb.askyesno(message="Do you want to save a json of your configuration?")
+    if ret:
+        args.save_json_folder = ask_dir("Select the folder to save json files to")
+
     ret = mb.askyesno(message="Do you want to use regularisation images?")
     if ret:
         args.reg_img_folder = ask_dir("Select your regularisation folder")
@@ -270,26 +319,30 @@ def ask_elements(args: ArgStore):
     else:
         args.net_dim = ret
 
-    ret = sd.askinteger(title="resolution", prompt="How large of a resolution do you want to train at?\nCancel will default to 512")
+    ret = sd.askinteger(title="resolution", prompt="How large of a resolution do you want to train at?\n"
+                                                   "Cancel will default to 512")
     if ret is None:
         args.train_resolution = 512
     else:
         args.train_resolution = ret
 
-    ret = sd.askfloat(title="learning_rate", prompt="What learning rate do you want to use?\n Cancel will default to 1e-4")
+    ret = sd.askfloat(title="learning_rate", prompt="What learning rate do you want to use?\n"
+                                                    "Cancel will default to 1e-4")
     if ret is None:
         args.learning_rate = 1e-4
     else:
         args.learning_rate = ret
 
-    ret = sd.askstring(title="scheduler", prompt="Which scheduler do you want?\n Cancel will default to \"cosine_with_restarts\"")
+    ret = sd.askstring(title="scheduler", prompt="Which scheduler do you want?\n Cancel will default "
+                                                 "to \"cosine_with_restarts\"")
     if ret is None:
         args.scheduler = "cosine_with_restarts"
     else:
         schedulers = {"linear", "cosine", "cosine_with_restarts", "polynomial", "constant", "constant_with_warmup"}
         while ret not in schedulers:
             mb.showwarning(message=f"scheduler isn't valid.\nvalid schedulers are: {schedulers}")
-            ret = sd.askstring(title="scheduler", prompt="Which scheduler do you want?\n Cancel will default to \"cosine_with_restarts\"")
+            ret = sd.askstring(title="scheduler", prompt="Which scheduler do you want?\n Cancel will default "
+                                                         "to \"cosine_with_restarts\"")
             if ret is None:
                 args.scheduler = "cosine_with_restarts"
 
@@ -309,7 +362,8 @@ def ask_elements(args: ArgStore):
 
     ret = mb.askyesno(message="Do you want to keep some tokens at the front of your captions?")
     if ret:
-        ret = sd.askinteger(title="keep_tokens", prompt="How many do you want to keep at the front?\nCancel will default to 1")
+        ret = sd.askinteger(title="keep_tokens", prompt="How many do you want to keep at the front?"
+                                                        "\nCancel will default to 1")
         if ret is None:
             args.keep_tokens = 1
         else:
@@ -317,12 +371,61 @@ def ask_elements(args: ArgStore):
 
     ret = mb.askyesno(message="Do you want to have a warmup ratio?")
     if ret:
-        ret = sd.askfloat(title="warmup_ratio", prompt="What is the ratio of steps to use as warmup steps?\nCancel will default to 0.05")
+        ret = sd.askfloat(title="warmup_ratio", prompt="What is the ratio of steps to use as warmup "
+                                                       "steps?\nCancel will default to 0.05")
         if ret is None:
             args.warmup_lr_ratio = 0.05
         else:
             args.warmup_lr_ratio = ret
+
+    ret = mb.askyesno(message="Do you want to change the name of output epochs?")
+    if ret:
+        ret = sd.askstring(title="output_name", prompt="What do you want your output name to be?\n"
+                                                       "Cancel keeps outputs the original")
+        if ret:
+            args.change_output_name = ret
+        else:
+            args.change_output_name = None
     return args
+
+
+def save_json(path, obj):
+    fp = open(os.path.join(path, f"config-{time.time()}.json"), "w")
+    json.dump(obj, fp=fp, indent=4, cls=ArgsEncoder)
+    fp.close()
+
+
+def load_json(path, obj: ArgStore):
+    json_obj = None
+    with open(path) as f:
+        json_obj = json.loads(f.read())
+    print("json loaded, setting variables...")
+    obj.net_dim = json_obj["net_dim"]
+    obj.scheduler = json_obj["scheduler"]
+    obj.warmup_lr_ratio = json_obj["warmup_lr_ratio"]
+    obj.learning_rate = json_obj["learning_rate"]
+    obj.text_encoder_lr = json_obj["text_encoder_lr"]
+    obj.unet_lr = json_obj["unet_lr"]
+    obj.clip_skip = json_obj["clip_skip"]
+    old_tr = obj.train_resolution
+    obj.train_resolution = json_obj["train_resolution"]
+    obj.min_bucket_resolution = json_obj["min_bucket_resolution"]
+    obj.max_bucket_resolution = json_obj["max_bucket_resolution"]
+    obj.num_epochs = json_obj["num_epochs"]
+    obj.shuffle_captions = json_obj["shuffle_captions"]
+    obj.keep_tokens = json_obj["keep_tokens"]
+
+    if old_tr != obj.train_resolution:
+        ans = sd.askinteger(title="batch_size", prompt=f"Your train resolution changed from {old_tr} to "
+                                                       f"{obj.train_resolution}.\nSelect a new value for batch_size, "
+                                                       f"if you don't know hit cancel\nCancel defaults to 1")
+        if ans:
+            obj.batch_size = ans
+        else:
+            obj.batch_size = 1
+    else:
+        obj.batch_size = json_obj["batch_size"]
+    print("completed changing variables.")
 
 
 if __name__ == "__main__":

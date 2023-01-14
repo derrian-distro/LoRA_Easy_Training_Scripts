@@ -8,17 +8,15 @@ no matter which script you use, you must activate the venv in your SD-Scripts in
 
 ## Installation
 All you have to do to install it is move the scripts into your install of Kohya's SD-Scripts
-after that to use it you can activate your venv then type this command
+after that to use it you just put this one command into whatever your terminal is.
+if you're on a linux system or using bash on windows for some reason make sure you flip the `\` to `/`
 
-for the command line version
+command line version 
 ```
-venv\Scripts\activate
-accelerate launch --num_cpu_threads_per_process 12 lora_train_command_line.py
+venv\Scripts\accelerate.exe launch --num_cpu_threads_per_process 12 lora_train_command_line.py
 ```
 
-
-for the popup verison
+popup version
 ```
-venv\Scripts\activate
-accelerate launch --num_cpu_threads_per_process 12 lora_train_popup.py
+venv\Scripts\accelerate.exe launch --num_cpu_threads_per_process 12 lora_train_popup.py
 ```
