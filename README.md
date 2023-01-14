@@ -20,3 +20,11 @@ popup version
 ```
 venv\Scripts\accelerate.exe launch --num_cpu_threads_per_process 12 lora_train_popup.py
 ```
+
+## New JSON saving and loading
+Now you can save and load json files of your configs. When saving a json file, it just saves everything. When loading one if only loads the following (on command line):
+net dim, scheduler, warmup lr ratio, learning rate, text encoder lr, unet lr, and clip skip
+and optionally (asks the user):
+train resolution, min and max bucket resolution, batch size, num epochs, shuffle captions, and keep tokens
+
+The popup version loads the same amount, but it loads them without asking the user as much. This is to keep the popup.py version as user friendly as possible. the only time it asks for an input is when the resolution has changed. This might change in the future because I'm not entirely set on that.
