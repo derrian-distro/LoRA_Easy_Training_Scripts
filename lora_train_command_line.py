@@ -24,15 +24,16 @@ class ArgStore:
         # list of schedulers: linear, cosine, cosine_with_restarts, polynomial, constant, constant_with_warmup
         self.scheduler: string = "cosine_with_restarts"
         self.warmup_lr_ratio: Union[float, None] = None  # OPTIONAL, make sure to set this if you are using constant_with_warmup, None to ignore
-        self.learning_rate: float = 1e-4
-        self.text_encoder_lr: Union[float, None] = None  # OPTIONAL, None to ignore
-        self.unet_lr: Union[float, None] = None  # OPTIONAL, None to ignore
+        self.learning_rate: Union[float, None] = None  # OPTIONAL, None to ignore, seems like people have started not setting this value, so I updated the script to allow for that.
+        self.text_encoder_lr: Union[float, None] = 1e-5  # OPTIONAL, None to ignore
+        self.unet_lr: Union[float, None] = 1e-4  # OPTIONAL, None to ignore
 
         self.batch_size: int = 1
         self.num_epochs: int = 1
         self.save_at_n_epochs: Union[int, None] = None  # OPTIONAL, how often to save epochs, None to ignore
         self.shuffle_captions: bool = False  # OPTIONAL, False to ignore
         self.keep_tokens: Union[int, None] = None  # OPTIONAL, None to ignore
+        self.max_steps: Union[int, None] = None  # OPTIONAL, None to ignore, if you want, you can define an exact step count, the script will do the rest.
 
         # These are the second most likely things you will modify
         self.train_resolution: int = 512
@@ -72,11 +73,14 @@ class ArgStore:
                 f"--train_data_dir={self.img_folder}", f"--output_dir={self.output_folder}",
                 f"--prior_loss_weight={self.prior_loss_weight}", f"--caption_extension=" + self.caption_extension,
                 f"--resolution={self.train_resolution}", f"--train_batch_size={self.batch_size}",
-                f"--learning_rate={self.learning_rate}", f"--mixed_precision={self.mixed_precision}",
-                f"--save_precision={self.save_precision}", f"--network_dim={self.net_dim}",
-                f"--save_model_as={self.save_as}", f"--clip_skip={self.clip_skip}", f"--seed={self.test_seed}",
+                f"--mixed_precision={self.mixed_precision}", f"--save_precision={self.save_precision}",
+                f"--network_dim={self.net_dim}", f"--save_model_as={self.save_as}",
+                f"--clip_skip={self.clip_skip}", f"--seed={self.test_seed}",
                 f"--max_token_length={self.max_clip_token_length}", f"--lr_scheduler={self.scheduler}"]
-        steps = self.find_max_steps()
+        if not self.max_steps:
+            steps = self.find_max_steps()
+        else:
+            steps = self.max_steps
         args.append(f"--max_train_steps={steps}")
         args = self.create_optional_args(args, steps)
         return args
@@ -133,6 +137,9 @@ class ArgStore:
 
         if self.gradient_acc_steps and self.gradient_acc_steps > 0 and self.gradient_checkpointing:
             args.append(f"--gradient_accumulation_steps={self.gradient_acc_steps}")
+
+        if self.learning_rate and self.learning_rate > 0:
+            args.append(f"--learning_rate={self.learning_rate}")
 
         if self.text_encoder_lr and self.text_encoder_lr > 0:
             args.append(f"--text_encoder_lr={self.text_encoder_lr}")
