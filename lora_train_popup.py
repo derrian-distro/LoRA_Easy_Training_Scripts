@@ -24,6 +24,7 @@ class ArgStore:
         self.load_json_path: Union[string, None] = None  # OPTIONAL, loads a json file partially changes the config to match. things like folder paths do not get modified.
 
         self.net_dim: int = 128  # network dimension, 128 seems to work best, change if you want
+        self.alpha: float = 128  # setting it equal to net_dim makes it work equally to how it used to work.
         # list of schedulers: linear, cosine, cosine_with_restarts, polynomial, constant, constant_with_warmup
         self.scheduler: string = "cosine_with_restarts"
         self.warmup_lr_ratio: Union[float, None] = None  # OPTIONAL, make sure to set this if you are using constant_with_warmup, None to ignore
@@ -44,6 +45,7 @@ class ArgStore:
         self.lora_model_for_resume: Union[string, None] = None  # OPTIONAL, takes an input lora to continue training from, not exactly the way it *should* be, but it works, None to ignore
         self.save_state: bool = False  # OPTIONAL, is the intended way to save a training state to use for continuing training, False to ignore
         self.load_previous_save_state: Union[string, None] = None  # OPTIONAL, is the intended way to load a training state to use for continuing training, None to ignore
+        self.training_comment: Union[str, None] = None  # OPTIONAL, great way to put in things like activation tokens right into the metadata.
 
         # These are the least likely things you will modify
         self.reg_img_folder: Union[string, None] = None  # OPTIONAL, None to ignore
@@ -75,7 +77,8 @@ class ArgStore:
                 f"--learning_rate={self.learning_rate}", f"--mixed_precision={self.mixed_precision}",
                 f"--save_precision={self.save_precision}", f"--network_dim={self.net_dim}",
                 f"--save_model_as={self.save_as}", f"--clip_skip={self.clip_skip}", f"--seed={self.test_seed}",
-                f"--max_token_length={self.max_clip_token_length}", f"--lr_scheduler={self.scheduler}"]
+                f"--max_token_length={self.max_clip_token_length}", f"--lr_scheduler={self.scheduler}",
+                f"--network_alpha={self.alpha}"]
         steps = self.find_max_steps()
         args.append(f"--max_train_steps={steps}")
         args = self.create_optional_args(args, steps)
@@ -146,6 +149,9 @@ class ArgStore:
 
         if self.change_output_name:
             args.append(f"--output_name={self.change_output_name}")
+
+        if self.training_comment:
+            args.append(f"--training_comment={self.training_comment}")
         return args
 
     def find_max_steps(self):
@@ -198,6 +204,10 @@ def main():
 
 
 def add_misc_args(parser):
+    parser.add_argument("--save_json_path", type=str, default=None,
+                        help="Path to save a configuration json file to")
+    parser.add_argument("--load_json_path", type=str, default=None,
+                        help="Path to a json file to configure things from")
     parser.add_argument("--no_metadata", action='store_true',
                         help="do not save metadata in output model / メタデータを出力先モデルに保存しない")
     parser.add_argument("--save_model_as", type=str, default="pt", choices=[None, "ckpt", "pt", "safetensors"],
@@ -213,12 +223,16 @@ def add_misc_args(parser):
                         help='network module to train / 学習対象のネットワークのモジュール')
     parser.add_argument("--network_dim", type=int, default=None,
                         help='network dimensions (depends on each network) / モジュールの次元数（ネットワークにより定義は異なります）')
+    parser.add_argument("--network_alpha", type=float, default=1,
+                        help='alpha for LoRA weight scaling, default 1 (same as network_dim for same behavior as old version) / LoRaの重み調整のalpha値、デフォルト1（旧バージョンと同じ動作をするにはnetwork_dimと同じ値を指定）')
     parser.add_argument("--network_args", type=str, default=None, nargs='*',
                         help='additional argmuments for network (key=value) / ネットワークへの追加の引数')
     parser.add_argument("--network_train_unet_only", action="store_true",
                         help="only training U-Net part / U-Net関連部分のみ学習する")
     parser.add_argument("--network_train_text_encoder_only", action="store_true",
                         help="only training Text Encoder part / Text Encoder関連部分のみ学習する")
+    parser.add_argument("--training_comment", type=str, default=None,
+                        help="arbitrary comment string stored in metadata / メタデータに記録する任意のコメント文字列")
 
 
 def setup_args(parser):
@@ -278,6 +292,18 @@ def ask_elements_trunc(args: ArgStore):
             args.change_output_name = ret
         else:
             args.change_output_name = None
+
+    ret = sd.askfloat(title="alpha", prompt="What Alpha do you want?\nCancel will default to equal to network_dim")
+    if ret is None:
+        args.alpha = args.net_dim
+    else:
+        args.alpha = ret
+
+    ret = sd.askstring(title="comment", prompt="Do you want to have a comment that gets put into the metadata?\nA good use of this would be to include how to use, such as activation keywords.\nCancel will leave empty")
+    if ret is None:
+        args.training_comment = ret
+    else:
+        args.training_comment = None
     return args
 
 
@@ -319,6 +345,12 @@ def ask_elements(args: ArgStore):
     else:
         args.net_dim = ret
 
+    ret = sd.askfloat(title="alpha", prompt="What Alpha do you want?\nCancel will default to equal to network_dim")
+    if ret is None:
+        args.alpha = args.net_dim
+    else:
+        args.alpha = ret
+
     ret = sd.askinteger(title="resolution", prompt="How large of a resolution do you want to train at?\n"
                                                    "Cancel will default to 512")
     if ret is None:
@@ -332,6 +364,19 @@ def ask_elements(args: ArgStore):
         args.learning_rate = 1e-4
     else:
         args.learning_rate = ret
+
+    ret = sd.askfloat(title="text_encoder_lr", prompt="Do you want to set the text_encoder_lr?\n"
+                      "Cancel will default to None")
+    if ret is None:
+        args.text_encoder_lr = None
+    else:
+        args.text_encoder_lr = ret
+
+    ret = sd.askfloat(title="unet_lr", prompt="Do you want to set the unet_lr?\nCancel will default to None")
+    if ret is None:
+        args.unet_lr = None
+    else:
+        args.unet_lr = ret
 
     ret = sd.askstring(title="scheduler", prompt="Which scheduler do you want?\n Cancel will default "
                                                  "to \"cosine_with_restarts\"")
@@ -386,6 +431,13 @@ def ask_elements(args: ArgStore):
             args.change_output_name = ret
         else:
             args.change_output_name = None
+
+    ret = sd.askstring(title="comment",
+                       prompt="Do you want to set a comment that gets put into the metadata?\nA good use of this would be to include how to use, such as activation keywords.\nCancel will leave empty")
+    if ret is None:
+        args.training_comment = ret
+    else:
+        args.training_comment = None
     return args
 
 
@@ -400,20 +452,67 @@ def load_json(path, obj: ArgStore):
     with open(path) as f:
         json_obj = json.loads(f.read())
     print("json loaded, setting variables...")
-    obj.net_dim = json_obj["net_dim"]
-    obj.scheduler = json_obj["scheduler"]
-    obj.warmup_lr_ratio = json_obj["warmup_lr_ratio"]
-    obj.learning_rate = json_obj["learning_rate"]
-    obj.text_encoder_lr = json_obj["text_encoder_lr"]
-    obj.unet_lr = json_obj["unet_lr"]
-    obj.clip_skip = json_obj["clip_skip"]
+    if "net_dim" in json_obj:
+        old = obj.net_dim
+        obj.net_dim = json_obj["net_dim"]
+        print_change("net_dim", old, obj.net_dim)
+    elif "network_dim" in json_obj:
+        old = obj.net_dim
+        obj.net_dim = json_obj["network_dim"]
+        print_change("net_dim", old, obj.net_dim)
+
+    if "scheduler" in json_obj:
+        old = obj.scheduler
+        obj.scheduler = json_obj["scheduler"]
+        print_change("scheduler", old, obj.scheduler)
+    elif "lr_scheduler" in json_obj:
+        old = obj.scheduler
+        obj.scheduler = json_obj["lr_scheduler"]
+        print_change("scheduler", old, obj.scheduler)
+
+    if "warmup_lr_ratio" in json_obj:
+        old = obj.warmup_lr_ratio
+        obj.warmup_lr_ratio = json_obj["warmup_lr_ratio"]  # UI version doesn't have an equivalent, only handles steps
+        print_change("warmup_lr_ratio", old, obj.warmup_lr_ratio)
+
+    if "learning_rate" in json_obj:
+        old = obj.learning_rate
+        obj.learning_rate = json_obj["learning_rate"]
+        print_change("learning_rate", old, obj.learning_rate)
+
+    if "text_encoder_lr" in json_obj:
+        old = obj.text_encoder_lr
+        obj.text_encoder_lr = json_obj["text_encoder_lr"]  # UI version is the same
+        print_change("text_encoder_lr", old, obj.text_encoder_lr)
+
+    if "unet_lr" in json_obj:
+        old = obj.unet_lr
+        obj.unet_lr = json_obj["unet_lr"]  # UI version is the same
+        print_change("unet_lr", old, obj.unet_lr)
+
+    if "clip_skip" in json_obj:
+        old = obj.clip_skip
+        obj.clip_skip = json_obj["clip_skip"]  # UI version is the same
+        print_change("clip_skip", old, obj.clip_skip)
+
     old_tr = obj.train_resolution
-    obj.train_resolution = json_obj["train_resolution"]
-    obj.min_bucket_resolution = json_obj["min_bucket_resolution"]
-    obj.max_bucket_resolution = json_obj["max_bucket_resolution"]
-    obj.num_epochs = json_obj["num_epochs"]
-    obj.shuffle_captions = json_obj["shuffle_captions"]
-    obj.keep_tokens = json_obj["keep_tokens"]
+    if "train_resolution" in json_obj:
+        obj.train_resolution = json_obj["train_resolution"]
+
+    if "min_bucket_resolution" in json_obj:
+        obj.min_bucket_resolution = json_obj["min_bucket_resolution"]
+
+    if "max_bucket_resolution" in json_obj:
+        obj.max_bucket_resolution = json_obj["max_bucket_resolution"]
+
+    if "num_epochs" in json_obj:
+        obj.num_epochs = json_obj["num_epochs"]
+
+    if "shuffle_captions" in json_obj:
+        obj.shuffle_captions = json_obj["shuffle_captions"]
+
+    if "keep_tokens" in json_obj:
+        obj.keep_tokens = json_obj["keep_tokens"]
 
     if old_tr != obj.train_resolution:
         ans = sd.askinteger(title="batch_size", prompt=f"Your train resolution changed from {old_tr} to "
@@ -423,9 +522,13 @@ def load_json(path, obj: ArgStore):
             obj.batch_size = ans
         else:
             obj.batch_size = 1
-    else:
+    elif "batch_size" in json_obj:
         obj.batch_size = json_obj["batch_size"]
     print("completed changing variables.")
+
+
+def print_change(value, old, new):
+    print(f"{value} changed from {old} to {new}")
 
 
 if __name__ == "__main__":
