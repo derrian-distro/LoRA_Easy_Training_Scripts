@@ -4,6 +4,7 @@ import time
 from json import JSONEncoder
 from typing import Union
 import os
+import tkinter as tk
 from tkinter import filedialog as fd
 from tkinter import simpledialog as sd
 from tkinter import messagebox as mb
@@ -247,7 +248,12 @@ def ask_file(message, accepted_ext_list):
     res = ""
     while res == "":
         res = fd.askopenfilename(title=message)
-        if res == "" or not os.path.exists(res):
+        if res == "":
+            ret = mb.askretrycancel(message="Do you want to to cancel training?")
+            if not ret:
+                exit()
+            continue
+        elif not os.path.exists(res):
             res = ""
             continue
         _, name = os.path.split(res)
@@ -262,6 +268,11 @@ def ask_dir(message):
     res = ""
     while res == "":
         res = fd.askdirectory(title=message)
+        if res == "":
+            ret = mb.askretrycancel(message="Do you want to to cancel training?")
+            if not ret:
+                exit()
+            continue
         if not os.path.exists(res):
             res = ""
     return res
@@ -530,6 +541,9 @@ def load_json(path, obj: ArgStore):
 def print_change(value, old, new):
     print(f"{value} changed from {old} to {new}")
 
+root = tk.Tk()
+root.attributes('-topmost', True)
+root.withdraw()
 
 if __name__ == "__main__":
     main()
