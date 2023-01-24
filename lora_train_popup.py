@@ -4,6 +4,7 @@ import time
 from json import JSONEncoder
 from typing import Union
 import os
+import tkinter as tk
 from tkinter import filedialog as fd
 from tkinter import simpledialog as sd
 from tkinter import messagebox as mb
@@ -242,12 +243,23 @@ def setup_args(parser):
     add_misc_args(parser)
 
 
-def ask_file(message, accepted_ext_list):
+def ask_file(message, accepted_ext_list, file_path=None):
     mb.showinfo(message=message)
     res = ""
+    _initialdir  = ""
+    _initialfile = ""
+    if file_path!=None:
+        _initialdir  = os.path.dirname(file_path) if os.path.exists(file_path) else ""
+        _initialfile = os.path.basename(file_path) if os.path.exists(file_path) else ""
+
     while res == "":
-        res = fd.askopenfilename(title=message)
-        if res == "" or not os.path.exists(res):
+        res = fd.askopenfilename(title=message, initialdir=_initialdir, initialfile=_initialfile)
+        if res == "":
+            ret = mb.askretrycancel(message="Do you want to to cancel training?")
+            if not ret:
+                exit()
+            continue
+        elif not os.path.exists(res):
             res = ""
             continue
         _, name = os.path.split(res)
@@ -257,32 +269,40 @@ def ask_file(message, accepted_ext_list):
     return res
 
 
-def ask_dir(message):
+def ask_dir(message, dir_path=None):
     mb.showinfo(message=message)
     res = ""
+    _initialdir = ""
+    if dir_path!=None:
+        _initialdir = dir_path if os.path.exists(dir_path) else ""
     while res == "":
-        res = fd.askdirectory(title=message)
+        res = fd.askdirectory(title=message, initialdir=_initialdir)
+        if res == "":
+            ret = mb.askretrycancel(message="Do you want to to cancel training?")
+            if not ret:
+                exit()
+            continue
         if not os.path.exists(res):
             res = ""
     return res
 
 
 def ask_elements_trunc(args: ArgStore):
-    args.base_model = ask_file("Select your base model", {"ckpt", "safetensors"})
-    args.img_folder = ask_dir("Select your image folder")
-    args.output_folder = ask_dir("Select your output folder")
+    args.base_model = ask_file("Select your base model", {"ckpt", "safetensors"}, args.base_model)
+    args.img_folder = ask_dir("Select your image folder", args.img_folder)
+    args.output_folder = ask_dir("Select your output folder", args.output_folder )
 
     ret = mb.askyesno(message="Do you want to save a json of your configuration?")
     if ret:
-        args.save_json_folder = ask_dir("Select the folder to save json files to")
+        args.save_json_folder = ask_dir("Select the folder to save json files to", args.save_json_folder)
 
     ret = mb.askyesno(message="Do you want to use regularisation images?")
     if ret:
-        args.reg_img_folder = ask_dir("Select your regularisation folder")
+        args.reg_img_folder = ask_dir("Select your regularisation folder", args.reg_img_folder)
 
     ret = mb.askyesno(message="Do you want to continue from an earlier version?")
     if ret:
-        args.lora_model_for_resume = ask_file("Select your lora model", {"ckpt", "pt", "safetensors"})
+        args.lora_model_for_resume = ask_file("Select your lora model", {"ckpt", "pt", "safetensors"}, args.lora_model_for_resume)
 
     ret = mb.askyesno(message="Do you want to change the name of output epochs?")
     if ret:
@@ -309,6 +329,7 @@ def ask_elements_trunc(args: ArgStore):
 
 def ask_elements(args: ArgStore):
     # start with file dialog
+
     args.base_model = ask_file("Select your base model", {"ckpt", "safetensors"})
     args.img_folder = ask_dir("Select your image folder")
     args.output_folder = ask_dir("Select your output folder")
@@ -452,6 +473,38 @@ def load_json(path, obj: ArgStore):
     with open(path) as f:
         json_obj = json.loads(f.read())
     print("json loaded, setting variables...")
+
+    if "base_model" in json_obj:
+        old = obj.base_model
+        obj.base_model = json_obj["base_model"]
+        print_change("base_model", old, obj.base_model)
+
+    if "img_folder" in json_obj:
+        old = obj.img_folder
+        obj.img_folder = json_obj["img_folder"]
+        print_change("img_folder", old, obj.img_folder)
+
+    if "output_folder" in json_obj:
+        old = obj.output_folder
+        obj.output_folder = json_obj["output_folder"]
+        print_change("output_folder", old, obj.output_folder)
+
+    if "change_output_name" in json_obj:
+        old = obj.change_output_name
+        obj.change_output_name = json_obj["change_output_name"]
+        print_change("change_output_name", old, obj.change_output_name)
+
+    if "save_json_folder" in json_obj:
+        old = obj.save_json_folder
+        obj.save_json_folder = json_obj["save_json_folder"]
+        print_change("save_json_folder", old, obj.save_json_folder)
+
+    if "load_json_path" in json_obj:
+        old = obj.load_json_path
+        obj.load_json_path = json_obj["load_json_path"]
+        print_change("load_json_path", old, obj.load_json_path)
+
+
     if "net_dim" in json_obj:
         old = obj.net_dim
         obj.net_dim = json_obj["net_dim"]
@@ -530,6 +583,9 @@ def load_json(path, obj: ArgStore):
 def print_change(value, old, new):
     print(f"{value} changed from {old} to {new}")
 
+root = tk.Tk()
+root.attributes('-topmost', True)
+root.withdraw()
 
 if __name__ == "__main__":
     main()
