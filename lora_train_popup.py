@@ -32,6 +32,7 @@ class ArgStore:
         self.learning_rate: float = 1e-4
         self.text_encoder_lr: Union[float, None] = None  # OPTIONAL, None to ignore
         self.unet_lr: Union[float, None] = None  # OPTIONAL, None to ignore
+        self.num_workers: int = 8  # The number of threads that are being used to load images, lower speeds up the start of epochs, but slows down the loading of data. The assumption here is that it increases the training time as you reduce this value
 
         self.batch_size: int = 1
         self.num_epochs: int = 1
@@ -153,6 +154,9 @@ class ArgStore:
 
         if self.training_comment:
             args.append(f"--training_comment={self.training_comment}")
+
+        if self.num_workers:
+            args.append(f"--max_data_loader_n_workers={self.num_workers}")
         return args
 
     def find_max_steps(self):
@@ -175,7 +179,7 @@ class ArgStore:
                 if os.path.isdir(file):
                     continue
                 ext = file.split(".")
-                if ext[-1] in {"png", "bmp", "gif", "jpeg", "jpg", "webp"}:
+                if ext[-1].lower() in {"png", "bmp", "gif", "jpeg", "jpg", "webp"}:
                     imgs += 1
             total_steps += (num_repeats * imgs)
         total_steps = (total_steps // self.batch_size) * self.num_epochs
@@ -290,11 +294,19 @@ def ask_dir(message, dir_path=None):
 def ask_elements_trunc(args: ArgStore):
     args.base_model = ask_file("Select your base model", {"ckpt", "safetensors"}, args.base_model)
     args.img_folder = ask_dir("Select your image folder", args.img_folder)
-    args.output_folder = ask_dir("Select your output folder", args.output_folder )
+    args.output_folder = ask_dir("Select your output folder", args.output_folder)
 
     ret = mb.askyesno(message="Do you want to save a json of your configuration?")
     if ret:
         args.save_json_folder = ask_dir("Select the folder to save json files to", args.save_json_folder)
+    else:
+        args.save_json_folder = None
+
+    ret = sd.askinteger(title="num_workers", prompt="How many workers do you want? higher means longer epoch starts, but faster data loading, and has higher System Memory Usage.\nIf you want fast epoch start times, set this number to 1.\nCancel defaults to 8")
+    if ret:
+        args.num_workers = ret
+    else:
+        args.num_workers = 8
 
     ret = mb.askyesno(message="Do you want to use regularisation images?")
     if ret:
@@ -319,17 +331,17 @@ def ask_elements_trunc(args: ArgStore):
     else:
         args.alpha = ret
 
-    ret = sd.askstring(title="comment", prompt="Do you want to have a comment that gets put into the metadata?\nA good use of this would be to include how to use, such as activation keywords.\nCancel will leave empty")
-    if ret is None:
-        args.training_comment = ret
-    else:
-        args.training_comment = None
+    #ret = sd.askstring(title="comment",
+    #                  prompt="Do you want to set a comment that gets put into the metadata?\nA good use of this would be to include how to use, such as activation keywords.\nCancel will leave empty")
+    #if ret is None:
+    #    args.training_comment = ret
+    #else:
+    #    args.training_comment = None
     return args
 
 
 def ask_elements(args: ArgStore):
     # start with file dialog
-
     args.base_model = ask_file("Select your base model", {"ckpt", "safetensors"})
     args.img_folder = ask_dir("Select your image folder")
     args.output_folder = ask_dir("Select your output folder")
@@ -338,6 +350,13 @@ def ask_elements(args: ArgStore):
     ret = mb.askyesno(message="Do you want to save a json of your configuration?")
     if ret:
         args.save_json_folder = ask_dir("Select the folder to save json files to")
+
+    ret = sd.askinteger(title="num_workers",
+                        prompt="How many workers do you want? higher means longer epoch starts, but faster data loading, and has higher System Memory Usage.\nIf you want fast epoch start times, set this number to 1.\nCancel defaults to 8")
+    if ret:
+        args.num_workers = ret
+    else:
+        args.num_workers = 8
 
     ret = mb.askyesno(message="Do you want to use regularisation images?")
     if ret:
@@ -453,12 +472,12 @@ def ask_elements(args: ArgStore):
         else:
             args.change_output_name = None
 
-    ret = sd.askstring(title="comment",
-                       prompt="Do you want to set a comment that gets put into the metadata?\nA good use of this would be to include how to use, such as activation keywords.\nCancel will leave empty")
-    if ret is None:
-        args.training_comment = ret
-    else:
-        args.training_comment = None
+    #ret = sd.askstring(title="comment",
+    #                  prompt="Do you want to set a comment that gets put into the metadata?\nA good use of this would be to include how to use, such as activation keywords.\nCancel will leave empty")
+    #if ret is None:
+    #    args.training_comment = ret
+    #else:
+    #    args.training_comment = None
     return args
 
 
@@ -503,7 +522,6 @@ def load_json(path, obj: ArgStore):
         old = obj.load_json_path
         obj.load_json_path = json_obj["load_json_path"]
         print_change("load_json_path", old, obj.load_json_path)
-
 
     if "net_dim" in json_obj:
         old = obj.net_dim
@@ -582,6 +600,7 @@ def load_json(path, obj: ArgStore):
 
 def print_change(value, old, new):
     print(f"{value} changed from {old} to {new}")
+
 
 root = tk.Tk()
 root.attributes('-topmost', True)

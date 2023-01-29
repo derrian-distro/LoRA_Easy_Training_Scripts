@@ -27,6 +27,7 @@ class ArgStore:
         self.learning_rate: Union[float, None] = 1e-4  # OPTIONAL, None to ignore, seems like people have started not setting this value, so I updated the script to allow for that.
         self.text_encoder_lr: Union[float, None] = None  # OPTIONAL, None to ignore
         self.unet_lr: Union[float, None] = None  # OPTIONAL, None to ignore
+        self.num_workers: int = 8  # The number of threads that are being used to load images, lower speeds up the start of epochs, but slows down the loading of data. The assumption here is that it increases the training time as you reduce this value
 
         self.batch_size: int = 1
         self.num_epochs: int = 1
@@ -42,7 +43,7 @@ class ArgStore:
         self.lora_model_for_resume: Union[str, None] = None  # OPTIONAL, takes an input lora to continue training from, not exactly the way it *should* be, but it works, None to ignore
         self.save_state: bool = False  # OPTIONAL, is the intended way to save a training state to use for continuing training, False to ignore
         self.load_previous_save_state: Union[str, None] = None  # OPTIONAL, is the intended way to load a training state to use for continuing training, None to ignore
-        self.training_comment: Union[str, None] = None  # OPTIONAL, great way to put in things like activation tokens right into the metadata.
+        self.training_comment: Union[str, None] = None  # OPTIONAL, great way to put in things like activation tokens right into the metadata. seems to not work at this point and time
 
         # These are the least likely things you will modify
         self.reg_img_folder: Union[str, None] = None  # OPTIONAL, None to ignore
@@ -166,6 +167,9 @@ class ArgStore:
         
         if self.training_comment:
             args.append(f"--training_comment={self.training_comment}")
+
+        if self.num_workers:
+            args.append(f"--max_data_loader_n_workers={self.num_workers}")
         return args
 
     def find_max_steps(self):
@@ -188,7 +192,7 @@ class ArgStore:
                 if os.path.isdir(file):
                     continue
                 ext = file.split(".")
-                if ext[-1] in {"png", "bmp", "gif", "jpeg", "jpg", "webp"}:
+                if ext[-1].lower() in {"png", "bmp", "gif", "jpeg", "jpg", "webp"}:
                     imgs += 1
             total_steps += (num_repeats * imgs)
         total_steps = (total_steps // self.batch_size) * self.num_epochs
