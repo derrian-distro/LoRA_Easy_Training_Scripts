@@ -23,6 +23,8 @@ class ArgStore:
         self.alpha: float = 128  # setting it equal to net_dim makes it work equally to how it used to work.
         # list of schedulers: linear, cosine, cosine_with_restarts, polynomial, constant, constant_with_warmup
         self.scheduler: str = "cosine_with_restarts"
+        self.cosine_restarts: Union[int, None] = 1  # OPTIONAL, only matters if you are using cosine_with_restarts
+        self.scheduler_power: Union[float, None] = 1  # OPTIONAL, only matters if you are using polynomial
         self.warmup_lr_ratio: Union[float, None] = None  # OPTIONAL, make sure to set this if you are using constant_with_warmup, None to ignore
         self.learning_rate: Union[float, None] = 1e-4  # OPTIONAL, None to ignore, seems like people have started not setting this value, so I updated the script to allow for that.
         self.text_encoder_lr: Union[float, None] = None  # OPTIONAL, None to ignore
@@ -170,6 +172,12 @@ class ArgStore:
 
         if self.num_workers:
             args.append(f"--max_data_loader_n_workers={self.num_workers}")
+
+        if self.cosine_restarts and self.scheduler == "cosine_with_restarts":
+            args.append(f"--lr_scheduler_num_cycles={self.cosine_restarts}")
+
+        if self.scheduler_power and self.scheduler == "polynomial":
+            args.append(f"--lr_scheduler_power={self.scheduler_power}")
         return args
 
     def find_max_steps(self):
@@ -225,12 +233,16 @@ def add_misc_args(parser):
                         help="Path to a json file to configure things from")
     parser.add_argument("--no_metadata", action='store_true',
                         help="do not save metadata in output model / メタデータを出力先モデルに保存しない")
-    parser.add_argument("--save_model_as", type=str, default="pt", choices=[None, "ckpt", "pt", "safetensors"],
-                        help="format to save the model (default is .pt) / モデル保存時の形式（デフォルトはpt）")
+    parser.add_argument("--save_model_as", type=str, default="safetensors", choices=[None, "ckpt", "pt", "safetensors"],
+                        help="format to save the model (default is .safetensors) / モデル保存時の形式（デフォルトはsafetensors）")
 
     parser.add_argument("--unet_lr", type=float, default=None, help="learning rate for U-Net / U-Netの学習率")
     parser.add_argument("--text_encoder_lr", type=float, default=None,
                         help="learning rate for Text Encoder / Text Encoderの学習率")
+    parser.add_argument("--lr_scheduler_num_cycles", type=int, default=1,
+                        help="Number of restarts for cosine scheduler with restarts / cosine with restartsスケジューラでのリスタート回数")
+    parser.add_argument("--lr_scheduler_power", type=float, default=1,
+                        help="Polynomial power for polynomial scheduler / polynomialスケジューラでのpolynomial power")
 
     parser.add_argument("--network_weights", type=str, default=None,
                         help="pretrained weights for network / 学習するネットワークの初期重み")
