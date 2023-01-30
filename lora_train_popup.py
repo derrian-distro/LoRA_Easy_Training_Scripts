@@ -190,8 +190,32 @@ class ArgStore:
                 if ext[-1].lower() in {"png", "bmp", "gif", "jpeg", "jpg", "webp"}:
                     imgs += 1
             total_steps += (num_repeats * imgs)
-        total_steps = (total_steps // self.batch_size) * self.num_epochs
+        total_steps = int((total_steps / self.batch_size) * self.num_epochs)
+        if self.quick_calc_regs():
+            total_steps *= 2
         return total_steps
+
+    def quick_calc_regs(self):
+        if not self.reg_img_folder or not os.path.exists(self.reg_img_folder):
+            return False
+        folders = os.listdir(self.reg_img_folder)
+        for folder in folders:
+            if not os.path.isdir(os.path.join(self.reg_img_folder, folder)):
+                continue
+            num_repeats = folder.split("_")
+            if len(num_repeats) < 2:
+                continue
+            try:
+                num_repeats = int(num_repeats[0])
+            except ValueError:
+                continue
+            for file in os.listdir(os.path.join(self.reg_img_folder, folder)):
+                if os.path.isdir(file):
+                    continue
+                ext = file.split(".")
+                if ext[-1].lower() in {"png", "bmp", "gif", "jpeg", "jpg", "webp"}:
+                    return True
+        return False
 
 
 class ArgsEncoder(JSONEncoder):
