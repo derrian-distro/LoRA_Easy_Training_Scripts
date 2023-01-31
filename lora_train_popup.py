@@ -352,7 +352,7 @@ def ask_elements_trunc(args: ArgStore):
     if ret:
         args.lora_model_for_resume = ask_file("Select your lora model", {"ckpt", "pt", "safetensors"}, args.lora_model_for_resume)
 
-    ret = mb.askyesno(message="Do you want to change the name of output epochs?")
+    ret = mb.askyesno(message="Do you want to change the name of output checkpoints?")
     if ret:
         ret = sd.askstring(title="output_name", prompt="What do you want your output name to be?\n"
                                                        "Cancel keeps outputs the original")
@@ -513,7 +513,7 @@ def ask_elements(args: ArgStore):
         else:
             args.warmup_lr_ratio = ret
 
-    ret = mb.askyesno(message="Do you want to change the name of output epochs?")
+    ret = mb.askyesno(message="Do you want to change the name of output checkpoints?")
     if ret:
         ret = sd.askstring(title="output_name", prompt="What do you want your output name to be?\n"
                                                        "Cancel keeps outputs the original")
