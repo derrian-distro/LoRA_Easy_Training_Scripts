@@ -2,7 +2,6 @@ import time
 from typing import Union
 import os
 import json
-from json import JSONEncoder
 
 import train_network
 import library.train_util as util
@@ -10,33 +9,35 @@ import argparse
 
 
 class ArgStore:
+    # Represents the entirety of all possible inputs for sd-scripts. they are ordered from most important to least
     def __init__(self):
         # Important, these are the most likely things you will modify
         self.base_model: str = r""  # example path, r"E:\sd\stable-diffusion-webui\models\Stable-diffusion\nai.ckpt"
-        self.img_folder: str = r""
-        self.output_folder: str = r""
-        self.change_output_name: Union[str, None] = None  # OPTIONAL, changes how the output files are named
+        self.img_folder: str = r""  # is the folder path to your img folder, make sure to follow the guide here for folder setup: https://rentry.org/2chAI_LoRA_Dreambooth_guide_english#for-kohyas-script
+        self.output_folder: str = r""  # just the folder all epochs/safetensors are output
+        self.change_output_name: Union[str, None] = None  # changes the output name of the epochs
         self.save_json_folder: Union[str, None] = None  # OPTIONAL, saves a json folder of your config to whatever location you set here.
         self.load_json_path: Union[str, None] = None  # OPTIONAL, loads a json file partially changes the config to match. things like folder paths do not get modified.
+        self.json_load_skip_list: Union[list[str], None] = None  # OPTIONAL, allows the user to define what they skip when loading a json, by default it loads everything, including all paths, set it up like this ["base_model", "img_folder", "output_folder"]
 
-        self.net_dim: int = 128  # network dimension, 128 seems to work best, change if you want
-        self.alpha: float = 128  # setting it equal to net_dim makes it work equally to how it used to work.
+        self.net_dim: int = 128  # network dimension, 128 is the most common, however you might be able to get lesser to work
+        self.alpha: float = 64  # represents the scalar for training. the lower the alpha, the less gets learned per step. if you want the older way of training, set this to dim
         # list of schedulers: linear, cosine, cosine_with_restarts, polynomial, constant, constant_with_warmup
-        self.scheduler: str = "cosine_with_restarts"
-        self.cosine_restarts: Union[int, None] = 1  # OPTIONAL, only matters if you are using cosine_with_restarts
-        self.scheduler_power: Union[float, None] = 1  # OPTIONAL, only matters if you are using polynomial
-        self.warmup_lr_ratio: Union[float, None] = None  # OPTIONAL, make sure to set this if you are using constant_with_warmup, None to ignore
-        self.learning_rate: Union[float, None] = 1e-4  # OPTIONAL, None to ignore, seems like people have started not setting this value, so I updated the script to allow for that.
-        self.text_encoder_lr: Union[float, None] = None  # OPTIONAL, None to ignore
-        self.unet_lr: Union[float, None] = None  # OPTIONAL, None to ignore
-        self.num_workers: int = 8  # The number of threads that are being used to load images, lower speeds up the start of epochs, but slows down the loading of data. The assumption here is that it increases the training time as you reduce this value
+        self.scheduler: str = "cosine_with_restarts"  # the scheduler for learning rate. Each does something specific
+        self.cosine_restarts: Union[int, None] = 1  # OPTIONAL, represents the number of times it restarts. Only matters if you are using cosine_with_restarts
+        self.scheduler_power: Union[float, None] = 1  # OPTIONAL, represents the power of the polynomial. Only matters if you are using polynomial
+        self.warmup_lr_ratio: Union[float, None] = None  # OPTIONAL, Calculates the number of warmup steps based on the ratio given. Make sure to set this if you are using constant_with_warmup, None to ignore
+        self.learning_rate: Union[float, None] = 1e-4  # OPTIONAL, when not set, lr gets set to 1e-3 as per adamW. Personally, I suggest actually setting this as lower lr seems to be a small bit better.
+        self.text_encoder_lr: Union[float, None] = None  # OPTIONAL, Sets a specific lr for the text encoder, this overwrites the base lr I believe, None to ignore
+        self.unet_lr: Union[float, None] = None  # OPTIONAL, Sets a specific lr for the unet, this overwrites the base lr I believe, None to ignore
+        self.num_workers: int = 1  # The number of threads that are being used to load images, lower speeds up the start of epochs, but slows down the loading of data. The assumption here is that it increases the training time as you reduce this value
 
-        self.batch_size: int = 1
-        self.num_epochs: int = 1
+        self.batch_size: int = 1  # The number of images that get processed at one time, this is directly proportional to your vram and resolution. with 12gb of vram, at 512 reso, you can get a maximum of 6 batch size
+        self.num_epochs: int = 1  # The number of epochs, if you set max steps this value is ignored as it doesn't calculate steps.
         self.save_at_n_epochs: Union[int, None] = 1  # OPTIONAL, how often to save epochs, None to ignore
         self.shuffle_captions: bool = False  # OPTIONAL, False to ignore
         self.keep_tokens: Union[int, None] = None  # OPTIONAL, None to ignore
-        self.max_steps: Union[int, None] = None  # OPTIONAL, None to ignore, if you want, you can define an exact step count, the script will do the rest.
+        self.max_steps: Union[int, None] = None  # OPTIONAL, if you have specific steps you want to hit, this allows you to set it directly. None to ignore
 
         # These are the second most likely things you will modify
         self.train_resolution: int = 512
@@ -49,208 +50,221 @@ class ArgStore:
 
         # These are the least likely things you will modify
         self.reg_img_folder: Union[str, None] = None  # OPTIONAL, None to ignore
-        self.clip_skip: int = 2
-        self.test_seed: int = 23
+        self.clip_skip: int = 2  # If you are training on a model that is anime based, keep this at 2 as most models are designed for that
+        self.test_seed: int = 23  # this is the "reproducable seed", basically if you set the seed to this, you should be able to input a prompt from one of your training images and get a close representation of it
         self.prior_loss_weight: float = 1  # is the loss weight much like Dreambooth, is required for LoRA training
         self.gradient_checkpointing: bool = False  # OPTIONAL, enables gradient checkpointing
         self.gradient_acc_steps: Union[int, None] = None  # OPTIONAL, not sure exactly what this means
-        self.mixed_precision: str = "fp16"
-        self.save_precision: str = "fp16"
+        self.mixed_precision: str = "fp16"  # If you have the ability to use bf16, do it, it's better
+        self.save_precision: str = "fp16"  # You can also save in bf16, but because it's not universally supported, I suggest you keep saving at fp16
         self.save_as: str = "safetensors"  # list is pt, ckpt, safetensors
-        self.caption_extension: str = ".txt"
-        self.max_clip_token_length = 150
-        self.buckets: bool = True  # enables/disables buckets
+        self.caption_extension: str = ".txt"  # the other option is .captions, but since wd1.4 tagger outputs as txt files, this is the default
+        self.max_clip_token_length = 150  # can be 75, 150, or 225 I believe, there is no reason to go higher than 150 though
+        self.buckets: bool = True
         self.xformers: bool = True
         self.use_8bit_adam: bool = True
         self.cache_latents: bool = True
         self.color_aug: bool = False  # IMPORTANT: Clashes with cache_latents, only have one of the two on!
         self.flip_aug: bool = False
-        self.vae: Union[str, None] = None
+        self.vae: Union[str, None] = None  # Seems to only make results worse when not using that specific vae, should probably not use
         self.no_meta: bool = False  # This removes the metadata that now gets saved into safetensors, (you should keep this on)
+        self.log_dir: Union[str, None] = None  # output of logs, not useful to most people.
 
-    def create_arg_list(self):
-        ensure_path(self.base_model, "base_model", {"ckpt", "safetensors"})
-        ensure_path(self.img_folder, "img_folder")
-        ensure_path(self.output_folder, "output_folder")
-        # This is the list of args that are to be used regardless of setup
-        args = ["--network_module=networks.lora", f"--pretrained_model_name_or_path={self.base_model}",
-                f"--train_data_dir={self.img_folder}", f"--output_dir={self.output_folder}",
-                f"--prior_loss_weight={self.prior_loss_weight}", f"--caption_extension=" + self.caption_extension,
-                f"--resolution={self.train_resolution}", f"--train_batch_size={self.batch_size}",
-                f"--mixed_precision={self.mixed_precision}", f"--save_precision={self.save_precision}",
-                f"--network_dim={self.net_dim}", f"--save_model_as={self.save_as}",
-                f"--clip_skip={self.clip_skip}", f"--seed={self.test_seed}",
-                f"--max_token_length={self.max_clip_token_length}", f"--lr_scheduler={self.scheduler}",
-                f"--network_alpha={self.alpha}"]
-        if not self.max_steps:
-            steps = self.find_max_steps()
-        else:
-            steps = self.max_steps
-        args.append(f"--max_train_steps={steps}")
-        args = self.create_optional_args(args, steps)
-        return args
-
-    def create_optional_args(self, args, steps):
-        if self.reg_img_folder:
-            ensure_path(self.reg_img_folder, "reg_img_folder")
-            args.append(f"--reg_data_dir={self.reg_img_folder}")
-
-        if self.lora_model_for_resume:
-            ensure_path(self.lora_model_for_resume, "lora_model_for_resume", {"pt", "ckpt", "safetensors"})
-            args.append(f"--network_weights={self.lora_model_for_resume}")
-
-        if self.save_at_n_epochs:
-            args.append(f"--save_every_n_epochs={self.save_at_n_epochs}")
-        else:
-            args.append("--save_every_n_epochs=999999")
-
-        if self.shuffle_captions:
-            args.append("--shuffle_caption")
-
-        if self.keep_tokens and self.keep_tokens > 0:
-            args.append(f"--keep_tokens={self.keep_tokens}")
-
-        if self.buckets:
-            args.append("--enable_bucket")
-            args.append(f"--min_bucket_reso={self.min_bucket_resolution}")
-            args.append(f"--max_bucket_reso={self.max_bucket_resolution}")
-
-        if self.use_8bit_adam:
-            args.append("--use_8bit_adam")
-
-        if self.xformers:
-            args.append("--xformers")
-
-        if self.color_aug:
-            if self.cache_latents:
-                print("color_aug and cache_latents conflict with one another. Please select only one")
-                quit(1)
-            args.append("--color_aug")
-
-        if self.flip_aug:
-            args.append("--flip_aug")
-
-        if self.cache_latents:
-            args.append("--cache_latents")
-
-        if self.warmup_lr_ratio and self.warmup_lr_ratio > 0:
-            warmup_steps = int(steps * self.warmup_lr_ratio)
-            args.append(f"--lr_warmup_steps={warmup_steps}")
-
-        if self.gradient_checkpointing:
-            args.append("--gradient_checkpointing")
-
-        if self.gradient_acc_steps and self.gradient_acc_steps > 0 and self.gradient_checkpointing:
-            args.append(f"--gradient_accumulation_steps={self.gradient_acc_steps}")
-
-        if self.learning_rate and self.learning_rate > 0:
-            args.append(f"--learning_rate={self.learning_rate}")
-
-        if self.text_encoder_lr and self.text_encoder_lr > 0:
-            args.append(f"--text_encoder_lr={self.text_encoder_lr}")
-
-        if self.unet_lr and self.unet_lr > 0:
-            args.append(f"--unet_lr={self.unet_lr}")
-
-        if self.vae:
-            args.append(f"--vae={self.vae}")
-
-        if self.no_meta:
-            args.append("--no_metadata")
-
-        if self.save_state:
-            args.append("--save_state")
-
-        if self.load_previous_save_state:
-            args.append(f"--resume={self.load_previous_save_state}")
-
-        if self.change_output_name:
-            args.append(f"--output_name={self.change_output_name}")
-        
-        if self.training_comment:
-            args.append(f"--training_comment={self.training_comment}")
-
-        if self.num_workers:
-            args.append(f"--max_data_loader_n_workers={self.num_workers}")
-
-        if self.cosine_restarts and self.scheduler == "cosine_with_restarts":
-            args.append(f"--lr_scheduler_num_cycles={self.cosine_restarts}")
-
-        if self.scheduler_power and self.scheduler == "polynomial":
-            args.append(f"--lr_scheduler_power={self.scheduler_power}")
-        return args
-
-    def find_max_steps(self):
-        total_steps = 0
-        folders = os.listdir(self.img_folder)
-        for folder in folders:
-            if not os.path.isdir(os.path.join(self.img_folder, folder)):
-                continue
-            num_repeats = folder.split("_")
-            if len(num_repeats) < 2:
-                print(f"folder {folder} is not in the correct format. Format is x_name. skipping")
-                continue
-            try:
-                num_repeats = int(num_repeats[0])
-            except ValueError:
-                print(f"folder {folder} is not in the correct format. Format is x_name. skipping")
-                continue
-            imgs = 0
-            for file in os.listdir(os.path.join(self.img_folder, folder)):
-                if os.path.isdir(file):
-                    continue
-                ext = file.split(".")
-                if ext[-1].lower() in {"png", "bmp", "gif", "jpeg", "jpg", "webp"}:
-                    imgs += 1
-            total_steps += (num_repeats * imgs)
-        total_steps = int((total_steps / self.batch_size) * self.num_epochs)
-        if self.quick_calc_regs():
-            total_steps *= 2
-        return total_steps
-
-    def quick_calc_regs(self):
-        if not self.reg_img_folder or not os.path.exists(self.reg_img_folder):
-            return False
-        folders = os.listdir(self.reg_img_folder)
-        for folder in folders:
-            if not os.path.isdir(os.path.join(self.reg_img_folder, folder)):
-                continue
-            num_repeats = folder.split("_")
-            if len(num_repeats) < 2:
-                continue
-            try:
-                num_repeats = int(num_repeats[0])
-            except ValueError:
-                continue
-            for file in os.listdir(os.path.join(self.reg_img_folder, folder)):
-                if os.path.isdir(file):
-                    continue
-                ext = file.split(".")
-                if ext[-1].lower() in {"png", "bmp", "gif", "jpeg", "jpg", "webp"}:
-                    return True
-        return False
-
-
-class ArgsEncoder(JSONEncoder):
-    def default(self, o):
-        return o.__dict__
+    # Creates the dict that is used for the rest of the code, to facilitate easier json saving and loading
+    @staticmethod
+    def convert_args_to_dict():
+        return ArgStore().__dict__
 
 
 def main():
     parser = argparse.ArgumentParser()
     setup_args(parser)
-    arg_class = ArgStore()
+    arg_dict = ArgStore.convert_args_to_dict()
     pre_args = parser.parse_args()
-    if pre_args.load_json_path or arg_class.load_json_path:
-        load_json(pre_args.load_json_path if pre_args.load_json_path else arg_class.load_json_path, arg_class)
-    if pre_args.save_json_path or arg_class.save_json_folder:
-        save_json(pre_args.save_json_path if pre_args.save_json_path else arg_class.save_json_folder, arg_class)
-    args = arg_class.create_arg_list()
+    if pre_args.load_json_path or arg_dict["load_json_path"]:
+        load_json(pre_args.load_json_path if pre_args.load_json_path else arg_dict['load_json_path'], arg_dict)
+    if pre_args.save_json_path or arg_dict["save_json_folder"]:
+        save_json(pre_args.save_json_path if pre_args.save_json_path else arg_dict['save_json_folder'], arg_dict)
+    args = create_arg_space(arg_dict)
     args = parser.parse_args(args)
     train_network.train(args)
 
 
-def add_misc_args(parser):
+def create_arg_space(args: dict) -> [str]:
+    if not ensure_path(args["base_model"], "base_model", {"ckpt", "safetensors"}):
+        raise FileNotFoundError("Failed to find base model, make sure you have the correct path")
+    if not ensure_path(args["img_folder"], "img_folder"):
+        raise FileNotFoundError("Failed to find the image folder, make sure you have the correct path")
+    if not ensure_path(args["output_folder"], "output_folder"):
+        raise FileNotFoundError("Failed to find the output folder, make sure you have the correct path")
+    # This is the list of args that are to be used regardless of setup
+    output = ["--network_module=networks.lora", f"--pretrained_model_name_or_path={args['base_model']}",
+              f"--train_data_dir={args['img_folder']}", f"--output_dir={args['output_folder']}",
+              f"--prior_loss_weight={args['prior_loss_weight']}", f"--caption_extension=" + args['caption_extension'],
+              f"--resolution={args['train_resolution']}", f"--train_batch_size={args['batch_size']}",
+              f"--mixed_precision={args['mixed_precision']}", f"--save_precision={args['save_precision']}",
+              f"--network_dim={args['net_dim']}", f"--save_model_as={args['save_as']}",
+              f"--clip_skip={args['clip_skip']}", f"--seed={args['test_seed']}",
+              f"--max_token_length={args['max_clip_token_length']}", f"--lr_scheduler={args['scheduler']}",
+              f"--network_alpha={args['alpha']}"]
+    if not args['max_steps']:
+        steps = find_max_steps(args)
+    else:
+        steps = args["max_steps"]
+    output.append(f"--max_train_steps={steps}")
+    output += create_optional_args(args, steps)
+    return output
+
+
+def create_optional_args(args: dict, steps):
+    output = []
+    if args["reg_img_folder"]:
+        if not ensure_path(args["reg_img_folder"], "reg_img_folder"):
+            raise FileNotFoundError("Failed to find the reg image folder, make sure you have the correct path")
+        output.append(f"--reg_data_dir={args['reg_img_folder']}")
+
+    if args['lora_model_for_resume']:
+        if not ensure_path(args['lora_model_for_resume'], "lora_model_for_resume", {"pt", "ckpt", "safetensors"}):
+            raise FileNotFoundError("Failed to find the lora model, make sure you have the correct path")
+        output.append(f"--network_weights={args['lora_model_for_resume']}")
+
+    if args['save_at_n_epochs']:
+        output.append(f"--save_every_n_epochs={args['save_at_n_epochs']}")
+    else:
+        output.append("--save_every_n_epochs=999999")
+
+    if args['shuffle_captions']:
+        output.append("--shuffle_caption")
+
+    if args['keep_tokens'] and args['keep_tokens'] > 0:
+        output.append(f"--keep_tokens={args['keep_tokens']}")
+
+    if args['buckets']:
+        output.append("--enable_bucket")
+        output.append(f"--min_bucket_reso={args['min_bucket_resolution']}")
+        output.append(f"--max_bucket_reso={args['max_bucket_resolution']}")
+
+    if args['use_8bit_adam']:
+        output.append("--use_8bit_adam")
+
+    if args['xformers']:
+        output.append("--xformers")
+
+    if args['color_aug']:
+        if args['cache_latents']:
+            print("color_aug and cache_latents conflict with one another. Please select only one")
+            quit(1)
+        output.append("--color_aug")
+
+    if args['flip_aug']:
+        output.append("--flip_aug")
+
+    if args['cache_latents']:
+        output.append("--cache_latents")
+
+    if args['warmup_lr_ratio'] and args['warmup_lr_ratio'] > 0:
+        warmup_steps = int(steps * args['warmup_lr_ratio'])
+        output.append(f"--lr_warmup_steps={warmup_steps}")
+
+    if args['gradient_checkpointing']:
+        output.append("--gradient_checkpointing")
+
+    if args['gradient_acc_steps'] and args['gradient_acc_steps'] > 0 and args['gradient_checkpointing']:
+        output.append(f"--gradient_accumulation_steps={args['gradient_acc_steps']}")
+
+    if args['learning_rate'] and args['learning_rate'] > 0:
+        output.append(f"--learning_rate={args['learning_rate']}")
+
+    if args['text_encoder_lr'] and args['text_encoder_lr'] > 0:
+        output.append(f"--text_encoder_lr={args['text_encoder_lr']}")
+
+    if args['unet_lr'] and args['unet_lr'] > 0:
+        output.append(f"--unet_lr={args['unet_lr']}")
+
+    if args['vae']:
+        output.append(f"--vae={args['vae']}")
+
+    if args['no_meta']:
+        output.append("--no_metadata")
+
+    if args['save_state']:
+        output.append("--save_state")
+
+    if args['load_previous_save_state']:
+        if not ensure_path(args['load_previous_save_state'], "previous_state"):
+            raise FileNotFoundError("Failed to find the save state folder, make sure you have the correct path")
+        output.append(f"--resume={args['load_previous_save_state']}")
+
+    if args['change_output_name']:
+        output.append(f"--output_name={args['change_output_name']}")
+
+    if args['training_comment']:
+        output.append(f"--training_comment={args['training_comment']}")
+
+    if args['num_workers']:
+        output.append(f"--max_data_loader_n_workers={args['num_workers']}")
+
+    if args['cosine_restarts'] and args['scheduler'] == "cosine_with_restarts":
+        output.append(f"--lr_scheduler_num_cycles={args['cosine_restarts']}")
+
+    if args['scheduler_power'] and args['scheduler'] == "polynomial":
+        output.append(f"--lr_scheduler_power={args['scheduler_power']}")
+    return output
+
+
+def find_max_steps(args: dict) -> int:
+    total_steps = 0
+    folders = os.listdir(args["img_folder"])
+    for folder in folders:
+        if not os.path.isdir(os.path.join(args["img_folder"], folder)):
+            continue
+        num_repeats = folder.split("_")
+        if len(num_repeats) < 2:
+            print(f"folder {folder} is not in the correct format. Format is x_name. skipping")
+            continue
+        try:
+            num_repeats = int(num_repeats[0])
+        except ValueError:
+            print(f"folder {folder} is not in the correct format. Format is x_name. skipping")
+            continue
+        imgs = 0
+        for file in os.listdir(os.path.join(args["img_folder"], folder)):
+            if os.path.isdir(file):
+                continue
+            ext = file.split(".")
+            if ext[-1].lower() in {"png", "bmp", "gif", "jpeg", "jpg", "webp"}:
+                imgs += 1
+        total_steps += (num_repeats * imgs)
+    total_steps = int((total_steps / args["batch_size"]) * args["num_epochs"])
+    if quick_calc_regs(args):
+        total_steps *= 2
+    return total_steps
+
+
+def quick_calc_regs(args: dict) -> bool:
+    if not args["reg_img_folder"] or not os.path.exists(args["reg_img_folder"]):
+        return False
+    folders = os.listdir(args["reg_img_folder"])
+    for folder in folders:
+        if not os.path.isdir(os.path.join(args["reg_img_folder"], folder)):
+            continue
+        num_repeats = folder.split("_")
+        if len(num_repeats) < 2:
+            continue
+        try:
+            num_repeats = int(num_repeats[0])
+        except ValueError:
+            continue
+        for file in os.listdir(os.path.join(args["reg_img_folder"], folder)):
+            if os.path.isdir(file):
+                continue
+            ext = file.split(".")
+            if ext[-1].lower() in {"png", "bmp", "gif", "jpeg", "jpg", "webp"}:
+                return True
+    return False
+
+
+def add_misc_args(parser) -> None:
     parser.add_argument("--save_json_path", type=str, default=None,
                         help="Path to save a configuration json file to")
     parser.add_argument("--load_json_path", type=str, default=None,
@@ -286,147 +300,80 @@ def add_misc_args(parser):
                         help="arbitrary comment string stored in metadata / メタデータに記録する任意のコメント文字列")
 
 
-def setup_args(parser):
+def setup_args(parser) -> None:
     util.add_sd_models_arguments(parser)
     util.add_dataset_arguments(parser, True, True)
     util.add_training_arguments(parser, True)
     add_misc_args(parser)
 
 
-def ensure_path(path, name, ext_list=None):
+def ensure_path(path, name, ext_list=None) -> bool:
     if ext_list is None:
         ext_list = {}
     folder = len(ext_list) == 0
     if path is None or not os.path.exists(path):
         print(f"Failed to find {name}, Please make sure path is correct.")
-        quit(1)
+        return False
     elif folder and os.path.isfile(path):
         print(f"Path given for {name} is that of a file, please select a folder.")
-        quit(1)
+        return False
     elif not folder and os.path.isdir(path):
         print(f"Path given for {name} is that of a folder, please select a file.")
-        quit(1)
+        return False
     elif not folder and path.split(".")[-1] not in ext_list:
         print(f"Found a file for {name}, however it wasn't of the accepted types: {ext_list}")
-        quit(1)
+        return False
+    return True
 
 
-def save_json(path, obj):
+def save_json(path, obj: dict) -> None:
     ensure_path(path, "save_json_path")
     fp = open(os.path.join(path, f"config-{time.time()}.json"), "w")
-    json.dump(obj, fp=fp, indent=4, cls=ArgsEncoder)
+    json.dump(obj, fp=fp, indent=4)
     fp.close()
 
 
-def load_json(path, obj):
-    ensure_path(path, "load_json_path", {"json"})
-    json_obj = None
+def load_json(path, obj: dict) -> dict:
+    if not ensure_path(path, "load_json_path", {"json"}):
+        raise FileNotFoundError("Failed to find base model, make sure you have the correct path")
     with open(path) as f:
         json_obj = json.loads(f.read())
-    print("json loaded, setting variables...")
-    if "net_dim" in json_obj:
-        old = obj.net_dim
-        obj.net_dim = json_obj["net_dim"]
-        print_change("net_dim", old, obj.net_dim)
-    elif "network_dim" in json_obj:
-        old = obj.net_dim
-        obj.net_dim = json_obj["network_dim"]
-        print_change("net_dim", old, obj.net_dim)
-    if "scheduler" in json_obj:
-        old = obj.scheduler
-        obj.scheduler = json_obj["scheduler"]
-        print_change("scheduler", old, obj.scheduler)
-    elif "lr_scheduler" in json_obj:
-        old = obj.scheduler
-        obj.scheduler = json_obj["lr_scheduler"]
-        print_change("scheduler", old, obj.scheduler)
+    print("loaded json, setting variables...")
+    ui_name_scheme = {"pretrained_model_name_or_path": "base_model", "logging_dir": "log_dir",
+                      "train_data_dir": "img_folder", "reg_data_dir": "reg_img_folder",
+                      "output_dir": "output_folder", "max_resolution": "train_resolution",
+                      "lr_scheduler": "scheduler", "lr_warmup": "warmup_lr_ratio",
+                      "train_batch_size": "batch_size", "epoch": "num_epochs",
+                      "save_every_n_epochs": "save_at_n_epochs", "num_cpu_threads_per_process": "num_workers",
+                      "enable_bucket": "buckets", "save_model_as": "save_as", "shuffle_caption": "shuffle_captions",
+                      "resume": "load_previous_save_state", "network_dim": "net_dim",
+                      "gradient_accumulation_steps": "gradient_acc_steps", "output_name": "change_output_name",
+                      "network_alpha": "alpha", "lr_scheduler_num_cycles": "cosine_restarts",
+                      "lr_scheduler_power": "scheduler_power"}
 
-    if "warmup_lr_ratio" in json_obj:
-        old = obj.warmup_lr_ratio
-        obj.warmup_lr_ratio = json_obj["warmup_lr_ratio"]  # UI version doesn't have an equivalent, only handles steps
-        print_change("warmup_lr_ratio", old, obj.warmup_lr_ratio)
-    if "learning_rate" in json_obj:
-        old = obj.learning_rate
-        obj.learning_rate = json_obj["learning_rate"]
-        print_change("learning_rate", old, obj.learning_rate)
-    if "text_encoder_lr" in json_obj:
-        old = obj.text_encoder_lr
-        obj.text_encoder_lr = json_obj["text_encoder_lr"]  # UI version is the same
-        print_change("text_encoder_lr", old, obj.text_encoder_lr)
-    if "unet_lr" in json_obj:
-        old = obj.unet_lr
-        obj.unet_lr = json_obj["unet_lr"]  # UI version is the same
-        print_change("unet_lr", old, obj.unet_lr)
-    if "clip_skip" in json_obj:
-        old = obj.clip_skip
-        obj.clip_skip = json_obj["clip_skip"]  # UI version is the same
-        print_change("clip_skip", old, obj.clip_skip)
+    for key in list(json_obj):
+        if key in ui_name_scheme:
+            json_obj[ui_name_scheme[key]] = json_obj[key]
+            if ui_name_scheme[key] in {"batch_size", "num_epochs"}:
+                try:
+                    json_obj[ui_name_scheme[key]] = int(json_obj[ui_name_scheme[key]])
+                except ValueError:
+                    print(f"attempting to load {key} from json failed as input isn't an integer")
+                    quit(1)
 
-    if "train_resolution" in json_obj and obj.train_resolution != json_obj["train_resolution"]:
-        ans = check_input("train_resolution", obj.train_resolution, json_obj["train_resolution"])
-        obj.train_resolution = process_input(ans, obj.train_resolution, json_obj["train_resolution"])
-    elif "max_resolution" in json_obj and obj.train_resolution != int(json_obj["max_resolution"].split(",")[0]):
-        ans = check_input("train_resolution", obj.train_resolution, int(json_obj["max_resolution"].split(",")[0]))
-        obj.train_resolution = process_input(ans, obj.train_resolution, int(json_obj["max_resolution"].split(",")[0]))
-
-    if "min_bucket_resolution" in json_obj and obj.min_bucket_resolution != json_obj["min_bucket_resolution"]:
-        ans = check_input("min_bucket_resolution", obj.min_bucket_resolution, json_obj["min_bucket_resolution"])
-        obj.min_bucket_resolution = process_input(ans, obj.min_bucket_resolution, json_obj["min_bucket_resolution"])
-
-    if "max_bucket_resolution" in json_obj and obj.max_bucket_resolution != json_obj["max_bucket_resolution"]:
-        ans = check_input("max_bucket_resolution", obj.max_bucket_resolution, json_obj["max_bucket_resolution"])
-        obj.max_bucket_resolution = process_input(ans, obj.max_bucket_resolution, json_obj["max_bucket_resolution"])
-
-    if "batch_size" in json_obj and obj.batch_size != json_obj["batch_size"]:
-        ans = check_input("batch_size", obj.batch_size, json_obj["batch_size"])
-        obj.batch_size = process_input(ans, obj.batch_size, json_obj["batch_size"])
-    elif "train_batch_size" in json_obj and obj.batch_size != json_obj["train_batch_size"]:
-        ans = check_input("batch_size", obj.batch_size, json_obj["train_batch_size"])
-        obj.batch_size = process_input(ans, obj.batch_size, json_obj["train_batch_size"])
-
-    if "num_epochs" in json_obj and obj.num_epochs != json_obj["num_epochs"]:
-        ans = check_input("num_epochs", obj.num_epochs, json_obj["num_epochs"])
-        obj.num_epochs = process_input(ans, obj.num_epochs, json_obj["num_epochs"])
-    elif "epoch" in json_obj and obj.num_epochs != json_obj["epoch"]:
-        ans = check_input("num_epochs", obj.num_epochs, json_obj["epoch"])
-        obj.num_epochs = process_input(ans, obj.num_epochs, json_obj["epoch"])
-
-    if "shuffle_captions" in json_obj and obj.shuffle_captions != json_obj["shuffle_captions"]:
-        ans = check_input("shuffle_captions", obj.shuffle_captions, json_obj["shuffle_captions"], True)
-        obj.shuffle_captions = process_input(ans, obj.shuffle_captions, json_obj["shuffle_captions"])
-    elif "shuffle_caption" in json_obj and obj.shuffle_captions != json_obj["shuffle_caption"]:
-        ans = check_input("shuffle_captions", obj.shuffle_captions, json_obj["shuffle_caption"], True)
-        obj.shuffle_captions = process_input(ans, obj.shuffle_captions, json_obj["shuffle_caption"])
-
-    if "keep_tokens" in json_obj and obj.keep_tokens != json_obj["keep_tokens"]:
-        ans = check_input("keep_tokens", obj.keep_tokens, json_obj["keep_tokens"])
-        obj.keep_tokens = process_input(ans, obj.keep_tokens, json_obj["keep_tokens"])
+    for key in list(json_obj):
+        if obj["json_load_skip_list"] and key in obj["json_load_skip_list"]:
+            continue
+        if key in obj:
+            if key in {"keep_tokens", "warmup_lr_ratio"}:
+                json_obj[key] = int(json_obj[key]) if json_obj[key] is not None else None
+            if key in {"learning_rate", "unet_lr", "text_encoder_lr"}:
+                json_obj[key] = float(json_obj[key]) if json_obj[key] is not None else None
+            if obj[key] != json_obj[key]:
+                print_change(key, obj[key], json_obj[key])
+                obj[key] = json_obj[key]
     print("completed changing variables.")
-
-
-def check_input(name, oldval, newval, no_int: bool = False):
-    ans = None
-    while not ans:
-        ans = input(f"{name} is different old:{oldval} -> new:{newval}\n"
-                    f"Would you like to use the new value?\n" + ("Answer y/n or an int to overwrite both: " if not no_int else "Answer y/n: "))
-        if not no_int:
-            try:
-                ans = int(ans)
-                return ans
-            except ValueError:
-                pass
-        if ans and ans not in {'y', 'Y', 'n', 'N'}:
-            ans = None
-    return ans
-
-
-def process_input(value, oldval, newval):
-    if type(value) is int:
-        return value
-    elif value in {'y', 'Y'}:
-        return newval
-    else:
-        return oldval
+    return obj
 
 
 def print_change(value, old, new):

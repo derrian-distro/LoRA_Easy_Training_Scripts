@@ -1,7 +1,5 @@
 import json
-import string
 import time
-from json import JSONEncoder
 from typing import Union
 import os
 import tkinter as tk
@@ -15,229 +13,255 @@ import argparse
 
 
 class ArgStore:
+    # Represents the entirety of all possible inputs for sd-scripts. they are ordered from most important to least
     def __init__(self):
         # Important, these are the most likely things you will modify
-        self.base_model: string = None  # example path, make sure to use \\ instead of \ if on windows -> "E:\\sd\\stable-diffusion-webui\\models\\Stable-diffusion\\nai.ckpt"
-        self.img_folder: string = None
-        self.output_folder: string = None
-        self.change_output_name: Union[string, None] = None  # OPTIONAL, changes how the output files are named
-        self.save_json_folder: Union[string, None] = None  # OPTIONAL, saves a json folder of your config to whatever location you set here.
-        self.load_json_path: Union[string, None] = None  # OPTIONAL, loads a json file partially changes the config to match. things like folder paths do not get modified.
+        self.base_model: str = r""  # example path, r"E:\sd\stable-diffusion-webui\models\Stable-diffusion\nai.ckpt"
+        self.img_folder: str = r""  # is the folder path to your img folder, make sure to follow the guide here for folder setup: https://rentry.org/2chAI_LoRA_Dreambooth_guide_english#for-kohyas-script
+        self.output_folder: str = r""  # just the folder all epochs/safetensors are output
+        self.change_output_name: Union[str, None] = None  # changes the output name of the epochs
+        self.save_json_folder: Union[str, None] = None  # OPTIONAL, saves a json folder of your config to whatever location you set here.
+        self.load_json_path: Union[str, None] = None  # OPTIONAL, loads a json file partially changes the config to match. things like folder paths do not get modified.
+        self.json_load_skip_list: Union[list[str], None] = ["base_model", "img_folder", "output_folder",
+                                                            "save_json_folder", "reg_img_folder", "lora_model_for_resume",
+                                                            "change_output_name", "training_comment", "json_load_skip_list"]  # OPTIONAL, allows the user to define what they skip when loading a json, by default it loads everything, including all paths, set it up like this ["base_model", "img_folder", "output_folder"]
 
-        self.net_dim: int = 128  # network dimension, 128 seems to work best, change if you want
-        self.alpha: float = 128  # setting it equal to net_dim makes it work equally to how it used to work.
+        self.net_dim: int = 128  # network dimension, 128 is the most common, however you might be able to get lesser to work
+        self.alpha: float = 128  # represents the scalar for training. the lower the alpha, the less gets learned per step. if you want the older way of training, set this to dim
         # list of schedulers: linear, cosine, cosine_with_restarts, polynomial, constant, constant_with_warmup
-        self.scheduler: string = "cosine_with_restarts"
-        self.cosine_restarts: Union[int, None] = 1  # OPTIONAL, only matters if you are using cosine_with_restarts
-        self.scheduler_power: Union[float, None] = 1  # OPTIONAL, only matters if you are using polynomial
-        self.warmup_lr_ratio: Union[float, None] = None  # OPTIONAL, make sure to set this if you are using constant_with_warmup, None to ignore
-        self.learning_rate: float = 1e-4
-        self.text_encoder_lr: Union[float, None] = None  # OPTIONAL, None to ignore
-        self.unet_lr: Union[float, None] = None  # OPTIONAL, None to ignore
-        self.num_workers: int = 8  # The number of threads that are being used to load images, lower speeds up the start of epochs, but slows down the loading of data. The assumption here is that it increases the training time as you reduce this value
+        self.scheduler: str = "cosine_with_restarts"  # the scheduler for learning rate. Each does something specific
+        self.cosine_restarts: Union[int, None] = 1  # OPTIONAL, represents the number of times it restarts. Only matters if you are using cosine_with_restarts
+        self.scheduler_power: Union[float, None] = 1  # OPTIONAL, represents the power of the polynomial. Only matters if you are using polynomial
+        self.warmup_lr_ratio: Union[float, None] = None  # OPTIONAL, Calculates the number of warmup steps based on the ratio given. Make sure to set this if you are using constant_with_warmup, None to ignore
+        self.learning_rate: Union[float, None] = 1e-4  # OPTIONAL, when not set, lr gets set to 1e-3 as per adamW. Personally, I suggest actually setting this as lower lr seems to be a small bit better.
+        self.text_encoder_lr: Union[float, None] = None  # OPTIONAL, Sets a specific lr for the text encoder, this overwrites the base lr I believe, None to ignore
+        self.unet_lr: Union[float, None] = None  # OPTIONAL, Sets a specific lr for the unet, this overwrites the base lr I believe, None to ignore
+        self.num_workers: int = 1  # The number of threads that are being used to load images, lower speeds up the start of epochs, but slows down the loading of data. The assumption here is that it increases the training time as you reduce this value
 
-        self.batch_size: int = 1
-        self.num_epochs: int = 1
-        self.save_at_n_epochs: Union[int, None] = None  # OPTIONAL, how often to save epochs, None to ignore
+        self.batch_size: int = 1  # The number of images that get processed at one time, this is directly proportional to your vram and resolution. with 12gb of vram, at 512 reso, you can get a maximum of 6 batch size
+        self.num_epochs: int = 1  # The number of epochs, if you set max steps this value is ignored as it doesn't calculate steps.
+        self.save_at_n_epochs: Union[int, None] = 1  # OPTIONAL, how often to save epochs, None to ignore
         self.shuffle_captions: bool = False  # OPTIONAL, False to ignore
         self.keep_tokens: Union[int, None] = None  # OPTIONAL, None to ignore
+        self.max_steps: Union[int, None] = None  # OPTIONAL, if you have specific steps you want to hit, this allows you to set it directly. None to ignore
 
         # These are the second most likely things you will modify
         self.train_resolution: int = 512
         self.min_bucket_resolution: int = 320
         self.max_bucket_resolution: int = 960
-        self.lora_model_for_resume: Union[string, None] = None  # OPTIONAL, takes an input lora to continue training from, not exactly the way it *should* be, but it works, None to ignore
+        self.lora_model_for_resume: Union[str, None] = None  # OPTIONAL, takes an input lora to continue training from, not exactly the way it *should* be, but it works, None to ignore
         self.save_state: bool = False  # OPTIONAL, is the intended way to save a training state to use for continuing training, False to ignore
-        self.load_previous_save_state: Union[string, None] = None  # OPTIONAL, is the intended way to load a training state to use for continuing training, None to ignore
-        self.training_comment: Union[str, None] = None  # OPTIONAL, great way to put in things like activation tokens right into the metadata.
+        self.load_previous_save_state: Union[str, None] = None  # OPTIONAL, is the intended way to load a training state to use for continuing training, None to ignore
+        self.training_comment: Union[str, None] = None  # OPTIONAL, great way to put in things like activation tokens right into the metadata. seems to not work at this point and time
 
         # These are the least likely things you will modify
-        self.reg_img_folder: Union[string, None] = None  # OPTIONAL, None to ignore
-        self.clip_skip: int = 2
-        self.test_seed: int = 23
+        self.reg_img_folder: Union[str, None] = None  # OPTIONAL, None to ignore
+        self.clip_skip: int = 2  # If you are training on a model that is anime based, keep this at 2 as most models are designed for that
+        self.test_seed: int = 23  # this is the "reproducable seed", basically if you set the seed to this, you should be able to input a prompt from one of your training images and get a close representation of it
         self.prior_loss_weight: float = 1  # is the loss weight much like Dreambooth, is required for LoRA training
         self.gradient_checkpointing: bool = False  # OPTIONAL, enables gradient checkpointing
         self.gradient_acc_steps: Union[int, None] = None  # OPTIONAL, not sure exactly what this means
-        self.mixed_precision: string = "fp16"
-        self.save_precision: string = "fp16"
-        self.save_as: string = "safetensors"  # list is pt, ckpt, safetensors
-        self.caption_extension: string = ".txt"
-        self.max_clip_token_length = 150
-        self.buckets: bool = True  # enables/disables buckets
+        self.mixed_precision: str = "fp16"  # If you have the ability to use bf16, do it, it's better
+        self.save_precision: str = "fp16"  # You can also save in bf16, but because it's not universally supported, I suggest you keep saving at fp16
+        self.save_as: str = "safetensors"  # list is pt, ckpt, safetensors
+        self.caption_extension: str = ".txt"  # the other option is .captions, but since wd1.4 tagger outputs as txt files, this is the default
+        self.max_clip_token_length = 150  # can be 75, 150, or 225 I believe, there is no reason to go higher than 150 though
+        self.buckets: bool = True
         self.xformers: bool = True
         self.use_8bit_adam: bool = True
         self.cache_latents: bool = True
         self.color_aug: bool = False  # IMPORTANT: Clashes with cache_latents, only have one of the two on!
         self.flip_aug: bool = False
-        self.vae: Union[string, None] = None
+        self.vae: Union[str, None] = None  # Seems to only make results worse when not using that specific vae, should probably not use
         self.no_meta: bool = False  # This removes the metadata that now gets saved into safetensors, (you should keep this on)
+        self.log_dir: Union[str, None] = None  # output of logs, not useful to most people.
 
-    def create_arg_list(self):
-        # This is the list of args that are to be used regardless of setup
-        args = ["--network_module=networks.lora", f"--pretrained_model_name_or_path={self.base_model}",
-                f"--train_data_dir={self.img_folder}", f"--output_dir={self.output_folder}",
-                f"--prior_loss_weight={self.prior_loss_weight}", f"--caption_extension=" + self.caption_extension,
-                f"--resolution={self.train_resolution}", f"--train_batch_size={self.batch_size}",
-                f"--learning_rate={self.learning_rate}", f"--mixed_precision={self.mixed_precision}",
-                f"--save_precision={self.save_precision}", f"--network_dim={self.net_dim}",
-                f"--save_model_as={self.save_as}", f"--clip_skip={self.clip_skip}", f"--seed={self.test_seed}",
-                f"--max_token_length={self.max_clip_token_length}", f"--lr_scheduler={self.scheduler}",
-                f"--network_alpha={self.alpha}"]
-        steps = self.find_max_steps()
-        args.append(f"--max_train_steps={steps}")
-        args = self.create_optional_args(args, steps)
-        return args
-
-    def create_optional_args(self, args, steps):
-        if self.reg_img_folder:
-            args.append(f"--reg_data_dir={self.reg_img_folder}")
-
-        if self.lora_model_for_resume:
-            args.append(f"--network_weights={self.lora_model_for_resume}")
-
-        if self.save_at_n_epochs:
-            args.append(f"--save_every_n_epochs={self.save_at_n_epochs}")
-        else:
-            args.append("--save_every_n_epochs=999999")
-
-        if self.shuffle_captions:
-            args.append("--shuffle_caption")
-
-        if self.keep_tokens and self.keep_tokens > 0:
-            args.append(f"--keep_tokens={self.keep_tokens}")
-
-        if self.buckets:
-            args.append("--enable_bucket")
-            args.append(f"--min_bucket_reso={self.min_bucket_resolution}")
-            args.append(f"--max_bucket_reso={self.max_bucket_resolution}")
-
-        if self.use_8bit_adam:
-            args.append("--use_8bit_adam")
-
-        if self.xformers:
-            args.append("--xformers")
-
-        if self.color_aug:
-            if self.cache_latents:
-                print("color_aug and cache_latents conflict with one another. Please select only one")
-                quit(1)
-            args.append("--color_aug")
-
-        if self.flip_aug:
-            args.append("--flip_aug")
-
-        if self.cache_latents:
-            args.append("--cache_latents")
-
-        if self.warmup_lr_ratio and self.warmup_lr_ratio > 0:
-            warmup_steps = int(steps * self.warmup_lr_ratio)
-            args.append(f"--lr_warmup_steps={warmup_steps}")
-
-        if self.gradient_checkpointing:
-            args.append("--gradient_checkpointing")
-
-        if self.gradient_acc_steps and self.gradient_acc_steps > 0 and self.gradient_checkpointing:
-            args.append(f"--gradient_accumulation_steps={self.gradient_acc_steps}")
-
-        if self.text_encoder_lr and self.text_encoder_lr > 0:
-            args.append(f"--text_encoder_lr={self.text_encoder_lr}")
-
-        if self.unet_lr and self.unet_lr > 0:
-            args.append(f"--unet_lr={self.unet_lr}")
-
-        if self.vae:
-            args.append(f"--vae={self.vae}")
-
-        if self.no_meta:
-            args.append("--no_metadata")
-
-        if self.change_output_name:
-            args.append(f"--output_name={self.change_output_name}")
-
-        if self.training_comment:
-            args.append(f"--training_comment={self.training_comment}")
-
-        if self.num_workers:
-            args.append(f"--max_data_loader_n_workers={self.num_workers}")
-
-        if self.cosine_restarts and self.scheduler == "cosine_with_restarts":
-            args.append(f"--lr_scheduler_num_cycles={self.cosine_restarts}")
-
-        if self.scheduler_power and self.scheduler == "polynomial":
-            args.append(f"--lr_scheduler_power={self.scheduler_power}")
-        return args
-
-    def find_max_steps(self):
-        total_steps = 0
-        folders = os.listdir(self.img_folder)
-        for folder in folders:
-            if not os.path.isdir(os.path.join(self.img_folder, folder)):
-                continue
-            num_repeats = folder.split("_")
-            if len(num_repeats) < 2:
-                print(f"folder {folder} is not in the correct format. Format is x_name. skipping")
-                continue
-            try:
-                num_repeats = int(num_repeats[0])
-            except ValueError:
-                print(f"folder {folder} is not in the correct format. Format is x_name. skipping")
-                continue
-            imgs = 0
-            for file in os.listdir(os.path.join(self.img_folder, folder)):
-                if os.path.isdir(file):
-                    continue
-                ext = file.split(".")
-                if ext[-1].lower() in {"png", "bmp", "gif", "jpeg", "jpg", "webp"}:
-                    imgs += 1
-            total_steps += (num_repeats * imgs)
-        total_steps = int((total_steps / self.batch_size) * self.num_epochs)
-        if self.quick_calc_regs():
-            total_steps *= 2
-        return total_steps
-
-    def quick_calc_regs(self):
-        if not self.reg_img_folder or not os.path.exists(self.reg_img_folder):
-            return False
-        folders = os.listdir(self.reg_img_folder)
-        for folder in folders:
-            if not os.path.isdir(os.path.join(self.reg_img_folder, folder)):
-                continue
-            num_repeats = folder.split("_")
-            if len(num_repeats) < 2:
-                continue
-            try:
-                num_repeats = int(num_repeats[0])
-            except ValueError:
-                continue
-            for file in os.listdir(os.path.join(self.reg_img_folder, folder)):
-                if os.path.isdir(file):
-                    continue
-                ext = file.split(".")
-                if ext[-1].lower() in {"png", "bmp", "gif", "jpeg", "jpg", "webp"}:
-                    return True
-        return False
-
-
-class ArgsEncoder(JSONEncoder):
-    def default(self, o):
-        return o.__dict__
+    # Creates the dict that is used for the rest of the code, to facilitate easier json saving and loading
+    @staticmethod
+    def convert_args_to_dict():
+        return ArgStore().__dict__
 
 
 def main():
     parser = argparse.ArgumentParser()
     setup_args(parser)
-    arg_class = ArgStore()
+    arg_dict = ArgStore.convert_args_to_dict()
+    pre_args = parser.parse_args()
     ret = mb.askyesno(message="Do you want to load a json config file?")
     if ret:
-        load_json(ask_file("json to load from", {"json"}), arg_class)
-        arg_class = ask_elements_trunc(arg_class)
+        load_json(ask_file("select json to load from", {"json"}), arg_dict)
+        arg_dict = ask_elements_trunc(arg_dict)
     else:
-        arg_class = ask_elements(arg_class)
-    if arg_class.save_json_folder:
-        save_json(arg_class.save_json_folder, arg_class)
-    args = arg_class.create_arg_list()
+        arg_dict = ask_elements(arg_dict)
+    if pre_args.load_json_path or arg_dict["load_json_path"]:
+        load_json(pre_args.load_json_path if pre_args.load_json_path else arg_dict['load_json_path'], arg_dict)
+    if pre_args.save_json_path or arg_dict["save_json_folder"]:
+        save_json(pre_args.save_json_path if pre_args.save_json_path else arg_dict['save_json_folder'], arg_dict)
+    args = create_arg_space(arg_dict)
     args = parser.parse_args(args)
     train_network.train(args)
+
+
+def create_arg_space(args: dict) -> [str]:
+    # This is the list of args that are to be used regardless of setup
+    output = ["--network_module=networks.lora", f"--pretrained_model_name_or_path={args['base_model']}",
+              f"--train_data_dir={args['img_folder']}", f"--output_dir={args['output_folder']}",
+              f"--prior_loss_weight={args['prior_loss_weight']}", f"--caption_extension=" + args['caption_extension'],
+              f"--resolution={args['train_resolution']}", f"--train_batch_size={args['batch_size']}",
+              f"--mixed_precision={args['mixed_precision']}", f"--save_precision={args['save_precision']}",
+              f"--network_dim={args['net_dim']}", f"--save_model_as={args['save_as']}",
+              f"--clip_skip={args['clip_skip']}", f"--seed={args['test_seed']}",
+              f"--max_token_length={args['max_clip_token_length']}", f"--lr_scheduler={args['scheduler']}",
+              f"--network_alpha={args['alpha']}"]
+    if not args['max_steps']:
+        steps = find_max_steps(args)
+    else:
+        steps = args["max_steps"]
+    output.append(f"--max_train_steps={steps}")
+    output += create_optional_args(args, steps)
+    return output
+
+
+def create_optional_args(args: dict, steps):
+    output = []
+    if args["reg_img_folder"]:
+        output.append(f"--reg_data_dir={args['reg_img_folder']}")
+
+    if args['lora_model_for_resume']:
+        output.append(f"--network_weights={args['lora_model_for_resume']}")
+
+    if args['save_at_n_epochs']:
+        output.append(f"--save_every_n_epochs={args['save_at_n_epochs']}")
+    else:
+        output.append("--save_every_n_epochs=999999")
+
+    if args['shuffle_captions']:
+        output.append("--shuffle_caption")
+
+    if args['keep_tokens'] and args['keep_tokens'] > 0:
+        output.append(f"--keep_tokens={args['keep_tokens']}")
+
+    if args['buckets']:
+        output.append("--enable_bucket")
+        output.append(f"--min_bucket_reso={args['min_bucket_resolution']}")
+        output.append(f"--max_bucket_reso={args['max_bucket_resolution']}")
+
+    if args['use_8bit_adam']:
+        output.append("--use_8bit_adam")
+
+    if args['xformers']:
+        output.append("--xformers")
+
+    if args['color_aug']:
+        if args['cache_latents']:
+            print("color_aug and cache_latents conflict with one another. Please select only one")
+            quit(1)
+        output.append("--color_aug")
+
+    if args['flip_aug']:
+        output.append("--flip_aug")
+
+    if args['cache_latents']:
+        output.append("--cache_latents")
+
+    if args['warmup_lr_ratio'] and args['warmup_lr_ratio'] > 0:
+        warmup_steps = int(steps * args['warmup_lr_ratio'])
+        output.append(f"--lr_warmup_steps={warmup_steps}")
+
+    if args['gradient_checkpointing']:
+        output.append("--gradient_checkpointing")
+
+    if args['gradient_acc_steps'] and args['gradient_acc_steps'] > 0 and args['gradient_checkpointing']:
+        output.append(f"--gradient_accumulation_steps={args['gradient_acc_steps']}")
+
+    if args['learning_rate'] and args['learning_rate'] > 0:
+        output.append(f"--learning_rate={args['learning_rate']}")
+
+    if args['text_encoder_lr'] and args['text_encoder_lr'] > 0:
+        output.append(f"--text_encoder_lr={args['text_encoder_lr']}")
+
+    if args['unet_lr'] and args['unet_lr'] > 0:
+        output.append(f"--unet_lr={args['unet_lr']}")
+
+    if args['vae']:
+        output.append(f"--vae={args['vae']}")
+
+    if args['no_meta']:
+        output.append("--no_metadata")
+
+    if args['save_state']:
+        output.append("--save_state")
+
+    if args['load_previous_save_state']:
+        output.append(f"--resume={args['load_previous_save_state']}")
+
+    if args['change_output_name']:
+        output.append(f"--output_name={args['change_output_name']}")
+
+    if args['training_comment']:
+        output.append(f"--training_comment={args['training_comment']}")
+
+    if args['num_workers']:
+        output.append(f"--max_data_loader_n_workers={args['num_workers']}")
+
+    if args['cosine_restarts'] and args['scheduler'] == "cosine_with_restarts":
+        output.append(f"--lr_scheduler_num_cycles={args['cosine_restarts']}")
+
+    if args['scheduler_power'] and args['scheduler'] == "polynomial":
+        output.append(f"--lr_scheduler_power={args['scheduler_power']}")
+    return output
+
+
+def find_max_steps(args: dict) -> int:
+    total_steps = 0
+    folders = os.listdir(args["img_folder"])
+    for folder in folders:
+        if not os.path.isdir(os.path.join(args["img_folder"], folder)):
+            continue
+        num_repeats = folder.split("_")
+        if len(num_repeats) < 2:
+            print(f"folder {folder} is not in the correct format. Format is x_name. skipping")
+            continue
+        try:
+            num_repeats = int(num_repeats[0])
+        except ValueError:
+            print(f"folder {folder} is not in the correct format. Format is x_name. skipping")
+            continue
+        imgs = 0
+        for file in os.listdir(os.path.join(args["img_folder"], folder)):
+            if os.path.isdir(file):
+                continue
+            ext = file.split(".")
+            if ext[-1].lower() in {"png", "bmp", "gif", "jpeg", "jpg", "webp"}:
+                imgs += 1
+        total_steps += (num_repeats * imgs)
+    total_steps = int((total_steps / args["batch_size"]) * args["num_epochs"])
+    if quick_calc_regs(args):
+        total_steps *= 2
+    return total_steps
+
+
+def quick_calc_regs(args: dict) -> bool:
+    if not args["reg_img_folder"] or not os.path.exists(args["reg_img_folder"]):
+        return False
+    folders = os.listdir(args["reg_img_folder"])
+    for folder in folders:
+        if not os.path.isdir(os.path.join(args["reg_img_folder"], folder)):
+            continue
+        num_repeats = folder.split("_")
+        if len(num_repeats) < 2:
+            continue
+        try:
+            num_repeats = int(num_repeats[0])
+        except ValueError:
+            continue
+        for file in os.listdir(os.path.join(args["reg_img_folder"], folder)):
+            if os.path.isdir(file):
+                continue
+            ext = file.split(".")
+            if ext[-1].lower() in {"png", "bmp", "gif", "jpeg", "jpg", "webp"}:
+                return True
+    return False
 
 
 def add_misc_args(parser):
@@ -286,10 +310,10 @@ def setup_args(parser):
 def ask_file(message, accepted_ext_list, file_path=None):
     mb.showinfo(message=message)
     res = ""
-    _initialdir  = ""
+    _initialdir = ""
     _initialfile = ""
-    if file_path!=None:
-        _initialdir  = os.path.dirname(file_path) if os.path.exists(file_path) else ""
+    if file_path != None:
+        _initialdir = os.path.dirname(file_path) if os.path.exists(file_path) else ""
         _initialfile = os.path.basename(file_path) if os.path.exists(file_path) else ""
 
     while res == "":
@@ -313,7 +337,7 @@ def ask_dir(message, dir_path=None):
     mb.showinfo(message=message)
     res = ""
     _initialdir = ""
-    if dir_path!=None:
+    if dir_path != None:
         _initialdir = dir_path if os.path.exists(dir_path) else ""
     while res == "":
         res = fd.askdirectory(title=message, initialdir=_initialdir)
@@ -327,137 +351,136 @@ def ask_dir(message, dir_path=None):
     return res
 
 
-def ask_elements_trunc(args: ArgStore):
-    args.base_model = ask_file("Select your base model", {"ckpt", "safetensors"}, args.base_model)
-    args.img_folder = ask_dir("Select your image folder", args.img_folder)
-    args.output_folder = ask_dir("Select your output folder", args.output_folder)
+def ask_elements_trunc(args: dict):
+    args['base_model'] = ask_file("Select your base model", {"ckpt", "safetensors"}, args['base_model'])
+    args['img_folder'] = ask_dir("Select your image folder", args['img_folder'])
+    args['output_folder'] = ask_dir("Select your output folder", args['output_folder'])
 
     ret = mb.askyesno(message="Do you want to save a json of your configuration?")
     if ret:
-        args.save_json_folder = ask_dir("Select the folder to save json files to", args.save_json_folder)
+        args['save_json_folder'] = ask_dir("Select the folder to save json files to", args['save_json_folder'])
     else:
-        args.save_json_folder = None
+        args['save_json_folder'] = None
 
-    ret = sd.askinteger(title="num_workers", prompt="How many workers do you want? higher means longer epoch starts, but faster data loading, and has higher System Memory Usage.\nIf you want fast epoch start times, set this number to 1.\nCancel defaults to 8")
+    ret = mb.askyesno(message="Do you want to use regularization images?")
     if ret:
-        args.num_workers = ret
+        args['reg_img_folder'] = ask_dir("Select your regularization folder", args['reg_img_folder'])
     else:
-        args.num_workers = 8
-
-    ret = mb.askyesno(message="Do you want to use regularisation images?")
-    if ret:
-        args.reg_img_folder = ask_dir("Select your regularisation folder", args.reg_img_folder)
+        args['reg_img_folder'] = None
 
     ret = mb.askyesno(message="Do you want to continue from an earlier version?")
     if ret:
-        args.lora_model_for_resume = ask_file("Select your lora model", {"ckpt", "pt", "safetensors"}, args.lora_model_for_resume)
+        args['lora_model_for_resume'] = ask_file("Select your lora model", {"ckpt", "pt", "safetensors"},
+                                                 args['lora_model_for_resume'])
+    else:
+        args['lora_model_for_resume'] = None
 
     ret = mb.askyesno(message="Do you want to change the name of output checkpoints?")
     if ret:
         ret = sd.askstring(title="output_name", prompt="What do you want your output name to be?\n"
                                                        "Cancel keeps outputs the original")
         if ret:
-            args.change_output_name = ret
+            args['change_output_name'] = ret
         else:
-            args.change_output_name = None
+            args['change_output_name'] = None
 
-    ret = sd.askfloat(title="alpha", prompt="What Alpha do you want?\nCancel will default to equal to network_dim")
+    ret = sd.askstring(title="comment",
+                       prompt="Do you want to set a comment that gets put into the metadata?\nA good use of this would "
+                              "be to include how to use, such as activation keywords.\nCancel will leave empty")
     if ret is None:
-        args.alpha = args.net_dim
+        args['training_comment'] = ret
     else:
-        args.alpha = ret
-
-    #ret = sd.askstring(title="comment",
-    #                  prompt="Do you want to set a comment that gets put into the metadata?\nA good use of this would be to include how to use, such as activation keywords.\nCancel will leave empty")
-    #if ret is None:
-    #    args.training_comment = ret
-    #else:
-    #    args.training_comment = None
+        args['training_comment'] = None
     return args
 
 
-def ask_elements(args: ArgStore):
+def ask_elements(args: dict):
     # start with file dialog
-    args.base_model = ask_file("Select your base model", {"ckpt", "safetensors"})
-    args.img_folder = ask_dir("Select your image folder")
-    args.output_folder = ask_dir("Select your output folder")
+    args['base_model'] = ask_file("Select your base model", {"ckpt", "safetensors"}, args['base_model'])
+    args['img_folder'] = ask_dir("Select your image folder", args['img_folder'])
+    args['output_folder'] = ask_dir("Select your output folder", args['output_folder'])
 
     # optional file dialog
     ret = mb.askyesno(message="Do you want to save a json of your configuration?")
     if ret:
-        args.save_json_folder = ask_dir("Select the folder to save json files to")
-
-    ret = sd.askinteger(title="num_workers",
-                        prompt="How many workers do you want? higher means longer epoch starts, but faster data loading, and has higher System Memory Usage.\nIf you want fast epoch start times, set this number to 1.\nCancel defaults to 8")
-    if ret:
-        args.num_workers = ret
+        args['save_json_folder'] = ask_dir("Select the folder to save json files to", args['save_json_folder'])
     else:
-        args.num_workers = 8
+        args['save_json_folder'] = None
 
-    ret = mb.askyesno(message="Do you want to use regularisation images?")
+    ret = mb.askyesno(message="Do you want to use regularization images?")
     if ret:
-        args.reg_img_folder = ask_dir("Select your regularisation folder")
+        args['reg_img_folder'] = ask_dir("Select your regularization folder", args['reg_img_folder'])
+    else:
+        args['reg_img_folder'] = None
 
     ret = mb.askyesno(message="Do you want to continue from an earlier version?")
     if ret:
-        args.lora_model_for_resume = ask_file("Select your lora model", {"ckpt", "pt", "safetensors"})
+        args['lora_model_for_resume'] = ask_file("Select your lora model", {"ckpt", "pt", "safetensors"},
+                                                 args['lora_model_for_resume'])
+    else:
+        args['lora_model_for_resume'] = None
 
     # text based required elements
-    ret = sd.askinteger(title="batch_size", prompt="How large is your batch size going to be?\nCancel will default to 1")
+    ret = sd.askinteger(title="batch_size",
+                        prompt="The number of images that get processed at one time, this is directly proportional to "
+                               "your vram and resolution. with 12gb of vram, at 512 reso, you can get a maximum of 6 "
+                               "batch size\nHow large is your batch size going to be?\nCancel will default to 1")
     if ret is None:
-        args.batch_size = 1
+        args['batch_size'] = 1
     else:
-        args.batch_size = ret
+        args['batch_size'] = ret
 
     ret = sd.askinteger(title="num_epochs", prompt="How many epochs do you want?\nCancel will default to 1")
     if ret is None:
-        args.num_epochs = 1
+        args['num_epochs'] = 1
     else:
-        args.num_epochs = ret
+        args['num_epochs'] = ret
 
     ret = sd.askinteger(title="network_dim", prompt="What is the dim size you want to use?\nCancel will default to 128")
     if ret is None:
-        args.net_dim = 128
+        args['net_dim'] = 128
     else:
-        args.net_dim = ret
+        args['net_dim'] = ret
 
-    ret = sd.askfloat(title="alpha", prompt="What Alpha do you want?\nCancel will default to equal to network_dim")
+    ret = sd.askfloat(title="alpha", prompt="Alpha is the scalar of the training, generally a good starting point is "
+                                            "0.5x dim size\nWhat Alpha do you want?\nCancel will default to equal to "
+                                            "0.5 x network_dim")
     if ret is None:
-        args.alpha = args.net_dim
+        args['alpha'] = args['net_dim'] / 2
     else:
-        args.alpha = ret
+        args['alpha'] = ret
 
     ret = sd.askinteger(title="resolution", prompt="How large of a resolution do you want to train at?\n"
                                                    "Cancel will default to 512")
     if ret is None:
-        args.train_resolution = 512
+        args['train_resolution'] = 512
     else:
-        args.train_resolution = ret
+        args['train_resolution'] = ret
 
     ret = sd.askfloat(title="learning_rate", prompt="What learning rate do you want to use?\n"
                                                     "Cancel will default to 1e-4")
     if ret is None:
-        args.learning_rate = 1e-4
+        args['learning_rate'] = 1e-4
     else:
-        args.learning_rate = ret
+        args['learning_rate'] = ret
 
     ret = sd.askfloat(title="text_encoder_lr", prompt="Do you want to set the text_encoder_lr?\n"
-                      "Cancel will default to None")
+                                                      "Cancel will default to None")
     if ret is None:
-        args.text_encoder_lr = None
+        args['text_encoder_lr'] = None
     else:
-        args.text_encoder_lr = ret
+        args['text_encoder_lr'] = ret
 
     ret = sd.askfloat(title="unet_lr", prompt="Do you want to set the unet_lr?\nCancel will default to None")
     if ret is None:
-        args.unet_lr = None
+        args['unet_lr'] = None
     else:
-        args.unet_lr = ret
+        args['unet_lr'] = ret
 
     ret = sd.askstring(title="scheduler", prompt="Which scheduler do you want?\n Cancel will default "
                                                  "to \"cosine_with_restarts\"")
     if ret is None:
-        args.scheduler = "cosine_with_restarts"
+        args['scheduler'] = "cosine_with_restarts"
     else:
         schedulers = {"linear", "cosine", "cosine_with_restarts", "polynomial", "constant", "constant_with_warmup"}
         while ret not in schedulers:
@@ -465,187 +488,124 @@ def ask_elements(args: ArgStore):
             ret = sd.askstring(title="scheduler", prompt="Which scheduler do you want?\n Cancel will default "
                                                          "to \"cosine_with_restarts\"")
             if ret is None:
-                args.scheduler = "cosine_with_restarts"
+                args['scheduler'] = "cosine_with_restarts"
 
-    if args.scheduler == "cosine_with_restarts":
-        ret = sd.askinteger(title="Cycle Count", prompt="How many times do you want cosine to restart?\nThis is the entire amount of times it will restart for the entire training\nCancel will default to 1")
+    if args['scheduler'] == "cosine_with_restarts":
+        ret = sd.askinteger(title="Cycle Count",
+                            prompt="How many times do you want cosine to restart?\nThis is the entire amount of times "
+                                   "it will restart for the entire training\nCancel will default to 1")
         if ret is None:
-            args.cosine_restarts = 1
+            args['cosine_restarts'] = 1
         else:
-            args.cosine_restarts = ret
+            args['cosine_restarts'] = ret
 
-    if args.scheduler == "polynomial":
-        ret = sd.askfloat(title="Poly Strength", prompt="What power do you want to set your polynomial to?\nhigher power means that the model reduces the learning more more aggressively from initial training.\n1 = linear\nCancel sets to 1")
+    if args['scheduler'] == "polynomial":
+        ret = sd.askfloat(title="Poly Strength",
+                          prompt="What power do you want to set your polynomial to?\nhigher power means that the "
+                                 "model reduces the learning more more aggressively from initial training.\n1 = "
+                                 "linear\nCancel sets to 1")
         if ret is None:
-            args.scheduler_power = 1
+            args['scheduler_power'] = 1
         else:
-            args.scheduler_power = ret
+            args['scheduler_power'] = ret
 
-    ret = mb.askyesno(message="do you want to save intermediate epochs?")
+    ret = mb.askyesno(message="Do you want to save epochs as it trains?")
     if ret:
-        ret = sd.askinteger(title="save_epoch", prompt="How often do you want to save epochs?\nCancel will default to 1")
+        ret = sd.askinteger(title="save_epoch",
+                            prompt="How often do you want to save epochs?\nCancel will default to 1")
         if ret is None:
-            args.save_at_n_epochs = 1
+            args['save_at_n_epochs'] = 1
         else:
-            args.save_at_n_epochs = ret
+            args['save_at_n_epochs'] = ret
 
     ret = mb.askyesno(message="Do you want to shuffle captions?")
     if ret:
-        args.shuffle_captions = True
+        args['shuffle_captions'] = True
     else:
-        args.shuffle_captions = False
+        args['shuffle_captions'] = False
 
     ret = mb.askyesno(message="Do you want to keep some tokens at the front of your captions?")
     if ret:
         ret = sd.askinteger(title="keep_tokens", prompt="How many do you want to keep at the front?"
                                                         "\nCancel will default to 1")
         if ret is None:
-            args.keep_tokens = 1
+            args['keep_tokens'] = 1
         else:
-            args.keep_tokens = ret
+            args['keep_tokens'] = ret
 
     ret = mb.askyesno(message="Do you want to have a warmup ratio?")
     if ret:
         ret = sd.askfloat(title="warmup_ratio", prompt="What is the ratio of steps to use as warmup "
-                                                       "steps?\nCancel will default to 0.05")
+                                                       "steps?\nCancel will default to None")
         if ret is None:
-            args.warmup_lr_ratio = 0.05
+            args['warmup_lr_ratio'] = None
         else:
-            args.warmup_lr_ratio = ret
+            args['warmup_lr_ratio'] = ret
 
     ret = mb.askyesno(message="Do you want to change the name of output checkpoints?")
     if ret:
         ret = sd.askstring(title="output_name", prompt="What do you want your output name to be?\n"
                                                        "Cancel keeps outputs the original")
         if ret:
-            args.change_output_name = ret
+            args['change_output_name'] = ret
         else:
-            args.change_output_name = None
+            args['change_output_name'] = None
 
-    #ret = sd.askstring(title="comment",
-    #                  prompt="Do you want to set a comment that gets put into the metadata?\nA good use of this would be to include how to use, such as activation keywords.\nCancel will leave empty")
-    #if ret is None:
-    #    args.training_comment = ret
-    #else:
-    #    args.training_comment = None
+    ret = sd.askstring(title="comment",
+                       prompt="Do you want to set a comment that gets put into the metadata?\nA good use of this would "
+                              "be to include how to use, such as activation keywords.\nCancel will leave empty")
+    if ret is None:
+        args['training_comment'] = ret
+    else:
+        args['training_comment'] = None
     return args
 
 
-def save_json(path, obj):
+def save_json(path, obj: dict) -> None:
     fp = open(os.path.join(path, f"config-{time.time()}.json"), "w")
-    json.dump(obj, fp=fp, indent=4, cls=ArgsEncoder)
+    json.dump(obj, fp=fp, indent=4)
     fp.close()
 
 
-def load_json(path, obj: ArgStore):
-    json_obj = None
+def load_json(path, obj: dict) -> dict:
     with open(path) as f:
         json_obj = json.loads(f.read())
-    print("json loaded, setting variables...")
+    print("loaded json, setting variables...")
+    ui_name_scheme = {"pretrained_model_name_or_path": "base_model", "logging_dir": "log_dir",
+                      "train_data_dir": "img_folder", "reg_data_dir": "reg_img_folder",
+                      "output_dir": "output_folder", "max_resolution": "train_resolution",
+                      "lr_scheduler": "scheduler", "lr_warmup": "warmup_lr_ratio",
+                      "train_batch_size": "batch_size", "epoch": "num_epochs",
+                      "save_every_n_epochs": "save_at_n_epochs", "num_cpu_threads_per_process": "num_workers",
+                      "enable_bucket": "buckets", "save_model_as": "save_as", "shuffle_caption": "shuffle_captions",
+                      "resume": "load_previous_save_state", "network_dim": "net_dim",
+                      "gradient_accumulation_steps": "gradient_acc_steps", "output_name": "change_output_name",
+                      "network_alpha": "alpha", "lr_scheduler_num_cycles": "cosine_restarts",
+                      "lr_scheduler_power": "scheduler_power"}
 
-    if "base_model" in json_obj:
-        old = obj.base_model
-        obj.base_model = json_obj["base_model"]
-        print_change("base_model", old, obj.base_model)
+    for key in list(json_obj):
+        if key in ui_name_scheme:
+            json_obj[ui_name_scheme[key]] = json_obj[key]
+            if ui_name_scheme[key] in {"batch_size", "num_epochs"}:
+                try:
+                    json_obj[ui_name_scheme[key]] = int(json_obj[ui_name_scheme[key]])
+                except ValueError:
+                    print(f"attempting to load {key} from json failed as input isn't an integer")
+                    quit(1)
 
-    if "img_folder" in json_obj:
-        old = obj.img_folder
-        obj.img_folder = json_obj["img_folder"]
-        print_change("img_folder", old, obj.img_folder)
-
-    if "output_folder" in json_obj:
-        old = obj.output_folder
-        obj.output_folder = json_obj["output_folder"]
-        print_change("output_folder", old, obj.output_folder)
-
-    if "change_output_name" in json_obj:
-        old = obj.change_output_name
-        obj.change_output_name = json_obj["change_output_name"]
-        print_change("change_output_name", old, obj.change_output_name)
-
-    if "save_json_folder" in json_obj:
-        old = obj.save_json_folder
-        obj.save_json_folder = json_obj["save_json_folder"]
-        print_change("save_json_folder", old, obj.save_json_folder)
-
-    if "load_json_path" in json_obj:
-        old = obj.load_json_path
-        obj.load_json_path = json_obj["load_json_path"]
-        print_change("load_json_path", old, obj.load_json_path)
-
-    if "net_dim" in json_obj:
-        old = obj.net_dim
-        obj.net_dim = json_obj["net_dim"]
-        print_change("net_dim", old, obj.net_dim)
-    elif "network_dim" in json_obj:
-        old = obj.net_dim
-        obj.net_dim = json_obj["network_dim"]
-        print_change("net_dim", old, obj.net_dim)
-
-    if "scheduler" in json_obj:
-        old = obj.scheduler
-        obj.scheduler = json_obj["scheduler"]
-        print_change("scheduler", old, obj.scheduler)
-    elif "lr_scheduler" in json_obj:
-        old = obj.scheduler
-        obj.scheduler = json_obj["lr_scheduler"]
-        print_change("scheduler", old, obj.scheduler)
-
-    if "warmup_lr_ratio" in json_obj:
-        old = obj.warmup_lr_ratio
-        obj.warmup_lr_ratio = json_obj["warmup_lr_ratio"]  # UI version doesn't have an equivalent, only handles steps
-        print_change("warmup_lr_ratio", old, obj.warmup_lr_ratio)
-
-    if "learning_rate" in json_obj:
-        old = obj.learning_rate
-        obj.learning_rate = json_obj["learning_rate"]
-        print_change("learning_rate", old, obj.learning_rate)
-
-    if "text_encoder_lr" in json_obj:
-        old = obj.text_encoder_lr
-        obj.text_encoder_lr = json_obj["text_encoder_lr"]  # UI version is the same
-        print_change("text_encoder_lr", old, obj.text_encoder_lr)
-
-    if "unet_lr" in json_obj:
-        old = obj.unet_lr
-        obj.unet_lr = json_obj["unet_lr"]  # UI version is the same
-        print_change("unet_lr", old, obj.unet_lr)
-
-    if "clip_skip" in json_obj:
-        old = obj.clip_skip
-        obj.clip_skip = json_obj["clip_skip"]  # UI version is the same
-        print_change("clip_skip", old, obj.clip_skip)
-
-    old_tr = obj.train_resolution
-    if "train_resolution" in json_obj:
-        obj.train_resolution = json_obj["train_resolution"]
-
-    if "min_bucket_resolution" in json_obj:
-        obj.min_bucket_resolution = json_obj["min_bucket_resolution"]
-
-    if "max_bucket_resolution" in json_obj:
-        obj.max_bucket_resolution = json_obj["max_bucket_resolution"]
-
-    if "num_epochs" in json_obj:
-        obj.num_epochs = json_obj["num_epochs"]
-
-    if "shuffle_captions" in json_obj:
-        obj.shuffle_captions = json_obj["shuffle_captions"]
-
-    if "keep_tokens" in json_obj:
-        obj.keep_tokens = json_obj["keep_tokens"]
-
-    if old_tr != obj.train_resolution:
-        ans = sd.askinteger(title="batch_size", prompt=f"Your train resolution changed from {old_tr} to "
-                                                       f"{obj.train_resolution}.\nSelect a new value for batch_size, "
-                                                       f"if you don't know hit cancel\nCancel defaults to 1")
-        if ans:
-            obj.batch_size = ans
-        else:
-            obj.batch_size = 1
-    elif "batch_size" in json_obj:
-        obj.batch_size = json_obj["batch_size"]
+    for key in list(json_obj):
+        if obj["json_load_skip_list"] and key in obj["json_load_skip_list"]:
+            continue
+        if key in obj:
+            if key in {"keep_tokens", "warmup_lr_ratio"}:
+                json_obj[key] = int(json_obj[key]) if json_obj[key] is not None else None
+            if key in {"learning_rate", "unet_lr", "text_encoder_lr"}:
+                json_obj[key] = float(json_obj[key]) if json_obj[key] is not None else None
+            if obj[key] != json_obj[key]:
+                print_change(key, obj[key], json_obj[key])
+                obj[key] = json_obj[key]
     print("completed changing variables.")
+    return obj
 
 
 def print_change(value, old, new):
