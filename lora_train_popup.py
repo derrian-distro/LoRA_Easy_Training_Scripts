@@ -56,6 +56,8 @@ class ArgStore:
         self.save_state: bool = False  # OPTIONAL, is the intended way to save a training state to use for continuing training, False to ignore
         self.load_previous_save_state: Union[str, None] = None  # OPTIONAL, is the intended way to load a training state to use for continuing training, None to ignore
         self.training_comment: Union[str, None] = None  # OPTIONAL, great way to put in things like activation tokens right into the metadata. seems to not work at this point and time
+        self.unet_only: bool = False  # OPTIONAL, set it to only train the unet
+        self.text_only: bool = False  # OPTIONAL, set it to only train the text encoder
 
         # These are the least likely things you will modify
         self.reg_img_folder: Union[str, None] = None  # OPTIONAL, None to ignore
@@ -225,6 +227,12 @@ def create_optional_args(args: dict, steps):
 
     if args['persistent_workers']:
         output.append(f"--persistent_data_loader_workers")
+
+    if args['unet_only']:
+        output.append("--network_train_unet_only")
+
+    if args['text_only'] and not args['unet_only']:
+        output.append("--network_train_text_encoder_only")
     return output
 
 
@@ -549,6 +557,15 @@ def ask_elements(args: dict):
         args['training_comment'] = ret
     else:
         args['training_comment'] = None
+
+    ret = mb.askyesno(message="Do you want to only train the unet?")
+    if ret:
+        args["unet_only"] = True
+
+    if not args["unet_only"]:
+        ret = mb.askyesno(message="Do you want to only train the text encoder?")
+        if ret:
+            args["text_only"] = True
     return args
 
 
