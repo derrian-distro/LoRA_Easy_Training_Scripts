@@ -1,3 +1,4 @@
+import gc
 import json
 import time
 from typing import Union
@@ -7,6 +8,7 @@ from tkinter import filedialog as fd
 from tkinter import simpledialog as sd
 from tkinter import messagebox as mb
 
+import torch.cuda
 import train_network
 import library.train_util as util
 import argparse
@@ -37,10 +39,11 @@ class ArgStore:
         self.text_encoder_lr: Union[float, None] = None  # OPTIONAL, Sets a specific lr for the text encoder, this overwrites the base lr I believe, None to ignore
         self.unet_lr: Union[float, None] = None  # OPTIONAL, Sets a specific lr for the unet, this overwrites the base lr I believe, None to ignore
         self.num_workers: int = 1  # The number of threads that are being used to load images, lower speeds up the start of epochs, but slows down the loading of data. The assumption here is that it increases the training time as you reduce this value
+        self.persistent_workers: bool = True  # makes workers persistent, further reduces/eliminates the lag in between epochs. however it may increase memory usage
 
         self.batch_size: int = 1  # The number of images that get processed at one time, this is directly proportional to your vram and resolution. with 12gb of vram, at 512 reso, you can get a maximum of 6 batch size
         self.num_epochs: int = 1  # The number of epochs, if you set max steps this value is ignored as it doesn't calculate steps.
-        self.save_at_n_epochs: Union[int, None] = 1  # OPTIONAL, how often to save epochs, None to ignore
+        self.save_at_n_epochs: Union[int, None] = None  # OPTIONAL, how often to save epochs, None to ignore
         self.shuffle_captions: bool = False  # OPTIONAL, False to ignore
         self.keep_tokens: Union[int, None] = None  # OPTIONAL, None to ignore
         self.max_steps: Union[int, None] = None  # OPTIONAL, if you have specific steps you want to hit, this allows you to set it directly. None to ignore
@@ -85,21 +88,34 @@ class ArgStore:
 def main():
     parser = argparse.ArgumentParser()
     setup_args(parser)
-    arg_dict = ArgStore.convert_args_to_dict()
     pre_args = parser.parse_args()
-    ret = mb.askyesno(message="Do you want to load a json config file?")
-    if ret:
-        load_json(ask_file("select json to load from", {"json"}), arg_dict)
-        arg_dict = ask_elements_trunc(arg_dict)
-    else:
-        arg_dict = ask_elements(arg_dict)
-    if pre_args.load_json_path or arg_dict["load_json_path"]:
-        load_json(pre_args.load_json_path if pre_args.load_json_path else arg_dict['load_json_path'], arg_dict)
-    if pre_args.save_json_path or arg_dict["save_json_folder"]:
-        save_json(pre_args.save_json_path if pre_args.save_json_path else arg_dict['save_json_folder'], arg_dict)
-    args = create_arg_space(arg_dict)
-    args = parser.parse_args(args)
-    train_network.train(args)
+    queues = 0
+    args_queue = []
+    cont = True
+    while cont:
+        arg_dict = ArgStore.convert_args_to_dict()
+        ret = mb.askyesno(message="Do you want to load a json config file?")
+        if ret:
+            load_json(ask_file("select json to load from", {"json"}), arg_dict)
+            arg_dict = ask_elements_trunc(arg_dict)
+        else:
+            arg_dict = ask_elements(arg_dict)
+        if pre_args.save_json_path or arg_dict["save_json_folder"]:
+            save_json(pre_args.save_json_path if pre_args.save_json_path else arg_dict['save_json_folder'], arg_dict)
+        args = create_arg_space(arg_dict)
+        args = parser.parse_args(args)
+        queues += 1
+        args_queue.append(args)
+        ret = mb.askyesno(message="Do you want to queue another training?")
+        if not ret:
+            cont = False
+    for args in args_queue:
+        try:
+            train_network.train(args)
+        except Exception as e:
+            print(f"Failed to train this set of args.\nSkipping this training session.\nError is: {e}")
+        gc.collect()
+        torch.cuda.empty_cache()
 
 
 def create_arg_space(args: dict) -> [str]:
@@ -112,13 +128,13 @@ def create_arg_space(args: dict) -> [str]:
               f"--network_dim={args['net_dim']}", f"--save_model_as={args['save_as']}",
               f"--clip_skip={args['clip_skip']}", f"--seed={args['test_seed']}",
               f"--max_token_length={args['max_clip_token_length']}", f"--lr_scheduler={args['scheduler']}",
-              f"--network_alpha={args['alpha']}"]
+              f"--network_alpha={args['alpha']}", f"--max_data_loader_n_workers={args['num_workers']}"]
     if not args['max_steps']:
-        steps = find_max_steps(args)
+        output.append(f"--max_train_epochs={args['num_epochs']}")
+        output += create_optional_args(args, find_max_steps(args))
     else:
-        steps = args["max_steps"]
-    output.append(f"--max_train_steps={steps}")
-    output += create_optional_args(args, steps)
+        output.append(f"--max_train_steps={args['max_steps']}")
+        output += create_optional_args(args, args['max_steps'])
     return output
 
 
@@ -201,14 +217,14 @@ def create_optional_args(args: dict, steps):
     if args['training_comment']:
         output.append(f"--training_comment={args['training_comment']}")
 
-    if args['num_workers']:
-        output.append(f"--max_data_loader_n_workers={args['num_workers']}")
-
     if args['cosine_restarts'] and args['scheduler'] == "cosine_with_restarts":
         output.append(f"--lr_scheduler_num_cycles={args['cosine_restarts']}")
 
     if args['scheduler_power'] and args['scheduler'] == "polynomial":
         output.append(f"--lr_scheduler_power={args['scheduler_power']}")
+
+    if args['persistent_workers']:
+        output.append(f"--persistent_data_loader_workers")
     return output
 
 
@@ -236,32 +252,7 @@ def find_max_steps(args: dict) -> int:
                 imgs += 1
         total_steps += (num_repeats * imgs)
     total_steps = int((total_steps / args["batch_size"]) * args["num_epochs"])
-    if quick_calc_regs(args):
-        total_steps *= 2
     return total_steps
-
-
-def quick_calc_regs(args: dict) -> bool:
-    if not args["reg_img_folder"] or not os.path.exists(args["reg_img_folder"]):
-        return False
-    folders = os.listdir(args["reg_img_folder"])
-    for folder in folders:
-        if not os.path.isdir(os.path.join(args["reg_img_folder"], folder)):
-            continue
-        num_repeats = folder.split("_")
-        if len(num_repeats) < 2:
-            continue
-        try:
-            num_repeats = int(num_repeats[0])
-        except ValueError:
-            continue
-        for file in os.listdir(os.path.join(args["reg_img_folder"], folder)):
-            if os.path.isdir(file):
-                continue
-            ext = file.split(".")
-            if ext[-1].lower() in {"png", "bmp", "gif", "jpeg", "jpg", "webp"}:
-                return True
-    return False
 
 
 def add_misc_args(parser):

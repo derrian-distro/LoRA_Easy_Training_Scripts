@@ -9,7 +9,7 @@ no matter which script you use, you must activate the venv in your SD-Scripts in
 
 ## New easy install scripts
 
-If you don't know how to set up sd-scripts or kohya_ss for that matter I have created some batch files to make installing that easy! It does everything for you, all you need to do is right click -> run as administrator. **This only works for windows!** you can grab it [here](https://github.com/derrian-distro/LoRA_Easy_Training_Scripts/releases/tag/installers-v1).
+If you don't know how to set up sd-scripts or kohya_ss for that matter I have created some batch files to make installing that easy! It does everything for you, all you need to do is right click -> run as administrator. **This only works for windows!** you can grab it [here](https://github.com/derrian-distro/LoRA_Easy_Training_Scripts/releases/latest).
 
 ## alternative Installation
 
@@ -29,21 +29,21 @@ popup version
 venv\Scripts\accelerate.exe launch --num_cpu_threads_per_process 12 lora_train_popup.py
 ```
 
-## New JSON saving and loading
+## JSON Rework, and More
 
-### Now supports the UI version JSON files!
-
-Now you can save and load json files of your configs. When saving a json file, it just saves everything. When loading one if only loads the following (on command line):
-net dim, scheduler, warmup lr ratio, learning rate, text encoder lr, unet lr, and clip skip
-and optionally (asks the user):
-train resolution, min and max bucket resolution, batch size, num epochs, shuffle captions, and keep tokens
-
-The popup version loads the same amount, but it loads them without asking the user as much. This is to keep the popup.py version as user-friendly as possible. the only time it asks for an input is when the resolution has changed. This might change in the future because I'm not entirely set on that.
-
+Json got a major rework in the last update I posted, changing how it works to load everything by default if you are using `command_line.py` and almost everything if you are using `popup.py`.
+Additionally, it has a whole new way to exclude parameters so that the user can decide what gets loaded and what doesn't.
+It still has support for the UI version of json files, and will support new options as they get added.
+Also, for those who would rather not have to change the variables for loading or saving json files, there is an argument
+you can add for both, `--save_json_path "path\to\folder"` for saving and `--load_json_path "path\to\json.json"` for loading.
 ## Other Updates
 
-- Since sd-scripts has changed a big thing, I had to delay the UI update I was working on to fix this issue. Now you can set an Alpha, either by hand in the command_line version, or through a popup in the popup.py version.
-- I have also added support for the new training_comment which allows you to put a comment into the metadata. This should be nice to use for things like use case, or activation codes. You can either write the comment in the script in command_line, or through a popup, in popup.py
-- Popup.py has added popups for the unet_lr and the text_encoder_lr so that those values can also be changed when you want.
-- In command_line.py I have made a slight modification to make all input strings a literal string. Now you don't need to do `\\` when specifying a path. just make sure to have your path be in the format of r"path\to\model" for example.
-- I set up some batch files which you can also just drop into the root folder of sd-scripts which you can just open to run the script. Keep in mind, this doesn't automatically fill things out for command_line.py, nor does it have --save_json_path or --load_json_path pre applied. You can still manually set the save_json_path or the load_json_path manually.
+- First, I added an option to `command_line.py` which allows you to generate a json file and skip training. This was to facilitate
+a new way of training that I added as well
+- I added a way to queue training for both `command_lin.py` and `popup.py`, though they are done slightly differently
+  - `popup.py` handles it by repeating the popups until you say do don't want to queue any more. This is done this way for those who
+  are worse with tech than others
+  - `command_line.py` does it by adding a variable called `multi_run_folder` to the args list. setting this will completely
+  ignore all other inputs and just take the json files in that folder and load them. in this, you do multiple runs at a time
+  by putting all of your json files into one folder and giving it that folder. If you don't want to go into the script, you can
+  just add the argument `--multi_run_path "path\to\folder"` to when you run the script.
