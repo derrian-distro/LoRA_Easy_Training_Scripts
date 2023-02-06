@@ -233,6 +233,9 @@ def create_optional_args(args: dict, steps):
 
     if args['text_only'] and not args['unet_only']:
         output.append("--network_train_text_encoder_only")
+    
+    if args["log_dir"]:
+        output.append(f"--logging_dir={args['log_dir']}"
     return output
 
 

@@ -250,13 +250,16 @@ def create_optional_args(args: dict, steps):
         output.append(f"--lr_scheduler_power={args['scheduler_power']}")
 
     if args['persistent_workers']:
-        output.append(f"--persistent_data_loader_workers")
+        output.append("--persistent_data_loader_workers")
 
     if args['unet_only']:
         output.append("--network_train_unet_only")
 
     if args['text_only'] and not args['unet_only']:
         output.append("--network_train_text_encoder_only")
+    
+    if args["log_dir"]:
+        output.append(f"--logging_dir={args['log_dir']}"
     return output
 
 
