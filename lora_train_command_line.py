@@ -28,6 +28,10 @@ class ArgStore:
                                                         # keep in mind, it will ignore the json_load_skip_list to ensure that everything gets loaded.
                                                         # IMPORTANT: This will also ignore all params set here and instead use all params in the json files.
         self.save_json_only: bool = False  # set to true if you don't want to do any training, but rather just want to generate a json
+        self.caption_dropout_rate: Union[float, None] = None  # The rate at which captions for files get dropped.
+        self.caption_dropout_every_n_epochs: Union[int, None] = None  # Defines how often an epoch will completely ignore
+                                                                      # captions, EX. 3 means it will ignore captions at epochs 3, 6, and 9
+        self.caption_tag_dropout_rate: Union[float, None] = None  # Defines the rate at which a tag would be dropped, rather than the entire caption file
 
         self.net_dim: int = 128  # network dimension, 128 is the most common, however you might be able to get lesser to work
         self.alpha: float = 64  # represents the scalar for training. the lower the alpha,
@@ -50,7 +54,7 @@ class ArgStore:
         self.batch_size: int = 1  # The number of images that get processed at one time, this is directly proportional
                                   # to your vram and resolution. with 12gb of vram, at 512 reso, you can get a maximum of 6 batch size
         self.num_epochs: int = 1  # The number of epochs, if you set max steps this value is ignored as it doesn't calculate steps.
-        self.save_at_n_epochs: Union[int, None] = 1  # OPTIONAL, how often to save epochs, None to ignore
+        self.save_every_n_epochs: Union[int, None] = 1  # OPTIONAL, how often to save epochs, None to ignore
         self.shuffle_captions: bool = False  # OPTIONAL, False to ignore
         self.keep_tokens: Union[int, None] = None  # OPTIONAL, None to ignore
         self.max_steps: Union[int, None] = None  # OPTIONAL, if you have specific steps you want to hit, this allows you to set it directly. None to ignore
@@ -97,6 +101,8 @@ class ArgStore:
         self.bucket_reso_steps: Union[int, None] = None  # is the steps that is taken when making buckets, can be any
                                                          # can be any positive value from 1 up
         self.bucket_no_upscale: bool = False  # Disables up-scaling for images in buckets
+        self.v2: bool = False  # Sets up training for SD2.1
+        self.v_parameterization: bool = False  # Only is used when v2 is also set and you are using the 768x version of v2
 
     # Creates the dict that is used for the rest of the code, to facilitate easier json saving and loading
     @staticmethod
@@ -181,8 +187,8 @@ def create_optional_args(args: dict, steps):
             raise FileNotFoundError("Failed to find the lora model, make sure you have the correct path")
         output.append(f"--network_weights={args['lora_model_for_resume']}")
 
-    if args['save_at_n_epochs']:
-        output.append(f"--save_every_n_epochs={args['save_at_n_epochs']}")
+    if args['save_every_n_epochs']:
+        output.append(f"--save_every_n_epochs={args['save_every_n_epochs']}")
     else:
         output.append("--save_every_n_epochs=999999")
 
@@ -280,6 +286,21 @@ def create_optional_args(args: dict, steps):
 
     if args['random_crop'] and not args['cache_latents']:
         output.append("--random_crop")
+
+    if args['caption_dropout_rate']:
+        output.append(f"--caption_dropout_rate={args['caption_dropout_rate']}")
+
+    if args['caption_dropout_every_n_epochs']:
+        output.append(f"--caption_dropout_every_n_epochs={args['caption_dropout_every_n_epochs']}")
+
+    if args['caption_tag_dropout_rate']:
+        output.append(f"--caption_tag_dropout_rate={args['caption_tag_dropout_rate']}")
+
+    if args['v2']:
+        output.append("--v2")
+
+    if args['v2'] and args['v_parameterization']:
+        output.append("--v_parameterization")
     return output
 
 
@@ -350,7 +371,7 @@ def add_misc_args(parser) -> None:
 
 def setup_args(parser) -> None:
     util.add_sd_models_arguments(parser)
-    util.add_dataset_arguments(parser, True, True)
+    util.add_dataset_arguments(parser, True, True, True)
     util.add_training_arguments(parser, True)
     add_misc_args(parser)
 
@@ -396,7 +417,7 @@ def load_json(path, obj: dict) -> dict:
                       "output_dir": "output_folder", "max_resolution": "train_resolution",
                       "lr_scheduler": "scheduler", "lr_warmup": "warmup_lr_ratio",
                       "train_batch_size": "batch_size", "epoch": "num_epochs",
-                      "save_every_n_epochs": "save_at_n_epochs", "num_cpu_threads_per_process": "num_workers",
+                      "save_at_n_epochs": "save_every_n_epochs", "num_cpu_threads_per_process": "num_workers",
                       "enable_bucket": "buckets", "save_model_as": "save_as", "shuffle_caption": "shuffle_captions",
                       "resume": "load_previous_save_state", "network_dim": "net_dim",
                       "gradient_accumulation_steps": "gradient_acc_steps", "output_name": "change_output_name",

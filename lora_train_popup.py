@@ -1,10 +1,11 @@
 import gc
 import json
 import time
+from functools import partial
 from typing import Union
 import os
 import tkinter as tk
-from tkinter import filedialog as fd
+from tkinter import filedialog as fd, ttk
 from tkinter import simpledialog as sd
 from tkinter import messagebox as mb
 
@@ -28,6 +29,10 @@ class ArgStore:
                                                             "lora_model_for_resume", "change_output_name",
                                                             "training_comment",
                                                             "json_load_skip_list"]  # OPTIONAL, allows the user to define what they skip when loading a json, by default it loads everything, including all paths, set it up like this ["base_model", "img_folder", "output_folder"]
+        self.caption_dropout_rate: Union[float, None] = None  # The rate at which captions for files get dropped.
+        self.caption_dropout_every_n_epochs: Union[int, None] = None  # Defines how often an epoch will completely ignore
+        # captions, EX. 3 means it will ignore captions at epochs 3, 6, and 9
+        self.caption_tag_dropout_rate: Union[float, None] = None  # Defines the rate at which a tag would be dropped, rather than the entire caption file
 
         self.net_dim: int = 128  # network dimension, 128 is the most common, however you might be able to get lesser to work
         self.alpha: float = 128  # represents the scalar for training. the lower the alpha, the less gets learned per step. if you want the older way of training, set this to dim
@@ -84,6 +89,8 @@ class ArgStore:
         self.vae: Union[str, None] = None  # Seems to only make results worse when not using that specific vae, should probably not use
         self.no_meta: bool = False  # This removes the metadata that now gets saved into safetensors, (you should keep this on)
         self.log_dir: Union[str, None] = None  # output of logs, not useful to most people.
+        self.v2: bool = False  # Sets up training for SD2.1
+        self.v_parameterization: bool = False  # Only is used when v2 is also set and you are using the 768x version of v2
 
     # Creates the dict that is used for the rest of the code, to facilitate easier json saving and loading
     @staticmethod
@@ -242,6 +249,21 @@ def create_optional_args(args: dict, steps):
 
     if args["log_dir"]:
         output.append(f"--logging_dir={args['log_dir']}")
+
+    if args['caption_dropout_rate']:
+        output.append(f"--caption_dropout_rate={args['caption_dropout_rate']}")
+
+    if args['caption_dropout_every_n_epochs']:
+        output.append(f"--caption_dropout_every_n_epochs={args['caption_dropout_every_n_epochs']}")
+
+    if args['caption_tag_dropout_rate']:
+        output.append(f"--caption_tag_dropout_rate={args['caption_tag_dropout_rate']}")
+
+    if args['v2']:
+        output.append("--v2")
+
+    if args['v2'] and args['v_parameterization']:
+        output.append("--v_parameterization")
     return output
 
 
@@ -310,7 +332,7 @@ def add_misc_args(parser):
 
 def setup_args(parser):
     util.add_sd_models_arguments(parser)
-    util.add_dataset_arguments(parser, True, True)
+    util.add_dataset_arguments(parser, True, True, True)
     util.add_training_arguments(parser, True)
     add_misc_args(parser)
 
@@ -405,6 +427,19 @@ def ask_elements_trunc(args: dict):
     else:
         args['save_json_folder'] = None
 
+    ret = mb.askyesno(message="Are you training on a SD2 based model?")
+    if ret:
+        args['v2'] = True
+
+    ret = mb.askyesno(message="Are you training on an anime style model?")
+    if not ret:
+        args['clip_skip'] = 1
+
+    if args['v2']:
+        ret = mb.askyesno(message="Are you training on a model based on the 768x version of SD2?")
+        if ret:
+            args['v_parameterization'] = True
+
     ret = mb.askyesno(message="Do you want to use regularization images?")
     if ret:
         args['reg_img_folder'] = ask_dir("Select your regularization folder", args['reg_img_folder'])
@@ -437,19 +472,45 @@ def ask_elements_trunc(args: dict):
 
     ret = mb.askyesno(message="Do you want to train only one of unet and text encoder?")
     if ret:
-        ret = mb.askyesno(message="Do you want to train only the unet?\n"
-                                 "select yes for unet only, selecting no sets it to train text encoder only")
-        if ret:
-            args['unet_only'] = True
-        else:
-            args['text_only'] = True
+        button = ButtonBox("Which do you want to train with?", ["unet_only", "text_only"])
+        button.window.mainloop()
+        if button.current_value != "":
+            args[button.current_value] = True
 
     ret = mb.askyesno(message="Do you want to save a txt file that contains a list\n"
-                             "of all tags that you have used in your training data?\n"
-                             "this will output so that the highest occurrences are at the top\n"
-                             "of the file, with the file name that is the same as your output name")
+                              "of all tags that you have used in your training data?\n"
+                              "this will output so that the highest occurrences are at the top\n"
+                              "of the file, with the file name that is the same as your output name")
     if ret:
         args['tag_occurrence_txt_file'] = True
+
+    ret = mb.askyesno(message="Do you want to use caption dropout?")
+    if ret:
+        ret = mb.askyesno(message="Do you want full caption files to dropout randomly?")
+        if ret:
+            ret = sd.askinteger(title="Caption_File_Dropout",
+                                prompt="How often do you want caption files to drop out?\n"
+                                       "enter a number from 0 to 100 that is the percentage chance of dropout\n"
+                                       "Cancel sets to 0")
+            if ret and 0 <= ret <= 100:
+                args['caption_dropout_rate'] = ret / 100.0
+
+        ret = mb.askyesno(message="Do you want to have full epochs have no captions?")
+        if ret:
+            ret = sd.askinteger(title="Caption_epoch_dropout", prompt="The number set here is how often you will have an"
+                                                                      "epoch with no captions\nSo if you set 3, then every"
+                                                                      "three epochs will not have captions (3, 6, 9)\n"
+                                                                      "Cancel will set to None")
+            if ret:
+                args['caption_dropout_every_n_epochs'] = ret
+
+        ret = mb.askyesno(message="Do you want to have tags to randomly drop?")
+        if ret:
+            ret = sd.askinteger(title="Caption_tag_dropout", prompt="How often do you want tags to randomly drop out?\n"
+                                                                    "Enter a number between 0 and 100 that is the percentage"
+                                                                    "chance of dropout.\nCancel sets to 0")
+            if ret and 0 <= ret <= 100:
+                args['caption_tag_dropout_rate'] = ret / 100.0
     return args
 
 
@@ -465,6 +526,19 @@ def ask_elements(args: dict):
         args['save_json_folder'] = ask_dir("Select the folder to save json files to", args['save_json_folder'])
     else:
         args['save_json_folder'] = None
+
+    ret = mb.askyesno(message="Are you training on a SD2 based model?")
+    if ret:
+        args['v2'] = True
+
+    ret = mb.askyesno(message="Are you training on an realistic model?")
+    if ret:
+        args['clip_skip'] = 1
+
+    if args['v2']:
+        ret = mb.askyesno(message="Are you training on a model based on the 768x version of SD2?")
+        if ret:
+            args['v_parameterization'] = True
 
     ret = mb.askyesno(message="Do you want to use regularization images?")
     if ret:
@@ -536,18 +610,10 @@ def ask_elements(args: dict):
     else:
         args['unet_lr'] = ret
 
-    ret = sd.askstring(title="scheduler", prompt="Which scheduler do you want?\n Cancel will default "
-                                                 "to \"cosine_with_restarts\"")
-    if ret is None:
-        args['scheduler'] = "cosine_with_restarts"
-    else:
-        schedulers = {"linear", "cosine", "cosine_with_restarts", "polynomial", "constant", "constant_with_warmup"}
-        while ret not in schedulers:
-            mb.showwarning(message=f"scheduler isn't valid.\nvalid schedulers are: {schedulers}")
-            ret = sd.askstring(title="scheduler", prompt="Which scheduler do you want?\n Cancel will default "
-                                                         "to \"cosine_with_restarts\"")
-            if ret is None:
-                args['scheduler'] = "cosine_with_restarts"
+    button = ButtonBox("Which scheduler do you want?", ["cosine_with_restarts", "cosine", "polynomial",
+                                                        "constant", "constant_with_warmup", "linear"])
+    button.window.mainloop()
+    args['scheduler'] = button.current_value if button.current_value != "" else "cosine_with_restarts"
 
     if args['scheduler'] == "cosine_with_restarts":
         ret = sd.askinteger(title="Cycle Count",
@@ -620,19 +686,46 @@ def ask_elements(args: dict):
 
     ret = mb.askyesno(message="Do you want to train only one of unet and text encoder?")
     if ret:
-        ret = mb.askyesno(message="Do you want to train only the unet?\n"
-                                 "select yes for unet only, selecting no sets it to train text encoder only")
         if ret:
-            args['unet_only'] = True
-        else:
-            args['text_only'] = True
+            button = ButtonBox("Which do you want to train with?", ["unet_only", "text_only"])
+            button.window.mainloop()
+            if button.current_value != "":
+                args[button.current_value] = True
 
     ret = mb.askyesno(message="Do you want to save a txt file that contains a list\n"
-                             "of all tags that you have used in your training data?\n"
-                             "this will output so that the highest occurrences are at the top\n"
-                             "of the file, with the file name that is the same as your output name")
+                              "of all tags that you have used in your training data?\n"
+                              "this will output so that the highest occurrences are at the top\n"
+                              "of the file, with the file name that is the same as your output name")
     if ret:
         args['tag_occurrence_txt_file'] = True
+
+    ret = mb.askyesno(message="Do you want to use caption dropout?")
+    if ret:
+        ret = mb.askyesno(message="Do you want full caption files to dropout randomly?")
+        if ret:
+            ret = sd.askinteger(title="Caption_File_Dropout",
+                                prompt="How often do you want caption files to drop out?\n"
+                                       "enter a number from 0 to 100 that is the percentage chance of dropout\n"
+                                       "Cancel sets to 0")
+            if ret and 0 <= ret <= 100:
+                args['caption_dropout_rate'] = ret / 100.0
+
+        ret = mb.askyesno(message="Do you want to have full epochs have no captions?")
+        if ret:
+            ret = sd.askinteger(title="Caption_epoch_dropout", prompt="The number set here is how often you will have an"
+                                                                      "epoch with no captions\nSo if you set 3, then every"
+                                                                      "three epochs will not have captions (3, 6, 9)\n"
+                                                                      "Cancel will set to None")
+            if ret:
+                args['caption_dropout_every_n_epochs'] = ret
+
+        ret = mb.askyesno(message="Do you want to have tags to randomly drop?")
+        if ret:
+            ret = sd.askinteger(title="Caption_tag_dropout", prompt="How often do you want tags to randomly drop out?\n"
+                                                                    "Enter a number between 0 and 100 that is the percentage"
+                                                                    "chance of dropout.\nCancel sets to 0")
+            if ret and 0 <= ret <= 100:
+                args['caption_tag_dropout_rate'] = ret / 100.0
     return args
 
 
@@ -651,7 +744,7 @@ def load_json(path, obj: dict) -> dict:
                       "output_dir": "output_folder", "max_resolution": "train_resolution",
                       "lr_scheduler": "scheduler", "lr_warmup": "warmup_lr_ratio",
                       "train_batch_size": "batch_size", "epoch": "num_epochs",
-                      "save_every_n_epochs": "save_at_n_epochs", "num_cpu_threads_per_process": "num_workers",
+                      "save_at_n_epochs": "save_every_n_epochs", "num_cpu_threads_per_process": "num_workers",
                       "enable_bucket": "buckets", "save_model_as": "save_as", "shuffle_caption": "shuffle_captions",
                       "resume": "load_previous_save_state", "network_dim": "net_dim",
                       "gradient_accumulation_steps": "gradient_acc_steps", "output_name": "change_output_name",
@@ -685,6 +778,33 @@ def load_json(path, obj: dict) -> dict:
 
 def print_change(value, old, new):
     print(f"{value} changed from {old} to {new}")
+
+
+class ButtonBox:
+    def __init__(self, label: str, button_name_list: list[str]) -> None:
+        self.window = tk.Tk()
+        self.button_list = []
+        self.current_value = ""
+
+        self.window.attributes("-topmost", True)
+        self.window.resizable(False, False)
+        self.window.eval('tk::PlaceWindow . center')
+
+        def del_window():
+            self.window.quit()
+            self.window.destroy()
+
+        self.window.protocol("WM_DELETE_WINDOW", del_window)
+        tk.Label(text=label, master=self.window).pack()
+        for button in button_name_list:
+            self.button_list.append(ttk.Button(text=button, master=self.window,
+                                               command=partial(self.set_current_value, button)))
+            self.button_list[-1].pack()
+
+    def set_current_value(self, value):
+        self.current_value = value
+        self.window.quit()
+        self.window.destroy()
 
 
 root = tk.Tk()

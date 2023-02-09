@@ -1,5 +1,6 @@
 @echo off
+
+echo starting resizing...
 call venv\Scripts\activate
-echo starting resize.py
-python run_resize.py
+python lora_resize.py
 pause
