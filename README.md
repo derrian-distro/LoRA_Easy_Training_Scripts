@@ -91,7 +91,6 @@ new with this update is a way to generate a txt file that outputs all of the tag
 
 ## List Of Arguments
 
-| Argument                | Type      | Required | What It Does                                                                                                                                                                                                                                                             |
 | Argument                       | Type      | Required | What It Does                                                                                                                                                                                                                                                             |
 | ------------------------------ | --------- | -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | base_model                     | str       | YES      | Path to the base model                                                                                                                                                                                                                                                   |
