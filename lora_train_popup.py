@@ -24,9 +24,10 @@ class ArgStore:
         self.change_output_name: Union[str, None] = None  # changes the output name of the epochs
         self.save_json_folder: Union[str, None] = None  # OPTIONAL, saves a json folder of your config to whatever location you set here.
         self.load_json_path: Union[str, None] = None  # OPTIONAL, loads a json file partially changes the config to match. things like folder paths do not get modified.
-        self.json_load_skip_list: Union[list[str], None] = ["base_model", "img_folder", "output_folder",
-                                                            "save_json_folder", "reg_img_folder", "lora_model_for_resume",
-                                                            "change_output_name", "training_comment", "json_load_skip_list"]  # OPTIONAL, allows the user to define what they skip when loading a json, by default it loads everything, including all paths, set it up like this ["base_model", "img_folder", "output_folder"]
+        self.json_load_skip_list: Union[list[str], None] = ["save_json_folder", "reg_img_folder",
+                                                            "lora_model_for_resume", "change_output_name",
+                                                            "training_comment",
+                                                            "json_load_skip_list"]  # OPTIONAL, allows the user to define what they skip when loading a json, by default it loads everything, including all paths, set it up like this ["base_model", "img_folder", "output_folder"]
 
         self.net_dim: int = 128  # network dimension, 128 is the most common, however you might be able to get lesser to work
         self.alpha: float = 128  # represents the scalar for training. the lower the alpha, the less gets learned per step. if you want the older way of training, set this to dim
@@ -47,6 +48,9 @@ class ArgStore:
         self.shuffle_captions: bool = False  # OPTIONAL, False to ignore
         self.keep_tokens: Union[int, None] = None  # OPTIONAL, None to ignore
         self.max_steps: Union[int, None] = None  # OPTIONAL, if you have specific steps you want to hit, this allows you to set it directly. None to ignore
+        self.tag_occurrence_txt_file: bool = False  # OPTIONAL, creates a txt file that has the entire occurrence of all tags in your dataset
+        # the metadata will also have this so long as you have metadata on, so no reason to have this on by default
+        # will automatically output to the same folder as your output checkpoints
 
         # These are the second most likely things you will modify
         self.train_resolution: int = 512
@@ -108,6 +112,8 @@ def main():
         args = parser.parse_args(args)
         queues += 1
         args_queue.append(args)
+        if arg_dict['tag_occurrence_txt_file']:
+            get_occurrence_of_tags(arg_dict)
         ret = mb.askyesno(message="Do you want to queue another training?")
         if not ret:
             cont = False
@@ -233,7 +239,7 @@ def create_optional_args(args: dict, steps):
 
     if args['text_only'] and not args['unet_only']:
         output.append("--network_train_text_encoder_only")
-    
+
     if args["log_dir"]:
         output.append(f"--logging_dir={args['log_dir']}")
     return output
@@ -307,6 +313,41 @@ def setup_args(parser):
     util.add_dataset_arguments(parser, True, True)
     util.add_training_arguments(parser, True)
     add_misc_args(parser)
+
+
+def get_occurrence_of_tags(args):
+    extension = args['caption_extension']
+    img_folder = args['img_folder']
+    output_folder = args['output_folder']
+    occurrence_dict = {}
+    print(img_folder)
+    for folder in os.listdir(img_folder):
+        print(folder)
+        if not os.path.isdir(os.path.join(img_folder, folder)):
+            continue
+        for file in os.listdir(os.path.join(img_folder, folder)):
+            if not os.path.isfile(os.path.join(img_folder, folder, file)):
+                continue
+            ext = os.path.splitext(file)[1]
+            if ext != extension:
+                continue
+            get_tags_from_file(os.path.join(img_folder, folder, file), occurrence_dict)
+    output_list = {k: v for k, v in sorted(occurrence_dict.items(), key=lambda item: item[1], reverse=True)}
+    with open(os.path.join(output_folder, f"{args['change_output_name']}.txt"), "w") as f:
+        f.write(f"Below is a list of keywords used during the training of {args['change_output_name']}:\n")
+        for k, v in output_list.items():
+            f.write(f"[{v}] {k}\n")
+
+
+def get_tags_from_file(file, occurrence_dict):
+    f = open(file)
+    temp = f.read().replace(", ", ",").split(",")
+    f.close()
+    for tag in temp:
+        if tag in occurrence_dict:
+            occurrence_dict[tag] += 1
+        else:
+            occurrence_dict[tag] = 1
 
 
 def ask_file(message, accepted_ext_list, file_path=None):
@@ -393,6 +434,22 @@ def ask_elements_trunc(args: dict):
         args['training_comment'] = ret
     else:
         args['training_comment'] = None
+
+    ret = mb.askyesno(message="Do you want to train only one of unet and text encoder?")
+    if ret:
+        ret = mb.askyesno(message="Do you want to train only the unet?\n"
+                                 "select yes for unet only, selecting no sets it to train text encoder only")
+        if ret:
+            args['unet_only'] = True
+        else:
+            args['text_only'] = True
+
+    ret = mb.askyesno(message="Do you want to save a txt file that contains a list\n"
+                             "of all tags that you have used in your training data?\n"
+                             "this will output so that the highest occurrences are at the top\n"
+                             "of the file, with the file name that is the same as your output name")
+    if ret:
+        args['tag_occurrence_txt_file'] = True
     return args
 
 
@@ -561,14 +618,21 @@ def ask_elements(args: dict):
     else:
         args['training_comment'] = None
 
-    ret = mb.askyesno(message="Do you want to only train the unet?")
+    ret = mb.askyesno(message="Do you want to train only one of unet and text encoder?")
     if ret:
-        args["unet_only"] = True
-
-    if not args["unet_only"]:
-        ret = mb.askyesno(message="Do you want to only train the text encoder?")
+        ret = mb.askyesno(message="Do you want to train only the unet?\n"
+                                 "select yes for unet only, selecting no sets it to train text encoder only")
         if ret:
-            args["text_only"] = True
+            args['unet_only'] = True
+        else:
+            args['text_only'] = True
+
+    ret = mb.askyesno(message="Do you want to save a txt file that contains a list\n"
+                             "of all tags that you have used in your training data?\n"
+                             "this will output so that the highest occurrences are at the top\n"
+                             "of the file, with the file name that is the same as your output name")
+    if ret:
+        args['tag_occurrence_txt_file'] = True
     return args
 
 

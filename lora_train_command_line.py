@@ -54,6 +54,9 @@ class ArgStore:
         self.shuffle_captions: bool = False  # OPTIONAL, False to ignore
         self.keep_tokens: Union[int, None] = None  # OPTIONAL, None to ignore
         self.max_steps: Union[int, None] = None  # OPTIONAL, if you have specific steps you want to hit, this allows you to set it directly. None to ignore
+        self.tag_occurrence_txt_file: bool = False  # OPTIONAL, creates a txt file that has the entire occurrence of all tags in your dataset
+                                                    # the metadata will also have this so long as you have metadata on, so no reason to have this on by default
+                                                    # will automatically output to the same folder as your output checkpoints
 
         # These are the second most likely things you will modify
         self.train_resolution: int = 512
@@ -87,9 +90,13 @@ class ArgStore:
         self.cache_latents: bool = True
         self.color_aug: bool = False  # IMPORTANT: Clashes with cache_latents, only have one of the two on!
         self.flip_aug: bool = False
+        self.random_crop: bool = False  # IMPORTANT: Clashes with cache_latents
         self.vae: Union[str, None] = None  # Seems to only make results worse when not using that specific vae, should probably not use
         self.no_meta: bool = False  # This removes the metadata that now gets saved into safetensors, (you should keep this on)
         self.log_dir: Union[str, None] = None  # output of logs, not useful to most people.
+        self.bucket_reso_steps: Union[int, None] = None  # is the steps that is taken when making buckets, can be any
+                                                         # can be any positive value from 1 up
+        self.bucket_no_upscale: bool = False  # Disables up-scaling for images in buckets
 
     # Creates the dict that is used for the rest of the code, to facilitate easier json saving and loading
     @staticmethod
@@ -114,6 +121,8 @@ def main():
             load_json(os.path.join(multi_path, file), arg_dict)
             args = create_arg_space(arg_dict)
             args = parser.parse_args(args)
+            if arg_dict['tag_occurrence_txt_file']:
+                get_occurrence_of_tags(arg_dict)
             train_network.train(args)
             gc.collect()
             torch.cuda.empty_cache()
@@ -128,6 +137,8 @@ def main():
         save_json(pre_args.save_json_path if pre_args.save_json_path else arg_dict['save_json_folder'], arg_dict)
     args = create_arg_space(arg_dict)
     args = parser.parse_args(args)
+    if arg_dict['tag_occurrence_txt_file']:
+        get_occurrence_of_tags(arg_dict)
     if not arg_dict["save_json_only"]:
         train_network.train(args)
 
@@ -260,6 +271,15 @@ def create_optional_args(args: dict, steps):
     
     if args["log_dir"]:
         output.append(f"--logging_dir={args['log_dir']}")
+
+    if args['bucket_reso_steps']:
+        output.append(f"--bucket_reso_steps={args['bucket_reso_steps']}")
+
+    if args['bucket_no_upscale']:
+        output.append("--bucket_no_upscale")
+
+    if args['random_crop'] and not args['cache_latents']:
+        output.append("--random_crop")
     return output
 
 
@@ -410,6 +430,41 @@ def load_json(path, obj: dict) -> dict:
 
 def print_change(value, old, new):
     print(f"{value} changed from {old} to {new}")
+
+
+def get_occurrence_of_tags(args):
+    extension = args['caption_extension']
+    img_folder = args['img_folder']
+    output_folder = args['output_folder']
+    occurrence_dict = {}
+    print(img_folder)
+    for folder in os.listdir(img_folder):
+        print(folder)
+        if not os.path.isdir(os.path.join(img_folder, folder)):
+            continue
+        for file in os.listdir(os.path.join(img_folder, folder)):
+            if not os.path.isfile(os.path.join(img_folder, folder, file)):
+                continue
+            ext = os.path.splitext(file)[1]
+            if ext != extension:
+                continue
+            get_tags_from_file(os.path.join(img_folder, folder, file), occurrence_dict)
+    output_list = {k: v for k, v in sorted(occurrence_dict.items(), key=lambda item: item[1], reverse=True)}
+    with open(os.path.join(output_folder, f"{args['change_output_name']}.txt"), "w") as f:
+        f.write(f"Below is a list of keywords used during the training of {args['change_output_name']}:\n")
+        for k, v in output_list.items():
+            f.write(f"[{v}] {k}\n")
+
+
+def get_tags_from_file(file, occurrence_dict):
+    f = open(file)
+    temp = f.read().replace(", ", ",").split(",")
+    f.close()
+    for tag in temp:
+        if tag in occurrence_dict:
+            occurrence_dict[tag] += 1
+        else:
+            occurrence_dict[tag] = 1
 
 
 if __name__ == "__main__":
