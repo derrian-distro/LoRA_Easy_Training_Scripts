@@ -438,9 +438,9 @@ def load_json(path, obj: dict) -> dict:
         if obj["json_load_skip_list"] and key in obj["json_load_skip_list"]:
             continue
         if key in obj:
-            if key in {"keep_tokens", "warmup_lr_ratio"}:
+            if key in {"keep_tokens"}:
                 json_obj[key] = int(json_obj[key]) if json_obj[key] is not None else None
-            if key in {"learning_rate", "unet_lr", "text_encoder_lr"}:
+            if key in {"learning_rate", "unet_lr", "text_encoder_lr", "warmup_lr_ratio"}:
                 json_obj[key] = float(json_obj[key]) if json_obj[key] is not None else None
             if obj[key] != json_obj[key]:
                 print_change(key, obj[key], json_obj[key])
