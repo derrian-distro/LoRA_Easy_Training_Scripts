@@ -355,10 +355,12 @@ def get_occurrence_of_tags(args):
                 continue
             get_tags_from_file(os.path.join(img_folder, folder, file), occurrence_dict)
     output_list = {k: v for k, v in sorted(occurrence_dict.items(), key=lambda item: item[1], reverse=True)}
-    with open(os.path.join(output_folder, f"{args['change_output_name']}.txt"), "w") as f:
+    name = args['change_output_name'] if args['change_output_name'] else "last"
+    with open(os.path.join(output_folder, f"{name}.txt"), "w") as f:
         f.write(f"Below is a list of keywords used during the training of {args['change_output_name']}:\n")
         for k, v in output_list.items():
             f.write(f"[{v}] {k}\n")
+    print(f"Created a txt file named {name}.txt in the output folder")
 
 
 def get_tags_from_file(file, occurrence_dict):

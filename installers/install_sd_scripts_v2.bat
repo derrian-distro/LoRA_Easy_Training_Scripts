@@ -101,7 +101,7 @@ echo you do not have git installed, please install it
 goto end
 
 :complete
-echo installation complete, to run the program just double click the batch file named run_popup.py
+echo installation complete, to run the program just double click the batch file named run_popup.bat
 echo if you intend to use the popup version, or edit and use the command_line files to have greater control
 :end
 pause
