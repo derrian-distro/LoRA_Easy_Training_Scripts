@@ -431,8 +431,8 @@ def ask_elements_trunc(args: dict):
     if ret:
         args['v2'] = True
 
-    ret = mb.askyesno(message="Are you training on an anime style model?")
-    if not ret:
+    ret = mb.askyesno(message="Are you training on an realistic model?")
+    if ret:
         args['clip_skip'] = 1
 
     if args['v2']:
