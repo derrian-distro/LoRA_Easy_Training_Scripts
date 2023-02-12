@@ -54,8 +54,10 @@ class ArgStore:
         self.keep_tokens: Union[int, None] = None  # OPTIONAL, None to ignore
         self.max_steps: Union[int, None] = None  # OPTIONAL, if you have specific steps you want to hit, this allows you to set it directly. None to ignore
         self.tag_occurrence_txt_file: bool = False  # OPTIONAL, creates a txt file that has the entire occurrence of all tags in your dataset
-        # the metadata will also have this so long as you have metadata on, so no reason to have this on by default
-        # will automatically output to the same folder as your output checkpoints
+                                                    # the metadata will also have this so long as you have metadata on, so no reason to have this on by default
+                                                    # will automatically output to the same folder as your output checkpoints
+        self.sort_tag_occurrence_alphabetically: bool = False  # OPTIONAL, only applies if tag_occurrence_txt_file is also true
+                                                               # Will change the output to be alphabetically vs being occurrence based
 
         # These are the second most likely things you will modify
         self.train_resolution: int = 512
@@ -354,7 +356,10 @@ def get_occurrence_of_tags(args):
             if ext != extension:
                 continue
             get_tags_from_file(os.path.join(img_folder, folder, file), occurrence_dict)
-    output_list = {k: v for k, v in sorted(occurrence_dict.items(), key=lambda item: item[1], reverse=True)}
+    if not args['sort_tag_occurrence_alphabetically']:
+        output_list = {k: v for k, v in sorted(occurrence_dict.items(), key=lambda item: item[1], reverse=True)}
+    else:
+        output_list = {k: v for k, v in sorted(occurrence_dict.items(), key=lambda item: item[0])}
     name = args['change_output_name'] if args['change_output_name'] else "last"
     with open(os.path.join(output_folder, f"{name}.txt"), "w") as f:
         f.write(f"Below is a list of keywords used during the training of {args['change_output_name']}:\n")
@@ -455,6 +460,11 @@ def ask_elements_trunc(args: dict):
     else:
         args['lora_model_for_resume'] = None
 
+    ret = mb.askyesno(message="Do you want to flip all of your images? It is supposed to reduce biases\n"
+                              "within your dataset but it can also ruin learning an asymmetrical element\n")
+    if ret:
+        args['flip_aug'] = True
+
     ret = mb.askyesno(message="Do you want to change the name of output checkpoints?")
     if ret:
         ret = sd.askstring(title="output_name", prompt="What do you want your output name to be?\n"
@@ -480,11 +490,13 @@ def ask_elements_trunc(args: dict):
             args[button.current_value] = True
 
     ret = mb.askyesno(message="Do you want to save a txt file that contains a list\n"
-                              "of all tags that you have used in your training data?\n"
-                              "this will output so that the highest occurrences are at the top\n"
-                              "of the file, with the file name that is the same as your output name")
+                              "of all tags that you have used in your training data?\n")
     if ret:
         args['tag_occurrence_txt_file'] = True
+        button = ButtonBox("How do you want tags to be ordered?", ["alphabetically", "occurrence-ly"])
+        button.window.mainloop()
+        if button.current_value == "alphabetically":
+            args['sort_tag_occurrence_alphabetically'] = True
 
     ret = mb.askyesno(message="Do you want to use caption dropout?")
     if ret:
@@ -695,11 +707,13 @@ def ask_elements(args: dict):
                 args[button.current_value] = True
 
     ret = mb.askyesno(message="Do you want to save a txt file that contains a list\n"
-                              "of all tags that you have used in your training data?\n"
-                              "this will output so that the highest occurrences are at the top\n"
-                              "of the file, with the file name that is the same as your output name")
+                              "of all tags that you have used in your training data?\n")
     if ret:
         args['tag_occurrence_txt_file'] = True
+        button = ButtonBox("How do you want tags to be ordered?", ["alphabetically", "occurrence-ly"])
+        button.window.mainloop()
+        if button.current_value == "alphabetically":
+            args['sort_tag_occurrence_alphabetically'] = True
 
     ret = mb.askyesno(message="Do you want to use caption dropout?")
     if ret:

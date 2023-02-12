@@ -68,7 +68,7 @@ like the JSON saving, they work slightly differently from one another. so I'll e
 
 ## Tag Occurrence Printout
 
-new with this update is a way to generate a txt file that outputs all of the tags that was used to train with in an easy to read way that has both the number of times it appeared in all caption files, as well as the tag itself, it is ordered from most to least.
+new with this update is a way to generate a txt file that outputs all of the tags that was used to train with in an easy to read way that has both the number of times it appeared in all caption files, as well as the tag itself. I have now changed it's implementation so that if you wanted to output alphabetically, you can.
 
 ## LoRA Resize Script
 
@@ -76,6 +76,20 @@ new with this update is a way to generate a txt file that outputs all of the tag
 
 ## Changelog
 
+- Feb 12, 2023
+  - Small change to the txt file generation system so that you can output the files alphabetically
+  - Added the option to turn on flip_aug for `lora_train_popup.py`
+- Feb 11, 2023
+  - released v3 of the installers
+    - Added the python check system wide as well as user wide, rather than just user wide
+    - Decluttered thing's a bit more for easier reading
+    - Added a way to ask for admin so you no longer need to run it as admin
+- Fab 10, 2023
+  - released v2 of the installers
+    - New guards to make sure that python 3.10 and git are installed
+    - less cluttered messages so that is makes more sense what is going on
+    - the option to install the cudnn patch for higher end 30X0 cards as well as 40X0 cards, using the installer script written by bmaltais. Thanks bmaltais
+    - the option to auto install the patch for 10X0 cards, for the sd-scripts installer only
 - Feb 9, 2023
   - I modified the bat files to work a bit better on the off chance that bitsandbytes needed to be installed to a different place than expected.
   - I also fixed the bat file for `lora_resize.bat` because it was looking for the wrong file name.
@@ -111,7 +125,7 @@ new with this update is a way to generate a txt file that outputs all of the tag
 | text_encoder_lr                | float     | NO       | This is the lr for specifically the text encoder. it overwrites the base lr                                                                                                                                                                                              |
 | unet_lr                        | float     | NO       | This is the lr for specifically the unet. it overwrites the base lr                                                                                                                                                                                                      |
 | num_workers                    | int       | YES      | This is the number of threads that are used for data processing, lower numbers mean faster epoch starting time, but supposedly slower data loading                                                                                                                       |
-| save_every_n_epochs            | int       | NO       | Saves a checkpoint every n epochs, so save_every_n_epochs = 1 means that it saves every epoch                                                                                                                                  										   |
+| save_every_n_epochs            | int       | NO       | Saves a checkpoint every n epochs, so save_every_n_epochs = 1 means that it saves every epoch                                                                                                                                                                            |
 | shuffle_captions               | bool      | NO       | This is a switch to turn on shuffle_captions, doing so will shuffle all of the tags in the caption files                                                                                                                                                                 |
 | keep_tokens                    | int       | NO       | This is a way to keep certain tokens at the front of the captions files when shuffling. This only matters if you are shuffling captions                                                                                                                                  |
 | max_steps                      | int       | NO       | This is a way to specify an amount of steps without needing to calculate it. If it is a step amount that doesn't end it a full epoch, it will just train until it hits the final step, then output the final epoch, even if it was not a full epoch                      |

@@ -60,6 +60,8 @@ class ArgStore:
         self.max_steps: Union[int, None] = None  # OPTIONAL, if you have specific steps you want to hit, this allows you to set it directly. None to ignore
         self.tag_occurrence_txt_file: bool = True  # OPTIONAL, creates a txt file that has the entire occurrence of all tags in your dataset
                                                    # will automatically output to the same folder as your output checkpoints
+        self.sort_tag_occurrence_alphabetically: bool = False  # OPTIONAL, only applies if tag_occurrence_txt_file is also true
+                                                               # Will change the output to be alphabetically vs being occurrence based
 
         # These are the second most likely things you will modify
         self.train_resolution: int = 512
@@ -469,7 +471,10 @@ def get_occurrence_of_tags(args):
             if ext != extension:
                 continue
             get_tags_from_file(os.path.join(img_folder, folder, file), occurrence_dict)
-    output_list = {k: v for k, v in sorted(occurrence_dict.items(), key=lambda item: item[1], reverse=True)}
+    if not args['sort_tag_occurrence_alphabetically']:
+        output_list = {k: v for k, v in sorted(occurrence_dict.items(), key=lambda item: item[1], reverse=True)}
+    else:
+        output_list = {k: v for k, v in sorted(occurrence_dict.items(), key=lambda item: item[0])}
     name = args['change_output_name'] if args['change_output_name'] else "last"
     with open(os.path.join(output_folder, f"{name}.txt"), "w") as f:
         f.write(f"Below is a list of keywords used during the training of {args['change_output_name']}:\n")
