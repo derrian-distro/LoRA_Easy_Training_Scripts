@@ -77,6 +77,9 @@ new with this update is a way to generate a txt file that outputs all of the tag
 ## Changelog
 
 - Feb 12, 2023
+  - released v4 of the installers
+    - had to remove the python and git check because it wasn't working as expected
+    - also fixed an issue where ther cudnn wouldn't download because the website had an incorrect certificate
   - Small change to the txt file generation system so that you can output the files alphabetically
   - Added the option to turn on flip_aug for `lora_train_popup.py`
 - Feb 11, 2023
