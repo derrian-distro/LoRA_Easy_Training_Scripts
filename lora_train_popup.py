@@ -567,6 +567,11 @@ def ask_elements(args: dict):
     else:
         args['lora_model_for_resume'] = None
 
+    ret = mb.askyesno(message="Do you want to flip all of your images? It is supposed to reduce biases\n"
+                              "within your dataset but it can also ruin learning an asymmetrical element\n")
+    if ret:
+        args['flip_aug'] = True
+
     # text based required elements
     ret = sd.askinteger(title="batch_size",
                         prompt="The number of images that get processed at one time, this is directly proportional to "
