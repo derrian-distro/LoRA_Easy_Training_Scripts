@@ -33,6 +33,9 @@ class ArgStore:
         self.caption_dropout_every_n_epochs: Union[int, None] = None  # Defines how often an epoch will completely ignore
         # captions, EX. 3 means it will ignore captions at epochs 3, 6, and 9
         self.caption_tag_dropout_rate: Union[float, None] = None  # Defines the rate at which a tag would be dropped, rather than the entire caption file
+        self.noise_offset: Union[float, None] = None  # OPTIONAL, seems to help allow SD to gen better blacks and whites
+                                                      # Kohya recommends, if you have it set, to use 0.1, not sure how
+                                                      # high the value can be, I'm going to assume maximum of 1
 
         self.net_dim: int = 128  # network dimension, 128 is the most common, however you might be able to get lesser to work
         self.alpha: float = 128  # represents the scalar for training. the lower the alpha, the less gets learned per step. if you want the older way of training, set this to dim
@@ -266,6 +269,9 @@ def create_optional_args(args: dict, steps):
 
     if args['v2'] and args['v_parameterization']:
         output.append("--v_parameterization")
+
+    if args['noise_offset']:
+        output.append(f"--noise_offset={args['noise_offset']}")
     return output
 
 
@@ -521,10 +527,20 @@ def ask_elements_trunc(args: dict):
         ret = mb.askyesno(message="Do you want to have tags to randomly drop?")
         if ret:
             ret = sd.askinteger(title="Caption_tag_dropout", prompt="How often do you want tags to randomly drop out?\n"
-                                                                    "Enter a number between 0 and 100 that is the percentage"
+                                                                    "Enter a number between 0 and 100, that is the percentage"
                                                                     "chance of dropout.\nCancel sets to 0")
             if ret and 0 <= ret <= 100:
                 args['caption_tag_dropout_rate'] = ret / 100.0
+
+    ret = mb.askyesno(message="Do you want to use noise offset? Noise offset seems to allow for SD to better generate\n"
+                              "darker or lighter images using this than normal.")
+    if ret:
+        ret = sd.askfloat(title="noise_offset", prompt="What value do you want to set? recommended value is 0.1,\n"
+                                                       "but it can go higher. Cancel defaults to 0.1")
+        if ret:
+            args['noise_offset'] = ret
+        else:
+            args['noise_offset'] = 0.1
     return args
 
 
@@ -743,10 +759,20 @@ def ask_elements(args: dict):
         ret = mb.askyesno(message="Do you want to have tags to randomly drop?")
         if ret:
             ret = sd.askinteger(title="Caption_tag_dropout", prompt="How often do you want tags to randomly drop out?\n"
-                                                                    "Enter a number between 0 and 100 that is the percentage"
+                                                                    "Enter a number between 0 and 100, that is the percentage"
                                                                     "chance of dropout.\nCancel sets to 0")
             if ret and 0 <= ret <= 100:
                 args['caption_tag_dropout_rate'] = ret / 100.0
+
+    ret = mb.askyesno(message="Do you want to use noise offset? Noise offset seems to allow for SD to better generate\n"
+                              "darker or lighter images using this than normal.")
+    if ret:
+        ret = sd.askfloat(title="noise_offset", prompt="What value do you want to set? recommended value is 0.1,\n"
+                                                       "but it can go higher. Cancel defaults to 0.1")
+        if ret:
+            args['noise_offset'] = ret
+        else:
+            args['noise_offset'] = 0.1
     return args
 
 

@@ -32,6 +32,9 @@ class ArgStore:
         self.caption_dropout_every_n_epochs: Union[int, None] = None  # Defines how often an epoch will completely ignore
                                                                       # captions, EX. 3 means it will ignore captions at epochs 3, 6, and 9
         self.caption_tag_dropout_rate: Union[float, None] = None  # Defines the rate at which a tag would be dropped, rather than the entire caption file
+        self.noise_offset: Union[float, None] = None  # OPTIONAL, seems to help allow SD to gen better blacks and whites
+                                                      # Kohya recommends, if you have it set, to use 0.1, not sure how
+                                                      # high the value can be, I'm going to assume maximum of 1
 
         self.net_dim: int = 128  # network dimension, 128 is the most common, however you might be able to get lesser to work
         self.alpha: float = 64  # represents the scalar for training. the lower the alpha,
@@ -275,7 +278,7 @@ def create_optional_args(args: dict, steps):
 
     if args['text_only'] and not args['unet_only']:
         output.append("--network_train_text_encoder_only")
-    
+
     if args["log_dir"]:
         output.append(f"--logging_dir={args['log_dir']}")
 
@@ -302,6 +305,9 @@ def create_optional_args(args: dict, steps):
 
     if args['v2'] and args['v_parameterization']:
         output.append("--v_parameterization")
+
+    if args['noise_offset']:
+        output.append(f"--noise_offset={args['noise_offset']}")
     return output
 
 

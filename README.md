@@ -76,6 +76,12 @@ new with this update is a way to generate a txt file that outputs all of the tag
 
 ## Changelog
 
+- Feb 14, 2023
+  - Updated the scripts to support the new parameter Kohya added, noise_offset
+    - I haven't tested it myself yet, but supposedly having this set will improve generation of very bright and very dark elements. Kohya recommends a value of 0.1
+  - Added the verbose option to the `lora_resize` script, I also wanted to add a way to output this to a text file, but I wan't able to find a way to do so cleanly. I will revisit this another time.
+  - Added a queue system to the `lora_resize` script, it works very similar to my queue system when using the `lora_train_popup.py` queue system.
+  - It seems like the multi-gpu option is baked into the code and will automatically use the gpus you have set when using `accelerate config`, I suggest that if you want to use multiple gpus to re-run the `accelerate config` to account for that, as right now, most people have it set up such that only one gpu is used.
 - Feb 12, 2023
   - released v4 of the installers
     - had to remove the python and git check because it wasn't working as expected
@@ -164,3 +170,4 @@ new with this update is a way to generate a txt file that outputs all of the tag
 | caption_dropout_rate           | float     | NO       | The rate at which caption files get dropped while training, not entirely sure what this does, except for the fact that it will occasionally not use the caption file for images                                                                                          |
 | caption_dropout_every_n_epochs | int       | NO       | How often an epoch ignores captions while training, the number set means that every N epochs have ingored captions, EX: 3 = (3, 6, 9,...)                                                                                                                                |
 | caption_tag_dropout_rate       | float     | NO       | The rate at which _tags_ within caption files get ignored, this will not drop tags that are being kept by the keep_tokens argument.                                                                                                                                      |
+| noise_offset                   | float     | NO       | Seemingly allows generation of darker and lighter than usual images. Kohya suggests 0.1, as does the paper on this technique, so I will parrot this and also suggest that you set it to 0.1 if you use it.                                                               |
