@@ -57,7 +57,7 @@ class ArgStore:
         self.batch_size: int = 1  # The number of images that get processed at one time, this is directly proportional
                                   # to your vram and resolution. with 12gb of vram, at 512 reso, you can get a maximum of 6 batch size
         self.num_epochs: int = 1  # The number of epochs, if you set max steps this value is ignored as it doesn't calculate steps.
-        self.save_every_n_epochs: Union[int, None] = 1  # OPTIONAL, how often to save epochs, None to ignore
+        self.save_every_n_epochs: Union[int, None] = None  # OPTIONAL, how often to save epochs, None to ignore
         self.shuffle_captions: bool = False  # OPTIONAL, False to ignore
         self.keep_tokens: Union[int, None] = None  # OPTIONAL, None to ignore
         self.max_steps: Union[int, None] = None  # OPTIONAL, if you have specific steps you want to hit, this allows you to set it directly. None to ignore

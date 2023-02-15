@@ -52,7 +52,7 @@ class ArgStore:
 
         self.batch_size: int = 1  # The number of images that get processed at one time, this is directly proportional to your vram and resolution. with 12gb of vram, at 512 reso, you can get a maximum of 6 batch size
         self.num_epochs: int = 1  # The number of epochs, if you set max steps this value is ignored as it doesn't calculate steps.
-        self.save_at_n_epochs: Union[int, None] = None  # OPTIONAL, how often to save epochs, None to ignore
+        self.save_every_n_epochs: Union[int, None] = None  # OPTIONAL, how often to save epochs, None to ignore
         self.shuffle_captions: bool = False  # OPTIONAL, False to ignore
         self.keep_tokens: Union[int, None] = None  # OPTIONAL, None to ignore
         self.max_steps: Union[int, None] = None  # OPTIONAL, if you have specific steps you want to hit, this allows you to set it directly. None to ignore
@@ -166,8 +166,8 @@ def create_optional_args(args: dict, steps):
     if args['lora_model_for_resume']:
         output.append(f"--network_weights={args['lora_model_for_resume']}")
 
-    if args['save_at_n_epochs']:
-        output.append(f"--save_every_n_epochs={args['save_at_n_epochs']}")
+    if args['save_every_n_epochs']:
+        output.append(f"--save_every_n_epochs={args['save_every_n_epochs']}")
     else:
         output.append("--save_every_n_epochs=999999")
 
@@ -674,9 +674,9 @@ def ask_elements(args: dict):
         ret = sd.askinteger(title="save_epoch",
                             prompt="How often do you want to save epochs?\nCancel will default to 1")
         if ret is None:
-            args['save_at_n_epochs'] = 1
+            args['save_every_n_epochs'] = 1
         else:
-            args['save_at_n_epochs'] = ret
+            args['save_every_n_epochs'] = ret
 
     ret = mb.askyesno(message="Do you want to shuffle captions?")
     if ret:
