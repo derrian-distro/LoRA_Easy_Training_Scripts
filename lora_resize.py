@@ -27,7 +27,11 @@ def main():
     args_list = []
     cont = True
     while cont:
-        args = ["--save_precision=fp16", "--device=cuda"]
+        args = ["--save_precision=fp16"]
+        ret = messagebox.askyesno(message="Do you want to use your graphics card to resize? if you have a lower end"
+                                          "card (4-6gb vram) then I suggest you select no.")
+        if ret:
+            args.append("--device=cuda")
         model = ask_path("Select your model to reduce", [("safetensors", ".safetensors")])
         args.append(f"--model={model}")
 

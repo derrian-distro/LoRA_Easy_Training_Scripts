@@ -396,7 +396,7 @@ def ask_file(message, accepted_ext_list, file_path=None):
 
     while res == "":
         res = fd.askopenfilename(title=message, initialdir=_initialdir, initialfile=_initialfile)
-        if res == "":
+        if res == "" or type(res) == tuple:
             ret = mb.askretrycancel(message="Do you want to to cancel training?")
             if not ret:
                 exit()
@@ -419,7 +419,7 @@ def ask_dir(message, dir_path=None):
         _initialdir = dir_path if os.path.exists(dir_path) else ""
     while res == "":
         res = fd.askdirectory(title=message, initialdir=_initialdir)
-        if res == "":
+        if res == "" or type(res) == tuple:
             ret = mb.askretrycancel(message="Do you want to to cancel training?")
             if not ret:
                 exit()
