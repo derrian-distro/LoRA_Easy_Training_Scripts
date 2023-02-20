@@ -1,5 +1,7 @@
 import gc
 import json
+import subprocess
+import sys
 import time
 from functools import partial
 from typing import Union
@@ -9,6 +11,7 @@ from tkinter import filedialog as fd, ttk
 from tkinter import simpledialog as sd
 from tkinter import messagebox as mb
 
+import pkg_resources
 import torch.cuda
 import train_network
 import library.train_util as util
@@ -87,6 +90,8 @@ class ArgStore:
         self.max_clip_token_length = 150  # can be 75, 150, or 225 I believe, there is no reason to go higher than 150 though
         self.buckets: bool = True
         self.xformers: bool = True
+        self.use_lion: bool = False  # Is a new optimizer added recently, cannot be used with 8bit_adam, so only have one on,
+                                     # it will prioritize 8bit_adam
         self.use_8bit_adam: bool = True
         self.cache_latents: bool = True
         self.color_aug: bool = False  # IMPORTANT: Clashes with cache_latents, only have one of the two on!
@@ -96,6 +101,7 @@ class ArgStore:
         self.log_dir: Union[str, None] = None  # output of logs, not useful to most people.
         self.v2: bool = False  # Sets up training for SD2.1
         self.v_parameterization: bool = False  # Only is used when v2 is also set and you are using the 768x version of v2
+        self.lowram: bool = False
 
     # Creates the dict that is used for the rest of the code, to facilitate easier json saving and loading
     @staticmethod
@@ -104,6 +110,14 @@ class ArgStore:
 
 
 def main():
+    required = {"lion-pytorch"}
+    installed = {p.key for p in pkg_resources.working_set}
+    missing = required - installed
+    if missing:
+        mb.showinfo(message="Failed to find lion-pytorch, will install after this closes")
+        python = sys.executable
+        subprocess.check_call([python, "-m", "pip", "install", *missing], stdout=subprocess.DEVNULL)
+
     parser = argparse.ArgumentParser()
     setup_args(parser)
     pre_args = parser.parse_args()
@@ -184,6 +198,9 @@ def create_optional_args(args: dict, steps):
 
     if args['use_8bit_adam']:
         output.append("--use_8bit_adam")
+
+    if not args['use_8bit_adam'] and args['use_lion']:
+        output.append("--use_lion_optimizer")
 
     if args['xformers']:
         output.append("--xformers")
@@ -272,6 +289,9 @@ def create_optional_args(args: dict, steps):
 
     if args['noise_offset']:
         output.append(f"--noise_offset={args['noise_offset']}")
+
+    if args['lowram']:
+        output.append("--lowram")
     return output
 
 
@@ -440,6 +460,20 @@ def ask_elements_trunc(args: dict):
     else:
         args['save_json_folder'] = None
 
+    ret = mb.askyesno(message="Do you want to enable low ram mode? If you have "
+                              "low ram and more vram, then enable this mode.")
+    if ret:
+        args['lowram'] = True
+
+    button = ButtonBox("Which optimizer do you want? The original optimizer was 8bit_adam, or adamw for AMD\n"
+                       "Lion is a new one that was recently introduced. Defaults to 8bit_adam", ["adamw", "8bit_adam", "lion"])
+    if button.current_value not in {"", "8bit_adam"}:
+        if button.current_value == "adamw":
+            args['8bit_adam'] = False
+        else:
+            args['use_lion'] = True
+            args['use_8bit_adam'] = False
+
     ret = mb.askyesno(message="Are you training on a SD2 based model?")
     if ret:
         args['v2'] = True
@@ -557,6 +591,21 @@ def ask_elements(args: dict):
     else:
         args['save_json_folder'] = None
 
+    ret = mb.askyesno(message="Do you want to enable low ram mode? If you have "
+                              "low ram and more vram, then enable this mode.")
+    if ret:
+        args['lowram'] = True
+
+    button = ButtonBox("Which optimizer do you want? The original optimizer was 8bit_adam, or adamw for AMD\n"
+                       "Lion is a new one that was recently introduced. Defaults to 8bit_adam",
+                       ["adamw", "8bit_adam", "lion"])
+    if button.current_value not in {"", "8bit_adam"}:
+        if button.current_value == "adamw":
+            args['8bit_adam'] = False
+        else:
+            args['use_lion'] = True
+            args['use_8bit_adam'] = False
+
     ret = mb.askyesno(message="Are you training on a SD2 based model?")
     if ret:
         args['v2'] = True
@@ -604,9 +653,9 @@ def ask_elements(args: dict):
     else:
         args['num_epochs'] = ret
 
-    ret = sd.askinteger(title="network_dim", prompt="What is the dim size you want to use?\nCancel will default to 128")
+    ret = sd.askinteger(title="network_dim", prompt="What is the dim size you want to use?\nCancel will default to 32")
     if ret is None:
-        args['net_dim'] = 128
+        args['net_dim'] = 32
     else:
         args['net_dim'] = ret
 
@@ -647,7 +696,6 @@ def ask_elements(args: dict):
 
     button = ButtonBox("Which scheduler do you want?", ["cosine_with_restarts", "cosine", "polynomial",
                                                         "constant", "constant_with_warmup", "linear"])
-    button.window.mainloop()
     args['scheduler'] = button.current_value if button.current_value != "" else "cosine_with_restarts"
 
     if args['scheduler'] == "cosine_with_restarts":
@@ -695,12 +743,12 @@ def ask_elements(args: dict):
 
     ret = mb.askyesno(message="Do you want to have a warmup ratio?")
     if ret:
-        ret = sd.askfloat(title="warmup_ratio", prompt="What is the ratio of steps to use as warmup "
-                                                       "steps?\nCancel will default to None")
-        if ret is None:
-            args['warmup_lr_ratio'] = None
+        value = SliderBox("Choose warmup ratio", ["warmup"], "Closing this window will set warmup_lr to 0.05.\n"
+                                                       "Do you want to cancel?")
+        if value.not_selected:
+            args['warmup_lr_ratio'] = 0.05
         else:
-            args['warmup_lr_ratio'] = ret
+            args['warmup_lr_ratio'] = float(value.get_values()[0])
 
     ret = mb.askyesno(message="Do you want to change the name of output checkpoints?")
     if ret:
@@ -723,7 +771,6 @@ def ask_elements(args: dict):
     if ret:
         if ret:
             button = ButtonBox("Which do you want to train with?", ["unet_only", "text_only"])
-            button.window.mainloop()
             if button.current_value != "":
                 args[button.current_value] = True
 
@@ -732,7 +779,6 @@ def ask_elements(args: dict):
     if ret:
         args['tag_occurrence_txt_file'] = True
         button = ButtonBox("How do you want tags to be ordered?", ["alphabetically", "occurrence-ly"])
-        button.window.mainloop()
         if button.current_value == "alphabetically":
             args['sort_tag_occurrence_alphabetically'] = True
 
@@ -847,6 +893,7 @@ class ButtonBox:
             self.button_list.append(ttk.Button(text=button, master=self.window,
                                                command=partial(self.set_current_value, button)))
             self.button_list[-1].pack()
+        self.window.mainloop()
 
     def set_current_value(self, value):
         self.current_value = value
@@ -854,9 +901,53 @@ class ButtonBox:
         self.window.destroy()
 
 
-root = tk.Tk()
-root.attributes('-topmost', True)
-root.withdraw()
+class SliderBox:
+    def __init__(self, label: str, slider_name_list: list[str], cancel_message: str) -> None:
+        self.window = tk.Tk()
+        self.slider_list: list[tk.Frame] = []
+        self.slider_values: list[tk.DoubleVar] = []
+        self.slider_labels: list[ttk.Label] = []
+        self.not_selected: bool = False
+
+        self.window.attributes("-topmost", True)
+        self.window.resizable(False, False)
+        self.window.eval("tk::PlaceWindow . center")
+
+        def del_window():
+            ret = mb.askyesno(message=cancel_message)
+            if ret:
+                self.not_selected = True
+                self.window.quit()
+                self.window.destroy()
+
+        self.window.protocol("WM_DELETE_WINDOW", del_window)
+        tk.Label(text=label, master=self.window, pady=10).pack()
+        for index, slider in enumerate(slider_name_list):
+            self.slider_values.append(tk.DoubleVar(value=0.0, name=f"{index}"))
+            self.slider_values[-1].trace_add("write", self.test_print)
+            self.slider_list.append(tk.Frame(self.window))
+            self.slider_list[-1].pack()
+            ttk.Label(master=self.slider_list[-1], text=slider, width=30, anchor=tk.CENTER).grid(row=0, column=0)
+            ttk.Scale(master=self.slider_list[-1], from_=0, to=1,
+                      variable=self.slider_values[-1]).grid(row=1, column=0, padx=10)
+            self.slider_labels.append(ttk.Label(master=self.slider_list[-1], text="0.00"))
+            self.slider_labels[-1].grid(row=1, column=1)
+        ttk.Button(master=self.window, text="Complete Selection", command=self.close_window).pack()
+        self.window.mainloop()
+
+    def close_window(self):
+        self.window.quit()
+        self.window.destroy()
+
+    def get_values(self):
+        return [str(s.get()) for s in self.slider_values]
+
+    def test_print(self, *in_vals):
+        pos = int(in_vals[0])
+        trunc_value = '{value:.2f}'.format(value=self.slider_values[pos].get())
+        self.slider_values[pos].set(float(trunc_value))
+        self.slider_labels[pos]['text'] = trunc_value
+
 
 if __name__ == "__main__":
     main()

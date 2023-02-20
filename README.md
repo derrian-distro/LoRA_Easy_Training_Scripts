@@ -72,10 +72,27 @@ new with this update is a way to generate a txt file that outputs all of the tag
 
 ## LoRA Resize Script
 
-`lora_resize.py` is a script I wrote to run the resize script that is within SD-Scripts, much like the other two, it has a batch file that can be used to run it. It does things in the popup way, and currently _doesn't_ support queuing, It will be added another time. This script should simplify reducing the dim size of LoRA.
+`lora_resize.py` is a script I wrote to run the resize script that is within SD-Scripts, much like the other two, it has a batch file that can be used to run it. It does things in the popup style, and supports queueing. This script should simplify reducing the dim size of LoRA.
+
+## LoRA Merging and Image Resizing scripts
+
+I added two new scripts to handle the scripts that sd-scripts added since I created the resizing script. The first one, `lora_merge.py` and it's accompanying bat file `lora_merge.bat` can take in any number of loras to merge together, it walks you through the process, so you shouldn't need to know how it works under the hood!
+
+The second one, `image_resize.py` is a script for downscaling your images. This is great if you are training at a high resolution as you can disable bucket upscaling and have a set of images that are "different" to the model, it should improve gens at lower resolutions, and might even help smaller datasets
+
+## Lion Optimizer
+
+I added support for the new Lion optimizer in both scripts. I don't know what the best lr is for them, and still have 8bit adam as the default for now. if you want to know more, take a look at the original github [here](https://github.com/lucidrains/lion-pytorch). They seem to have some insights, namely, use less steps than usual and a smaller lr. stating that lr should be anywhere from 3-10x _smaller_ than normal.
 
 ## Changelog
 
+- Feb 20, 2023
+  - Updated the scripts to support the new parameters added
+    - Lion support added on both scripts, under the param `use_lion`
+    - added the `lowram` option even though I don't think it will be needed for anybody who actually uses my scripts, as that seems to be geared towards colab users.
+  - Added a script for merging LoRA, called `lora_merge.py` and it's bat file `lora_merge.bat`
+    - It uses the same popup style for the other sub scripts, and will walk you through the process. This script seems to be able to merge more than one LoRA at a time
+  - Added a script for downscaling images, called `image_resize.py` and it's bat file `image_resize.bat`. This will be a very useful tool for replacing repeats with a better alternative if you use the no_upscale feature.
 - Feb 14, 2023
   - Updated the scripts to support the new parameter Kohya added, noise_offset
     - I haven't tested it myself yet, but supposedly having this set will improve generation of very bright and very dark elements. Kohya recommends a value of 0.1
@@ -171,3 +188,5 @@ new with this update is a way to generate a txt file that outputs all of the tag
 | caption_dropout_every_n_epochs | int       | NO       | How often an epoch ignores captions while training, the number set means that every N epochs have ingored captions, EX: 3 = (3, 6, 9,...)                                                                                                                                |
 | caption_tag_dropout_rate       | float     | NO       | The rate at which _tags_ within caption files get ignored, this will not drop tags that are being kept by the keep_tokens argument.                                                                                                                                      |
 | noise_offset                   | float     | NO       | Seemingly allows generation of darker and lighter than usual images. Kohya suggests 0.1, as does the paper on this technique, so I will parrot this and also suggest that you set it to 0.1 if you use it.                                                               |
+| lowram                         | bool      | NO       | Changes how the model is loaded so that it loads into vram, pretty much only useful for people with a lot of vram and no system ram, or colab users.                                                                                                                     |
+| use_lion                       | bool      | NO       | Is the flag to enable using the new lion optimizer. it obviously can't be used with 8bit_adam as they are both optimizers.                                                                                                                                               |

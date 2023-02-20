@@ -1,9 +1,12 @@
 import gc
+import subprocess
+import sys
 import time
 from typing import Union
 import os
 import json
 
+import pkg_resources
 import torch.cuda
 import train_network
 import library.train_util as util
@@ -94,6 +97,8 @@ class ArgStore:
         self.max_clip_token_length = 150  # can be 75, 150, or 225 I believe, there is no reason to go higher than 150 though
         self.buckets: bool = True
         self.xformers: bool = True
+        self.use_lion: bool = False  # Is a new optimizer added recently, cannot be used with 8bit_adam, so only have one on,
+                                     # it will prioritize 8bit_adam
         self.use_8bit_adam: bool = True
         self.cache_latents: bool = True
         self.color_aug: bool = False  # IMPORTANT: Clashes with cache_latents, only have one of the two on!
@@ -107,6 +112,7 @@ class ArgStore:
         self.bucket_no_upscale: bool = False  # Disables up-scaling for images in buckets
         self.v2: bool = False  # Sets up training for SD2.1
         self.v_parameterization: bool = False  # Only is used when v2 is also set and you are using the 768x version of v2
+        self.lowram: bool = False  # Turn this on if you have a small amount of ram but a lot of vram
 
     # Creates the dict that is used for the rest of the code, to facilitate easier json saving and loading
     @staticmethod
@@ -115,6 +121,14 @@ class ArgStore:
 
 
 def main():
+    required = {"lion-pytorch"}
+    installed = {p.key for p in pkg_resources.working_set}
+    missing = required - installed
+    if missing:
+        print("lion-pytorch is missing, installing...")
+        python = sys.executable
+        subprocess.check_call([python, "-m", "pip", "install", *missing], stdout=subprocess.DEVNULL)
+
     parser = argparse.ArgumentParser()
     setup_args(parser)
     pre_args = parser.parse_args()
@@ -209,6 +223,9 @@ def create_optional_args(args: dict, steps):
 
     if args['use_8bit_adam']:
         output.append("--use_8bit_adam")
+
+    if not args['use_8bit_adam'] and args['use_lion']:
+        output.append("--use_lion_optimizer")
 
     if args['xformers']:
         output.append("--xformers")
@@ -308,6 +325,9 @@ def create_optional_args(args: dict, steps):
 
     if args['noise_offset']:
         output.append(f"--noise_offset={args['noise_offset']}")
+
+    if args['lowram']:
+        output.append(f"--lowram")
     return output
 
 
