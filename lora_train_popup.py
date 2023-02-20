@@ -110,8 +110,12 @@ class ArgStore:
         self.vae: Union[str, None] = None  # Seems to only make results worse when not using that specific vae, should probably not use
         self.no_meta: bool = False  # This removes the metadata that now gets saved into safetensors, (you should keep this on)
         self.log_dir: Union[str, None] = None  # output of logs, not useful to most people.
+        self.bucket_reso_steps: Union[int, None] = None  # is the steps that is taken when making buckets, can be any
+                                                         # can be any positive value from 1 up
+        self.bucket_no_upscale: bool = False  # Disables up-scaling for images in buckets
         self.v2: bool = False  # Sets up training for SD2.1
         self.v_parameterization: bool = False  # Only is used when v2 is also set and you are using the 768x version of v2
+        self.random_crop: bool = False  # IMPORTANT: Clashes with cache_latents
         self.lowram: bool = False
 
     # Creates the dict that is used for the rest of the code, to facilitate easier json saving and loading
@@ -275,6 +279,9 @@ def create_optional_args(args: dict, steps):
     if args["log_dir"]:
         output.append(f"--logging_dir={args['log_dir']}")
 
+    if args['random_crop'] and not args['cache_latents']:
+        output.append("--random_crop")
+
     if args['caption_dropout_rate']:
         output.append(f"--caption_dropout_rate={args['caption_dropout_rate']}")
 
@@ -283,6 +290,12 @@ def create_optional_args(args: dict, steps):
 
     if args['caption_tag_dropout_rate']:
         output.append(f"--caption_tag_dropout_rate={args['caption_tag_dropout_rate']}")
+
+    if args['bucket_reso_steps']:
+        output.append(f"--bucket_reso_steps={args['bucket_reso_steps']}")
+
+    if args['bucket_no_upscale']:
+        output.append("--bucket_no_upscale")
 
     if args['v2']:
         output.append("--v2")
@@ -746,12 +759,12 @@ def ask_elements(args: dict):
 
     ret = mb.askyesno(message="Do you want to have a warmup ratio?")
     if ret:
-        value = SliderBox("Choose warmup ratio", ["warmup"], "Closing this window will set warmup_lr to 0.05.\n"
-                                                       "Do you want to cancel?")
-        if value.not_selected:
-            args['warmup_lr_ratio'] = 0.05
+        ret = sd.askfloat(title="warmup_ratio", prompt="What is the ratio of steps to use as warmup "
+                                                       "steps?\nCancel will default to None")
+        if ret is None:
+            args['warmup_lr_ratio'] = None
         else:
-            args['warmup_lr_ratio'] = float(value.get_values()[0])
+            args['warmup_lr_ratio'] = ret
 
     ret = mb.askyesno(message="Do you want to change the name of output checkpoints?")
     if ret:
@@ -822,6 +835,10 @@ def ask_elements(args: dict):
             args['noise_offset'] = ret
         else:
             args['noise_offset'] = 0.1
+
+    ret = mb.askyesno(message="Do you want to prevent upscaling images?")
+    if ret:
+        args['bucket_no_upscale'] = True
     return args
 
 
