@@ -1,6 +1,7 @@
 import gc
 import json
 import subprocess
+import pkg_resources
 import sys
 import time
 from functools import partial
@@ -11,7 +12,17 @@ from tkinter import filedialog as fd, ttk
 from tkinter import simpledialog as sd
 from tkinter import messagebox as mb
 
-import pkg_resources
+try:
+    import lion_pytorch
+except ModuleNotFoundError as error:
+    required = {"lion-pytorch"}
+    installed = {p.key for p in pkg_resources.working_set}
+    missing = required - installed
+    if missing:
+        mb.showinfo(message="Failed to find lion-pytorch, will install after this closes")
+        python = sys.executable
+        subprocess.check_call([python, "-m", "pip", "install", *missing], stdout=subprocess.DEVNULL)
+
 import torch.cuda
 import train_network
 import library.train_util as util
@@ -110,14 +121,6 @@ class ArgStore:
 
 
 def main():
-    required = {"lion-pytorch"}
-    installed = {p.key for p in pkg_resources.working_set}
-    missing = required - installed
-    if missing:
-        mb.showinfo(message="Failed to find lion-pytorch, will install after this closes")
-        python = sys.executable
-        subprocess.check_call([python, "-m", "pip", "install", *missing], stdout=subprocess.DEVNULL)
-
     parser = argparse.ArgumentParser()
     setup_args(parser)
     pre_args = parser.parse_args()

@@ -1,3 +1,6 @@
+import pkg_resources
+import subprocess
+import sys
 import argparse
 import os
 from functools import partial
@@ -5,6 +8,16 @@ from tkinter import messagebox as mb, \
     filedialog as fd, \
     simpledialog as sd, ttk
 import tkinter as tk
+try:
+    import lora
+except ModuleNotFoundError as error:
+    required = {"lora"}
+    installed = {p.key for p in pkg_resources.working_set}
+    missing = required - installed
+    if missing:
+        print("Failed to find lora, installing...")
+        python = sys.executable
+        subprocess.check_call([python, "-m", "pip", "install", *missing], stdout=subprocess.DEVNULL)
 import networks.svd_merge_lora as merge
 
 
@@ -30,7 +43,6 @@ def main():
     args.append("--models")
     args += models
 
-
     slider = SliderBox("Use the sliders below to set the percentage that will be merged from each model.\n",
                        [os.path.split(s)[-1] for s in models], "Closing this window will set every value to 0.5\n"
                                                                "Do you want to cancel?")
@@ -55,7 +67,7 @@ def main():
             if rt:
                 quit()
         else:
-            args.append(f"--save_to={os.path.join(ret, name)}")
+            args.append(f"--save_to={os.path.join(ret, name)}.safetensors")
             cont = False
     merge.args = parser.parse_args(args)
     merge.merge(merge.args)
