@@ -171,7 +171,7 @@ class ArgStore:
                           'alpha': 'network_alpha', 'unet_only': 'network_train_unet_only',
                           'text_only': 'network_train_text_encoder_only'}
 
-        if 'warmup_lr_ratio' in dic:
+        if 'warmup_lr_ratio' in dic and dic['warmup_lr_ratio'] is not None:
             steps = find_max_steps(dic) if not dic['max_steps'] else dic['max_steps']
             dic['lr_warmup_steps'] = int(steps * dic['warmup_lr_ratio'])
 
