@@ -6,12 +6,13 @@
     some args are practically useless, so they will be at the very bottom of the list,
     even if they are linked to other elements
 """
+import os
 from typing import Union
 
 
 class ArgStore:
     def __init__(self):
-        # path args
+        # path args, make sure to use r"" when setting them. That will allow you to not have \\
         self.base_model: str = r""
         self.img_folder: str = r""
         self.output_folder: str = r""
@@ -35,13 +36,17 @@ class ArgStore:
         # vs being occurrence based
 
         # Optimizer args
-        self.optimizer_type: str = "adamW"  # options are AdamW, AdamW8bit, Lion, SGDNesterov,
+        self.optimizer_type: str = "AdamW"  # options are AdamW, AdamW8bit, Lion, SGDNesterov,
         # SGDNesterov8bit, DAdaptation, AdaFactor
-        self.optimizer_args: Union[str, None] = None  # List of optional elements that can be used for an optimizer
+
+        # this is where you add things like weight_decay
+        # the values set here are the default I recommend when using AdamW or AdamW8bit
+        self.optimizer_args: Union[dict[str:str], None] = {"weight_decay": "0.1",
+                                                           "betas": "0.9,0.99"}  # List of optional elements that can be used for an optimizer
 
         # scheduler args
         # list of schedulers: linear, cosine, cosine_with_restarts, polynomial, constant, constant_with_warmup
-        self.scheduler: str = "cosine_with_restarts"
+        self.scheduler: str = "cosine"
         self.cosine_restarts: Union[int, None] = 1  # OPTIONAL, represents the number of times it restarts.
         # Only matters if you are using cosine_with_restarts
         self.scheduler_power: Union[float, None] = 1  # OPTIONAL, represents the power of the polynomial.
@@ -140,7 +145,7 @@ class ArgStore:
         self.persistent_workers: bool = True  # makes workers persistent, further reduces/eliminates the lag in between
         # epochs. however it may increase memory usage
         self.face_crop_aug_range: Union[str, None] = None
-        self.network_module: str = "networks.lora"
+        self.network_module: str = 'sd_scripts.networks.lora'
 
     # Creates the dict that is used for the rest of the code, to facilitate easier json saving and loading
     @staticmethod
@@ -148,7 +153,7 @@ class ArgStore:
         return ArgStore().__dict__
 
     @staticmethod
-    def convert_args_to_dict_with_internal_names():
+    def change_dict_to_internal_names(dic: dict):
         internal_names = {'base_model': 'pretrained_model_name_or_path', 'img_folder': 'train_data_dir',
                           'shuffle_captions': 'shuffle_caption', 'train_resolution': 'resolution',
                           'buckets': 'enable_bucket', 'min_bucket_resolution': 'min_bucket_reso',
@@ -166,7 +171,9 @@ class ArgStore:
                           'alpha': 'network_alpha', 'unet_only': 'network_train_unet_only',
                           'text_only': 'network_train_text_encoder_only'}
 
-        dic = ArgStore.convert_args_to_dict()
+        if 'warmup_lr_ratio' in dic:
+            steps = find_max_steps(dic) if not dic['max_steps'] else dic['max_steps']
+            dic['lr_warmup_steps'] = int(steps * dic['warmup_lr_ratio'])
 
         for key, val in internal_names.items():
             if key in dic:
@@ -174,3 +181,30 @@ class ArgStore:
                 dic.pop(key)
 
         return dic
+
+
+def find_max_steps(args: dict) -> int:
+    total_steps = 0
+    folders = os.listdir(args["img_folder"])
+    for folder in folders:
+        if not os.path.isdir(os.path.join(args["img_folder"], folder)):
+            continue
+        num_repeats = folder.split("_")
+        if len(num_repeats) < 2:
+            print(f"folder {folder} is not in the correct format. Format is x_name. skipping")
+            continue
+        try:
+            num_repeats = int(num_repeats[0])
+        except ValueError:
+            print(f"folder {folder} is not in the correct format. Format is x_name. skipping")
+            continue
+        imgs = 0
+        for file in os.listdir(os.path.join(args["img_folder"], folder)):
+            if os.path.isdir(file):
+                continue
+            ext = file.split(".")
+            if ext[-1].lower() in {"png", "bmp", "gif", "jpeg", "jpg", "webp"}:
+                imgs += 1
+        total_steps += (num_repeats * imgs)
+    total_steps = int((total_steps / args["batch_size"]) * args["num_epochs"])
+    return total_steps
