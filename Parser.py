@@ -98,4 +98,11 @@ class Parser:
             name_space.optimizer_args = []
             for key, value in args['optimizer_args'].items():
                 name_space.optimizer_args.append(f"{key}={value}")
+
+        # print(args['use_8bit_adam'])
+        if "use_8bit_adam" in args and args['use_8bit_adam'] is True:
+            name_space.optimizer_type = ""
+        if "use_lion_optimizer" in args and args['use_lion_optimizer'] is True:
+            name_space.optimizer_type = ""
+
         return name_space
