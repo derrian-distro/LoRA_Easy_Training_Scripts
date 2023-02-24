@@ -59,7 +59,7 @@ If you are using Linux, you can run it by activating your venv then running the 
 ```
 sd_scripts/venv/bin/activate
 then
-acceelerate launch main.py
+accelerate launch main.py
 or
 accelerate launch main.py --popup
 ```
