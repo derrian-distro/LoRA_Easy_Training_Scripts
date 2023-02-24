@@ -2,19 +2,16 @@
 
 A set of training scripts written in python for use in Kohya's [SD-Scripts](https://github.com/kohya-ss/sd-scripts).
 
-The main two scripts, titled `lora_train_command_line.py` and `lora_train_popup.py` are the main training scripts. They both effectively do the same thing, just in different ways.
+**Please ensure you have python 3.10.6 and git installed**
 
-`lora_train_command_line.py` is designed for those who want to directly edit the script, if you need some help on what the various commands are, you can just run the script like so to get help with for every arg, at the bottom of this readme will be a big list of all of the commands as well
+Gone is the two scripts of the past, and now everything is handled in one simple `main.py` and the two accompanying bat files `run_popup.bat` and `run_command_line.bat`. If you are on a linux system you can run them by activating the venv, which has moved to the sd_scripts folder within this project then run it using the command `accelerate launch main.py` for the command line, or `accelerate launch main.py --popup` if you want the popups.
 
-```
-venv\Scripts\accelerate.exe launch lora_train_command_line.py -h
-or
-venv\Scripts\accelerate.exe launch lora_train_popup.py -h
-```
 
-`lora_train_popup.py` is designed for those who are unable or unwilling to directly edit the script, you give up some control this way, but the defaults are generally good, so you won't need to worry too much about the hidden elements. It attempts to keep things simple by asking the user questions through popups, it's slower than `lora_train_command_line.py` but it is a guided experience
+the base version was designed for people who want to directly modify the script themselves, which you can now do so in the file `ArgsList.py`. to find out all of the commands and what they do you can run the script with the -h command to list every argument or just look at the list of arguments below
 
-`lora_resize.py` is a third script that is to be used for _resizing_ lora, as SD-Scripts includes a way to do that now. This is a great way to reduce your dim size after training. It should be plenty easy to use as well because it uses popups much like `lora_train_popup.py` does.
+the popups are designed for those who are unable or unwilling to directly edit the script, you give up some control this way, but the defaults are generally good, so you won't need to worry too much about the hidden elements. It attempts to keep things simple by asking the user questions through popups, it's slower than the command line but it is a guided experience
+
+there are also a bunch of small scripts meant to do other things that sd-scripts can do, such as resizing and merging LoRA, or down scaling images for datasets.
 
 ## Installation
 
@@ -24,68 +21,105 @@ If you have a windows device I have created batch files [here](https://github.co
 
 ### Linux
 
-Unfortunatly, I haven't actually gotten around to creating installers for Linux devices, mainly because I don't use a Linux device as my daily driver. that being said, you can still install SD-Scripts! Follow the install instructions on SD-Scripts then just move these files over to the SD-Scripts directory.
+I don't have installers for my scripts for linux, but here is the setup process so you can do it yourself.
+```
+git clone https://github.com/derrian-distro/LoRA_Easy_Training_Scripts
+cd LoRA_Easy_Training_Scripts
+git submodule init
+git submodule update
+cd sd_scripts
+python -m venv venv
+source venv\bin\activate
+pip install torch torchvision --extra-index-url https://download.pytorch.org/whl/cu116
+pip install --upgrade -r requirements.txt
+pip install -U xformers
+accelerate config
+```
+follow these answers when setting up accelerate
+```
+- This machine
+- No distributed training
+- NO
+- NO
+- NO
+- all
+- fp16
+```
 
 ## Usage
 
 ### Windows
 
-If you are using windows, then you can just run any of the scripts by using their respective `run_*.bat` files, so `lora_train_popup.py` would have you run `run_popup.py`. Just make sure that they are in the same folder as the `.py` files, which should be the root of SD-Scripts.
+If you are using windows, then you can just run any of the scripts by using their respective `run_*.bat` files.
 
 ### Linux
 
-If you are using Linux, you can run it by running accelerate like so.
+If you are using Linux, you can run it by activating your venv then running the scripts like so.
 
 ```
-venv/Scripts/accelerate launch lora_train_command_line.py
+sd_scripts/venv/bin/activate
+then
+acceelerate launch main.py
 or
-venv/Scripts/accelerate launch lora_train_popup.py
+accelerate launch main.py --popup
 ```
 
 I believe it also works without accelerate if you just want to run it from the venv and python directly.
 
+<!-- ## Updating
+To check for updates on windows you can use the new `update.bat` that will automatically check for updates -->
+
 ## JSON Saving And Loading
 
-One of the big features of this set of scripts is that they can create and use JSON files.
-how they load json files are slightly different between the two training scripts, so lets explain why.
+One of the special features of the project is that you can save and load json files.
 
-`lora_train_command_line.py` will load everything unconditionally by default. There is a way to exclude things though. you must modify the variable called `json_load_skip_list` which can be added to to exclude things, more explanation of it will be below
+command_line and popup now handle this the same way as they now use the exact same backend.
+if you load a json file when the `--popup` arg is active, it will skip all popups and just load the json in full, rather than only load parts of it.
 
-`lora_train_popup.py` will load everything except for the following items, the path to save a json, the path to load regularization images, the path to a lora model to resume training, the name you can set to change the output name, your training comment, and the skip list itself
-
-Additionally, you can load or save JSON files from the command line with their respective commands, `--save_json_path "path\to\folder"` for saving, and `--load_json_path "path\to\json.json"` for loading. You can also just set them, in `lora_train_command_line.py` and it is asked in `lora_train_popup.py`
+Additionally, you can load or save JSON files from the command line with their respective commands, `--save_json_path "path\to\folder"` for saving, and `--load_json_path "path\to\json.json"` for loading. You can also just set them, in `ArgsList.py` and it is asked when using `--popup`. Keep in mind that if you use `--save_json_path` and `--load_json_path` it will take precidence over whatever you inserted into the ArgsList or popups.
 
 Finally, I also set up the JSON loading so that it supports the JSON files Kohya_ss generates
 
 ## Queuing Training
 
-I have implemented queues to both the `lora_train_command_line.py` and `lora_train_popup.py`
-like the JSON saving, they work slightly differently from one another. so I'll explain the differences.
+I have implemented queues into the project so that it will be able to take in a folder that has a bunch of json files and run through them all. Unlike the previous version, which had the popup version run through the popups for each time you wanted to queue up something, it now just uses the same method as the previous command line version.
 
-`lora_train_command_line.py` has a variable called `multi_run_folder` that can take a path to a folder that has a bunch of JSON files in it. it will run through all of them one by one, and train every model in that folder. Unlike when loading JSON files normally, this will ignore the exclude list because it cannot wait for the user to change the variables during run time. Since it loads everything through JSON files, I have opted to have it create a "completed" folder of the JSON files that have already been trained, doing this means that if you quit before all are finished, you know what hasn't been done. If you would rather set it through the command line, you can call `--multi_run_path "path\to\folder"`
+you can also supply the path to the folder through the command line argument `--multi_run_path "path\to\folder"`. keep in mind that setting this will override any value set in `ArgsList.py` or through the popups
 
-`lora_train_popup.py` just loops through the popups until you say you want to stop, and then queues them up to run after you are done entering them. I don't have a way to track what has been done for this version because of the way it's implemented.
+if you need to generate json files you can do use through changing the `ArgsList.py` and setting the variable `save_json_only` to True, or through the popups by selecting yes on the associated popup. for that popup to appear you must also select yes to generating a json file
 
 ## Tag Occurrence Printout
 
-new with this update is a way to generate a txt file that outputs all of the tags that was used to train with in an easy to read way that has both the number of times it appeared in all caption files, as well as the tag itself. I have now changed it's implementation so that if you wanted to output alphabetically, you can.
+With my scripts, you can create a txt file with a list of all tags used during training. The tags can be output in one of two ways, according to most used to least, or alphabetically.
 
 ## LoRA Resize Script
 
-`lora_resize.py` is a script I wrote to run the resize script that is within SD-Scripts, much like the other two, it has a batch file that can be used to run it. It does things in the popup style, and supports queueing. This script should simplify reducing the dim size of LoRA.
+`lora_resize.py` and it's accompanying bat file `lora_resize.bat` is a script I wrote to run the resize script that is within SD-Scripts, much like the other two, it has a batch file that can be used to run it. It does things in the popup style, and supports queueing. This script should simplify reducing the dim size of LoRA.
 
 ## LoRA Merging and Image Resizing scripts
 
 I added two new scripts to handle the scripts that sd-scripts added since I created the resizing script. The first one, `lora_merge.py` and it's accompanying bat file `lora_merge.bat` can take in any number of loras to merge together, it walks you through the process, so you shouldn't need to know how it works under the hood!
 
-The second one, `image_resize.py` is a script for downscaling your images. This is great if you are training at a high resolution as you can disable bucket upscaling and have a set of images that are "different" to the model, it should improve gens at lower resolutions, and might even help smaller datasets
+The second one, `image_resize.py` and it's accompanying bat file `image_resize.bat` is a script for downscaling your images. This is great if you are training at a high resolution as you can disable bucket upscaling and have a set of images that are "different" to the model, it should improve gens at lower resolutions, and might even help smaller datasets
 
 ## Lion Optimizer
 
 I added support for the new Lion optimizer in both scripts. I don't know what the best lr is for them, and still have 8bit adam as the default for now. if you want to know more, take a look at the original github [here](https://github.com/lucidrains/lion-pytorch). They seem to have some insights, namely, use less steps than usual and a smaller lr. stating that lr should be anywhere from 3-10x _smaller_ than normal.
 
-## Changelog
+## D-Adaption
+I also added support for the new D-Adaption which works differently from the other optimizers.
+It handles the lr by itself, you just need to set the lr values to a value close to or at 1 for each lr. in order to seperate out the lr's for d-adaption though, you must also add the args `{"decouple": "True"}` to seperate the lr's for d-adaption. using the popups automatically sets this for you
 
+## Changelog
+- Feb 23, 2023
+  - Completely overhauled the scripts, changing everything
+  - command line and popup are no longer seperate scripts
+    - you can acces the popup version by adding --popup to the command call, or by using the associated batch file for that purpose.
+    - you no longer modify the variables directly in the command_line.py script as it no longer exists, instead, there is a script specifically made to house all of the arguments that is seperated from the running logic.
+  - changed the entire structure of the file system so that sd_scripts is now a submodule of my scripts, so that things don't break when sd_scripts updates until I update the scripts to support the new updates.
+  - Updated all of the smaller side scripts to allow them to work with the new structure.
+  - Added the new args, and shuffled around all of the old args to better organize them.
+  - Created a new installer to support the new way everything is set up. (soon, gotta get this up first) This is windows only unfortunately
 - Feb 20, 2023
   - Updated the scripts to support the new parameters added
     - Lion support added on both scripts, under the param `use_lion`

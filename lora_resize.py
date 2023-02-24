@@ -3,7 +3,9 @@ import os.path
 from tkinter import filedialog
 from tkinter import simpledialog
 from tkinter import messagebox
-import networks.resize_lora as resize
+
+import popup_modules
+import sd_scripts.networks.resize_lora as resize
 
 
 def main():
@@ -32,7 +34,7 @@ def main():
                                           "card (4-6gb vram) then I suggest you select no.")
         if ret:
             args.append("--device=cuda")
-        model = ask_path("Select your model to reduce", [("safetensors", ".safetensors")])
+        model = popup_modules.ask_file("Select your model to reduce", ["safetensors"])
         args.append(f"--model={model}")
 
         rank = None
@@ -48,7 +50,7 @@ def main():
                 continue
         args.append(f"--new_rank={rank}")
 
-        output_folder = ask_path("What folder do you want your output to be in?")
+        output_folder = popup_modules.ask_dir("What folder do you want your output to be in?")
         file_name = None
         while not file_name:
             file_name = simpledialog.askstring(title="output name", prompt="What would you like your output files "
@@ -71,23 +73,6 @@ def main():
     for args in args_list:
         resize.args = args
         resize.resize(args)
-
-
-def ask_path(message: str, file_types=None):
-    ret = ""
-    while ret == "":
-        messagebox.showinfo(message=message)
-        if file_types:
-            ret = filedialog.askopenfilename(filetypes=file_types)
-        else:
-            ret = filedialog.askdirectory()
-        if not ret:
-            ret = messagebox.askretrycancel(message="Do you want to cancel converting?")
-            if not ret:
-                exit()
-            ret = ""
-            continue
-    return ret
 
 
 if __name__ == "__main__":
