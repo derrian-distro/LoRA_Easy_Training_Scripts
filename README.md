@@ -66,8 +66,8 @@ accelerate launch main.py --popup
 
 I believe it also works without accelerate if you just want to run it from the venv and python directly.
 
-<!-- ## Updating
-To check for updates on windows you can use the new `update.bat` that will automatically check for updates -->
+## Updating
+To check for updates on windows you can use the new `update.bat` that will automatically check for updates and apply them when it finds one, it should also update sd_scripts when there is an update as well.
 
 ## JSON Saving And Loading
 
