@@ -97,6 +97,8 @@ class Parser:
         if 'optimizer_args' in args:
             name_space.optimizer_args = []
             for key, value in args['optimizer_args'].items():
+                if key == "betas" and args['optimizer_type'] in {"AdaFactor"}:
+                    continue
                 name_space.optimizer_args.append(f"{key}={value}")
 
         # print(args['use_8bit_adam'])
