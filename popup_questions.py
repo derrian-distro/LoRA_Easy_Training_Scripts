@@ -30,6 +30,14 @@ def ask_starter_questions(args: dict) -> int:
         args['save_json_folder'] = None
 
     if args['save_json_folder']:
+        ret = simpledialog.askstring(title="Json Name", prompt="What name do you want to set for the json file?\n"
+                                                               "Cancel will retain old saving style")
+        if ret:
+            args['save_json_name'] = ret
+        else:
+            args['save_json_name'] = None
+
+    if args['save_json_folder']:
         ret = messagebox.askyesno(message="Do you want to only save a json file and not train?\n"
                                           "(this is good for setting up training for the queue system)")
         if ret:
@@ -277,3 +285,17 @@ def ask_all_questions(args: dict) -> None:
     ret = messagebox.askyesno(message="Do you want to prevent upscaling images?")
     if ret:
         args['bucket_no_upscale'] = True
+
+    button = popup_modules.ButtonBox("What Mixed precision do you want?\nCancel will default to fp16",
+                                     ["fp16", "bf16", "no"])
+    if button.current_value in {""}:
+        args['mixed_precision'] = "fp16"
+    else:
+        args['mixed_precision'] = button.current_value
+
+    button = popup_modules.ButtonBox("What save precision do you want?\nCancel will default to fp16",
+                                     ["float", "fp16", "bf16"])
+    if button.current_value in {""}:
+        args['save_precision'] = "fp16"
+    else:
+        args['save_precision'] = button.current_value

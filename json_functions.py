@@ -7,7 +7,9 @@ def save_json(path, obj: dict) -> None:
     # set these to None and False to prevent them from modifying the output when loaded back up
     obj['list_of_json_to_run'] = None
     obj['save_json_only'] = False
-    fp = open(os.path.join(path, f"config-{time.time()}.json"), "w")
+    name = f"config-{time.time()}.json" if not obj['save_json_name'] else \
+        f"config-{time.time()}-{obj['save_json_name']}.json"
+    fp = open(os.path.join(path, name), "w")
     json.dump(obj, fp=fp, indent=4)
     fp.close()
 

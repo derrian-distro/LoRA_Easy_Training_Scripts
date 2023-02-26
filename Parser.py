@@ -34,6 +34,8 @@ class Parser:
         self.add_misc_args()
 
     def add_misc_args(self) -> None:
+        self.parser.add_argument("--save_json_name", type=str, default=None,
+                                 help="Changes the output name of json files to config-123312.13123214-set_name.json")
         self.parser.add_argument("--popup", action="store_true", help="argument to run popup mode")
         self.parser.add_argument("--multi_run_path", type=str, default=None,
                                  help="Path to load a set of json files to train all at once")
@@ -97,11 +99,13 @@ class Parser:
         if 'optimizer_args' in args:
             name_space.optimizer_args = []
             for key, value in args['optimizer_args'].items():
-                if key == "betas" and args['optimizer_type'] in {"AdaFactor"}:
+                if key == "betas" and args['optimizer_type'] in {"AdaFactor", "SGDNesterov", "SGDNesterov8bit"}:
                     continue
                 name_space.optimizer_args.append(f"{key}={value}")
 
-        # print(args['use_8bit_adam'])
+        if args['optimizer_type'] == "DAdaptation":
+            name_space.optimizer_args.append("decouple=True")
+
         if "use_8bit_adam" in args and args['use_8bit_adam'] is True:
             name_space.optimizer_type = ""
         if "use_lion_optimizer" in args and args['use_lion_optimizer'] is True:

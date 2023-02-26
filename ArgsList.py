@@ -17,6 +17,7 @@ class ArgStore:
         self.img_folder: str = r""
         self.output_folder: str = r""
         self.save_json_folder: Union[str, None] = None
+        self.save_json_name: Union[str, None] = None
         self.load_json_path: Union[str, None] = None
         self.multi_run_folder: Union[str, None] = None
         self.reg_img_folder: Union[str, None] = None
