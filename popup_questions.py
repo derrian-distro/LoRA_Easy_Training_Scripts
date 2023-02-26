@@ -271,17 +271,6 @@ def ask_all_questions(args: dict) -> None:
     else:
         args['training_comment'] = None
 
-    ret = messagebox.askyesno(message="Do you want to use noise offset? Noise offset seems to allow for SD to better "
-                                      "generate\ndarker or lighter images using this than normal. seems to cause"
-                                      "baking when you use two LoRA that have noise_offset")
-    if ret:
-        ret = simpledialog.askfloat(title="noise_offset", prompt="What value do you want to set? recommended value is "
-                                                                 "0.1,\nbut it can go higher. Cancel defaults to 0.1")
-        if ret:
-            args['noise_offset'] = ret
-        else:
-            args['noise_offset'] = 0.1
-
     ret = messagebox.askyesno(message="Do you want to prevent upscaling images?")
     if ret:
         args['bucket_no_upscale'] = True
@@ -299,3 +288,13 @@ def ask_all_questions(args: dict) -> None:
         args['save_precision'] = "fp16"
     else:
         args['save_precision'] = button.current_value
+
+    button = popup_modules.ButtonBox("Which of random crop or cache latents do you want? "
+                                     "cache latents don't work with random crop.\n"
+                                     "Cancel will enable cache latents", ["cache latents", "random crop"])
+    if button.current_value in {"", "cache latents"}:
+        args['cache_latents'] = True
+        args['random_crop'] = False
+    else:
+        args['cache_latents'] = False
+        args['random_crop'] = True
