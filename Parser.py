@@ -34,9 +34,6 @@ class Parser:
         self.add_misc_args()
 
     def add_misc_args(self) -> None:
-        self.parser.add_argument("--locon", action="store_true",
-                                 help="Activates locon training, which is LoRA with more data")
-        self.parser.add_argument("--locon_dim", type=int, help="the dim for the locon layers (not the normal dim)")
         self.parser.add_argument("--save_json_name", type=str, default=None,
                                  help="Changes the output name of json files to config-123312.13123214-set_name.json")
         self.parser.add_argument("--popup", action="store_true", help="argument to run popup mode")
@@ -82,7 +79,7 @@ class Parser:
         args_list = []
         skip_list = ["save_json_folder", "load_json_path", "multi_run_folder", "json_load_skip_list",
                      "tag_occurrence_txt_file", "sort_tag_occurrence_alphabetically", "save_json_only",
-                     "warmup_lr_ratio", "optimizer_args"]
+                     "warmup_lr_ratio", "optimizer_args", "locon_dim", "locon_alpha", "locon"]
         for key, value in args.items():
             if not value:
                 continue
@@ -117,6 +114,8 @@ class Parser:
         if 'locon' in args and 'locon_dim' in args and args['locon'] is True:
             name_space.network_module = "locon.locon.locon_kohya"
             name_space.network_args = []
-            name_space.network_args.append(f"conv_dim={args['locon_dim'] if args['locon_dim'] else '4'}")
+            dim = args['locon_dim'] if args['locon_dim'] else '4'
+            name_space.network_args.append(f"conv_dim={dim}")
+            name_space.network_args.append(f"conv_alpha={args['locon_alpha'] if args['locon_alpha'] else dim}")
 
         return name_space

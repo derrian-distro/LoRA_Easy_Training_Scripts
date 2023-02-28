@@ -85,6 +85,8 @@ class ArgStore:
         self.locon: bool = False  # turn on if you want to use the new locon architecture
         self.locon_dim: Union[int, None] = None  # The dim size for the locon model.
                                                  # not enough tests to suggest a default
+        self.locon_alpha: Union[int, None] = None  # The alpha for the locon layers. Can't suggest any defaults as there
+                                                   # hasn't been enough tests
 
         # steps args
         self.num_epochs: int = 1  # The number of epochs, if you set max steps this value is
