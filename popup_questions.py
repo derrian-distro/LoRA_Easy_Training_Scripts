@@ -93,6 +93,8 @@ def ask_all_questions(args: dict) -> None:
         args['optimizer_type'] = button.current_value
         if args['optimizer_type'] == "DAdaptation":
             args['optimizer_args']["decouple"] = "True"
+    else:
+        args['optimizer_type'] = "AdamW"
 
     ret = simpledialog.askinteger(title="network_dim", prompt="What is the dim size you want to use?\n"
                                                               "Cancel will default to 32")
