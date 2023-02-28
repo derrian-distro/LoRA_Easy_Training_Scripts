@@ -34,6 +34,9 @@ class Parser:
         self.add_misc_args()
 
     def add_misc_args(self) -> None:
+        self.parser.add_argument("--locon", action="store_true",
+                                 help="Activates locon training, which is LoRA with more data")
+        self.parser.add_argument("--locon_dim", type=int, help="the dim for the locon layers (not the normal dim)")
         self.parser.add_argument("--save_json_name", type=str, default=None,
                                  help="Changes the output name of json files to config-123312.13123214-set_name.json")
         self.parser.add_argument("--popup", action="store_true", help="argument to run popup mode")
@@ -110,5 +113,10 @@ class Parser:
             name_space.optimizer_type = ""
         if "use_lion_optimizer" in args and args['use_lion_optimizer'] is True:
             name_space.optimizer_type = ""
+
+        if 'locon' in args and 'locon_dim' in args and args['locon'] is True:
+            name_space.network_module = "locon.locon.locon_kohya"
+            name_space.network_args = []
+            name_space.network_args.append(f"conv_dim={args['locon_dim'] if args['locon_dim'] else '4'}")
 
         return name_space

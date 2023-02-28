@@ -81,6 +81,11 @@ class ArgStore:
         self.save_precision: str = "fp16"  # You can also save in bf16, but because it's not universally supported,
         # I suggest you keep saving at fp16
 
+        # architecture arguments
+        self.locon: bool = False  # turn on if you want to use the new locon architecture
+        self.locon_dim: Union[int, None] = None  # The dim size for the locon model.
+                                                 # not enough tests to suggest a default
+
         # steps args
         self.num_epochs: int = 1  # The number of epochs, if you set max steps this value is
         # ignored as it doesn't calculate steps.
@@ -146,7 +151,7 @@ class ArgStore:
         self.persistent_workers: bool = True  # makes workers persistent, further reduces/eliminates the lag in between
         # epochs. however it may increase memory usage
         self.face_crop_aug_range: Union[str, None] = None
-        self.network_module: str = 'sd_scripts.networks.lora'
+        self.network_module: str = 'sd_scripts.networks.lora'  # locon.locon.locon_kohya for locon
 
     # Creates the dict that is used for the rest of the code, to facilitate easier json saving and loading
     @staticmethod

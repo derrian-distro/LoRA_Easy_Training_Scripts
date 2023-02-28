@@ -9,29 +9,41 @@ from tkinter import messagebox as mb, \
 
 import popup_modules
 
-try:
-    import lora
-except ModuleNotFoundError as error:
-    required = {"lora"}
-    installed = {p.key for p in pkg_resources.working_set}
-    missing = required - installed
-    if missing:
-        print("Failed to find lora, installing...")
-        python = sys.executable
-        subprocess.check_call([python, "-m", "pip", "install", *missing], stdout=subprocess.DEVNULL)
-import sd_scripts.networks.svd_merge_lora as merge
+# try:
+#     import lora
+# except ModuleNotFoundError as error:
+#     required = {"lora"}
+#     installed = {p.key for p in pkg_resources.working_set}
+#     missing = required - installed
+#     if missing:
+#         print("Failed to find lora, installing...")
+#         python = sys.executable
+#         subprocess.check_call([python, "-m", "pip", "install", *missing], stdout=subprocess.DEVNULL)
+# import sd_scripts.networks.svd_merge_lora as merge_lora
+# import sd_scripts.networks.merge_lora as merge_model
 
 
 def main():
-    args = ["--save_precision=fp16"]
-    button = popup_modules.ButtonBox("Which mode do you want to run in?", ["cpu", "gpu"])
-    if button.current_value != "":
-        args.append("--device=cuda")
+    my_args = ["--save_precision=fp16"]
+    _model = False
+    ret = mb.askyesno(message="Are you merging LoRA into a model?")
+    if ret:
+        ret = ask_path("Select a base model to merge into", [("safetensors", ".safetensors"), ("ckpt", ".ckpt")])
+        my_args.append(f"--sd_model={ret}")
+        ret = mb.askyesno(message="Are you using a SD2.x based model?")
+        if ret:
+            my_args.append("--v2")
+        _model = True
+
+    if not _model:
+        button = popup_modules.ButtonBox("Which mode do you want to run in?", ["cpu", "gpu"])
+        if button.current_value != "":
+            my_args.append("--device=cuda")
 
     button = popup_modules.ButtonBox("Select the precision you want to merge at.\nfloat is recommended\n"
                                      "cancel will default to float",
                                      ["float", "fp16", "bf16"])
-    args.append("--precision=" + button.current_value if button.current_value else "float")
+    my_args.append("--precision=" + button.current_value if button.current_value else "float")
 
     models = []
     cont = True
@@ -42,22 +54,23 @@ def main():
         if not ret:
             cont = False
     print(models)
-    args.append("--models")
-    args += models
+    my_args.append("--models")
+    my_args += models
 
     slider = popup_modules.SliderBox("Use the sliders below to set the percentage that will be merged from each model.\n",
                                      [os.path.split(s)[-1] for s in models], "Closing this window will set every value "
                                                                              "to 0.5\nDo you want to cancel?")
     if slider.not_selected:
-        args.append(f"--ratios")
-        args += ['0.5' for _ in range(0, len(models))]
+        my_args.append(f"--ratios")
+        my_args += ['0.5' for _ in range(0, len(models))]
     else:
-        args.append(f"--ratios")
-        args += slider.get_values()
+        my_args.append(f"--ratios")
+        my_args += slider.get_values()
 
-    ret = sd.askinteger(title="New Dim", prompt="What dim do you want the resulting merge to be in?\n"
-                                                "Cancel will default to 8")
-    args.append(f"--new_rank={ret if ret else 8}")
+    if not _model:
+        ret = sd.askinteger(title="New Dim", prompt="What dim do you want the resulting merge to be in?\n"
+                                                    "Cancel will default to 8")
+        my_args.append(f"--new_rank={ret if ret else 8}")
 
     ret = ask_path("Select the output folder")
     cont = True
@@ -69,10 +82,19 @@ def main():
             if rt:
                 quit()
         else:
-            args.append(f"--save_to={os.path.join(ret, name)}.safetensors")
+            my_args.append(f"--save_to={os.path.join(ret, name)}.safetensors")
             cont = False
-    merge.args = parser.parse_args(args)
-    merge.merge(merge.args)
+
+    python = sys.executable
+    arg = parser.parse_args(my_args)
+    if arg.sd_model is None:
+        my_args.insert(0, python)
+        my_args.insert(1, r"sd_scripts\networks\svd_merge_lora.py")
+        subprocess.check_call(my_args)
+    else:
+        my_args.insert(0, python)
+        my_args.insert(1, r"sd_scripts\networks\merge_lora.py")
+        subprocess.check_call(my_args)
 
 
 def ask_path(message: str, file_types=None):
@@ -121,4 +143,10 @@ if __name__ == "__main__":
     # yesno for cuda
     parser.add_argument("--device", type=str, default=None, help="device to use, cuda for GPU / "
                                                                  "計算を行うデバイス、cuda でGPUを使う")
+    parser.add_argument("--sd_model", type=str, default=None,
+                        help="Stable Diffusion model to load: ckpt or safetensors file, merge LoRA models if omitted / "
+                             "読み込むモデル、ckptまたはsafetensors。省略時はLoRAモデル同士をマージする")
+    parser.add_argument("--v2", action='store_true',
+                        help='load Stable Diffusion v2.x model / Stable Diffusion 2.xのモデルを読み込む')
+
     main()

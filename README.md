@@ -98,7 +98,7 @@ With my scripts, you can create a txt file with a list of all tags used during t
 
 ## LoRA Merging and Image Resizing scripts
 
-I added two new scripts to handle the scripts that sd-scripts added since I created the resizing script. The first one, `lora_merge.py` and it's accompanying bat file `lora_merge.bat` can take in any number of loras to merge together, it walks you through the process, so you shouldn't need to know how it works under the hood!
+I added two new scripts to handle the scripts that sd-scripts added since I created the resizing script. The first one, `lora_merge.py` and it's accompanying bat file `lora_merge.bat` can take in any number of loras to merge together, it walks you through the process, so you shouldn't need to know how it works under the hood! I also added support for merging lora into models with this most recent update.
 
 The second one, `image_resize.py` and it's accompanying bat file `image_resize.bat` is a script for downscaling your images. This is great if you are training at a high resolution as you can disable bucket upscaling and have a set of images that are "different" to the model, it should improve gens at lower resolutions, and might even help smaller datasets
 
@@ -110,7 +110,15 @@ I added support for the new Lion optimizer in both scripts. I don't know what th
 I also added support for the new D-Adaption which works differently from the other optimizers.
 It handles the lr by itself, you just need to set the lr values to a value close to or at 1 for each lr. in order to seperate out the lr's for d-adaption though, you must also add the args `{"decouple": "True"}` to seperate the lr's for d-adaption. using the popups automatically sets this for you
 
+## LoCon Training
+I have added support for locon training that was recently released. To that end, I have added two new arguments for activating and managing it, `locon` for activating it, and `locon_dim` for setting the dim size. Since it is largely untested I have not added it to the popups for the time being. **The file size is larger, as it stores more info, since the dims are seperate, you can create lower sized models still**
+
 ## Changelog
+- Feb 27, 2023
+  - Updated the LoRA merging scripts to allow for merging LoRA to models, I don't believe this works for locon models for now, I'll look into adding support another time
+  - Added LoCon training to the scripts, as well as added the LoCon repo as a submodule. I added two new commands to facilite this
+    - `locon` which is a bool that activates training with LoCon
+    - `locon_dim` which is the dim for the LoCon layers, you must still set the main dim size
 - Feb 23, 2023
   - Completely overhauled the scripts, changing everything
   - command line and popup are no longer seperate scripts
@@ -224,3 +232,6 @@ It handles the lr by itself, you just need to set the lr values to a value close
 | noise_offset                   | float     | NO       | Seemingly allows generation of darker and lighter than usual images. Kohya suggests 0.1, as does the paper on this technique, so I will parrot this and also suggest that you set it to 0.1 if you use it.                                                               |
 | lowram                         | bool      | NO       | Changes how the model is loaded so that it loads into vram, pretty much only useful for people with a lot of vram and no system ram, or colab users.                                                                                                                     |
 | use_lion                       | bool      | NO       | Is the flag to enable using the new lion optimizer. it obviously can't be used with 8bit_adam as they are both optimizers.                                                                                                                                               |
+|save_json_name|str|NO|Is the name that will be appended to the end of the config file output|
+|locon|bool|NO|Enables locon training, which is new, basically works like LoRA but holds more information.|
+|locon_dim|int |NO|The dim that is seperate to the normal network dim, it serves as the dim size for the other layers that aren't the default LoRA layers. No recommendation because not enough testing has been done.|
