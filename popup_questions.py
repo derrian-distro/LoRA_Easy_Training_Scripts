@@ -66,19 +66,27 @@ def ask_all_questions(args: dict) -> None:
         button = popup_modules.ButtonBox("How do you want tags to be ordered?", ["alphabetically", "occurrence-ly"])
         if button.current_value == "alphabetically":
             args['sort_tag_occurrence_alphabetically'] = True
+    else:
+        args['tag_occurrence_txt_file'] = False
 
     ret = messagebox.askyesno(message="Are you training on a SD2.x based model?")
     if ret:
         args['v2'] = True
+    else:
+        args['v2'] = False
 
     if args['v2']:
         ret = messagebox.askyesno(message="Are you training on a model based on the 768x version of SD2?")
         if ret:
             args['v_parameterization'] = True
+        else:
+            args['v_parameterization'] = False
 
     ret = messagebox.askyesno(message="Are you training on an realistic model?")
     if ret:
         args['clip_skip'] = 1
+    else:
+        args['clip_skip'] = 2
 
     ret = messagebox.askyesno(message="Do you want to use regularization images?")
     if ret:
@@ -86,7 +94,7 @@ def ask_all_questions(args: dict) -> None:
     else:
         args['reg_img_folder'] = None
 
-    button = popup_modules.ButtonBox("Which Optimizer do you want? The default optimizer is AdamW",
+    button = popup_modules.ButtonBox("Which Optimizer do you want? The default optimizer is AdamW8bit",
                                      ["AdamW", "AdamW8bit", "Lion", "SGDNesterov", "SGDNesterov8bit", "DAdaptation",
                                       "AdaFactor"])
     if button.current_value != "":
@@ -94,7 +102,7 @@ def ask_all_questions(args: dict) -> None:
         if args['optimizer_type'] == "DAdaptation":
             args['optimizer_args']["decouple"] = "True"
     else:
-        args['optimizer_type'] = "AdamW"
+        args['optimizer_type'] = "AdamW8bit"
 
     ret = simpledialog.askinteger(title="network_dim", prompt="What is the dim size you want to use?\n"
                                                               "Cancel will default to 32")
@@ -259,11 +267,16 @@ def ask_all_questions(args: dict) -> None:
             args['unet_only'] = True
         else:
             args['text_only'] = True
+    else:
+        args['unet_only'] = False
+        args['text_only'] = False
 
     ret = messagebox.askyesno(message="Do you want to flip all of your images? It is supposed to reduce biases\n"
                                       "within your dataset but it can also ruin learning an asymmetrical element\n")
     if ret:
         args['flip_aug'] = True
+    else:
+        args['flip_aug'] = False
 
     ret = simpledialog.askstring(title="comment", prompt="Do you want to set a comment that gets put into the metadata?"
                                                          "\nA good use of this would be to include how to use, such as "
@@ -276,6 +289,8 @@ def ask_all_questions(args: dict) -> None:
     ret = messagebox.askyesno(message="Do you want to prevent upscaling images?")
     if ret:
         args['bucket_no_upscale'] = True
+    else:
+        args['bucket_no_upscale'] = False
 
     button = popup_modules.ButtonBox("What Mixed precision do you want?\nCancel will default to fp16",
                                      ["fp16", "bf16", "no"])

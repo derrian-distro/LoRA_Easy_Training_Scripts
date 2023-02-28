@@ -37,7 +37,7 @@ class ArgStore:
         # vs being occurrence based
 
         # Optimizer args
-        self.optimizer_type: str = "AdamW"  # options are AdamW, AdamW8bit, Lion, SGDNesterov,
+        self.optimizer_type: str = "AdamW8bit"  # options are AdamW, AdamW8bit, Lion, SGDNesterov,
         # SGDNesterov8bit, DAdaptation, AdaFactor
 
         # this is where you add things like weight_decay
