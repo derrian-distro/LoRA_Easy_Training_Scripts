@@ -3,6 +3,7 @@ import os
 from typing import Union
 
 import sd_scripts.library.train_util as util
+import  sd_scripts.library.config_util as config_util
 
 
 def ensure_path(path, name, ext_list=None) -> bool:
@@ -31,6 +32,7 @@ class Parser:
         util.add_dataset_arguments(self.parser, True, True, True)
         util.add_training_arguments(self.parser, True)
         util.add_optimizer_arguments(self.parser)
+        config_util.add_config_arguments(self.parser)
         self.add_misc_args()
 
     def add_misc_args(self) -> None:

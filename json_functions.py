@@ -40,8 +40,11 @@ def load_json(path, obj: dict) -> dict:
                     print(f"attempting to load {key} from json failed as input isn't an integer")
                     quit(1)
 
+    obj['save_json_folder'] = None
     for key in list(json_obj):
         if obj["json_load_skip_list"] and key in obj["json_load_skip_list"]:
+            continue
+        if key == "save_json_folder":
             continue
         if key in obj:
             if key in {"keep_tokens"}:

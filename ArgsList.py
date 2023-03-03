@@ -21,6 +21,9 @@ class ArgStore:
         self.load_json_path: Union[str, None] = None
         self.multi_run_folder: Union[str, None] = None
         self.reg_img_folder: Union[str, None] = None
+        self.sample_prompts: Union[str, None] = None  # path to a txt file that has all of the sample prompts in it,
+        # one per line. Only goes to 75 tokens, will cut off the rest. Just place the prompts into the txt file per line
+        # and it will gen using those prompts
         self.change_output_name: Union[str, None] = None
         self.json_load_skip_list: Union[list[str], None] = None  # OPTIONAL, allows the user to define what they skip
         # when loading a json, IMPORTANT: by default it loads
@@ -98,6 +101,16 @@ class ArgStore:
         self.max_steps: Union[int, None] = None  # OPTIONAL, if you have specific steps you want to hit,
         # this allows you to set it directly. None to ignore
 
+        # sample args
+        # list of samplers to choose from:
+        # 'ddim', 'pndm', 'lms', 'euler', 'euler_a', 'heun', 'dpm_2', 'dpm_2_a', 'dpmsolver', 'dpmsolver++',
+        # 'dpmsingle', 'k_lms', 'k_euler', 'k_euler_a', 'k_dpm_2', 'k_dpm_2_a'
+        self.sample_sampler: Union[str, None] = None  # what sampler to use for generating an image while training,
+        # defaults to ddim
+        self.sample_every_n_steps: Union[int, None] = None  # generates a sample image while training every n steps
+        self.sample_every_n_epochs: Union[int, None] = None  # generate a sample image while training every n epochs,
+        # overrides steps
+
         # bucket args
         self.buckets: bool = True
         self.min_bucket_resolution: int = 320
@@ -132,6 +145,9 @@ class ArgStore:
         self.vae: Union[str, None] = None  # Generally messes up outputs, avoid using
         self.log_dir: Union[str, None] = None  # Only useful if you wanted to see the LR and other training details
         self.log_prefix: Union[str, None] = None  # adds a prefix to the logging output to make it easier to find
+        self.tokenizer_cache_dir: Union[str, None] = None  # Doesn't seem to help in a majority of cases
+        self.dataset_config: Union[str, None] = None  # I haven't implemented a system to convert the json to toml yet.
+        # I'll make the toml the default once I can reliably create them and convert from my already existing json files
         self.lowram: bool = False  # Is mainly meant for people using colab, which don't use my scripts
         self.no_meta: bool = False  # Is only detrimental to preserving data
         self.color_aug: bool = False  # requires cache latents to be off

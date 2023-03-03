@@ -83,7 +83,7 @@ def main() -> None:
 def ensure_file_paths(args: dict) -> None:
     failed_to_find = False
     folders_to_check = ['img_folder', 'output_folder', 'save_json_folder', 'multi_run_folder',
-                        'reg_img_folder', 'log_dir']
+                        'reg_img_folder', 'log_dir', 'tokenizer_cache_dir']
     for folder in folders_to_check:
         if folder in args and args[folder] is not None:
             if not ensure_path(args[folder], folder):
@@ -94,6 +94,10 @@ def ensure_file_paths(args: dict) -> None:
     if args['load_json_path'] is not None and not ensure_path(args['load_json_path'], 'load_json_path', {'json'}):
         failed_to_find = True
     if args['vae'] is not None and not ensure_path(args['vae'], 'vae', {'pt'}):
+        failed_to_find = True
+    if args['sample_prompts'] is not None and not ensure_path(args['sample_prompts'], 'sample_prompts', {"txt"}):
+        failed_to_find = True
+    if args['dataset_config'] is not None and not ensure_path(args['dataset_config'], 'dataset_config', {'toml'}):
         failed_to_find = True
     if failed_to_find:
         raise FileNotFoundError()

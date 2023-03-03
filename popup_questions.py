@@ -315,3 +315,32 @@ def ask_all_questions(args: dict) -> None:
     else:
         args['cache_latents'] = False
         args['random_crop'] = True
+
+    ret = messagebox.askyesno(message="Do you want to generate test images as you train?\n"
+                                      "You must include have them be on separate lines in a txt file")
+    if ret:
+        args['sample_prompts'] = popup_modules.ask_file("Select the txt file you want to pull prompts from", {"txt"})
+        button = popup_modules.ButtonBox("What sampler do you want?\nDefault is ddim",
+                                         ['ddim', 'euler', 'euler_a', 'dpmsolver++', 'k_euler', 'k_euler_a'])
+        if button.current_value == "":
+            args['sample_sampler'] = 'ddim'
+        else:
+            args['sample_sampler'] = button.current_value
+        button = popup_modules.ButtonBox("do you want to sample based on steps or epochs?\nDefault is steps",
+                                         ['steps', 'epochs'])
+        if button.current_value in {"", "steps"}:
+            ret = simpledialog.askinteger(title="steps per gen", prompt="How many steps per test image do you want?\n"
+                                                                        "Default will be every 200 steps")
+            if not ret:
+                args['sample_every_n_steps'] = 200
+            else:
+                args['sample_every_n_steps'] = ret
+        else:
+            ret = simpledialog.askinteger(title="epochs per gen", prompt="How many epochs per test image do you want?\n"
+                                                                         "Default will be every 1 epoch")
+            if not ret:
+                args['sample_every_n_epoch'] = 1
+            else:
+                args['sample_every_n_epoch'] = ret
+    else:
+        args['sample_prompts'] = None
