@@ -57,7 +57,7 @@ If you are using windows, then you can just run any of the scripts by using thei
 If you are using Linux, you can run it by activating your venv then running the scripts like so.
 
 ```
-sd_scripts\venv\bin\activate
+source sd_scripts/venv/bin/activate
 then
 accelerate launch main.py
 or
