@@ -57,7 +57,7 @@ If you are using windows, then you can just run any of the scripts by using thei
 If you are using Linux, you can run it by activating your venv then running the scripts like so.
 
 ```
-sd_scripts/venv/bin/activate
+sd_scripts\venv\bin\activate
 then
 accelerate launch main.py
 or
@@ -111,9 +111,26 @@ I also added support for the new D-Adaption which works differently from the oth
 It handles the lr by itself, you just need to set the lr values to a value close to or at 1 for each lr. in order to seperate out the lr's for d-adaption though, you must also add the args `{"decouple": "True"}` to seperate the lr's for d-adaption. using the popups automatically sets this for you
 
 ## LoCon Training
-I have added support for locon training that was recently released. To that end, I have added two new arguments for activating and managing it, `locon` for activating it, and `locon_dim` for setting the dim size. Since it is largely untested I have not added it to the popups for the time being. **The file size is larger, as it stores more info, since the dims are seperate, you can create lower sized models still**
+I have added support for locon training that was recently released. To that end, I have added two new arguments for activating and managing it, `locon` for activating it, and `locon_dim` for setting the dim size. You can also set the alpha through `locon_alpha`. LoCon has proven it does have use, so it is now part of the popups. **The file size is larger, as it stores more info, since the dims are seperate, you can create lower sized models still**
+
+## LoCon Extraction
+I have added a popup style script for extracting LoCon from models. It does this using an Add Difference style approach, you much have a base model to compare against to extract this data. The process should guide you through the process. you can start it by running the bat file `locon_extract.bat`
+
+## LoCon merging
+I have added a popup style script for merging LoCon models into normal models. all you need to do is follow the popups. you can start it by running the bat file `locon_merge.bat`
 
 ## Changelog
+- Mar, 4, 2023
+  - Updated the scripts to support the new arguments that Kohya introduced
+    - `dataset config` for the toml file support, I haven't actually played with it, so for now it just sets it and that's it
+    - all of the sample arguments
+      - `sample_every_n_steps` and `sample_every_n_epochs` which allows you to generate a sample image every n steps or epochs
+      - `sample_prompts` which is the file you pass in to generate the preview images. you can only specify a positive prompt, there is no support for negative prompts
+      - `sample_sampler` which is the sampler that is used for generating images, it defaults to ddim, but there are a lot of options, I list them all in ArgsList.py
+    - `tokenizer_cache_dir` which, to be honest, I don't really know what this means, it seems to talk about using this for offline training, but I'm pretty sure training is already offline.
+    - `locon alpha` because this was added as a variable once it was fixed
+  - Added all of the LoCon args to the popups as they have been tested enough that I feel comfortable adding them in as a whole
+  - Added LoCon extracting and merging through their respective scripts `locon_extract.bat` and `locon_merge.bat`. look above for a bit more info on them, but the popups will generally guide you enough.
 - Feb 27, 2023
   - Updated the LoRA merging scripts to allow for merging LoRA to models, I don't believe this works for locon models for now, I'll look into adding support another time
   - Added LoCon training to the scripts, as well as added the LoCon repo as a submodule. I added two new commands to facilite this

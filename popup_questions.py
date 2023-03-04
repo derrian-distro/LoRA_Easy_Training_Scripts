@@ -88,6 +88,8 @@ def ask_all_questions(args: dict) -> None:
     else:
         args['clip_skip'] = 2
 
+    args['locon'] = messagebox.askyesno(message="Do you want to train a LoCon model instead of a LoRA?")
+
     ret = messagebox.askyesno(message="Do you want to use regularization images?")
     if ret:
         args['reg_img_folder'] = popup_modules.ask_dir("Select your regularization folder", args['reg_img_folder'])
@@ -118,6 +120,20 @@ def ask_all_questions(args: dict) -> None:
         args['alpha'] = args['net_dim'] / 2
     else:
         args['alpha'] = ret
+
+    if args['locon']:
+        ret = simpledialog.askinteger(title="Conv_dim", prompt="What LoCon dim do you want to use? Default is net_dim, "
+                                                               "but subject to change in the future")
+        if not ret:
+            args['locon_dim'] = args['net_dim']
+        else:
+            args['locon_dim'] = ret
+        ret = simpledialog.askfloat(title="Conv_alpha", prompt="What LoCon alpha do you want to use? Default is "
+                                                               "LoCon_dim, but is subject ot change in the future")
+        if not ret:
+            args['locon_alpha'] = args['locon_dim']
+        else:
+            args['locon_alpha'] = ret
 
     if args['optimizer_type'] == "DAdaptation":
         ret = simpledialog.askfloat(title="learning_rate", prompt="What learning rate do you want to use?\n"
