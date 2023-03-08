@@ -56,10 +56,14 @@ def main():
                                     prompt="What threshold do you want for LoCon? Default is 0.45")
         args.append(f"--conv_threshold={ret if ret else 0.45}")
     elif mode == 'ratio':
-        ret = simpledialog.askfloat(title="LoRA ratio", prompt="What ratio do you want for LoRA? Default is 5")
-        args.append(f"--linear_ratio={ret if ret else 5}")
-        ret = simpledialog.askfloat(title="LoCon ratio", prompt="What ratio do you want for LoCon? Default is 5")
-        args.append(f"--conv_ratio={ret if ret else 5}")
+        ret = simpledialog.askfloat(title="LoRA ratio", prompt="What ratio do you want for LoRA? Enter a value between "
+                                                               "0 and 1 Default is 0.5")
+        ret = 1 if ret and ret > 1 else ret
+        args.append(f"--linear_ratio={ret if ret else 0.5}")
+        ret = simpledialog.askfloat(title="LoCon ratio", prompt="What ratio do you want for LoCon? Enter a value "
+                                                                "between 0 and 1 Default is 0.5")
+        ret = 1 if ret and ret > 1 else ret
+        args.append(f"--conv_ratio={ret if ret else 0.5}")
     else:
         ret = simpledialog.askfloat(title="LoRA percentile",
                                     prompt="What percentile do you want for LoRA? Default is 70")
