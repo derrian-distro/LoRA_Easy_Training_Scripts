@@ -120,6 +120,23 @@ I have added a popup style script for extracting LoCon from models. It does this
 I have added a popup style script for merging LoCon models into normal models. all you need to do is follow the popups. you can start it by running the bat file `locon_merge.bat`
 
 ## Changelog
+- Mar 7, 2023
+  - Updated the locon dependancies to support the new extraction methods, this also includes writing up a new version of locon extraction to follow the update
+  - Kohya updated their readme with more details on how to use the image preview system. In the attempt to make this a bit more transparent I'm also adding it here
+    - `--n` is the neg prompt, you want to put it _after_ the main prompt
+    - `--h` is height
+    - `--w` is width
+    - `--d` is the seed of the image
+    - `--l` is the CFG scale
+    - `--s` is the step count.
+    - a sample prompt txt document might be like this
+    ```
+    # prompt 1
+    masterpiece, best quality, 1girl, white t-shirt, upper body, looking at viewer, simple background --n low quality, worst quality, bad anatomy, bad composition, poor, low effort --w 768 --h 768 --d 1 --l 7.5 --s 28
+
+    # prompt 2
+    masterpiece, best quality, 1boy, in business suit, standing at street, looking back --n low quality, worst quality, bad anatomy, bad composition, poor, low effort --w 576 --h 832 --d 2 --l 5.5 --s 40
+    ```
 - Mar, 4, 2023
   - Updated the scripts to support the new arguments that Kohya introduced
     - `dataset config` for the toml file support, I haven't actually played with it, so for now it just sets it and that's it
