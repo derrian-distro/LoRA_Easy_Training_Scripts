@@ -29,7 +29,7 @@ git submodule init
 git submodule update
 cd sd_scripts
 python -m venv venv
-source venv\bin\activate
+source venv/bin/activate
 pip install torch torchvision --extra-index-url https://download.pytorch.org/whl/cu116
 pip install --upgrade -r requirements.txt
 pip install -U xformers
