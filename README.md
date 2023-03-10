@@ -116,10 +116,18 @@ I have added support for locon training that was recently released. To that end,
 ## LoCon Extraction
 I have added a popup style script for extracting LoCon from models. It does this using an Add Difference style approach, you much have a base model to compare against to extract this data. The process should guide you through the process. you can start it by running the bat file `locon_extract.bat`
 
-## LoCon merging
-I have added a popup style script for merging LoCon models into normal models. all you need to do is follow the popups. you can start it by running the bat file `locon_merge.bat`
+## LoCon and loha merging
+I have added a popup style script for merging LoCon models into normal models. all you need to do is follow the popups. you can start it by running the bat file `locon_loha_merge.bat`
 
 ## Changelog
+- Mar 10, 2023
+  - Updated sd-scripts to the newest version which now natively supports LoCon models
+  - did a small refactor of the arguments to support the new LyCORIS that replaced the old LoCon repo
+  - Removed the old LoCon repo, replacing it with the new LyCORIS repo
+  - Added support for Loha models, as well as changed support for LoCon to follow the new pattern that was introduced in LyCORIS
+  - depricated the original LoCon variables, in favor of using a singluar variable `network_args` which works much like `optimizer_args`.
+  - popups were updated to support the new loha and other changes to setup
+  - Updated both the LoCon extract and merge script to support the changes, extract still only works with LoCon, but you can merge Loha using the new merge script.
 - Mar 7, 2023
   - Updated the locon dependancies to support the new extraction methods, this also includes writing up a new version of locon extraction to follow the update
   - Kohya updated their readme with more details on how to use the image preview system. In the attempt to make this a bit more transparent I'm also adding it here
