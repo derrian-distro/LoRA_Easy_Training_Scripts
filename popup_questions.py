@@ -88,8 +88,6 @@ def ask_all_questions(args: dict) -> None:
     else:
         args['clip_skip'] = 2
 
-    args['locon'] = messagebox.askyesno(message="Do you want to train a LoCon model instead of a LoRA?")
-
     ret = messagebox.askyesno(message="Do you want to use regularization images?")
     if ret:
         args['reg_img_folder'] = popup_modules.ask_dir("Select your regularization folder", args['reg_img_folder'])
@@ -121,19 +119,27 @@ def ask_all_questions(args: dict) -> None:
     else:
         args['alpha'] = ret
 
-    if args['locon']:
-        ret = simpledialog.askinteger(title="Conv_dim", prompt="What LoCon dim do you want to use? Default is net_dim, "
-                                                               "but subject to change in the future")
-        if not ret:
-            args['locon_dim'] = args['net_dim']
-        else:
-            args['locon_dim'] = ret
-        ret = simpledialog.askfloat(title="Conv_alpha", prompt="What LoCon alpha do you want to use? Default is "
-                                                               "LoCon_dim, but is subject ot change in the future")
-        if not ret:
-            args['locon_alpha'] = args['locon_dim']
-        else:
-            args['locon_alpha'] = ret
+    button = popup_modules.ButtonBox("Which type of model do you want to train? Default is LoRA",
+                                     ['LoRA', 'LoCon', 'LoHa'])
+    if button.current_value in {"", "LoRA"}:
+        args['locon'] = False
+        args['lyco'] = False
+        args['network_args'] = None
+    elif button.current_value == "LoCon":
+        args['lyco'] = True
+        args['network_args'] = dict()
+        args['network_args']['algo'] = 'lora'
+    else:
+        args['lyco'] = True
+        args['network_args'] = dict()
+        args['network_args']['algo'] = 'loha'
+
+    if args['lyco']:
+        ret = simpledialog.askinteger(title="Conv_dim", prompt="What conv dim do you want to use? Default is 32")
+        args['network_args']['conv_dim'] = 32 if not ret else ret
+        ret = simpledialog.askinteger(title="Conv_alpha", prompt="What conv alpha do you want to use? "
+                                                                 "Default is conv_dim")
+        args['network_args']['conv_alpha'] = args['network_args']['conv_dim'] if not ret else ret
 
     if args['optimizer_type'] == "DAdaptation":
         ret = simpledialog.askfloat(title="learning_rate", prompt="What learning rate do you want to use?\n"

@@ -81,7 +81,7 @@ class Parser:
         args_list = []
         skip_list = ["save_json_folder", "load_json_path", "multi_run_folder", "json_load_skip_list",
                      "tag_occurrence_txt_file", "sort_tag_occurrence_alphabetically", "save_json_only",
-                     "warmup_lr_ratio", "optimizer_args", "locon_dim", "locon_alpha", "locon"]
+                     "warmup_lr_ratio", "optimizer_args", "locon_dim", "locon_alpha", "locon", "lyco", "network_args"]
         for key, value in args.items():
             if not value:
                 continue
@@ -113,11 +113,21 @@ class Parser:
         if "use_lion_optimizer" in args and args['use_lion_optimizer'] is True:
             name_space.optimizer_type = ""
 
-        if 'locon' in args and 'locon_dim' in args and args['locon'] is True:
-            name_space.network_module = "locon.locon.locon_kohya"
+        if args['locon_dim']:
+            if not args['network_args']:
+                args['network_args'] = dict()
+            args['network_args']['conv_dim'] = args['locon_dim']
+        if args['locon_alpha']:
+            if not args['network_args']:
+                args['network_args'] = dict()
+            args['network_args']['conv_alpha'] = args['locon_alpha']
+
+        lyco = 'lyco' in args and args['lyco'] is True
+        name_space.network_module = 'lycoris.kohya' if lyco else 'sd_scripts.networks.lora'
+
+        if 'network_args' in args and args['network_args']:
             name_space.network_args = []
-            dim = args['locon_dim'] if args['locon_dim'] else '4'
-            name_space.network_args.append(f"conv_dim={dim}")
-            name_space.network_args.append(f"conv_alpha={args['locon_alpha'] if args['locon_alpha'] else dim}")
+            for key, value in args['network_args'].items():
+                name_space.network_args.append(f"{key}={value}")
 
         return name_space

@@ -15,8 +15,9 @@ import sd_scripts.train_network as train_network
 try:
     import lion_pytorch
     import dadaptation
+    import lycoris
 except ModuleNotFoundError as error:
-    required = {"lion-pytorch", "dadaptation"}
+    required = {"lion-pytorch", "dadaptation", "lycoris"}
     installed = {p.key for p in pkg_resources.working_set}
     missing = required - installed
     if missing:

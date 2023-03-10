@@ -1,6 +1,7 @@
 import os.path
 import subprocess
 import sys
+
 from tkinter import simpledialog
 
 import popup_modules
@@ -29,7 +30,7 @@ def main():
     args.insert(2, f"{output_name}")
 
     button = popup_modules.ButtonBox("What mode do you want? Default is fixed",
-                                     ['fixed', 'threshold', 'ratio', 'percentile'])
+                                     ['fixed', 'threshold', 'ratio', 'quantile'])
     if button.current_value in {"", 'fixed'}:
         mode = 'fixed'
         args.append("--mode=fixed")
@@ -40,8 +41,8 @@ def main():
         mode = 'ratio'
         args.append("--mode=ratio")
     else:
-        mode = 'percentile'
-        args.append("--mode=percentile")
+        mode = 'quantile'
+        args.append("--mode=quantile")
 
     if mode == 'fixed':
         ret = simpledialog.askinteger(title="LoRA Dim", prompt="What dim do you want? Default is 1")
@@ -65,15 +66,15 @@ def main():
         ret = 1 if ret and ret > 1 else ret
         args.append(f"--conv_ratio={ret if ret else 0.5}")
     else:
-        ret = simpledialog.askfloat(title="LoRA percentile",
-                                    prompt="What percentile do you want for LoRA? Default is 70")
-        args.append(f"--linear_percentile={ret if ret else 70}")
-        ret = simpledialog.askfloat(title="LoCon percentile",
-                                    prompt="What percentile do you want for LoCon? Default is 70")
-        args.append(f"--conv_percentile={ret if ret else 70}")
+        ret = simpledialog.askfloat(title="LoRA quantile",
+                                    prompt="What quantile do you want for LoRA? Default is 0.5")
+        args.append(f"--linear_quantile={ret if ret else 0.5}")
+        ret = simpledialog.askfloat(title="LoCon quantile",
+                                    prompt="What quantile do you want for LoCon? Default is 0.5")
+        args.append(f"--conv_quantile={ret if ret else 0.5}")
     python = sys.executable
     args.insert(0, python)
-    args.insert(1, os.path.join(os.curdir, "locon", "extract_locon.py"))
+    args.insert(1, os.path.join(os.curdir, "LyCORIS", "tools", "extract_locon.py"))
     subprocess.check_call(args)
 
 

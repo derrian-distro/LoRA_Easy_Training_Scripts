@@ -2,5 +2,5 @@
 
 echo starting locon merge...
 call sd_scripts\venv\Scripts\activate
-python locon_merge.py
+python locon_loha_merge.py
 pause

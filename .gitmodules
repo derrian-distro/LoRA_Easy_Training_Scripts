@@ -1,6 +1,6 @@
 [submodule "sd_scripts"]
 	path = sd_scripts
 	url = https://github.com/kohya-ss/sd-scripts
-[submodule "locon"]
-	path = locon
-	url = https://github.com/KohakuBlueleaf/LoCon
+[submodule "LyCORIS"]
+	path = LyCORIS
+	url = https://github.com/KohakuBlueleaf/LyCORIS
