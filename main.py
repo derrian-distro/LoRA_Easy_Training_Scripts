@@ -17,7 +17,7 @@ try:
     import dadaptation
     import lycoris
 except ModuleNotFoundError as error:
-    required = {"lion-pytorch", "dadaptation", "lycoris"}
+    required = {"lion-pytorch", "dadaptation", "lycoris_lora"}
     installed = {p.key for p in pkg_resources.working_set}
     missing = required - installed
     if missing:
