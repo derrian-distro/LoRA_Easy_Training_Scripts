@@ -25,6 +25,11 @@ def main():
                         help="device to use, cuda for GPU / 計算を行うデバイス、cuda でGPUを使う")
     parser.add_argument("--verbose", action="store_true",
                         help="Display verbose resizing information / rank変更時の詳細情報を出力する")
+    parser.add_argument("--dynamic_method", type=str, default=None,
+                        choices=[None, "sv_ratio", "sv_fro", "sv_cumulative"],
+                        help="Specify dynamic resizing method, --new_rank is used as a hard limit for max rank")
+    parser.add_argument("--dynamic_param", type=float, default=None,
+                        help="Specify target for dynamic reduction")
 
     args_list = []
     cont = True
@@ -37,18 +42,49 @@ def main():
         model = popup_modules.ask_file("Select your model to reduce", ["safetensors"])
         args.append(f"--model={model}")
 
-        rank = None
-        while not rank:
-            rank = simpledialog.askinteger(title="New Dim Size", prompt="What dim do you want to reduce the model to.\n"
-                                                                        "keep in mind that you can only reduce using "
-                                                                        "this method")
-            if not rank:
-                rank = messagebox.askretrycancel(message="Do you want to cancel converting?")
+        button = popup_modules.ButtonBox("Select how you want to resize the LoRA. Default is Fixed",
+                                         ['Fixed', 'sv_ratio', 'sv_fro', 'sv_cumulative'])
+        if button.current_value in {"", "Fixed"}:
+            fixed = True
+        else:
+            args.append(f"--dynamic_method={button.current_value}")
+            fixed = False
+
+        if fixed:
+            rank = None
+            while not rank:
+                rank = simpledialog.askinteger(title="New Dim Size",
+                                               prompt="What dim do you want to reduce the model to.\n"
+                                                      "keep in mind that you can only reduce using "
+                                                      "this method")
                 if not rank:
-                    exit()
-                rank = None
-                continue
-        args.append(f"--new_rank={rank}")
+                    rank = messagebox.askretrycancel(message="Do you want to cancel converting?")
+                    if not rank:
+                        exit()
+                    rank = None
+                    continue
+            args.append(f"--new_rank={rank}")
+        else:
+            ret = None
+            while not ret:
+                ret = simpledialog.askfloat(title="Dynamic Value", prompt="Set the value for the dynamic resizing.")
+                if not ret:
+                    ret = messagebox.askyesno(message="Do you want to cancel resizing?")
+                    if not ret:
+                        exit()
+                    ret = None
+                    continue
+                args.append(f"--dynamic_param={ret}")
+            ret = None
+            while not ret:
+                ret = simpledialog.askinteger(title="Max Dim Size", prompt="Select the max dim size for the resize")
+                if not ret:
+                    ret = messagebox.askyesno(message="Do you want to cancel resizing?")
+                    if not ret:
+                        exit()
+                    ret = None
+                    continue
+                args.append(f"--new_rank={ret}")
 
         output_folder = popup_modules.ask_dir("What folder do you want your output to be in?")
         file_name = None
@@ -56,7 +92,7 @@ def main():
             file_name = simpledialog.askstring(title="output name", prompt="What would you like your output files "
                                                                            "to be named?")
             if not file_name:
-                file_name = messagebox.askretrycancel(message="Do you want to cancel converting?")
+                file_name = messagebox.askretrycancel(message="Do you want to cancel resizing?")
                 if not file_name:
                     exit()
                 file_name = None

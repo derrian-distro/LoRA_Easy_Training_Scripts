@@ -32,16 +32,12 @@ def ask_starter_questions(args: dict) -> int:
     if args['save_json_folder']:
         ret = simpledialog.askstring(title="Json Name", prompt="What name do you want to set for the json file?\n"
                                                                "Cancel will retain old saving style")
-        if ret:
-            args['save_json_name'] = ret
-        else:
-            args['save_json_name'] = None
+        args['save_json_name'] = ret if ret else None
 
     if args['save_json_folder']:
         ret = messagebox.askyesno(message="Do you want to only save a json file and not train?\n"
                                           "(this is good for setting up training for the queue system)")
-        if ret:
-            args['save_json_only'] = True
+        args['save_json_only'] = ret
     return 2
 
 
@@ -54,10 +50,7 @@ def ask_all_questions(args: dict) -> None:
     if ret:
         ret = simpledialog.askstring(title="output_name", prompt="What do you want your output name to be?\n"
                                                                  "Cancel keeps outputs the original")
-        if ret:
-            args['change_output_name'] = ret
-        else:
-            args['change_output_name'] = None
+        args['change_output_name'] = ret
 
     ret = messagebox.askyesno(message="Do you want to save a txt file that contains a list\n"
                               "of all tags that you have used in your training data?\n")
@@ -70,23 +63,14 @@ def ask_all_questions(args: dict) -> None:
         args['tag_occurrence_txt_file'] = False
 
     ret = messagebox.askyesno(message="Are you training on a SD2.x based model?")
-    if ret:
-        args['v2'] = True
-    else:
-        args['v2'] = False
+    args['v2'] = ret
 
     if args['v2']:
         ret = messagebox.askyesno(message="Are you training on a model based on the 768x version of SD2?")
-        if ret:
-            args['v_parameterization'] = True
-        else:
-            args['v_parameterization'] = False
+        args['v_parameterization'] = ret
 
     ret = messagebox.askyesno(message="Are you training on an realistic model?")
-    if ret:
-        args['clip_skip'] = 1
-    else:
-        args['clip_skip'] = 2
+    args['clip_skip'] = 1 if ret else 2
 
     ret = messagebox.askyesno(message="Do you want to use regularization images?")
     if ret:
@@ -106,18 +90,12 @@ def ask_all_questions(args: dict) -> None:
 
     ret = simpledialog.askinteger(title="network_dim", prompt="What is the dim size you want to use?\n"
                                                               "Cancel will default to 32")
-    if ret is None:
-        args['net_dim'] = 32
-    else:
-        args['net_dim'] = ret
+    args['net_dim'] = ret if ret else 32
 
     ret = simpledialog.askfloat(title="alpha", prompt="Alpha is the scalar of the training, generally a good starting\n"
                                                       "point is 0.5x dim size. What Alpha do you want?\n"
                                                       "Cancel will default to equal to 0.5 x network_dim")
-    if ret is None:
-        args['alpha'] = args['net_dim'] / 2
-    else:
-        args['alpha'] = ret
+    args['alpha'] = ret if ret else args['net_dim'] / 2
 
     button = popup_modules.ButtonBox("Which type of model do you want to train? Default is LoRA",
                                      ['LoRA', 'LoCon', 'LoHa'])
@@ -140,54 +118,41 @@ def ask_all_questions(args: dict) -> None:
         ret = simpledialog.askinteger(title="Conv_alpha", prompt="What conv alpha do you want to use? "
                                                                  "Default is conv_dim")
         args['network_args']['conv_alpha'] = args['network_args']['conv_dim'] if not ret else ret
+        if not messagebox.askyesno(message="Do you want to enable cp decomposition?"):
+            args['network_args']['disable_conv_cp'] = 'True'
+        else:
+            if 'disable_conv_cp' in args['network_args']:
+                args['network_args'].pop('disable_conv_cp')
 
     if args['optimizer_type'] == "DAdaptation":
         ret = simpledialog.askfloat(title="learning_rate", prompt="What learning rate do you want to use?\n"
                                                                   "Cancel will default to 1.0\nIt is recommended that"
                                                                   " you use a value close to 1")
-        if ret is None:
-            args['learning_rate'] = 1.0
-        else:
-            args['learning_rate'] = ret
+        args['learning_rate'] = ret if ret else 1.0
     else:
         ret = simpledialog.askfloat(title="learning_rate", prompt="What learning rate do you want to use?\n"
                                                                   "Cancel will default to 1e-4")
-        if ret is None:
-            args['learning_rate'] = 1e-4
-        else:
-            args['learning_rate'] = ret
+        args['learning_rate'] = ret if ret else 1e-4
 
     if args['optimizer_type'] == "DAdaptation":
         ret = simpledialog.askfloat(title="unet_lr", prompt="What unet_lr do you want to use?\n"
                                                             "Cancel will default to 1.0\nIt is recommended that"
                                                             " you use a value close to 1")
-        if ret is None:
-            args['unet_lr'] = 1.0
-        else:
-            args['unet_lr'] = ret
+        args['unet_lr'] = ret if ret else 1.0
     else:
         ret = simpledialog.askfloat(title="unet_lr", prompt="What unet_lr do you want to use?\n"
                                                             "Cancel will default to None")
-        if ret is None:
-            args['unet_lr'] = None
-        else:
-            args['unet_lr'] = ret
+        args['unet_lr'] = ret
 
     if args['optimizer_type'] == "DAdaptation":
         ret = simpledialog.askfloat(title="text_encoder_lr", prompt="What text_encoder_lr do you want to use?\n"
                                                                     "Cancel will default to 1.0\nIt is recommended that"
                                                                     "you use a value close to 1")
-        if ret is None:
-            args['text_encoder_lr'] = 1.0
-        else:
-            args['text_encoder_lr'] = ret
+        args['text_encoder_lr'] = ret if ret else 1.0
     else:
         ret = simpledialog.askfloat(title="text_encoder_lr", prompt="What text_encoder_lr do you want to use?\n"
                                                                     "Cancel will default to None")
-        if ret is None:
-            args['text_encoder_lr'] = None
-        else:
-            args['text_encoder_lr'] = ret
+        args['text_encoder_lr'] = ret
 
     button = popup_modules.ButtonBox("Which scheduler do you want?", ["cosine_with_restarts", "cosine", "polynomial",
                                                                       "constant", "constant_with_warmup", "linear"])
@@ -198,33 +163,30 @@ def ask_all_questions(args: dict) -> None:
                                       prompt="How many times do you want cosine to restart?\nThis is the entire "
                                              "amount of times it will restart for the entire training\n"
                                              "Cancel will default to 1")
-        if ret is None:
-            args['cosine_restarts'] = 1
-        else:
-            args['cosine_restarts'] = ret
+        args['cosine_restarts'] = ret if ret else 1
 
     if args['scheduler'] == "polynomial":
         ret = simpledialog.askfloat(title="Poly Strength",
                                     prompt="What power do you want to set your polynomial to?\nhigher power means "
                                            "that the model reduces the learning more more aggressively from initial "
                                            "training.\n1 = linear\nCancel sets to 1")
-        if ret is None:
-            args['scheduler_power'] = 1
-        else:
-            args['scheduler_power'] = ret
+        args['scheduler_power'] = ret if ret else 1
 
-    ret = simpledialog.askinteger(title="resolution", prompt="How large of a resolution do you want to train at?\n"
-                                                             "Cancel will default to 512")
-    if ret is None:
-        args['train_resolution'] = 512
-    else:
-        args['train_resolution'] = ret
+    ret = simpledialog.askinteger(title="width resolution",
+                                  prompt="What width resolution do you want to train at?\nIf you don't specify a height"
+                                         ", then this will be used for both dimensions\nDefault is 512")
+    args['train_resolution'] = ret if ret else 512
+
+    ret = simpledialog.askinteger(title="Height Resolution", prompt="What height resolution do you want to train at?\n"
+                                                                    "You can hit cancel if you want to just use the "
+                                                                    "same size as the width")
+    args['height_resolution'] = ret
 
     ret = simpledialog.askinteger(title="batch_size",
                                   prompt="The number of images that get processed at one time, this is directly "
-                                         "proportional to your vram and resolution. with 12gb of vram, at 512 reso, "
-                                         "you can get a maximum of 6 batch size\nHow large is your batch size going to "
-                                         "be?\nCancel will default to 1")
+                                         "proportional to your vram and resolution. with 12gb of vram, at 512x512 reso,"
+                                         " you can get a maximum of 6 batch size\nHow large is your batch size going to"
+                                         " be?\nCancel will default to 1")
     if ret is None:
         args['batch_size'] = 1
     else:

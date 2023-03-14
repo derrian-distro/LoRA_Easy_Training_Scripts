@@ -81,7 +81,8 @@ class Parser:
         args_list = []
         skip_list = ["save_json_folder", "load_json_path", "multi_run_folder", "json_load_skip_list",
                      "tag_occurrence_txt_file", "sort_tag_occurrence_alphabetically", "save_json_only",
-                     "warmup_lr_ratio", "optimizer_args", "locon_dim", "locon_alpha", "locon", "lyco", "network_args"]
+                     "warmup_lr_ratio", "optimizer_args", "locon_dim", "locon_alpha", "locon", "lyco", "network_args",
+                     "resolution", "height_resolution"]
         for key, value in args.items():
             if not value:
                 continue
@@ -95,6 +96,11 @@ class Parser:
                 args_list.append(f"--{key}={value}")
 
         name_space = self.parser.parse_args(args_list)
+        if 'height_resolution' in args and args['height_resolution']:
+            name_space.resolution = f"{args['resolution']},{args['height_resolution']}"
+        else:
+            name_space.resolution = f"{args['resolution']}"
+
         if remove_epochs:
             name_space.max_train_epochs = None
 
@@ -129,5 +135,4 @@ class Parser:
             name_space.network_args = []
             for key, value in args['network_args'].items():
                 name_space.network_args.append(f"{key}={value}")
-
         return name_space

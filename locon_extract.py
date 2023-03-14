@@ -72,6 +72,13 @@ def main():
         ret = simpledialog.askfloat(title="LoCon quantile",
                                     prompt="What quantile do you want for LoCon? Default is 0.5")
         args.append(f"--conv_quantile={ret if ret else 0.5}")
+    if popup_modules.messagebox.askyesno(message="Do you want to enable sparce bias?"):
+        args.append("--use_sparse_bias")
+        ret = simpledialog.askfloat(title="sparsity", prompt="What sparsity do you want? Cancel defaults to 0.98")
+        args.append(f"--sparsity={ret if ret else 0.98}")
+    if not popup_modules.messagebox.askyesno(message="Do you want to enable cp decomposition?"):
+        args.append("--disable_cp")
+
     python = sys.executable
     args.insert(0, python)
     args.insert(1, os.path.join(os.curdir, "LyCORIS", "tools", "extract_locon.py"))
