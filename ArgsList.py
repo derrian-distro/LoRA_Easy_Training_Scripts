@@ -55,6 +55,8 @@ class ArgStore:
         # Only matters if you are using cosine_with_restarts
         self.scheduler_power: Union[float, None] = 1  # OPTIONAL, represents the power of the polynomial.
         # Only matters if you are using polynomial
+        self.lr_scheduler_type: Union[str, None] = None  # The variable to specify a custom scheduler
+        self.lr_scheduler_args: Union[dict[str:str], None] = None  # The args to go with that custom scheduler
 
         # learning rate args
         self.learning_rate: Union[float, None] = 1e-4  # AdamW does not require this, some other optimizers do.

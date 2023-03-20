@@ -135,4 +135,9 @@ class Parser:
             name_space.network_args = []
             for key, value in args['network_args'].items():
                 name_space.network_args.append(f"{key}={value}")
+
+        if 'lr_scheduler_args' in args and args['lr_scheduler_args']:
+            name_space.lr_scheduler_args = []
+            for key, value in args['lr_scheduler_args'].items():
+                name_space.lr_scheduler_args.append(f"{key}={value}")
         return name_space
