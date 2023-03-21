@@ -52,7 +52,7 @@ def main():
                       "2 = 2.1.0: ").casefold()
 
     if reply == "2":
-        torch_version = "torch==2.1.0.dev20230317+cu118 torchvision==0.16.0.dev20230317+cu118 --extra-index-url https://download.pytorch.org/whl/nightly/cu118"
+        torch_version = "torch==2.1.0.dev20230320+cu118 torchvision==0.16.0.dev20230320+cu118 --extra-index-url https://download.pytorch.org/whl/nightly/cu118"
     elif reply == '1':
         torch_version = "torch==2.0.0+cu118 torchvision==0.15.0+cu118 --extra-index-url https://download.pytorch.org/whl/nightly/cu118"
     else:

@@ -18,7 +18,7 @@ goto end
 
 :torcha
 echo installing torch 2.1.0
-pip install torch==2.1.0.dev20230317+cu118 torchvision==0.16.0.dev20230317+cu118 --extra-index-url https://download.pytorch.org/whl/nightly/cu118 > nul
+pip install torch==2.1.0.dev20230320+cu118 torchvision==0.16.0.dev20230320+cu118 --extra-index-url https://download.pytorch.org/whl/nightly/cu118 > nul
 echo installing requirements again
 pip install -r requirements.txt
 echo installing xformers for torch 2.1.0
