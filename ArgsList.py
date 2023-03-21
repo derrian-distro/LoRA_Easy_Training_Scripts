@@ -169,7 +169,7 @@ class ArgStore:
         self.caption_extension: str = ".txt"  # should keep this as .txt unless for some reason you use .caption files
         self.max_clip_token_length: Union[int, None] = 150  # you will never really have prompts within the txt files to exceed this
         self.save_last_n_epochs_state: Union[int, None] = None  # can't see any use in it.
-        self.num_workers: int = 8  # The number of threads that are being used to load images, lower speeds up
+        self.num_workers: int = 1  # The number of threads that are being used to load images, lower speeds up
         # the start of epochs, but slows down the loading of data. The assumption here is
         # that it increases the training time as you reduce this value
         self.persistent_workers: bool = True  # makes workers persistent, further reduces/eliminates the lag in between

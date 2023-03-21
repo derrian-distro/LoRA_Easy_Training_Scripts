@@ -120,6 +120,20 @@ I have added a popup style script for extracting LoCon from models. It does this
 I have added a popup style script for merging LoCon models into normal models. all you need to do is follow the popups. you can start it by running the bat file `locon_loha_merge.bat`
 
 ## Changelog
+- Mar 21, 2023
+  - Updated sd-scripts and LyCORIS
+  - Added the new parameters added by sd-scripts for a custom scheduler, however I don't do any sort of error checking for it
+  - Added support for torch 2.0.0 and 2.1.0 along with built xformers for both
+  - Added support for triton for torch 2, however it may not be working as expected.
+  - Updated the number of workers to be be 1 by default, as to make it more accessable
+  - Changed the main batch files to not use accelerate to launch anymore, instead option to use python directly instead.
+  - Added a new batch file for updating to torch 2.0.0 or 2.1.0 with the option to install triton as well.
+  - Added new installer that is python based, as to make it easier to check for the correct version of python, as well as check for git being installed. This installer is _still_ only for windows as linux is different for every distro.
+- Mar 13, 2023
+  - Updated sd-scripts and LyCORIS
+  - with it came an update to the resizing scripts, and the locon extraction scripts.
+  - Added new parameters for specifying height seperately from width for training at non square resolutions
+  - Added new popups to handle CP Decomposition for locon and loha as well as the change to how resolution is handled
 - Mar 10, 2023
   - Updated sd-scripts to the newest version which now natively supports LoCon models
   - did a small refactor of the arguments to support the new LyCORIS that replaced the old LoCon repo
