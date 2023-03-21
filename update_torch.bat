@@ -5,7 +5,7 @@ cd /d %~dp0\sd_scripts
 choice /C 01 /M "Which torch version do you want to upgrade to? 2.0 or 2.1"
 if ERRORLEVEL 2 goto torcha
 
-rm -rf venv > nul
+rmdir venv /s /q
 python -m venv venv
 call venv\Scripts\activate
 echo installing torch 2.0.0
