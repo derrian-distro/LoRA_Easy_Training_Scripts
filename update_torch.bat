@@ -31,3 +31,4 @@ echo installing triton
 pip install "..\installables\triton-2.0.0-cp310-cp310-win_amd64.whl"
 
 :complete
+pause
