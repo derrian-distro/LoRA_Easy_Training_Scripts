@@ -2,9 +2,19 @@ import shutil
 import sys
 import subprocess
 import os
+import pkg_resources
 from zipfile import ZipFile
 
-import requests
+try:
+    import requests
+except ModuleNotFoundError as error:
+    required = {'requests'}
+    installed = {p.key for p in pkg_resources.working_set}
+    missing = required - installed
+    if missing:
+        print("installing requests...")
+        python = sys.executable
+        subprocess.check_call([python, "-m", "pip", "install", *missing], stdout=subprocess.DEVNULL)
 
 
 def main():
@@ -28,9 +38,6 @@ def main():
         quit()
     print("Git is installed... installing")
 
-    print("setting execution policy to unrestricted")
-    subprocess.check_call('PowerShell -NoProfile -ExecutionPolicy Bypass -Command "& {Start-Process PowerShell -ArgumentList \'Set-ExecutionPolicy Unrestricted -Force\' -Verb RunAs}"'.split(" "))
-
     python_real = sys.executable
     python = r"venv\Scripts\pip.exe"
 
@@ -39,6 +46,10 @@ def main():
     os.chdir("LoRA_Easy_Training_Scripts")
     subprocess.check_call(['git', 'submodule', "init"])
     subprocess.check_call(['git', 'submodule', 'update'])
+
+    print("setting execution policy to unrestricted")
+    subprocess.check_call(f"{os.path.join('installables', 'change_execution_policy.bat')}")
+
     os.chdir("sd_scripts")
 
     print("creating venv and installing requirements")
