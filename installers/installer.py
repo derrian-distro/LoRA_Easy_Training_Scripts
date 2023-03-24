@@ -65,7 +65,7 @@ def main():
     if reply == "2":
         torch_version = "torch==2.1.0.dev20230320+cu118 torchvision==0.16.0.dev20230320+cu118 --extra-index-url https://download.pytorch.org/whl/nightly/cu118"
     elif reply == '1':
-        torch_version = "torch==2.0.0+cu118 torchvision==0.15.0+cu118 --extra-index-url https://download.pytorch.org/whl/nightly/cu118"
+        torch_version = "torch==2.0.0+cu118 torchvision==0.15.0+cu118 --extra-index-url https://download.pytorch.org/whl/cu118"
     else:
         torch_version = "torch==1.12.1+cu116 torchvision==0.13.1+cu116 --extra-index-url https://download.pytorch.org/whl/cu116"
     print("installing torch")
@@ -75,12 +75,12 @@ def main():
     subprocess.check_call(f"{python} install -r requirements.txt".split(" "))
 
     print("installing xformers")
-    if reply == '0':
-        xformers = "https://github.com/C43H66N12O12S2/stable-diffusion-webui/releases/download/f/xformers-0.0.14.dev0-cp310-cp310-win_amd64.whl"
-    elif reply == '1':
+    if reply == '2':
         xformers = "https://github.com/DDStorage/LoRA_Easy_Training_Scripts/releases/download/torch2.1.0/xformers-0.0.17+c36468d.d20230318-cp310-cp310-win_amd64.whl"
-    else:
+    elif reply == '1':
         xformers = "https://github.com/DDStorage/LoRA_Easy_Training_Scripts/releases/download/torch2.0.0/xformers-0.0.17+b3d75b3.d20230320-cp310-cp310-win_amd64.whl"
+    else:
+        xformers = "https://github.com/C43H66N12O12S2/stable-diffusion-webui/releases/download/f/xformers-0.0.14.dev0-cp310-cp310-win_amd64.whl"
     subprocess.check_call(f"{python} install -U -I --no-deps {xformers}".split(' '))
     if reply in {'1', '2'}:
         reply = None
