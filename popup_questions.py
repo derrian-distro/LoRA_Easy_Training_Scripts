@@ -300,6 +300,15 @@ def ask_all_questions(args: dict) -> None:
         args['cache_latents'] = False
         args['random_crop'] = True
 
+    ret = messagebox.askyesno(message="Do you want to use min snr gamma training?\n"
+                                      "It supposedly improves outputs but hasn't been fully tested by the community "
+                                      "yet")
+    if ret:
+        ret = simpledialog.askfloat(title="min snr gamma", prompt="What value do you want for the min snr gamma? "
+                                                                  "smaller has more effect\nRecommended value is 5, "
+                                                                  "default is also 5")
+        args['min_snr_gamma'] = ret if ret else 5.0
+
     ret = messagebox.askyesno(message="Do you want to generate test images as you train?\n"
                                       "You must include have them be on separate lines in a txt file")
     if ret:

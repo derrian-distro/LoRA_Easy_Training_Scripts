@@ -120,6 +120,13 @@ I have added a popup style script for extracting LoCon from models. It does this
 I have added a popup style script for merging LoCon models into normal models. all you need to do is follow the popups. you can start it by running the bat file `locon_loha_merge.bat`
 
 ## Changelog
+- Mar 28, 2023
+  - Updated sd-scripts and LyCORIS
+  - Added the new parameters added by sd-scripts for min snr gamma and token warmup
+    - `min_snr_gamma` is an argument that takes in a float, and seemingly improves training
+    - `token_warmup_min` takes in an int, is the smallest amount of tokens that are used when using token warmup
+    - `token_warmup_step` takes in a float, is the last step before all tokens are used in training
+  - Added `min_snr_gamma` to popups as it seems to be a worthwhile addition
 - Mar 21, 2023
   - Updated sd-scripts and LyCORIS
   - Added the new parameters added by sd-scripts for a custom scheduler, however I don't do any sort of error checking for it

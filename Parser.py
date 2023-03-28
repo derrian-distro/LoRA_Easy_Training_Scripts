@@ -3,7 +3,8 @@ import os
 from typing import Union
 
 import sd_scripts.library.train_util as util
-import  sd_scripts.library.config_util as config_util
+import sd_scripts.library.config_util as config_util
+import sd_scripts.library.custom_train_functions as custom_train_functions
 
 
 def ensure_path(path, name, ext_list=None) -> bool:
@@ -33,6 +34,7 @@ class Parser:
         util.add_training_arguments(self.parser, True)
         util.add_optimizer_arguments(self.parser)
         config_util.add_config_arguments(self.parser)
+        custom_train_functions.add_custom_train_arguments(self.parser)
         self.add_misc_args()
 
     def add_misc_args(self) -> None:

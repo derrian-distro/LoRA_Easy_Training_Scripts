@@ -128,6 +128,9 @@ class ArgStore:
         # tag args
         self.shuffle_captions: bool = False  # OPTIONAL, False to ignore
         self.keep_tokens: Union[int, None] = None  # OPTIONAL, None to ignore
+        self.token_warmup_step: Union[float, None] = None  # OPTIONAL, is the amount of steps before
+        # all tokens get used in training
+        self.token_warmup_min: Union[int, None] = None  # OPTIONAL, is the smallest amount of tokens used in tag warmup
 
         # other somewhat useful args
         self.xformers: bool = True
@@ -142,6 +145,8 @@ class ArgStore:
         # high the value can be, I'm going to assume maximum of 1
         # seems to cause baking in outputs with two LoRA using noise offset
         self.mem_eff_attn: bool = False
+        self.min_snr_gamma: Union[float, None] = None  # A new method of training that supposedly improves results,
+        # recommended value is 5
 
         # practically useless arguments
         self.lora_model_for_resume: Union[str, None] = None  # LoRA train fast enough to not need this
