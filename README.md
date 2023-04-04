@@ -67,7 +67,7 @@ accelerate launch main.py --popup
 I believe it also works without accelerate if you just want to run it from the venv and python directly.
 
 ## Updating
-To check for updates on windows you can use the new `update.bat` that will automatically check for updates and apply them when it finds one, it should also update sd_scripts when there is an update as well.
+To check for updates on windows you can use the new `update.bat` that will automatically check for updates and apply them when it finds one, it should also update sd_scripts when there is an update as well. Sometimes when you update you will also need to use the `upgrade.bat` file to make things run, so don't forget to run that once an update as well.
 
 ## JSON Saving And Loading
 
@@ -94,7 +94,7 @@ With my scripts, you can create a txt file with a list of all tags used during t
 
 ## LoRA Resize Script
 
-`lora_resize.py` and it's accompanying bat file `lora_resize.bat` is a script I wrote to run the resize script that is within SD-Scripts, much like the other two, it has a batch file that can be used to run it. It does things in the popup style, and supports queueing. This script should simplify reducing the dim size of LoRA.
+`lora_resize.py` and it's accompanying bat file `lora_resize.bat` is a script I wrote to run the resize script that is within SD-Scripts, much like the other two, it has a batch file that can be used to run it. It does things in the popup style, and supports queueing. This script should simplify reducing the dim size of LoRA. I have changed the queue system to better support multiple resizes, either through providing a txt file, or providing multiple values. Because of this, however, it is more prone to failures. the txt file only contains the values used, no the mode of resize or the model to resize. So, if you are planning on doing a fixed resize, you would only need to enter in 1 value per line, but if you are planning on doing a dynamic resize, you want to put two values per line, the dynamic value, and then the max dim size.
 
 ## LoRA Merging and Image Resizing scripts
 
@@ -110,16 +110,27 @@ I added support for the new Lion optimizer in both scripts. I don't know what th
 I also added support for the new D-Adaption which works differently from the other optimizers.
 It handles the lr by itself, you just need to set the lr values to a value close to or at 1 for each lr. in order to seperate out the lr's for d-adaption though, you must also add the args `{"decouple": "True"}` to seperate the lr's for d-adaption. using the popups automatically sets this for you
 
-## LoCon Training
-I have added support for locon training that was recently released. To that end, I have added two new arguments for activating and managing it, `locon` for activating it, and `locon_dim` for setting the dim size. You can also set the alpha through `locon_alpha`. LoCon has proven it does have use, so it is now part of the popups. **The file size is larger, as it stores more info, since the dims are seperate, you can create lower sized models still**
+## LoCon and LoHa Training
+I have added support for locon and loha training. You can set the variable `lyco` in the `ArgsList.py` to use LyCORIS, which also has a few variables that need to be set. in the `networks_args` variable, you can set the `conv_dim` and `conv_alpha` as well as the `algo` and if you are using `cp_decomp`. Typically, an example is like so:
+```python
+self.network_args = {
+  'algo': 'lora', # lora corresponds to locon, loha corresponds to loha
+  'conv_dim': '8',
+  'conv_alpha': '1'
+}
+```
+The popups handle setting these values for you, if you don't want to set them yourself.
 
 ## LoCon Extraction
-I have added a popup style script for extracting LoCon from models. It does this using an Add Difference style approach, you much have a base model to compare against to extract this data. The process should guide you through the process. you can start it by running the bat file `locon_extract.bat`
+I have added a popup style script for extracting LoCon from models. It does this using an Add Difference style approach, you much have a base model to compare against to extract this data. The process should guide you through the process. you can start it by running the bat file `locon_extract.bat`. I added a new way to do multiple extractions quickly through either using a txt file or giving multiple values, this is a much better way to set up queues than my original approach, however is more prone to failure. the txt file only contains the values used, not the mode of extract or the models to extract. Since all modes have two values, you can just put each set of two per line. There is an example included in the examples folder
 
 ## LoCon and loha merging
 I have added a popup style script for merging LoCon models into normal models. all you need to do is follow the popups. you can start it by running the bat file `locon_loha_merge.bat`
 
 ## Changelog
+- Apr 4, 2023
+  - Updated sd-scripts and LyCORIS, however sd-scripts is one version behind as I still need time to work in the new sd-scripts elements. Note, this next update will disable LyCORIS for the time being until Kohaku can update their code.
+  - Added new queue systems to the `lora_resize` and `locon_extract` scripts. They allow for much easier queues but it does mean it's more prone to failure. I have included example txt files in the examples folder.
 - Mar 28, 2023
   - Updated sd-scripts and LyCORIS
   - Added the new parameters added by sd-scripts for min snr gamma and token warmup

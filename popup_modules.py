@@ -3,6 +3,7 @@ import os
 from functools import partial
 from tkinter import messagebox, ttk
 from tkinter import filedialog
+from tkinter import simpledialog
 
 
 def ask_file(message, accepted_ext_list, file_path=None):
@@ -47,6 +48,22 @@ def ask_dir(message, dir_path=None):
         if not os.path.exists(res):
             res = ""
     return res
+
+
+def ask_value(title, message, mode='int', repeat=True):
+    cont = True
+    while cont:
+        if mode == 'int':
+            ret = simpledialog.askinteger(title, message)
+        elif mode == 'float':
+            ret = simpledialog.askfloat(title, message)
+        else:
+            ret = simpledialog.askstring(title, message)
+        if not ret and repeat:
+            if messagebox.askyesno(message="Do you want to cancel?"):
+                quit()
+            continue
+        return ret
 
 
 class ButtonBox:
