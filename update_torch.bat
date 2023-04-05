@@ -26,7 +26,7 @@ copy bitsandbytes_windows\main.py venv\Lib\site-packages\bitsandbytes\cuda_setup
 goto complete
 
 :torcha
-rmdir venv /s /q
+rmdir venv /s /q 2>null
 echo creating new venv
 python -m venv venv
 call venv\Scripts\activate
@@ -39,7 +39,7 @@ pip install -U -I --no-deps "https://github.com/DDStorage/LoRA_Easy_Training_Scr
 goto end
 
 :torchb
-rmdir venv /s /q
+rmdir venv /s /q 2>null
 echo creating new venv
 python -m venv venv
 call venv\Scripts\activate
