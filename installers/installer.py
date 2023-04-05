@@ -26,11 +26,11 @@ def main():
         print("Running on windows...")
 
     version = sys.version_info
-    if version.major != 3 or version.minor != 10 or version.micro != 6:
-        print("ERROR: You don't have python 3.10.6 installed, please install python 3.10.6, and add it to path")
+    if version.major != 3 or version.minor != 10 or version.micro < 6:
+        print("ERROR: You don't have python 3.10 installed, please install python 3.10, preferably 3.10.6, and add it to path")
         quit()
     else:
-        print("Python version 3.10.6 detected...")
+        print("Python version 3.10 detected...")
 
     try:
         subprocess.check_call(['git', '--version'], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)

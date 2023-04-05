@@ -13,7 +13,7 @@ python -m venv venv
 call venv\Scripts\activate
 echo installing torch 1.12.1
 pip install torch==1.12.1+cu116 torchvision==0.13.1+cu116 --extra-index-url https://download.pytorch.org/whl/cu116 > nul
-echo installing requirements again
+echo installing requirements
 pip install -r requirements.txt > nul
 echo installing xformers for torch 1.12.1
 pip install -U -I --no-deps "https://github.com/C43H66N12O12S2/stable-diffusion-webui/releases/download/f/xformers-0.0.14.dev0-cp310-cp310-win_amd64.whl" > nul
@@ -32,7 +32,7 @@ python -m venv venv
 call venv\Scripts\activate
 echo installing torch 2.1.0
 pip install torch==2.1.0.dev20230320+cu118 torchvision==0.16.0.dev20230320+cu118 --extra-index-url https://download.pytorch.org/whl/nightly/cu118 > nul
-echo installing requirements again
+echo installing requirements
 pip install -r requirements.txt > nul
 echo installing xformers for torch 2.1.0
 pip install -U -I --no-deps "https://github.com/DDStorage/LoRA_Easy_Training_Scripts/releases/download/torch2.1.0/xformers-0.0.17+c36468d.d20230318-cp310-cp310-win_amd64.whl" > nul
@@ -45,7 +45,7 @@ python -m venv venv
 call venv\Scripts\activate
 echo installing torch 2.0.0
 pip install torch==2.0.0+cu118 torchvision==0.15.0+cu118 --extra-index-url https://download.pytorch.org/whl/cu118 > nul
-echo installing requirements again
+echo installing requirements
 pip install -r requirements.txt
 echo installing xformers for torch 2.0.0
 pip install -U -I --no-deps "https://github.com/DDStorage/LoRA_Easy_Training_Scripts/releases/download/torch2.0.0/xformers-0.0.17+b3d75b3.d20230320-cp310-cp310-win_amd64.whl" > nul
