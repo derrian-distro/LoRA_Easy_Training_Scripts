@@ -7,7 +7,7 @@ choice /C 012 /M "Which torch version do you want to change to? 1.12.1, 2.0, or 
 if ERRORLEVEL 3 goto torcha
 if ERRORLEVEL 2 goto torchb
 
-rmdir venv /s /q
+rmdir venv /s /q 2>null
 echo creating new venv
 python -m venv venv
 call venv\Scripts\activate
