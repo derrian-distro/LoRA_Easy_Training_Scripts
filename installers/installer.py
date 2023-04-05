@@ -15,6 +15,7 @@ except ModuleNotFoundError as error:
         print("installing requests...")
         python = sys.executable
         subprocess.check_call([python, "-m", "pip", "install", *missing], stdout=subprocess.DEVNULL)
+        import requests
 
 
 def main():

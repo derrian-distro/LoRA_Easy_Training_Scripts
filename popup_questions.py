@@ -98,7 +98,7 @@ def ask_all_questions(args: dict) -> None:
     args['alpha'] = ret if ret else args['net_dim'] / 2
 
     button = popup_modules.ButtonBox("Which type of model do you want to train? Default is LoRA",
-                                     ['LoRA', 'LoCon', 'LoHa'])
+                                     ['LoRA', 'LoCon', 'LoHa', 'ia3'])
     if button.current_value in {"", "LoRA"}:
         args['locon'] = False
         args['lyco'] = False
@@ -107,10 +107,14 @@ def ask_all_questions(args: dict) -> None:
         args['lyco'] = True
         args['network_args'] = dict()
         args['network_args']['algo'] = 'lora'
-    else:
+    elif button.current_value == 'LoHa':
         args['lyco'] = True
         args['network_args'] = dict()
         args['network_args']['algo'] = 'loha'
+    else:
+        args['lyco'] = True
+        args['network_args'] = dict()
+        args['network_args']['algo'] = 'ia3'
 
     if args['lyco']:
         ret = simpledialog.askinteger(title="Conv_dim", prompt="What conv dim do you want to use? Default is 32")

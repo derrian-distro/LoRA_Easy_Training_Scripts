@@ -110,11 +110,11 @@ I added support for the new Lion optimizer in both scripts. I don't know what th
 I also added support for the new D-Adaption which works differently from the other optimizers.
 It handles the lr by itself, you just need to set the lr values to a value close to or at 1 for each lr. in order to seperate out the lr's for d-adaption though, you must also add the args `{"decouple": "True"}` to seperate the lr's for d-adaption. using the popups automatically sets this for you
 
-## LoCon and LoHa Training
-I have added support for locon and loha training. You can set the variable `lyco` in the `ArgsList.py` to use LyCORIS, which also has a few variables that need to be set. in the `networks_args` variable, you can set the `conv_dim` and `conv_alpha` as well as the `algo` and if you are using `cp_decomp`. Typically, an example is like so:
+## LoCon and LoHa and ia3 Training
+I have added support for locon, loha, and ia3 training. You can set the variable `lyco` in the `ArgsList.py` to use LyCORIS, which also has a few variables that need to be set. in the `networks_args` variable, you can set the `conv_dim` and `conv_alpha` as well as the `algo` and if you are using `cp_decomp`. Typically, an example is like so:
 ```python
 self.network_args = {
-  'algo': 'lora', # lora corresponds to locon, loha corresponds to loha
+  'algo': 'lora', # lora corresponds to locon, loha corresponds to loha, and ia3 corresponds to ia3
   'conv_dim': '8',
   'conv_alpha': '1'
 }
@@ -178,6 +178,7 @@ I have added a popup style script for merging LoCon models into normal models. a
     masterpiece, best quality, 1boy, in business suit, standing at street, looking back --n low quality, worst quality, bad anatomy, bad composition, poor, low effort --w 576 --h 832 --d 2 --l 5.5 --s 40
     ```
 - Mar, 4, 2023
+  - Updated the scripts to support LyCORIS's new algo ia3. Cant guarentee anything at all, have no clue how to train it, and know nothing about it other than that it is seemingly another loha style algo.
   - Updated the scripts to support the new arguments that Kohya introduced
     - `dataset config` for the toml file support, I haven't actually played with it, so for now it just sets it and that's it
     - all of the sample arguments
