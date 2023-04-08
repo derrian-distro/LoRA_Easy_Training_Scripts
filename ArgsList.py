@@ -135,6 +135,7 @@ class ArgStore:
         # other somewhat useful args
         self.xformers: bool = True
         self.cache_latents: bool = True
+        self.random_crop: bool = False  # requires cache latents to be off
         self.flip_aug: bool = False
         self.v2: bool = False  # Sets up training for SD2.1
         self.v_parameterization: bool = False  # Only is used when v2 is also set and you are using the 768x version of v2
@@ -147,6 +148,16 @@ class ArgStore:
         self.mem_eff_attn: bool = False
         self.min_snr_gamma: Union[float, None] = None  # A new method of training that supposedly improves results,
         # recommended value is 5
+
+        # huggingface args
+        self.huggingface_repo_id: Union[str, None] = None
+        self.huggingface_repo_type: Union[str, None] = None
+        self.huggingface_path_in_repo: Union[str, None] = None
+        self.huggingface_token: Union[str, None] = None
+        self.huggingface_repo_visibility: Union[str, None] = None
+        self.save_state_to_huggingface: bool = False
+        self.resume_from_huggingface: bool = False
+        self.async_upload: bool = False
 
         # practically useless arguments
         self.lora_model_for_resume: Union[str, None] = None  # LoRA train fast enough to not need this
@@ -162,7 +173,6 @@ class ArgStore:
         self.lowram: bool = False  # Is mainly meant for people using colab, which don't use my scripts
         self.no_meta: bool = False  # Is only detrimental to preserving data
         self.color_aug: bool = False  # requires cache latents to be off
-        self.random_crop: bool = False  # requires cache latents to be off
         self.use_8bit_adam: bool = False  # deprecated
         self.use_lion: bool = False  # deprecated
         self.caption_dropout_rate: Union[float, None] = None  # has seen no use

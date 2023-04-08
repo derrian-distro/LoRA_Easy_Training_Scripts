@@ -18,7 +18,8 @@ def ask_starter_questions(args: dict) -> int:
                                       "Keep in mind that this will prevent any more popups")
     if ret:
         args['load_json_path'] = popup_modules.ask_file("Select the json file you want to load", ["json"])
-        return 1
+        ret = messagebox.askyesno(message="Do you want to select new input folders?")
+        return 1 if not ret else 3
     else:
         args['load_json_path'] = None
 
@@ -41,16 +42,20 @@ def ask_starter_questions(args: dict) -> int:
     return 2
 
 
-def ask_all_questions(args: dict) -> None:
+def ask_main_folder_questions(args: dict):
     args['base_model'] = popup_modules.ask_file("Select your base model", {"ckpt", "safetensors"}, args['base_model'])
     args['img_folder'] = popup_modules.ask_dir("Select your image folder", args['img_folder'])
     args['output_folder'] = popup_modules.ask_dir("Select your output folder", args['output_folder'])
-
     ret = messagebox.askyesno(message="Do you want to change the name of output checkpoints?")
     if ret:
         ret = simpledialog.askstring(title="output_name", prompt="What do you want your output name to be?\n"
                                                                  "Cancel keeps outputs the original")
         args['change_output_name'] = ret
+
+
+def ask_all_questions(args: dict) -> None:
+    args['network_args'] = None
+    ask_main_folder_questions(args)
 
     ret = messagebox.askyesno(message="Do you want to save a txt file that contains a list\n"
                               "of all tags that you have used in your training data?\n")
@@ -88,45 +93,142 @@ def ask_all_questions(args: dict) -> None:
     else:
         args['optimizer_type'] = "AdamW8bit"
 
-    ret = simpledialog.askinteger(title="network_dim", prompt="What is the dim size you want to use?\n"
-                                                              "Cancel will default to 32")
-    args['net_dim'] = ret if ret else 32
+    blocks = messagebox.askyesno(message="Do you want to do block weight training?"
+                                         " (select no if you are new to training)")
+    if blocks:
+        args['network_args'] = dict()
+        down_weights = popup_modules.ask_block_values("Down Weight Values",
+                                                      "Write 12 weights from 0 -> 1 seperated by a space or "
+                                                      "one of the following presets:\nsine, cosine, linear, "
+                                                      "reverse_linear, zeros\n These values represent the "
+                                                      "in layers", minimum=0, maximum=1)
+        args['network_args']['down_lr_weight'] = down_weights
 
-    ret = simpledialog.askfloat(title="alpha", prompt="Alpha is the scalar of the training, generally a good starting\n"
-                                                      "point is 0.5x dim size. What Alpha do you want?\n"
-                                                      "Cancel will default to equal to 0.5 x network_dim")
-    args['alpha'] = ret if ret else args['net_dim'] / 2
+        middle_weight = popup_modules.ask_value("Middle Weight Value", "What middle weight value do you want?")
+        args['network_args']['mid_lr_weight'] = middle_weight
 
-    button = popup_modules.ButtonBox("Which type of model do you want to train? Default is LoRA",
-                                     ['LoRA', 'LoCon', 'LoHa', 'ia3'])
+        up_weights = popup_modules.ask_block_values("Up Weight Values",
+                                                    "Write 12 weights from 0 -> 1 seperated by a space or "
+                                                    "one of the following presets:\nsine, cosine, linear, "
+                                                    "reverse_linear, zeros\n These values represent the "
+                                                    "in layers", minimum=0, maximum=1)
+        args['network_args']['up_lr_weight'] = up_weights
+
+    if blocks:
+        block_dims = messagebox.askyesno(message="Do you want to set LoRA dims per layer?")
+    else:
+        block_dims = False
+
+    if block_dims:
+        in_vals = popup_modules.ask_block_values("Test", "Write 12 values seperated by a space, "
+                                                         "this represents the in values", mode='dims')
+        mid_val = popup_modules.ask_value("Test", "What mid value do you want?", 'int')
+        out_vals = popup_modules.ask_block_values("Test", "Write 12 values seperated by a space, "
+                                                          "this represents the out values", mode='dims')
+        args['network_args']['block_dims'] = in_vals + f",{mid_val}," + out_vals
+        ret = simpledialog.askinteger(title="network_dim", prompt="What is the default dim size you want to use?\n"
+                                                                  "Cancel will default to 32")
+        args['net_dim'] = ret if ret else 32
+    else:
+        ret = simpledialog.askinteger(title="network_dim", prompt="What is the dim size you want to use?\n"
+                                                                  "Cancel will default to 32")
+        args['net_dim'] = ret if ret else 32
+
+    if blocks:
+        block_alphas = messagebox.askyesno(message="Do you want to set an alpha per layer?")
+    else:
+        block_alphas = False
+    if block_alphas:
+        blocks = True
+        in_vals = popup_modules.ask_block_values("Down Block Alphas", "Write 12 values seperated by a space, "
+                                                                      "this represents the in values", mode='alphas')
+        mid_val = popup_modules.ask_value("Middle Block Alpha", "What mid value do you want?", 'float')
+        out_vals = popup_modules.ask_block_values("Up Block Alphas", "Write 12 values seperated by a space, "
+                                                                     "this represents the out values", mode='alphas')
+        args['network_args']['block_alphas'] = in_vals + f",{mid_val}," + out_vals
+        ret = simpledialog.askfloat(title="alpha",
+                                    prompt="Alpha is the scalar of the training, generally a good starting\n"
+                                           "point is 0.5x dim size. What default Alpha do you want?\n"
+                                           "Cancel will default to equal to 0.5 x network_dim")
+        args['alpha'] = ret if ret else args['net_dim'] / 2
+    else:
+        ret = simpledialog.askfloat(title="alpha",
+                                    prompt="Alpha is the scalar of the training, generally a good starting\n"
+                                           "point is 0.5x dim size. What Alpha do you want?\n"
+                                           "Cancel will default to equal to 0.5 x network_dim")
+        args['alpha'] = ret if ret else args['net_dim'] / 2
+
+    if blocks:
+        options = ['LoRA', 'LoCon']
+    else:
+        options = ['LoRA', 'LoCon', 'LoHa', 'ia3', 'lokr']
+    button = popup_modules.ButtonBox("Which type of model do you want to train? Default is LoRA", options)
     if button.current_value in {"", "LoRA"}:
         args['locon'] = False
         args['lyco'] = False
-        args['network_args'] = None
+        if not blocks:
+            args['network_args'] = None
     elif button.current_value == "LoCon":
-        args['lyco'] = True
-        args['network_args'] = dict()
-        args['network_args']['algo'] = 'lora'
-    elif button.current_value == 'LoHa':
-        args['lyco'] = True
-        args['network_args'] = dict()
-        args['network_args']['algo'] = 'loha'
+        if blocks:
+            args['locon'] = False
+            args['lyco'] = False
+        else:
+            args['lyco'] = True
+            args['network_args'] = dict()
+            args['network_args']['algo'] = 'lora'
     else:
         args['lyco'] = True
         args['network_args'] = dict()
-        args['network_args']['algo'] = 'ia3'
+        args['network_args']['algo'] = button.current_value.lower()
+    locon = button.current_value == 'LoCon'
+
+    if blocks and locon:
+        ret = messagebox.askyesno(message="Do you want to set LoCon dims per layer?")
+        block_dims = ret
+    else:
+        block_dims = False
+    if block_dims:
+        in_vals = popup_modules.ask_block_values("Down Block Dims", "Write 12 values seperated by a space, "
+                                                                    "this represents the down values", mode='dims')
+        mid_val = popup_modules.ask_value("Middle Block Dim", "What middle dim value do you want?", 'int')
+        out_vals = popup_modules.ask_block_values("Up Block Dims", "Write 12 values seperated by a space, "
+                                                                   "this represents the out values", mode='dims')
+        args['network_args']['conv_block_dims'] = in_vals + f",{mid_val}," + out_vals
+        print(args['network_args']['conv_block_dims'])
+        ret = simpledialog.askinteger(title="Conv_dim", prompt="What is the default conv dim size you want to use?\n"
+                                                               "Cancel will default to 32")
+        args['network_args']['conv_dim'] = ret if ret else 32
+    elif args['lyco'] or (blocks and locon):
+        ret = simpledialog.askinteger(title="Conv_dim", prompt="What is the conv dim size you want to use?\n"
+                                                               "Cancel will default to 32")
+        args['network_args']['conv_dim'] = ret if ret else 32
+
+    if blocks and locon:
+        ret = messagebox.askyesno(message="Do you want to set LoCon alphas per layer?")
+        block_alphas = ret
+    else:
+        block_alphas = False
+    if block_alphas:
+        in_vals = popup_modules.ask_block_values("Down Block Alphas", "Write 12 values seperated by a space, "
+                                                                      "this represents the down values", mode='alphas')
+        mid_val = popup_modules.ask_value("Middle Block Alphas", "What middle dim value do you want?", 'int')
+        out_vals = popup_modules.ask_block_values("Up Block Alphas", "Write 12 values seperated by a space, "
+                                                                     "this represents the out values", mode='alphas')
+        args['network_args']['conv_block_alphas'] = in_vals + f",{mid_val}," + out_vals
+        print(args['network_args']['conv_block_alphas'])
+        ret = simpledialog.askinteger(title="Conv_alpha", prompt="What is the default conv alpha size you want to use?\n"
+                                                                 "Cancel will default to conv_dim")
+        args['network_args']['conv_alpha'] = args['network_args']['conv_dim'] if not ret else ret
+    elif args['lyco'] or (blocks and locon):
+        ret = simpledialog.askinteger(title="Conv_alpha", prompt="What is the conv alpha size you want to use?\n"
+                                                                 "Cancel will default to conv_dim")
+        args['network_args']['conv_alpha'] = args['network_args']['conv_dim'] if not ret else ret
 
     if args['lyco']:
-        ret = simpledialog.askinteger(title="Conv_dim", prompt="What conv dim do you want to use? Default is 32")
-        args['network_args']['conv_dim'] = 32 if not ret else ret
-        ret = simpledialog.askinteger(title="Conv_alpha", prompt="What conv alpha do you want to use? "
-                                                                 "Default is conv_dim")
-        args['network_args']['conv_alpha'] = args['network_args']['conv_dim'] if not ret else ret
-        if not messagebox.askyesno(message="Do you want to enable cp decomposition?"):
-            args['network_args']['disable_conv_cp'] = 'True'
+        if messagebox.askyesno(message="Do you want to enable cp decomposition?"):
+            args['network_args']['use_conv_cp'] = True
         else:
-            if 'disable_conv_cp' in args['network_args']:
-                args['network_args'].pop('disable_conv_cp')
+            args['network_args']['disable_conv_cp'] = True
 
     if args['optimizer_type'] == "DAdaptation":
         ret = simpledialog.askfloat(title="learning_rate", prompt="What learning rate do you want to use?\n"

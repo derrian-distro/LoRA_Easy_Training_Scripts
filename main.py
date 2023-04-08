@@ -30,7 +30,9 @@ def main() -> None:
     parser = Parser()
     pre_args = parser.parse_args()
     args = ArgStore.convert_args_to_dict()
+    selected = 1
     if pre_args.popup:
+        print("starting popups")
         selected = popup_questions.ask_starter_questions(args)
         if selected == 2:
             popup_questions.ask_all_questions(args)
@@ -63,6 +65,8 @@ def main() -> None:
     json_path = pre_args.load_json_path if pre_args.load_json_path else args['load_json_path']
     if json_path and ensure_path(json_path, 'load_json_path', {"json"}):
         json_functions.load_json(json_path, args)
+    if selected == 3:
+        popup_questions.ask_main_folder_questions(args)
 
     ensure_file_paths(args)
 
@@ -77,7 +81,6 @@ def main() -> None:
         quit(0)
 
     args = parser.create_args(ArgStore.change_dict_to_internal_names(args))
-    # print(args)
     train_network.train(args)
 
 

@@ -50,20 +50,69 @@ def ask_dir(message, dir_path=None):
     return res
 
 
-def ask_value(title, message, mode='int', repeat=True):
+def ask_value(title, message, mode='int', repeat=True, default=None):
     cont = True
     while cont:
         if mode == 'int':
-            ret = simpledialog.askinteger(title, message)
+            ret = simpledialog.askinteger(title, message, initialvalue='' if not default else str(default))
         elif mode == 'float':
-            ret = simpledialog.askfloat(title, message)
+            ret = simpledialog.askfloat(title, message, initialvalue='' if not default else str(default))
         else:
-            ret = simpledialog.askstring(title, message)
+            ret = simpledialog.askstring(title, message, initialvalue='' if not default else default)
         if not ret and repeat:
             if messagebox.askyesno(message="Do you want to cancel?"):
                 quit()
             continue
         return ret
+
+
+def ask_block_values(title, message, mode='weights', minimum=None, maximum=None, repeat=True):
+    init_val = ""
+    if mode not in {'weights', 'dims', 'alphas'}:
+        return None
+    accepted_strings = {'sine', 'cosine', 'linear', 'reverse_linear', 'zeros'}
+    cont = True
+    while cont:
+        ret = ask_value(title, message, "string", default=init_val)
+        vals = ret.split(' ')
+        if len(vals) not in {1, 12}:
+            if repeat:
+                messagebox.showinfo(message=f"You must put in exactly 12 values.")
+                init_val = ret
+                continue
+            return None
+        return_to_top = False
+        for i in range(len(vals)):
+            val = vals[i]
+            if val.lower() in accepted_strings and mode == 'weights':
+                return val.lower()
+            elif val in accepted_strings:
+                if repeat:
+                    messagebox.showinfo(message="Dims or Alphas cannot use presets, please input 12 values seperated by"
+                                                " a space")
+                    init_val = ''
+                    return_to_top = True
+                    continue
+                return None
+            try:
+                temp = float(val) if mode in {'weights', 'alphas'} else int(val)
+                if minimum is not None and temp < minimum:
+                    print(f"{val} is smaller than minimum, setting to minimum")
+                    vals[i] = str(minimum)
+                if maximum is not None and temp > maximum:
+                    print(f"{val} is larger than maximum, setting to maximum")
+                    vals[i] = str(maximum)
+            except ValueError:
+                if repeat:
+                    messagebox.showinfo(message="One of more of the values are not valid values, "
+                                                "please check your values and try again.")
+                    init_val = ret
+                    return_to_top = True
+                    continue
+                return None
+        if return_to_top:
+            continue
+        return ','.join(vals)
 
 
 class ButtonBox:

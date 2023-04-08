@@ -102,19 +102,19 @@ I added two new scripts to handle the scripts that sd-scripts added since I crea
 
 The second one, `image_resize.py` and it's accompanying bat file `image_resize.bat` is a script for downscaling your images. This is great if you are training at a high resolution as you can disable bucket upscaling and have a set of images that are "different" to the model, it should improve gens at lower resolutions, and might even help smaller datasets
 
-## Lion Optimizer
-
-I added support for the new Lion optimizer in both scripts. I don't know what the best lr is for them, and still have 8bit adam as the default for now. if you want to know more, take a look at the original github [here](https://github.com/lucidrains/lion-pytorch). They seem to have some insights, namely, use less steps than usual and a smaller lr. stating that lr should be anywhere from 3-10x _smaller_ than normal.
-
 ## D-Adaption
 I also added support for the new D-Adaption which works differently from the other optimizers.
 It handles the lr by itself, you just need to set the lr values to a value close to or at 1 for each lr. in order to seperate out the lr's for d-adaption though, you must also add the args `{"decouple": "True"}` to seperate the lr's for d-adaption. using the popups automatically sets this for you
 
-## LoCon and LoHa and ia3 Training
+
+## Block Weight Training
+With the introduction of Block Weight Training by kohya in sd-scripts, I had to think about how to implement everything for this. I have a proper popup in the works, but I didn't have it ready in time for this update. So I opted to create a simpler setup for the time being. The popups will guide you through setting all of the values, or you can take a look at the documentation on it [here](https://github.com/kohya-ss/sd-scripts#4-apr-2023-202344-release-060). I tried my hardest to make it easy to use, however, I had to balance the amount of popups with the complexity. The choice I made meant more work for me in the end, but I think it turned out very well. The block weight training allows you to select a different weight for every layer, as well as dims and alphas. **NOTE**: If you want to use this outside of the popups, make sure to disable `lyco` and **not** have `algo` in the `network_args`
+
+## LoCon, LoHa, ia3, and Lokr Training
 I have added support for locon, loha, and ia3 training. You can set the variable `lyco` in the `ArgsList.py` to use LyCORIS, which also has a few variables that need to be set. in the `networks_args` variable, you can set the `conv_dim` and `conv_alpha` as well as the `algo` and if you are using `cp_decomp`. Typically, an example is like so:
 ```python
 self.network_args = {
-  'algo': 'lora', # lora corresponds to locon, loha corresponds to loha, and ia3 corresponds to ia3
+  'algo': 'lora', # lora corresponds to locon, loha corresponds to loha, ia3 corresponds to ia3, and lokr corresponds to lokr
   'conv_dim': '8',
   'conv_alpha': '1'
 }
@@ -128,6 +128,13 @@ I have added a popup style script for extracting LoCon from models. It does this
 I have added a popup style script for merging LoCon models into normal models. all you need to do is follow the popups. you can start it by running the bat file `locon_loha_merge.bat`
 
 ## Changelog
+- Apr 8, 2023
+  - Updated sd-scripts and LyCORIS
+  - added all of the new huggingface commands to the `ArgsList.py` that was added recently by sd-scripts, but I didn't include them in the popups.
+  - Added support for the new algo LyCORIS created, lokr, in the popups.
+  - Added support for the new block weight training that kohya implemented. There is a lot to it, so I suggest you read the documentation [here](https://github.com/kohya-ss/sd-scripts#4-apr-2023-202344-release-060).
+  - Added a mode to reading a json that allows you to specify the folders still.
+  - XTI implementation will be in the next update
 - Apr 4, 2023
   - Updated sd-scripts and LyCORIS, however sd-scripts is one version behind as I still need time to work in the new sd-scripts elements. Note, this next update will disable LyCORIS for the time being until Kohaku can update their code.
   - Added new queue systems to the `lora_resize` and `locon_extract` scripts. They allow for much easier queues but it does mean it's more prone to failure. I have included example txt files in the examples folder.
