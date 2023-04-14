@@ -106,6 +106,28 @@ The second one, `image_resize.py` and it's accompanying bat file `image_resize.b
 I also added support for the new D-Adaption which works differently from the other optimizers.
 It handles the lr by itself, you just need to set the lr values to a value close to or at 1 for each lr. in order to seperate out the lr's for d-adaption though, you must also add the args `{"decouple": "True"}` to seperate the lr's for d-adaption. using the popups automatically sets this for you
 
+## Weighted Captions
+Kohya has introduced a way to weight captions in the txt files, with it is an argument for it, as well as normal tag weight rules. All of the tag weights follow the same setup as auto1111 webui, () for increase, [] for decrease, and (tag:1.2) to increase or decrease according to the weight. As part of this, however, if you have it enabled, make sure to change all () to \\(tag\\) that aren't weighted as to prevent them from accidentally being weighted during training.
+
+
+## DyLoRA training
+DyLoRA is a new method of training LoRA and LoCon that recently popped up in both LyCORIS and sd-scripts. My scripts are configured to train sd-scripts by default, but it is capable of training both. DyLoRA are activated differently depending on the version you are training. It seems like you cannot use Block Weight Training with it so I have diabled it for the time being.
+```python
+# for kohya's implementation
+self.network_args = {
+  'conv_dim': '8', # Optional, must be set to the same as network dim to use kohya's version. conv_alpha is completely ignored if you are doing DyLoRA, instead using the network alpha
+  'unit':'4' # Is required if you want to use DyLoRA in my scripts, as that's how I tell what you want to do.
+}
+
+# for kohaku's implementation
+self.lyco = True
+self.network_args = {
+  'conv_dim': '8', # Unsure if it must be the same dim size like kohya as I didn't fully test it
+  'conv_alpha':'1', # Might end up ignoring it much like kohya does
+  'algo':'dylora' # Required to tell the scripts you want to use dylora
+}
+```
+
 
 ## Block Weight Training
 With the introduction of Block Weight Training by kohya in sd-scripts, I had to think about how to implement everything for this. I have a proper popup in the works, but I didn't have it ready in time for this update. So I opted to create a simpler setup for the time being. The popups will guide you through setting all of the values, or you can take a look at the documentation on it [here](https://github.com/kohya-ss/sd-scripts#4-apr-2023-202344-release-060). I tried my hardest to make it easy to use, however, I had to balance the amount of popups with the complexity. The choice I made meant more work for me in the end, but I think it turned out very well. The block weight training allows you to select a different weight for every layer, as well as dims and alphas. **NOTE**: If you want to use this outside of the popups, make sure to disable `lyco` and **not** have `algo` in the `network_args`
@@ -127,7 +149,14 @@ I have added a popup style script for extracting LoCon from models. It does this
 ## LoCon and loha merging
 I have added a popup style script for merging LoCon models into normal models. all you need to do is follow the popups. you can start it by running the bat file `locon_loha_merge.bat`
 
+## Experimental XTI training.
+I created a rudimentary popup script for training XTI. I have only tested that the arguments are getting properly passed, beyond that I have not tested anything as I don't actually know how to train them. Please submit a bug report if you know how to train them, and it doesn't work for you, as I'd not know otherwise.
+
 ## Changelog
+- Apr 14, 2023
+  - Updated sd-scripts and LyCORIS
+  - added the weighted captions arguments as well as support for the new DyLoRA.
+  - added support for XTI in the form of a popup script. It's not entirely tested beyond making sure it actually passes arguments correctly to the training scripts as well as making assumptions about what arguments are required. It is *very* rudimentary in comparison to the main scripts, doesn't have a majority of the features the normal scripts have, but at least it has json saving and loading. Since I have no idea how to train TI or XTI, I'm going to need some feedback from people who *do* so I can fix any bugs that might exist
 - Apr 8, 2023
   - Updated sd-scripts and LyCORIS
   - added all of the new huggingface commands to the `ArgsList.py` that was added recently by sd-scripts, but I didn't include them in the popups.

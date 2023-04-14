@@ -115,6 +115,18 @@ def ask_block_values(title, message, mode='weights', minimum=None, maximum=None,
         return ','.join(vals)
 
 
+def ask_yes_no_to_value(yn_message, title, message, mode='int', repeat=True, default=None):
+    ret = messagebox.askyesno(message=yn_message)
+    if ret:
+        return ask_value(title, message, mode, repeat, default)
+    return False
+
+
+def ask_value_or_default(title, message, default_output, mode='int', default_placeholder=None):
+    val = ask_value(title, message, mode=mode, repeat=False, default=default_placeholder)
+    return default_output if not val else val
+
+
 class ButtonBox:
     def __init__(self, label: str, button_name_list: list[str]) -> None:
         self.window = tk.Tk()

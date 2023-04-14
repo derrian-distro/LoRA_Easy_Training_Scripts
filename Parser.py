@@ -132,6 +132,9 @@ class Parser:
 
         lyco = 'lyco' in args and args['lyco'] is True
         name_space.network_module = 'lycoris.kohya' if lyco else 'sd_scripts.networks.lora'
+        if not lyco and 'network_args' in args and args['network_args']:
+            if 'unit' in args['network_args']:
+                name_space.network_module = 'sd_scripts.networks.dylora'
 
         if 'network_args' in args and args['network_args']:
             name_space.network_args = []

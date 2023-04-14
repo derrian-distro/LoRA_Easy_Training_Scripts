@@ -7,7 +7,7 @@ def save_json(path, obj: dict) -> None:
     # set these to None and False to prevent them from modifying the output when loaded back up
     obj['list_of_json_to_run'] = None
     obj['save_json_only'] = False
-    name = f"config-{time.time()}.json" if not obj['save_json_name'] else \
+    name = f"config-{time.time()}.json" if 'save_json_name' not in obj or not obj['save_json_name'] else \
         f"config-{time.time()}-{obj['save_json_name']}.json"
     fp = open(os.path.join(path, name), "w")
     json.dump(obj, fp=fp, indent=4)
@@ -55,6 +55,17 @@ def load_json(path, obj: dict) -> dict:
                 print_change(key, obj[key], json_obj[key])
                 obj[key] = json_obj[key]
     print("completed changing variables.")
+    return obj
+
+
+def load_xti_json(path):
+    obj = {}
+    with open(path) as f:
+        json_obj = json.loads(f.read())
+    for key in list(json_obj):
+        if key in {'save_json_only', 'list_of_json_to_run'}:
+            continue
+        obj[key] = json_obj[key]
     return obj
 
 

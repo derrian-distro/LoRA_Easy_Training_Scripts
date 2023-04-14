@@ -131,10 +131,12 @@ class ArgStore:
         self.token_warmup_step: Union[float, None] = None  # OPTIONAL, is the amount of steps before
         # all tokens get used in training
         self.token_warmup_min: Union[int, None] = None  # OPTIONAL, is the smallest amount of tokens used in tag warmup
+        self.weighted_captions: bool = False  # OPTIONAL, turn on if you have weighted your captions in your txt files
 
         # other somewhat useful args
         self.xformers: bool = True
         self.cache_latents: bool = True
+        self.cache_latents_to_disk: bool = False  # Both cache latents and cache latents to disk must be on to use this
         self.random_crop: bool = False  # requires cache latents to be off
         self.flip_aug: bool = False
         self.v2: bool = False  # Sets up training for SD2.1
@@ -232,10 +234,11 @@ class ArgStore:
 
 
 def find_max_steps(args: dict) -> int:
+    img_folder = args['img_folder'] if 'img_folder' in args else args['train_data_dir']
     total_steps = 0
-    folders = os.listdir(args["img_folder"])
+    folders = os.listdir(img_folder)
     for folder in folders:
-        if not os.path.isdir(os.path.join(args["img_folder"], folder)):
+        if not os.path.isdir(os.path.join(img_folder, folder)):
             continue
         num_repeats = folder.split("_")
         if len(num_repeats) < 2:
@@ -247,12 +250,13 @@ def find_max_steps(args: dict) -> int:
             print(f"folder {folder} is not in the correct format. Format is x_name. skipping")
             continue
         imgs = 0
-        for file in os.listdir(os.path.join(args["img_folder"], folder)):
+        for file in os.listdir(os.path.join(img_folder, folder)):
             if os.path.isdir(file):
                 continue
             ext = file.split(".")
             if ext[-1].lower() in {"png", "bmp", "gif", "jpeg", "jpg", "webp"}:
                 imgs += 1
         total_steps += (num_repeats * imgs)
-    total_steps = int((total_steps / args["batch_size"]) * args["num_epochs"])
+    epochs = args['num_epochs'] if 'num_epochs' in args else args['max_train_epochs']
+    total_steps = int((total_steps / args["batch_size"]) * epochs)
     return total_steps

@@ -2,6 +2,7 @@ from tkinter import messagebox
 from tkinter import simpledialog
 
 import popup_modules
+from ArgsList import find_max_steps
 
 
 def ask_starter_questions(args: dict) -> int:
@@ -58,7 +59,7 @@ def ask_all_questions(args: dict) -> None:
     ask_main_folder_questions(args)
 
     ret = messagebox.askyesno(message="Do you want to save a txt file that contains a list\n"
-                              "of all tags that you have used in your training data?\n")
+                                      "of all tags that you have used in your training data?\n")
     if ret:
         args['tag_occurrence_txt_file'] = True
         button = popup_modules.ButtonBox("How do you want tags to be ordered?", ["alphabetically", "occurrence-ly"])
@@ -161,7 +162,7 @@ def ask_all_questions(args: dict) -> None:
     if blocks:
         options = ['LoRA', 'LoCon']
     else:
-        options = ['LoRA', 'LoCon', 'LoHa', 'ia3', 'lokr']
+        options = ['LoRA', 'LoCon', 'LoHa', 'ia3', 'lokr', 'dylora']
     button = popup_modules.ButtonBox("Which type of model do you want to train? Default is LoRA", options)
     if button.current_value in {"", "LoRA"}:
         args['locon'] = False
@@ -176,13 +177,31 @@ def ask_all_questions(args: dict) -> None:
             args['lyco'] = True
             args['network_args'] = dict()
             args['network_args']['algo'] = 'lora'
+    elif button.current_value == 'dylora':
+        args['locon'] = False
+        args['lyco'] = False
+        args['network_args'] = dict()
     else:
         args['lyco'] = True
         args['network_args'] = dict()
         args['network_args']['algo'] = button.current_value.lower()
     locon = button.current_value == 'LoCon'
+    dylora = button.current_value == 'dylora'
+    if dylora:
+        ret = messagebox.askyesno(message="Do you want to use conv layers?")
+        if ret:
+            messagebox.showinfo(message="DyLora must have the same dim on both linear and conv dims. "
+                                        "Setting conv dim to linear dim")
+            args['network_args']['conv_dim'] = args['net_dim']
+            ret = simpledialog.askinteger(title="Conv_alpha",
+                                          prompt="What is the default conv alpha size you want to use?\n"
+                                                 "Cancel will default to conv_dim")
+            args['network_args']['conv_alpha'] = args['network_args']['conv_dim'] if not ret else ret
+        ret = popup_modules.ask_value("DyLoRA Unit Value", "What unit size do you want? all dims need to be "
+                                                           "divisible by the input value. Defaults to 4", int, False)
+        args['network_args']['unit'] = ret if ret else 4
 
-    if blocks and locon:
+    if blocks and locon and not dylora:
         ret = messagebox.askyesno(message="Do you want to set LoCon dims per layer?")
         block_dims = ret
     else:
@@ -198,12 +217,12 @@ def ask_all_questions(args: dict) -> None:
         ret = simpledialog.askinteger(title="Conv_dim", prompt="What is the default conv dim size you want to use?\n"
                                                                "Cancel will default to 32")
         args['network_args']['conv_dim'] = ret if ret else 32
-    elif args['lyco'] or (blocks and locon):
+    elif args['lyco'] or (blocks and locon and not dylora):
         ret = simpledialog.askinteger(title="Conv_dim", prompt="What is the conv dim size you want to use?\n"
                                                                "Cancel will default to 32")
         args['network_args']['conv_dim'] = ret if ret else 32
 
-    if blocks and locon:
+    if blocks and locon and not dylora:
         ret = messagebox.askyesno(message="Do you want to set LoCon alphas per layer?")
         block_alphas = ret
     else:
@@ -216,10 +235,11 @@ def ask_all_questions(args: dict) -> None:
                                                                      "this represents the out values", mode='alphas')
         args['network_args']['conv_block_alphas'] = in_vals + f",{mid_val}," + out_vals
         print(args['network_args']['conv_block_alphas'])
-        ret = simpledialog.askinteger(title="Conv_alpha", prompt="What is the default conv alpha size you want to use?\n"
-                                                                 "Cancel will default to conv_dim")
+        ret = simpledialog.askinteger(title="Conv_alpha",
+                                      prompt="What is the default conv alpha size you want to use?\n"
+                                             "Cancel will default to conv_dim")
         args['network_args']['conv_alpha'] = args['network_args']['conv_dim'] if not ret else ret
-    elif args['lyco'] or (blocks and locon):
+    elif args['lyco'] or (blocks and locon and not dylora):
         ret = simpledialog.askinteger(title="Conv_alpha", prompt="What is the conv alpha size you want to use?\n"
                                                                  "Cancel will default to conv_dim")
         args['network_args']['conv_alpha'] = args['network_args']['conv_dim'] if not ret else ret
@@ -406,6 +426,10 @@ def ask_all_questions(args: dict) -> None:
         args['cache_latents'] = False
         args['random_crop'] = True
 
+    if button.current_value in {'', 'cache latents'}:
+        ret = messagebox.askyesno(message="Do you want to cache latents to disk?")
+        args['cache_latents_to_disk'] = ret
+
     ret = messagebox.askyesno(message="Do you want to use min snr gamma training?\n"
                                       "It supposedly improves outputs but hasn't been fully tested by the community "
                                       "yet")
@@ -443,3 +467,112 @@ def ask_all_questions(args: dict) -> None:
                 args['sample_every_n_epoch'] = ret
     else:
         args['sample_prompts'] = None
+
+
+def ask_xti_questions() -> dict:
+    args = {}
+    args['max_data_loader_n_workers'] = 1
+    args['persistent_data_loader_workers'] = True
+    args['seed'] = 23
+    args['caption_extension'] = '.txt'
+    args['enable_bucket'] = True
+    args['max_token_length'] = 150
+    args['save_model_as'] = 'safetensors'
+    args['pretrained_model_name_or_path'] = popup_modules.ask_file("Select your base model", ['ckpt', 'safetensors'])
+    args['train_data_dir'] = popup_modules.ask_dir("Select your image folder")
+    args['output_dir'] = popup_modules.ask_dir("Select your output folder")
+    ret = popup_modules.ask_yes_no_to_value("Do you want to change the name of checkpoints?",
+                                            "Output name", "What do you want the name of your model to be?", 'str',
+                                            True)
+    if ret:
+        args['output_name'] = ret
+    ret = messagebox.askyesno(message="Are you using a model based on sd2.x?")
+    if ret:
+        args['v2'] = ret
+    if ret:
+        ret = messagebox.askyesno(message="Is the model you are using using v parameterization?")
+        if ret:
+            args['v_parameterization'] = ret
+    button = popup_modules.ButtonBox("Which mixed precision do you want? default is fp16", ['float', 'fp16', 'bf16'])
+    args['mixed_precision'] = 'fp16' if button.current_value == '' else button.current_value
+    button = popup_modules.ButtonBox("Which save precision do you want? default is fp16", ['float', 'fp16', 'bf16'])
+    args['save_precision'] = 'fp16' if button.current_value == '' else button.current_value
+    args['resolution'] = popup_modules.ask_value_or_default("Train Resolution", "What resolution width resolution do "
+                                                                                "you want to train at? default is 512",
+                                                            512, mode='int')
+    args['train_batch_size'] = popup_modules.ask_value_or_default('Train Batch Size', "What batch size do you want? "
+                                                                                      "default is 1", 1, mode='int')
+    button = popup_modules.ButtonBox("Select the optimizer you want to use. Default is Adamw8bit",
+                                     ['AdamW', 'AdamW8bit', 'Lion', 'SGDNesterov', 'SGDNesterov8bit',
+                                      'DAdaptation', 'AdaFactor'])
+    args['optimizer_type'] = 'Adamw8bit' if button.current_value == '' else button.current_value
+    lr_default = 1.0 if args['optimizer_type'] == 'DAdaptation' else 1e-4
+    args['learning_rate'] = popup_modules.ask_value_or_default('Learning Rate', f'What is your learning rate? '
+                                                                                f'Default is {lr_default}',
+                                                               lr_default, mode='float')
+    button = popup_modules.ButtonBox("What scheduler do you want to use? Default is cosine",
+                                     ['linear', 'cosine', 'cosine_with_restarts', 'polynomial', 'constant',
+                                      'constant_with_warmup', 'adafactor'])
+    args['lr_scheduler'] = 'cosine' if button.current_value == '' else button.current_value
+    if args['lr_scheduler'] == 'cosine_with_restarts':
+        args['lr_scheduler_num_cycles'] = popup_modules.ask_value_or_default('Num Cycles', "How many times do you want "
+                                                                                           "to restart? default is 1",
+                                                                             1, mode='int')
+    elif args['lr_scheduler'] == 'polynomial':
+        args['lr_scheduler_power'] = popup_modules.ask_value_or_default('Scheduler Power',
+                                                                        "What is the polynomial strength you want to "
+                                                                        "use? Default is 1.0", 1.0, mode='float')
+    button = popup_modules.ButtonBox("Which way do you want to manage steps? default is epochs", ['steps', 'epochs'])
+    if button.current_value in {'', 'epochs'}:
+        args['max_train_epochs'] = popup_modules.ask_value_or_default('Num Epochs', 'How many epochs do you want? '
+                                                                                    'default is 1', 1, mode='int')
+    else:
+        args['max_train_steps'] = popup_modules.ask_value_or_default('Num Steps', 'How many steps do you want? '
+                                                                                  'default is 1600', 1600, mode='int')
+    args['clip_skip'] = popup_modules.ask_value_or_default('Clip Skip', 'Which clip skip do you want? default is 2', 2,
+                                                           mode='int')
+    args['shuffle_caption'] = messagebox.askyesno(message="Do you want to shuffle captions?")
+    args['keep_tokens'] = popup_modules.ask_value_or_default('Keep Tokens', 'How many tokens do you want to keep? '
+                                                                            'default is 1', 1, mode='int')
+    ret = messagebox.askyesno(message='Do you want to flip the images?')
+    if ret:
+        args['flip_aug'] = ret
+    button = popup_modules.ButtonBox("Do you want cache latents, random crop, or none? Cache latents is default",
+                                     ['None', 'cache_latents', 'random_crop'])
+    if button.current_value != 'None':
+        args[button.current_value] = True
+    if args['cache_latents']:
+        ret = messagebox.askyesno(message="Do you want to cache to disk?")
+        if ret:
+            args['cache_latents_to_disk'] = ret
+    val = popup_modules.ask_yes_no_to_value("Do you want to use a warmup ratio?", 'Warmup Ratio',
+                                            "What warmup ratio do you want? default is 0.05", mode='float',
+                                            repeat=False)
+    if val is None:
+        val = 0.05
+    if 'max_train_steps' in args:
+        args['lr_warmup_steps'] = int(args['max_train_steps'] * val)
+    else:
+        args['lr_warmup_steps'] = int(find_max_steps(args) * val)
+    val = popup_modules.ask_yes_no_to_value("Do you want to use min_snr_gamma?", 'min_snr_gamma',
+                                            "What value do you want for min_snr_gamma? Default is 5.0", mode='float',
+                                            repeat=False)
+    if val is None:
+        args['min_snr_gamma'] = 5.0
+    elif val:
+        args['min_snr_gamma'] = val
+    ret = messagebox.askyesno(message="Do you want to use weighted captions?")
+    if ret:
+        args['weighted_captions'] = ret
+    val = popup_modules.ask_value("Weights", "What weights do you want to initialize?", mode='str',
+                                  repeat=False)
+    if val:
+        args['weights'] = val
+    args['num_vectors_per_token'] = popup_modules.ask_value_or_default('Vectors Per Token',
+                                                                       'How many vectors per token do you want? '
+                                                                       'default is 1', 1)
+    args['token_string'] = popup_modules.ask_value('Token String', "What token string do you want? "
+                                                                   "must not be in tokenizer", mode='str')
+    args['init_word'] = popup_modules.ask_value('Init Word', 'What init word do you want?', mode='str')
+
+    return args
