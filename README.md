@@ -4,7 +4,7 @@ A set of training scripts written in python for use in Kohya's [SD-Scripts](http
 
 **Please ensure you have python 3.10.6 and git installed**
 
-Gone is the two scripts of the past, and now everything is handled in one simple `main.py` and the two accompanying bat files `run_popup.bat` and `run_command_line.bat`. If you are on a linux system you can run them by activating the venv, which has moved to the sd_scripts folder within this project then run it using the command `accelerate launch main.py` for the command line, or `accelerate launch main.py --popup` if you want the popups.
+Gone are the two scripts of the past, and now everything is handled in one simple `main.py` and the two accompanying bat files `run_popup.bat` and `run_command_line.bat`. If you are on a linux system you can run them by activating the venv, which has moved to the sd_scripts folder within this project then run it using the command `accelerate launch main.py` for the command line, or `accelerate launch main.py --popup` if you want the popups.
 
 
 the base version was designed for people who want to directly modify the script themselves, which you can now do so in the file `ArgsList.py`. to find out all of the commands and what they do you can run the script with the -h command to list every argument or just look at the list of arguments below
@@ -143,8 +143,8 @@ self.network_args = {
 ```
 The popups handle setting these values for you, if you don't want to set them yourself.
 
-## LoCon Extraction
-I have added a popup style script for extracting LoCon from models. It does this using an Add Difference style approach, you much have a base model to compare against to extract this data. The process should guide you through the process. you can start it by running the bat file `locon_extract.bat`. I added a new way to do multiple extractions quickly through either using a txt file or giving multiple values, this is a much better way to set up queues than my original approach, however is more prone to failure. the txt file only contains the values used, not the mode of extract or the models to extract. Since all modes have two values, you can just put each set of two per line. There is an example included in the examples folder
+## LoRA and LoCon Extraction
+I have added a popup style script for extracting LoCon from models. It does this using an Add Difference style approach, you much have a base model to compare against to extract this data. The process should guide you through the process. you can start it by running the bat file `lora_locon_extract.bat`. I added a new way to do multiple extractions quickly through either using a txt file or giving multiple values, this is a much better way to set up queues than my original approach, however is more prone to failure. the txt file only contains the values used, not the mode of extract or the models to extract. If you are extracting a LoRA, the file only needs one value per line, LoCon requires two
 
 ## LoCon and loha merging
 I have added a popup style script for merging LoCon models into normal models. all you need to do is follow the popups. you can start it by running the bat file `locon_loha_merge.bat`
@@ -153,6 +153,9 @@ I have added a popup style script for merging LoCon models into normal models. a
 I created a rudimentary popup script for training XTI. I have only tested that the arguments are getting properly passed, beyond that I have not tested anything as I don't actually know how to train them. Please submit a bug report if you know how to train them, and it doesn't work for you, as I'd not know otherwise.
 
 ## Changelog
+- Apr 17, 2023
+  - Updated sd-scripts and LyCORIS, however no changes to the args have been made
+  - Changed the extraction script to kohya's implementation to allow for LoRA extraction.
 - Apr 14, 2023
   - Updated sd-scripts and LyCORIS
   - added the weighted captions arguments as well as support for the new DyLoRA.
