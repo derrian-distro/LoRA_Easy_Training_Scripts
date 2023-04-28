@@ -24,7 +24,7 @@ import popup_modules
 
 
 def main():
-    my_args = ["--save_precision=fp16"]
+    my_args = ["--save_precision=fp16", "--precision=float"]
     _model = False
     ret = mb.askyesno(message="Are you merging LoRA into a model?")
     if ret:
@@ -40,11 +40,6 @@ def main():
         if button.current_value != "":
             my_args.append("--device=cuda")
 
-    button = popup_modules.ButtonBox("Select the precision you want to merge at.\nfloat is recommended\n"
-                                     "cancel will default to float",
-                                     ["float", "fp16", "bf16"])
-    my_args.append("--precision=" + button.current_value if button.current_value else "float")
-
     models = []
     cont = True
     while cont:
@@ -59,7 +54,8 @@ def main():
 
     slider = popup_modules.SliderBox("Use the sliders below to set the percentage that will be merged from each model.\n",
                                      [os.path.split(s)[-1] for s in models], "Closing this window will set every value "
-                                                                             "to 0.5\nDo you want to cancel?")
+                                                                             "to 0.5\nDo you want to cancel?",
+                                     -1, 4)
     if slider.not_selected:
         my_args.append(f"--ratios")
         my_args += ['0.5' for _ in range(0, len(models))]

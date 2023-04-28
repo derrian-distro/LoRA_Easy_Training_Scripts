@@ -156,7 +156,8 @@ class ButtonBox:
 
 
 class SliderBox:
-    def __init__(self, label: str, slider_name_list: list[str], cancel_message: str) -> None:
+    def __init__(self, label: str, slider_name_list: list[str], cancel_message: str,
+                 minimum: int = 0, maximum: int = 1) -> None:
         self.window = tk.Tk()
         self.slider_list: list[tk.Frame] = []
         self.slider_values: list[tk.DoubleVar] = []
@@ -182,7 +183,7 @@ class SliderBox:
             self.slider_list.append(tk.Frame(self.window))
             self.slider_list[-1].pack()
             ttk.Label(master=self.slider_list[-1], text=slider, width=30, anchor=tk.CENTER).grid(row=0, column=0)
-            ttk.Scale(master=self.slider_list[-1], from_=0, to=1,
+            ttk.Scale(master=self.slider_list[-1], from_=minimum, to=maximum,
                       variable=self.slider_values[-1]).grid(row=1, column=0, padx=10)
             self.slider_labels.append(ttk.Label(master=self.slider_list[-1], text="0.00"))
             self.slider_labels[-1].grid(row=1, column=1)
