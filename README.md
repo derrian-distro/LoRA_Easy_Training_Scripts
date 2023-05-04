@@ -153,6 +153,17 @@ I have added a popup style script for merging LoCon models into normal models. a
 I created a rudimentary popup script for training XTI. I have only tested that the arguments are getting properly passed, beyond that I have not tested anything as I don't actually know how to train them. Please submit a bug report if you know how to train them, and it doesn't work for you, as I'd not know otherwise.
 
 ## Changelog
+- May 5, 2023
+  - Updated sd-scripts and LyCORIS, added all of the new args added to sd-scripts.
+  - re-added the extraction script for kohaku's extraction implementation.
+  - Added new pyramid noise args to the argslist, however not to the popups
+    - `multires_noise_iterations` which is the amount of iterations for pyramid noise. It is recommended to use between 6 and 10, I cannot confirm this to be the best option however.
+    - `multires_noise_discount`, which I have literally no clue what this does, seems like it is recommended to be between the values 0.1 and 0.3, I set the default to 0.3
+  - Added the new logging args
+    - `log_with` which allows you to specify what logging system to use, tensorboard, wandb, or all
+    - `log_tracker_name`, the name of the tracker, if none then it is set to whatever the specific logging system names it.
+    - `wandb_api_key`, the API key for wandb for use with wandb.
+  - Work on the UI update is still on-going, but a bit slow. I recently decided to change out how I'm handling the args, which means I had to remake a lot of the UI elements, but progress is steadily happening.
 - Apr 17, 2023
   - Updated sd-scripts and LyCORIS, however no changes to the args have been made
   - Changed the extraction script to kohya's implementation to allow for LoRA extraction.

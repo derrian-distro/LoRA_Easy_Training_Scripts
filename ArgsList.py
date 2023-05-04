@@ -147,6 +147,9 @@ class ArgStore:
         # Kohya recommends, if you have it set, to use 0.1, not sure how
         # high the value can be, I'm going to assume maximum of 1
         # seems to cause baking in outputs with two LoRA using noise offset
+        self.multires_noise_iterations: Union[int, None] = None  # OPTIONAL, is used for pyramid noise
+        self.multires_noise_discount: Union[float, None] = 0.3  # OPTIONAL, only applies when multires_noise_iterations
+        # is enabled
         self.mem_eff_attn: bool = False
         self.min_snr_gamma: Union[float, None] = None  # A new method of training that supposedly improves results,
         # recommended value is 5
@@ -169,6 +172,9 @@ class ArgStore:
         self.vae: Union[str, None] = None  # Generally messes up outputs, avoid using
         self.log_dir: Union[str, None] = None  # Only useful if you wanted to see the LR and other training details
         self.log_prefix: Union[str, None] = None  # adds a prefix to the logging output to make it easier to find
+        self.log_with: Union[str, None] = None  # the other option is wandb or all
+        self.log_tracker_name: Union[str, None] = None
+        self.wandb_api_key: Union[str, None] = None
         self.tokenizer_cache_dir: Union[str, None] = None  # Doesn't seem to help in a majority of cases
         self.dataset_config: Union[str, None] = None  # I haven't implemented a system to convert the json to toml yet.
         # I'll make the toml the default once I can reliably create them and convert from my already existing json files

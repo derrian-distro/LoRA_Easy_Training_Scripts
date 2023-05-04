@@ -112,7 +112,6 @@ def get_occurrence_of_tags(args):
     img_folder = args['img_folder']
     output_folder = args['output_folder']
     occurrence_dict = {}
-    print(img_folder)
     for folder in os.listdir(img_folder):
         print(folder)
         if not os.path.isdir(os.path.join(img_folder, folder)):
