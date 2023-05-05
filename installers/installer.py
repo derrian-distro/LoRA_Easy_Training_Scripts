@@ -131,11 +131,12 @@ def main():
                       f"training on high end 30X0 and 40X0 cards? (y/n): ").casefold()
 
     if reply == 'y':
-        r = requests.get("https://b1.thefileditch.ch/mwxKTEtelILoIbMbruuM.zip")
+        r = requests.get("https://developer.download.nvidia.com/compute/redist/cudnn/v8.6.0/local_installers/11.8/cudnn-windows-x86_64-8.6.0.163_cuda11-archive.zip")
         with open("cudnn.zip", 'wb') as f:
             f.write(r.content)
         with ZipFile("cudnn.zip", 'r') as f:
-            f.extractall(path="cudnn_windows")
+            f.extractall(path="cudnn_patch")
+        shutil.move("cudnn_patch\\cudnn-windows-x86_64-8.6.0.163_cuda11-archive\\bin", "cudnn_windows")
         os.mkdir("temp")
         r = requests.get("https://raw.githubusercontent.com/bmaltais/kohya_ss/9c5bdd17499e3f677a5d7fa081ee0b4fccf5fd4a/tools/cudann_1.8_install.py")
         with open(os.path.join('temp', 'cudnn.py'), 'wb') as f:
@@ -143,6 +144,7 @@ def main():
         subprocess.check_call(f"{os.path.join('venv', 'Scripts', 'python.exe')} {os.path.join('temp', 'cudnn.py')}".split(" "))
         shutil.rmtree("temp")
         shutil.rmtree("cudnn_windows")
+        shutil.rmtree("cudnn_patch")
     else:
         reply = None
         while reply not in ('y', 'n'):
