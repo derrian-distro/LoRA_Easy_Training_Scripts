@@ -59,7 +59,7 @@ def ask_value(title, message, mode='int', repeat=True, default=None):
             ret = simpledialog.askfloat(title, message, initialvalue='' if not default else str(default))
         else:
             ret = simpledialog.askstring(title, message, initialvalue='' if not default else default)
-        if not ret and repeat:
+        if ret != 0 and not ret and repeat:
             if messagebox.askyesno(message="Do you want to cancel?"):
                 quit()
             continue

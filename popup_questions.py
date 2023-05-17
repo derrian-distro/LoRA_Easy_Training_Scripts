@@ -105,7 +105,7 @@ def ask_all_questions(args: dict) -> None:
                                                       "in layers", minimum=0, maximum=1)
         args['network_args']['down_lr_weight'] = down_weights
 
-        middle_weight = popup_modules.ask_value("Middle Weight Value", "What middle weight value do you want?")
+        middle_weight = popup_modules.ask_value("Middle Weight Value", "What middle weight value do you want?", "float")
         args['network_args']['mid_lr_weight'] = middle_weight
 
         up_weights = popup_modules.ask_block_values("Up Weight Values",
