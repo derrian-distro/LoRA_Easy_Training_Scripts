@@ -42,9 +42,9 @@ def main():
     python_real = sys.executable
     python = r"venv\Scripts\pip.exe"
 
-    print("cloning repositories")
-    subprocess.check_call(['git', 'clone', 'https://github.com/derrian-distro/LoRA_Easy_Training_Scripts'])
-    os.chdir("LoRA_Easy_Training_Scripts")
+    # print("cloning repositories")
+    # subprocess.check_call(['git', 'clone', 'https://github.com/derrian-distro/LoRA_Easy_Training_Scripts'])
+    os.chdir("..")
     subprocess.check_call(['git', 'submodule', "init"])
     subprocess.check_call(['git', 'submodule', 'update'])
 
