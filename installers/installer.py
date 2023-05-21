@@ -44,7 +44,7 @@ def main():
 
     # print("cloning repositories")
     # subprocess.check_call(['git', 'clone', 'https://github.com/derrian-distro/LoRA_Easy_Training_Scripts'])
-    os.chdir("..")
+    os.chdir(os.path.dirname(os.getcwd()))
     subprocess.check_call(['git', 'submodule', "init"])
     subprocess.check_call(['git', 'submodule', 'update'])
 

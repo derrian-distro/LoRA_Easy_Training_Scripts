@@ -1,4 +1,6 @@
 @echo off
 
-call "installers\installer.py"
+cd %~dp0
+
+call python "installers\installer.py"
 pause
