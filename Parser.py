@@ -74,6 +74,11 @@ class Parser:
                                  help="only training Text Encoder part / Text Encoder関連部分のみ学習する")
         self.parser.add_argument("--training_comment", type=str, default=None,
                                  help="arbitrary comment string stored in metadata / メタデータに記録する任意のコメント文字列")
+        self.parser.add_argument(
+            "--dim_from_weights",
+            action="store_true",
+            help="automatically determine dim (rank) from network_weights / dim (rank)をnetwork_weightsで指定した重みから自動で決定する",
+        )
 
     def parse_args(self, args: Union[list[str], None] = None) -> argparse.Namespace:
         return self.parser.parse_args(args) if args else self.parser.parse_args()

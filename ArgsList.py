@@ -73,6 +73,7 @@ class ArgStore:
         self.net_dim: int = 32  # network dimension, 32 is default, but some people train at higher dims
         self.alpha: float = 16  # represents the scalar for training. default is half of dim.
         # if you want the older way of training, set this to dim
+        self.dim_from_weights: bool = False
         self.train_resolution: int = 512
         self.height_resolution: Union[int, None] = None  # for if you want to train in a non-square resolution
         self.batch_size: int = 1  # The number of images that get processed at one time, this is directly proportional
