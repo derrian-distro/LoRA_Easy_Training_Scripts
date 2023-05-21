@@ -1,5 +1,7 @@
 # LoRA_Easy_Training_Scripts
 
+## NOTE: These are the older scripts, I will probably not continue updating them after this, however I want to make sure they stay in a usable state, as such I have updated the install instructions and installer
+
 A set of training scripts written in python for use in Kohya's [SD-Scripts](https://github.com/kohya-ss/sd-scripts).
 
 **Please ensure you have python 3.10.6 and git installed**
@@ -17,20 +19,25 @@ there are also a bunch of small scripts meant to do other things that sd-scripts
 
 ### Windows
 
-If you have a windows device I have created batch files [here](https://github.com/derrian-distro/LoRA_Easy_Training_Scripts/releases/latest) that auto install for you. if you want to specifically use _my_ scripts, then grab the one titled `install_sd_scripts.bat` which will install SD-Scripts as well as my scripts. **Make sure you don't have spaces in your path when you install them**
+open up a cmd line in the folder you want to install the scripts to, then type in the following commands, this will clone the correct branch then launch the installer for you.
+```
+git clone https://github.com/derrian-distro/LoRA_Easy_Training_Scripts -b old-scripts
+cd LoRA_Easy_Training_Scripts
+install.bat
+```
 
 ### Linux
 
-I don't have installers for my scripts for linux, but here is the setup process so you can do it yourself.
+Linux doesn't have any installers due to the nature of each distro being different, so follow along as much as possible, it's likely the way you install torch will be different depending on the system
 ```
-git clone https://github.com/derrian-distro/LoRA_Easy_Training_Scripts
+git clone https://github.com/derrian-distro/LoRA_Easy_Training_Scripts -b old-scripts
 cd LoRA_Easy_Training_Scripts
 git submodule init
 git submodule update
 cd sd_scripts
 python -m venv venv
 source venv/bin/activate
-pip install torch torchvision --extra-index-url https://download.pytorch.org/whl/cu116
+pip install torch torchvision --index-url https://download.pytorch.org/whl/cu118
 pip install --upgrade -r requirements.txt
 pip install -U xformers
 accelerate config
@@ -153,6 +160,10 @@ I have added a popup style script for merging LoCon models into normal models. a
 I created a rudimentary popup script for training XTI. I have only tested that the arguments are getting properly passed, beyond that I have not tested anything as I don't actually know how to train them. Please submit a bug report if you know how to train them, and it doesn't work for you, as I'd not know otherwise.
 
 ## Changelog
+- May 20, 2023
+  - Updated sd-scripts, added the new arg that came with it.
+  - Moved old scripts to branch old-scripts, as they are being deprecated
+  - Updated the installers to work *within* the cloned folder, as all previous installers are now considered deprecated and will not work for this fork.
 - May 5, 2023
   - Updated sd-scripts and LyCORIS, added all of the new args added to sd-scripts.
   - re-added the extraction script for kohaku's extraction implementation.
