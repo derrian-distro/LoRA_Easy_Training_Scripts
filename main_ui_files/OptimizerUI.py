@@ -28,6 +28,7 @@ class OptimizerWidget(QtWidgets.QWidget):
         self.widget.cosine_restart_input.valueChanged.connect(lambda x: self.edit_args("lr_scheduler_num_cycles", x))
         self.widget.poly_power_input.valueChanged.connect(lambda x: self.edit_args("lr_scheduler_power", x))
         self.widget.warmup_ratio_input.valueChanged.connect(lambda x: self.edit_args("warmup_ratio", x, True))
+        self.widget.min_snr_input.valueChanged.connect(lambda x: self.edit_args("min_snr_gamma", x, True))
 
         # set all of the slots for enable and disable
         self.widget.unet_lr_enable.clicked.connect(lambda x: self.enable_disable_lr(x, self.widget.unet_lr_input,
@@ -35,6 +36,7 @@ class OptimizerWidget(QtWidgets.QWidget):
         self.widget.te_lr_enable.clicked.connect(lambda x: self.enable_disable_lr(x, self.widget.te_lr_input,
                                                                                   "text_encoder_lr"))
         self.widget.warmup_enable.clicked.connect(self.enable_disable_warmup)
+        self.widget.min_snr_enable.clicked.connect(self.enable_disable_gamma)
 
     @QtCore.Slot(str, object, bool)
     def edit_args(self, name: str, value: object, optional: bool = False):
@@ -111,6 +113,16 @@ class OptimizerWidget(QtWidgets.QWidget):
             if "warmup_ratio" in self.args:
                 del self.args['warmup_ratio']
 
+    @QtCore.Slot(bool)
+    def enable_disable_gamma(self, checked: bool):
+        if checked:
+            self.widget.min_snr_input.setEnabled(True)
+            self.edit_args("min_snr_gamma", self.widget.min_snr_input.value(), True)
+        else:
+            self.widget.min_snr_input.setEnabled(False)
+            if "min_snr_gamma" in self.args:
+                del self.args['min_snr_gamma']
+
     def get_args(self, input_args: dict):
         input_args['optimizer_args'] = self.args
 
@@ -143,6 +155,11 @@ class OptimizerWidget(QtWidgets.QWidget):
         self.widget.warmup_enable.setChecked(checked)
         self.widget.warmup_ratio_input.setValue(args.get("warmup_ratio", 0.00))
         self.enable_disable_warmup(checked)
+
+        checked = True if args.get("min_snr_gamma", False) else False
+        self.widget.min_snr_enable.setChecked(checked)
+        self.widget.min_snr_input.setValue(args.get('min_snr_gamma', 5))
+        self.enable_disable_gamma(checked)
 
         if "optimizer_args" in args:
             self.args['optimizer_args'] = {}

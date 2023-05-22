@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>400</width>
-    <height>255</height>
+    <height>283</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -242,6 +242,26 @@
     <widget class="QCheckBox" name="warmup_enable">
      <property name="text">
       <string>Warmup Ratio</string>
+     </property>
+    </widget>
+   </item>
+   <item row="8" column="0">
+    <widget class="QCheckBox" name="min_snr_enable">
+     <property name="text">
+      <string>Minimum SNR Gamma</string>
+     </property>
+    </widget>
+   </item>
+   <item row="8" column="1">
+    <widget class="QSpinBox" name="min_snr_input">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
+     <property name="toolTip">
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;This is a tool that reduces learning of unwanted elements by only learning what is the most common. This can lead to it not learning small details however. The recommended value is 5. Lower values apply more.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     </property>
+     <property name="value">
+      <number>5</number>
      </property>
     </widget>
    </item>

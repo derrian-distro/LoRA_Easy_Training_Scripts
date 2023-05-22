@@ -157,6 +157,7 @@ changelog of the old scripts are all in that branch [here](https://github.com/de
   - Fixed Dadapt and Lion not working properly, forgot that they must be installed individually.
   - Added an update.bat that will update everything then reinstall everything so that it is ensured to be updated
   - Fixed a small issue in which loading one of the lr_schedulers with spaces wouldn't load properly
+  - Added the forgotten min_snr_gamma
 - May 22, 2023
   - First release of the new UI system. This has been a long time coming and I put in a ton of work to make it as user friendly as possible. Some Things to note, This doesn't have support for queues or block weight training for the moment, they are planned though and will be added down the line.
   - If you find any bugs, *please* tell me, I want to fix them if something is wrong. After all, I am only one person

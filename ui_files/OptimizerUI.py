@@ -25,7 +25,7 @@ class Ui_optimizer_ui(object):
     def setupUi(self, optimizer_ui):
         if not optimizer_ui.objectName():
             optimizer_ui.setObjectName(u"optimizer_ui")
-        optimizer_ui.resize(400, 255)
+        optimizer_ui.resize(400, 283)
         self.formLayout = QFormLayout(optimizer_ui)
         self.formLayout.setObjectName(u"formLayout")
         self.optimizer_type_selector = QComboBox(optimizer_ui)
@@ -125,6 +125,18 @@ class Ui_optimizer_ui(object):
 
         self.formLayout.setWidget(5, QFormLayout.LabelRole, self.warmup_enable)
 
+        self.min_snr_enable = QCheckBox(optimizer_ui)
+        self.min_snr_enable.setObjectName(u"min_snr_enable")
+
+        self.formLayout.setWidget(8, QFormLayout.LabelRole, self.min_snr_enable)
+
+        self.min_snr_input = QSpinBox(optimizer_ui)
+        self.min_snr_input.setObjectName(u"min_snr_input")
+        self.min_snr_input.setEnabled(False)
+        self.min_snr_input.setValue(5)
+
+        self.formLayout.setWidget(8, QFormLayout.FieldRole, self.min_snr_input)
+
 
         self.retranslateUi(optimizer_ui)
 
@@ -188,5 +200,9 @@ class Ui_optimizer_ui(object):
         self.unet_lr_enable.setText(QCoreApplication.translate("optimizer_ui", u"Unet Learning Rate", None))
         self.te_lr_enable.setText(QCoreApplication.translate("optimizer_ui", u"TE Learning Rate", None))
         self.warmup_enable.setText(QCoreApplication.translate("optimizer_ui", u"Warmup Ratio", None))
+        self.min_snr_enable.setText(QCoreApplication.translate("optimizer_ui", u"Minimum SNR Gamma", None))
+#if QT_CONFIG(tooltip)
+        self.min_snr_input.setToolTip(QCoreApplication.translate("optimizer_ui", u"<html><head/><body><p>This is a tool that reduces learning of unwanted elements by only learning what is the most common. This can lead to it not learning small details however. The recommended value is 5. Lower values apply more.</p></body></html>", None))
+#endif // QT_CONFIG(tooltip)
     # retranslateUi
 
