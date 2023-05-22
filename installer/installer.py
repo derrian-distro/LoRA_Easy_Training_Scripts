@@ -26,7 +26,7 @@ def main():
         print("Running on windows...")
 
     version = sys.version_info
-    if version.major != 3 or version.minor != 10 or version.micro < 6:
+    if version.major != 3 or version.minor != 10:
         print("ERROR: You don't have python 3.10 installed, please install python 3.10, preferably 3.10.6, and add it to path")
         quit()
     else:
@@ -46,7 +46,13 @@ def main():
     subprocess.check_call(['git', 'submodule', 'update'])
 
     print("setting execution policy to unrestricted")
-    subprocess.check_call(f"{os.path.join('installables', 'change_execution_policy.bat')}")
+    try:
+        subprocess.check_call(f"{os.path.join('installables', 'change_execution_policy.bat')}")
+    except subprocess.SubprocessError:
+        try:
+            subprocess.check_call(f"{os.path.join('installables', 'change_execution_policy_backup.bat')}")
+        except subprocess.SubprocessError as e:
+            print(f"Failed to change the execution policy with error:\n {e}")
 
     os.chdir("sd_scripts")
 
@@ -58,10 +64,10 @@ def main():
         reply = input("which version of torch do you want to install?\n"
                       "0 = 1.12.1\n"
                       "1 = 2.0.0\n"
-                      "2 = 2.1.0: ").casefold()
+                      "2 = 2.0.1: ").casefold()
 
     if reply == "2":
-        torch_version = "torch==2.1.0.dev20230320+cu118 torchvision==0.16.0.dev20230320+cu118 --extra-index-url https://download.pytorch.org/whl/nightly/cu118"
+        torch_version = "torch==2.0.1+cu118 torchvision==0.15.2+cu118 --index-url https://download.pytorch.org/whl/cu118"
     elif reply == '1':
         torch_version = "torch==2.0.0+cu118 torchvision==0.15.0+cu118 --extra-index-url https://download.pytorch.org/whl/cu118"
     else:
@@ -73,10 +79,8 @@ def main():
     subprocess.check_call(f"{python} install -r requirements.txt".split(" "))
 
     print("installing xformers")
-    if reply == '2':
-        xformers = "https://github.com/DDStorage/LoRA_Easy_Training_Scripts/releases/download/torch2.1.0/xformers-0.0.17+c36468d.d20230318-cp310-cp310-win_amd64.whl"
-    elif reply == '1':
-        xformers = "https://github.com/DDStorage/LoRA_Easy_Training_Scripts/releases/download/torch2.0.0/xformers-0.0.17+b3d75b3.d20230320-cp310-cp310-win_amd64.whl"
+    if reply in {'2', '1'}:
+        xformers = "xformers==0.0.17"
     else:
         xformers = "https://github.com/C43H66N12O12S2/stable-diffusion-webui/releases/download/f/xformers-0.0.14.dev0-cp310-cp310-win_amd64.whl"
     subprocess.check_call(f"{python} install -U -I --no-deps {xformers}".split(' '))

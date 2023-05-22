@@ -149,6 +149,11 @@ As you can see everything is sectioned off into their own sections. Generally th
 ## Changelog
 changelog of the old scripts are all in that branch [here](https://github.com/derrian-distro/LoRA_Easy_Training_Scripts/tree/old-scripts#changelog)
 
+- May 22, 2023 (cont.)
+  - Made the training threaded, so that it can be done while still allowing you to use the UI
+  - Fixed the way betas was being saved in the toml files so that it doesn't break on load
+  - Fixed the installer by removing torch 2.1.0 and adding 2.0.1 in it's place as well as add a fallback execution policy bat that just assumes your powershell is at the normal location in system32
+  - Fixed the limit on the samples box to allow higher than 99
 - May 22, 2023
   - First release of the new UI system. This has been a long time coming and I put in a ton of work to make it as user friendly as possible. Some Things to note, This doesn't have support for queues or block weight training for the moment, they are planned though and will be added down the line.
   - If you find any bugs, *please* tell me, I want to fix them if something is wrong. After all, I am only one person

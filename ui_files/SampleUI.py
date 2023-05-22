@@ -45,16 +45,23 @@ class Ui_sample_ui(object):
         self.steps_epochs_selector.addItem("")
         self.steps_epochs_selector.addItem("")
         self.steps_epochs_selector.setObjectName(u"steps_epochs_selector")
+        sizePolicy = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Fixed)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.steps_epochs_selector.sizePolicy().hasHeightForWidth())
+        self.steps_epochs_selector.setSizePolicy(sizePolicy)
 
         self.horizontalLayout.addWidget(self.steps_epochs_selector)
 
         self.steps_epoch_input = QSpinBox(self.sample_args_box)
         self.steps_epoch_input.setObjectName(u"steps_epoch_input")
-        sizePolicy = QSizePolicy(QSizePolicy.Maximum, QSizePolicy.Fixed)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.steps_epoch_input.sizePolicy().hasHeightForWidth())
-        self.steps_epoch_input.setSizePolicy(sizePolicy)
+        sizePolicy1 = QSizePolicy(QSizePolicy.Minimum, QSizePolicy.Fixed)
+        sizePolicy1.setHorizontalStretch(0)
+        sizePolicy1.setVerticalStretch(0)
+        sizePolicy1.setHeightForWidth(self.steps_epoch_input.sizePolicy().hasHeightForWidth())
+        self.steps_epoch_input.setSizePolicy(sizePolicy1)
+        self.steps_epoch_input.setMinimum(1)
+        self.steps_epoch_input.setMaximum(16777215)
         self.steps_epoch_input.setValue(1)
 
         self.horizontalLayout.addWidget(self.steps_epoch_input)
@@ -102,8 +109,11 @@ class Ui_sample_ui(object):
 
         self.sample_prompt_selector = QPushButton(self.sample_args_box)
         self.sample_prompt_selector.setObjectName(u"sample_prompt_selector")
-        sizePolicy.setHeightForWidth(self.sample_prompt_selector.sizePolicy().hasHeightForWidth())
-        self.sample_prompt_selector.setSizePolicy(sizePolicy)
+        sizePolicy2 = QSizePolicy(QSizePolicy.Maximum, QSizePolicy.Fixed)
+        sizePolicy2.setHorizontalStretch(0)
+        sizePolicy2.setVerticalStretch(0)
+        sizePolicy2.setHeightForWidth(self.sample_prompt_selector.sizePolicy().hasHeightForWidth())
+        self.sample_prompt_selector.setSizePolicy(sizePolicy2)
 
         self.horizontalLayout_2.addWidget(self.sample_prompt_selector)
 

@@ -3,10 +3,11 @@ import sys
 import json
 import toml
 import subprocess
+import threading
 from validator import validate_args, validate_dataset_args, calculate_steps
 
 from PySide6 import QtWidgets, QtCore, QtGui
-from qt_material import apply_stylesheet, list_themes, QtStyleTools
+from qt_material import apply_stylesheet, QtStyleTools
 
 from main_ui_files.MainWidget import MainWidget
 from ui_files.MainUI import Ui_MainWindow
@@ -14,6 +15,7 @@ from ui_files.MainUI import Ui_MainWindow
 
 class MainWindow(QtWidgets.QMainWindow, QtStyleTools):
     def __init__(self, app: QtWidgets.QApplication = None):
+        self.training_thread = None
         self.app = app
         super(MainWindow, self).__init__()
         self.queue = []
@@ -61,7 +63,6 @@ class MainWindow(QtWidgets.QMainWindow, QtStyleTools):
         args = toml.dumps(args)
         file_name = QtWidgets.QFileDialog().getSaveFileName(self, "Select Where to save to",
                                                             filter="Config File (*.toml)")
-        print(file_name)
         if not file_name[0]:
             return
         if len(os.path.splitext(file_name[0])) > 1:
@@ -80,7 +81,6 @@ class MainWindow(QtWidgets.QMainWindow, QtStyleTools):
         with open(file_name, 'r') as f:
             args = toml.load(f)
         self.main_widget.load_args(args)
-        print(args)
 
     @QtCore.Slot(int, bool)
     def change_theme(self, theme_index: int, is_light: bool) -> None:
@@ -107,6 +107,9 @@ class MainWindow(QtWidgets.QMainWindow, QtStyleTools):
 
     @QtCore.Slot(dict, dict, bool)
     def begin_training(self, args: dict, dataset_args: dict):
+        if self.training_thread and self.training_thread.is_alive():
+            return
+        self.training_thread = threading.Thread(target=self.begin_training_thread)
         args_valid = validate_args(args)
         dataset_args_valid = validate_dataset_args(dataset_args)
         if not args_valid or not dataset_args_valid:
@@ -122,12 +125,20 @@ class MainWindow(QtWidgets.QMainWindow, QtStyleTools):
         self.create_config_args_file(args_valid)
         self.create_dataset_args_file(dataset_args_valid)
         print("validated, starting training...")
+        self.training_thread.start()
+
+    def begin_training_thread(self):
+        self.main_widget.start_training_button.setEnabled(False)
         python = sys.executable
-        subprocess.check_call([python, os.path.join("sd_scripts", "train_network.py"),
-                               f"--config_file={os.path.join('runtime_store', 'config.toml')}",
-                               f"--dataset_config={os.path.join('runtime_store', 'dataset.toml')}"])
+        try:
+            subprocess.check_call([python, os.path.join("sd_scripts", "train_network.py"),
+                                   f"--config_file={os.path.join('runtime_store', 'config.toml')}",
+                                   f"--dataset_config={os.path.join('runtime_store', 'dataset.toml')}"])
+        except subprocess.SubprocessError as e:
+            print(f"Failed to train because of error:\n {e}")
         os.remove(os.path.join("runtime_store", "config.toml"))
         os.remove(os.path.join("runtime_store", "dataset.toml"))
+        self.main_widget.start_training_button.setEnabled(True)
 
     @staticmethod
     def create_config_args_file(args: dict):

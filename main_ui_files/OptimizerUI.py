@@ -148,7 +148,10 @@ class OptimizerWidget(QtWidgets.QWidget):
             self.args['optimizer_args'] = {}
             for key, value in args['optimizer_args'].items():
                 if key == "betas":
-                    self.args['optimizer_args'][key] = f"\"{value}\""
+                    if isinstance(value, float):
+                        self.args['optimizer_args'][key] = f"\"{value}\""
+                    else:
+                        self.args['optimizer_args'][key] = value
                 else:
                     self.args['optimizer_args'][key] = value
         else:

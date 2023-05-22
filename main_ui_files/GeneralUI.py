@@ -65,7 +65,8 @@ class BaseArgsWidget(QtWidgets.QWidget):
         self.widget.xformers_enable.clicked.connect(self.enable_disable_xformers)
         self.widget.batch_size_input.valueChanged.connect(lambda x: self.edit_dataset_args("batch_size", x))
         self.widget.max_token_selector.currentIndexChanged.connect(self.edit_token_length)
-        self.widget.mixed_precision_selector.currentTextChanged.connect(lambda x: self.edit_args("mixed_precision", x))
+        self.widget.mixed_precision_selector.currentTextChanged.connect(lambda x: self.edit_args(
+            "mixed_precision", x if x != "float" else "no"))
 
     @QtCore.Slot(str, object, bool, QtWidgets.QWidget)
     def edit_args(self, name: str, value: object, optional: bool = False, elem: QtWidgets.QWidget = None):

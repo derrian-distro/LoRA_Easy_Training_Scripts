@@ -33,7 +33,6 @@ class MainWidget(QtWidgets.QWidget):
 
         self.start_training_button.clicked.connect(self.begin_train)
         self.args_widget.general_args.CacheLatentsChecked.connect(self.subset_widget.cache_checked)
-        # self.add_to_queue_button.clicked.connect(self.update_args, True)
 
     def begin_train(self):
         args = self.args_widget.collate_args()
@@ -124,5 +123,3 @@ class ArgsWidget(QtWidgets.QWidget):
         for widget in self.args_widget_array:
             if hasattr(widget, "load_args"):
                 widget.load_args(args)
-        # self.general_args.load_args(args)
-
