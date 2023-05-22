@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>sub_dataset_input</class>
+ <widget class="QWidget" name="sub_dataset_input">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>523</width>
+    <height>167</height>
+   </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property>
+  <property name="windowTitle">
+   <string>Widget</string>
+  </property>
+  <layout class="QGridLayout" name="gridLayout">
+   <property name="leftMargin">
+    <number>9</number>
+   </property>
+   <property name="topMargin">
+    <number>9</number>
+   </property>
+   <property name="rightMargin">
+    <number>9</number>
+   </property>
+   <property name="bottomMargin">
+    <number>0</number>
+   </property>
+   <item row="1" column="1">
+    <layout class="QGridLayout" name="gridLayout_2">
+     <property name="sizeConstraint">
+      <enum>QLayout::SetDefaultConstraint</enum>
+     </property>
+     <item row="0" column="1" alignment="Qt::AlignLeft">
+      <widget class="QCheckBox" name="flip_aug">
+       <property name="toolTip">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Flips the latents of the images during training. Works well to reduce bias according to sidedness, but can cause issues if the dataset is asymetric.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
+       <property name="text">
+        <string>flip augment</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="0" alignment="Qt::AlignLeft">
+      <widget class="QCheckBox" name="shuffle_captions">
+       <property name="toolTip">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;During training, the captions in the caption files will be shuffed. If you set keep tokens any higher than 0, then tags equal to keep tokens will not be shuffled and stay at the front, great for keeping something like a character name at the front of the file. I suggest you turn this on as it reduces overfitting.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
+       <property name="text">
+        <string>shuffle captions</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="1" alignment="Qt::AlignLeft">
+      <widget class="QCheckBox" name="random_crop">
+       <property name="toolTip">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Randomly crops from a corner vs from the center. Works very well when you have parts of the images that you want to learn that are on the edges. Doesn't work with cache latents.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
+       <property name="text">
+        <string>random crop</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="0" alignment="Qt::AlignLeft">
+      <widget class="QCheckBox" name="color_aug">
+       <property name="toolTip">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Shifts the color of images randomly throughout training. This doesn't change captions however so it's fairly useless. Doesn't work with cache latents.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
+       <property name="text">
+        <string>color augment</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="0" colspan="2" alignment="Qt::AlignLeft">
+      <widget class="QCheckBox" name="reg_images">
+       <property name="toolTip">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Select this if the folder provided is to images that are regularization images.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
+       <property name="text">
+        <string>regularization images</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item row="1" column="0">
+    <layout class="QFormLayout" name="other_form_layout">
+     <property name="horizontalSpacing">
+      <number>12</number>
+     </property>
+     <item row="0" column="0">
+      <widget class="QLabel" name="repeats_label">
+       <property name="text">
+        <string>Number of Repeats</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="1">
+      <widget class="QSpinBox" name="repeats_spinbox">
+       <property name="toolTip">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;This is the number of times the images in this folder will repeat per epoch. So if you have 30 images in this folder and 4 repeats, it will be treated like as if it has 120 images.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
+       <property name="minimum">
+        <number>1</number>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="0">
+      <widget class="QLabel" name="keep_tokens_label">
+       <property name="text">
+        <string>Keep Tokens</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="1">
+      <widget class="QSpinBox" name="keep_tokens_spinbox">
+       <property name="toolTip">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;This is the number of tokens that get kept at the front of the captions. This is great when you want to have a tag that is always weighted the highest, such as the name of a character or an outfit tag.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="0">
+      <widget class="QLabel" name="caption_label">
+       <property name="text">
+        <string>Caption Extension</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="1">
+      <widget class="QComboBox" name="caption_extension">
+       <property name="toolTip">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The file type of the captions, technically can be anything but I only included the two most common types, .caption, and .txt.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
+       <item>
+        <property name="text">
+         <string>.txt</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>.caption</string>
+        </property>
+       </item>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item row="0" column="0" colspan="2">
+    <layout class="QGridLayout" name="image_dir_grid">
+     <property name="horizontalSpacing">
+      <number>8</number>
+     </property>
+     <item row="1" column="1">
+      <widget class="QPushButton" name="file_dialog_button">
+       <property name="text">
+        <string/>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="0" colspan="2">
+      <widget class="QLabel" name="Input_image_dir_label">
+       <property name="text">
+        <string>Input Image Dir</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="0">
+      <widget class="DragDropLineEdit" name="lineEdit">
+       <property name="toolTip">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The folder that contains your images and caption files. If the folder is named something like 2_name, then it will automatically set the number of repeats, but only if you use the file dialog or drag and drop.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
+       <property name="placeholderText">
+        <string>Image Dir</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item row="3" column="0" colspan="2">
+    <widget class="CollapsibleWidget" name="extra_args" native="true"/>
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>DragDropLineEdit</class>
+   <extends>QLineEdit</extends>
+   <header>modules.DragDropLineEdit.h</header>
+  </customwidget>
+  <customwidget>
+   <class>CollapsibleWidget</class>
+   <extends>QWidget</extends>
+   <header>modules.CollapsibleWidget.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections/>
+</ui>

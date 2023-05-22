@@ -1,0 +1,301 @@
+# -*- coding: utf-8 -*-
+
+################################################################################
+## Form generated from reading UI file 'SavingUI.ui'
+##
+## Created by: Qt User Interface Compiler version 6.5.0
+##
+## WARNING! All changes made in this file will be lost when recompiling UI file!
+################################################################################
+
+from PySide6.QtCore import (QCoreApplication, QDate, QDateTime, QLocale,
+    QMetaObject, QObject, QPoint, QRect,
+    QSize, QTime, QUrl, Qt)
+from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
+    QFont, QFontDatabase, QGradient, QIcon,
+    QImage, QKeySequence, QLinearGradient, QPainter,
+    QPalette, QPixmap, QRadialGradient, QTransform)
+from PySide6.QtWidgets import (QApplication, QCheckBox, QComboBox, QFormLayout,
+    QHBoxLayout, QLabel, QPushButton, QSizePolicy,
+    QSpinBox, QWidget)
+
+from modules.DragDropLineEdit import DragDropLineEdit
+from modules.LineEditHighlight import LineEditWithHighlight
+
+class Ui_saving_ui(object):
+    def setupUi(self, saving_ui):
+        if not saving_ui.objectName():
+            saving_ui.setObjectName(u"saving_ui")
+        saving_ui.resize(515, 296)
+        saving_ui.setMinimumSize(QSize(515, 0))
+        self.formLayout = QFormLayout(saving_ui)
+        self.formLayout.setObjectName(u"formLayout")
+        self.label = QLabel(saving_ui)
+        self.label.setObjectName(u"label")
+
+        self.formLayout.setWidget(0, QFormLayout.LabelRole, self.label)
+
+        self.horizontalLayout = QHBoxLayout()
+        self.horizontalLayout.setSpacing(3)
+        self.horizontalLayout.setObjectName(u"horizontalLayout")
+        self.output_folder_input = DragDropLineEdit(saving_ui)
+        self.output_folder_input.setObjectName(u"output_folder_input")
+
+        self.horizontalLayout.addWidget(self.output_folder_input)
+
+        self.output_folder_selector = QPushButton(saving_ui)
+        self.output_folder_selector.setObjectName(u"output_folder_selector")
+
+        self.horizontalLayout.addWidget(self.output_folder_selector)
+
+
+        self.formLayout.setLayout(0, QFormLayout.FieldRole, self.horizontalLayout)
+
+        self.label_2 = QLabel(saving_ui)
+        self.label_2.setObjectName(u"label_2")
+
+        self.formLayout.setWidget(2, QFormLayout.LabelRole, self.label_2)
+
+        self.save_precision_selector = QComboBox(saving_ui)
+        self.save_precision_selector.addItem("")
+        self.save_precision_selector.addItem("")
+        self.save_precision_selector.addItem("")
+        self.save_precision_selector.setObjectName(u"save_precision_selector")
+
+        self.formLayout.setWidget(2, QFormLayout.FieldRole, self.save_precision_selector)
+
+        self.label_3 = QLabel(saving_ui)
+        self.label_3.setObjectName(u"label_3")
+
+        self.formLayout.setWidget(3, QFormLayout.LabelRole, self.label_3)
+
+        self.save_as_selector = QComboBox(saving_ui)
+        self.save_as_selector.addItem("")
+        self.save_as_selector.addItem("")
+        self.save_as_selector.addItem("")
+        self.save_as_selector.setObjectName(u"save_as_selector")
+
+        self.formLayout.setWidget(3, QFormLayout.FieldRole, self.save_as_selector)
+
+        self.save_freq_enable = QCheckBox(saving_ui)
+        self.save_freq_enable.setObjectName(u"save_freq_enable")
+
+        self.formLayout.setWidget(4, QFormLayout.LabelRole, self.save_freq_enable)
+
+        self.horizontalLayout_2 = QHBoxLayout()
+        self.horizontalLayout_2.setSpacing(3)
+        self.horizontalLayout_2.setObjectName(u"horizontalLayout_2")
+        self.save_freq_selector = QComboBox(saving_ui)
+        self.save_freq_selector.addItem("")
+        self.save_freq_selector.addItem("")
+        self.save_freq_selector.setObjectName(u"save_freq_selector")
+        self.save_freq_selector.setEnabled(False)
+
+        self.horizontalLayout_2.addWidget(self.save_freq_selector)
+
+        self.save_freq_input = QSpinBox(saving_ui)
+        self.save_freq_input.setObjectName(u"save_freq_input")
+        self.save_freq_input.setEnabled(False)
+        self.save_freq_input.setMinimum(1)
+        self.save_freq_input.setMaximum(16777215)
+
+        self.horizontalLayout_2.addWidget(self.save_freq_input)
+
+
+        self.formLayout.setLayout(4, QFormLayout.FieldRole, self.horizontalLayout_2)
+
+        self.save_ratio_enable = QCheckBox(saving_ui)
+        self.save_ratio_enable.setObjectName(u"save_ratio_enable")
+
+        self.formLayout.setWidget(5, QFormLayout.LabelRole, self.save_ratio_enable)
+
+        self.save_ratio_input = QSpinBox(saving_ui)
+        self.save_ratio_input.setObjectName(u"save_ratio_input")
+        self.save_ratio_input.setEnabled(False)
+        self.save_ratio_input.setMinimum(1)
+        self.save_ratio_input.setValue(1)
+
+        self.formLayout.setWidget(5, QFormLayout.FieldRole, self.save_ratio_input)
+
+        self.save_only_last_enable = QCheckBox(saving_ui)
+        self.save_only_last_enable.setObjectName(u"save_only_last_enable")
+
+        self.formLayout.setWidget(6, QFormLayout.LabelRole, self.save_only_last_enable)
+
+        self.horizontalLayout_3 = QHBoxLayout()
+        self.horizontalLayout_3.setSpacing(3)
+        self.horizontalLayout_3.setObjectName(u"horizontalLayout_3")
+        self.save_last_selector = QComboBox(saving_ui)
+        self.save_last_selector.addItem("")
+        self.save_last_selector.addItem("")
+        self.save_last_selector.setObjectName(u"save_last_selector")
+        self.save_last_selector.setEnabled(False)
+
+        self.horizontalLayout_3.addWidget(self.save_last_selector)
+
+        self.save_last_input = QSpinBox(saving_ui)
+        self.save_last_input.setObjectName(u"save_last_input")
+        self.save_last_input.setEnabled(False)
+        self.save_last_input.setMinimum(1)
+        self.save_last_input.setMaximum(16777215)
+
+        self.horizontalLayout_3.addWidget(self.save_last_input)
+
+
+        self.formLayout.setLayout(6, QFormLayout.FieldRole, self.horizontalLayout_3)
+
+        self.save_state_enable = QCheckBox(saving_ui)
+        self.save_state_enable.setObjectName(u"save_state_enable")
+
+        self.formLayout.setWidget(7, QFormLayout.LabelRole, self.save_state_enable)
+
+        self.horizontalLayout_4 = QHBoxLayout()
+        self.horizontalLayout_4.setSpacing(3)
+        self.horizontalLayout_4.setObjectName(u"horizontalLayout_4")
+        self.save_last_state_enable = QCheckBox(saving_ui)
+        self.save_last_state_enable.setObjectName(u"save_last_state_enable")
+        self.save_last_state_enable.setEnabled(False)
+        sizePolicy = QSizePolicy(QSizePolicy.Maximum, QSizePolicy.Fixed)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.save_last_state_enable.sizePolicy().hasHeightForWidth())
+        self.save_last_state_enable.setSizePolicy(sizePolicy)
+
+        self.horizontalLayout_4.addWidget(self.save_last_state_enable)
+
+        self.save_last_state_selector = QComboBox(saving_ui)
+        self.save_last_state_selector.addItem("")
+        self.save_last_state_selector.addItem("")
+        self.save_last_state_selector.setObjectName(u"save_last_state_selector")
+        self.save_last_state_selector.setEnabled(False)
+
+        self.horizontalLayout_4.addWidget(self.save_last_state_selector)
+
+        self.save_last_state_input = QSpinBox(saving_ui)
+        self.save_last_state_input.setObjectName(u"save_last_state_input")
+        self.save_last_state_input.setEnabled(False)
+        self.save_last_state_input.setMinimum(1)
+        self.save_last_state_input.setMaximum(16777215)
+
+        self.horizontalLayout_4.addWidget(self.save_last_state_input)
+
+
+        self.formLayout.setLayout(7, QFormLayout.FieldRole, self.horizontalLayout_4)
+
+        self.output_name_input = LineEditWithHighlight(saving_ui)
+        self.output_name_input.setObjectName(u"output_name_input")
+        self.output_name_input.setEnabled(False)
+
+        self.formLayout.setWidget(1, QFormLayout.FieldRole, self.output_name_input)
+
+        self.output_name_enable = QCheckBox(saving_ui)
+        self.output_name_enable.setObjectName(u"output_name_enable")
+
+        self.formLayout.setWidget(1, QFormLayout.LabelRole, self.output_name_enable)
+
+        self.resume_enable = QCheckBox(saving_ui)
+        self.resume_enable.setObjectName(u"resume_enable")
+
+        self.formLayout.setWidget(8, QFormLayout.LabelRole, self.resume_enable)
+
+        self.horizontalLayout_5 = QHBoxLayout()
+        self.horizontalLayout_5.setObjectName(u"horizontalLayout_5")
+        self.resume_input = DragDropLineEdit(saving_ui)
+        self.resume_input.setObjectName(u"resume_input")
+        self.resume_input.setEnabled(False)
+
+        self.horizontalLayout_5.addWidget(self.resume_input)
+
+        self.resume_selector = QPushButton(saving_ui)
+        self.resume_selector.setObjectName(u"resume_selector")
+        self.resume_selector.setEnabled(False)
+
+        self.horizontalLayout_5.addWidget(self.resume_selector)
+
+
+        self.formLayout.setLayout(8, QFormLayout.FieldRole, self.horizontalLayout_5)
+
+
+        self.retranslateUi(saving_ui)
+
+        QMetaObject.connectSlotsByName(saving_ui)
+    # setupUi
+
+    def retranslateUi(self, saving_ui):
+        saving_ui.setWindowTitle(QCoreApplication.translate("saving_ui", u"Form", None))
+        self.label.setText(QCoreApplication.translate("saving_ui", u"Output Folder", None))
+#if QT_CONFIG(tooltip)
+        self.output_folder_input.setToolTip(QCoreApplication.translate("saving_ui", u"<html><head/><body><p>The folder all of the trained epochs (checkpoints) will be output to.</p></body></html>", None))
+#endif // QT_CONFIG(tooltip)
+        self.output_folder_input.setPlaceholderText(QCoreApplication.translate("saving_ui", u"Output Folder", None))
+        self.output_folder_selector.setText("")
+        self.label_2.setText(QCoreApplication.translate("saving_ui", u"Save Precision", None))
+        self.save_precision_selector.setItemText(0, QCoreApplication.translate("saving_ui", u"fp16", None))
+        self.save_precision_selector.setItemText(1, QCoreApplication.translate("saving_ui", u"bf16", None))
+        self.save_precision_selector.setItemText(2, QCoreApplication.translate("saving_ui", u"float", None))
+
+#if QT_CONFIG(tooltip)
+        self.save_precision_selector.setToolTip(QCoreApplication.translate("saving_ui", u"<html><head/><body><p>Is the precision that the models are saved in, I suggest you save in fp16 as not all cards support bf16.</p></body></html>", None))
+#endif // QT_CONFIG(tooltip)
+        self.label_3.setText(QCoreApplication.translate("saving_ui", u"Save As", None))
+        self.save_as_selector.setItemText(0, QCoreApplication.translate("saving_ui", u"safetensors", None))
+        self.save_as_selector.setItemText(1, QCoreApplication.translate("saving_ui", u"pt", None))
+        self.save_as_selector.setItemText(2, QCoreApplication.translate("saving_ui", u"ckpt", None))
+
+#if QT_CONFIG(tooltip)
+        self.save_as_selector.setToolTip(QCoreApplication.translate("saving_ui", u"<html><head/><body><p>The type of model it outputs as, Safetensors is just flat out the best choice here.</p></body></html>", None))
+#endif // QT_CONFIG(tooltip)
+        self.save_freq_enable.setText(QCoreApplication.translate("saving_ui", u"Save Frequency", None))
+        self.save_freq_selector.setItemText(0, QCoreApplication.translate("saving_ui", u"Epochs", None))
+        self.save_freq_selector.setItemText(1, QCoreApplication.translate("saving_ui", u"Steps", None))
+
+#if QT_CONFIG(tooltip)
+        self.save_freq_selector.setToolTip(QCoreApplication.translate("saving_ui", u"<html><head/><body><p>How often to save models. You can save according to steps or epochs, setting it to epochs and 1 means it will save a model every epoch.</p></body></html>", None))
+#endif // QT_CONFIG(tooltip)
+#if QT_CONFIG(tooltip)
+        self.save_freq_input.setToolTip(QCoreApplication.translate("saving_ui", u"<html><head/><body><p>How often to save models. You can save according to steps or epochs, setting it to epochs and 1 means it will save a model every epoch.</p></body></html>", None))
+#endif // QT_CONFIG(tooltip)
+        self.save_ratio_enable.setText(QCoreApplication.translate("saving_ui", u"Save Ratio", None))
+#if QT_CONFIG(tooltip)
+        self.save_ratio_input.setToolTip(QCoreApplication.translate("saving_ui", u"<html><head/><body><p>The ratio of models saved. Basically, it will save x amount of models throughout training equal to the number set here, trying to spread them out as evenly as possible, might not work with save frequency, but doesn't crash when both are enabled.</p></body></html>", None))
+#endif // QT_CONFIG(tooltip)
+        self.save_only_last_enable.setText(QCoreApplication.translate("saving_ui", u"Save Only Last", None))
+        self.save_last_selector.setItemText(0, QCoreApplication.translate("saving_ui", u"Epochs", None))
+        self.save_last_selector.setItemText(1, QCoreApplication.translate("saving_ui", u"Steps", None))
+
+#if QT_CONFIG(tooltip)
+        self.save_last_selector.setToolTip(QCoreApplication.translate("saving_ui", u"<html><head/><body><p>Save only the last x models, either using steps or epochs. I believe it works with save frequency.</p></body></html>", None))
+#endif // QT_CONFIG(tooltip)
+#if QT_CONFIG(tooltip)
+        self.save_last_input.setToolTip(QCoreApplication.translate("saving_ui", u"<html><head/><body><p>Save only the last x models, either using steps or epochs. I believe it works with save frequency.</p></body></html>", None))
+#endif // QT_CONFIG(tooltip)
+#if QT_CONFIG(tooltip)
+        self.save_state_enable.setToolTip(QCoreApplication.translate("saving_ui", u"<html><head/><body><p>This is how you would save the state of the model in training for resuming later. By default it will save one every time you save an epoch</p></body></html>", None))
+#endif // QT_CONFIG(tooltip)
+        self.save_state_enable.setText(QCoreApplication.translate("saving_ui", u"Save State", None))
+#if QT_CONFIG(tooltip)
+        self.save_last_state_enable.setToolTip(QCoreApplication.translate("saving_ui", u"<html><head/><body><p>Works the exact same way as save last models, only it's for the state folders.</p></body></html>", None))
+#endif // QT_CONFIG(tooltip)
+        self.save_last_state_enable.setText(QCoreApplication.translate("saving_ui", u"Save Last State", None))
+        self.save_last_state_selector.setItemText(0, QCoreApplication.translate("saving_ui", u"Epochs", None))
+        self.save_last_state_selector.setItemText(1, QCoreApplication.translate("saving_ui", u"Steps", None))
+
+#if QT_CONFIG(tooltip)
+        self.save_last_state_selector.setToolTip(QCoreApplication.translate("saving_ui", u"<html><head/><body><p>Works the exact same way as save last models, only it's for the state folders.</p></body></html>", None))
+#endif // QT_CONFIG(tooltip)
+#if QT_CONFIG(tooltip)
+        self.save_last_state_input.setToolTip(QCoreApplication.translate("saving_ui", u"<html><head/><body><p>Works the exact same way as save last models, only it's for the state folders.</p></body></html>", None))
+#endif // QT_CONFIG(tooltip)
+#if QT_CONFIG(tooltip)
+        self.output_name_input.setToolTip(QCoreApplication.translate("saving_ui", u"<html><head/><body><p>Replaces the default naming behavior so that it will output this name instead of &quot;last&quot;.</p></body></html>", None))
+#endif // QT_CONFIG(tooltip)
+        self.output_name_input.setPlaceholderText(QCoreApplication.translate("saving_ui", u"Output Name", None))
+        self.output_name_enable.setText(QCoreApplication.translate("saving_ui", u"Output Name", None))
+        self.resume_enable.setText(QCoreApplication.translate("saving_ui", u"resume state", None))
+#if QT_CONFIG(tooltip)
+        self.resume_input.setToolTip(QCoreApplication.translate("saving_ui", u"<html><head/><body><p>The folder path to a previous state so that you can resume training.</p></body></html>", None))
+#endif // QT_CONFIG(tooltip)
+        self.resume_input.setPlaceholderText(QCoreApplication.translate("saving_ui", u"Folder To Resume From", None))
+        self.resume_selector.setText("")
+    # retranslateUi
+

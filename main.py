@@ -1,149 +1,197 @@
-import gc
-import os
-import subprocess
+import os.path
 import sys
+import json
+import toml
+import subprocess
+from validator import validate_args, validate_dataset_args, calculate_steps
 
-import pkg_resources
-import torch
+from PySide6 import QtWidgets, QtCore, QtGui
+from qt_material import apply_stylesheet, list_themes, QtStyleTools
 
-import popup_questions
-from ArgsList import ArgStore
-from Parser import Parser, ensure_path
-import json_functions
-import sd_scripts.train_network as train_network
-
-try:
-    import lion_pytorch
-    import dadaptation
-    import lycoris
-except ModuleNotFoundError as error:
-    required = {"lion-pytorch", "dadaptation", "lycoris_lora"}
-    installed = {p.key for p in pkg_resources.working_set}
-    missing = required - installed
-    if missing:
-        print("missing some requirements, installing...")
-        python = sys.executable
-        subprocess.check_call([python, "-m", "pip", "install", *missing], stdout=subprocess.DEVNULL)
+from main_ui_files.MainWidget import MainWidget
+from ui_files.MainUI import Ui_MainWindow
 
 
-def main() -> None:
-    parser = Parser()
-    pre_args = parser.parse_args()
-    args = ArgStore.convert_args_to_dict()
-    selected = 1
-    if pre_args.popup:
-        print("starting popups")
-        selected = popup_questions.ask_starter_questions(args)
-        if selected == 2:
-            popup_questions.ask_all_questions(args)
-    q = args['save_json_only']
-    multi_path = pre_args.multi_run_path if pre_args.multi_run_path else args['multi_run_folder']
-    if multi_path and ensure_path(multi_path, "multi_run_folder"):
-        for file in os.listdir(multi_path):
-            if os.path.isdir(file) or file.split(".")[-1] != "json":
+class MainWindow(QtWidgets.QMainWindow, QtStyleTools):
+    def __init__(self, app: QtWidgets.QApplication = None):
+        self.app = app
+        super(MainWindow, self).__init__()
+        self.queue = []
+        self.window_ = Ui_MainWindow()
+        self.window_.setupUi(self)
+        self.setMinimumSize(1450, 660)
+        self.main_widget = MainWidget()
+        self.setCentralWidget(self.main_widget)
+        self.main_widget.BeginTraining.connect(self.begin_training)
+
+        # setup theme actions for menu bar
+        self.dark_themes, self.light_themes = self.process_themes()
+        for theme in self.dark_themes:
+            self.window_.dark_theme_menu.addAction(theme)
+        for theme in self.light_themes:
+            self.window_.light_theme_menu.addAction(theme)
+
+        # setup theme switching
+        for i in range(len(self.dark_themes)):
+            self.dark_themes[i].triggered.connect(lambda x=False, index=i: self.change_theme(index, False))
+        for i in range(len(self.light_themes)):
+            self.light_themes[i].triggered.connect(lambda x=False, index=i: self.change_theme(index, True))
+
+        # setup TOML saving and loading actions
+        self.window_.save_toml.triggered.connect(self.save_toml)
+        self.window_.load_toml.triggered.connect(self.load_toml)
+
+    def process_themes(self):
+        themes = os.listdir(os.path.join("css", "themes"))
+        dark_themes = []
+        light_themes = []
+        for theme in themes:
+            is_dark = len(theme.split("dark")) > 1
+            if len(theme.split("500")) > 1:
                 continue
-            args = ArgStore.convert_args_to_dict()
-            args['json_load_skip_list'] = None
-            json_functions.load_json(os.path.join(multi_path, file), args)
-            try:
-                ensure_file_paths(args)
-            except FileNotFoundError:
-                print("failed to find one or more folders or paths, skipping.")
-                continue
-            if args['tag_occurrence_txt_file']:
-                get_occurrence_of_tags(args)
-            args = parser.create_args(ArgStore.change_dict_to_internal_names(args))
-            train_network.train(args)
-            gc.collect()
-            torch.cuda.empty_cache()
-            if not os.path.exists(os.path.join(multi_path, "complete")):
-                os.makedirs(os.path.join(multi_path, "complete"))
-            os.rename(os.path.join(multi_path, file), os.path.join(multi_path, "complete", file))
-        print("completed all training")
-        quit()
+            if is_dark:
+                dark_themes.append(QtGui.QAction(theme.split("_")[1].replace(".xml", ""), self))
+            else:
+                light_themes.append(QtGui.QAction(theme.split("_")[1].replace(".xml", ""), self))
+        return dark_themes, light_themes
 
-    json_path = pre_args.load_json_path if pre_args.load_json_path else args['load_json_path']
-    if json_path and ensure_path(json_path, 'load_json_path', {"json"}):
-        json_functions.load_json(json_path, args)
-    if selected == 3:
-        popup_questions.ask_main_folder_questions(args)
-
-    ensure_file_paths(args)
-
-    if args['tag_occurrence_txt_file']:
-        get_occurrence_of_tags(args)
-
-    json_path = pre_args.save_json_path if pre_args.save_json_path else args['save_json_folder']
-    if json_path and ensure_path(json_path, 'save_json_folder'):
-        json_functions.save_json(json_path, args)
-
-    if q:
-        quit(0)
-
-    args = parser.create_args(ArgStore.change_dict_to_internal_names(args))
-    train_network.train(args)
-
-
-def ensure_file_paths(args: dict) -> None:
-    failed_to_find = False
-    folders_to_check = ['img_folder', 'output_folder', 'save_json_folder', 'multi_run_folder',
-                        'reg_img_folder', 'log_dir', 'tokenizer_cache_dir']
-    for folder in folders_to_check:
-        if folder in args and args[folder] is not None:
-            if not ensure_path(args[folder], folder):
-                failed_to_find = True
-
-    if not ensure_path(args['base_model'], 'base_model', {"safetensors", "ckpt"}):
-        failed_to_find = True
-    if args['load_json_path'] is not None and not ensure_path(args['load_json_path'], 'load_json_path', {'json'}):
-        failed_to_find = True
-    if args['vae'] is not None and not ensure_path(args['vae'], 'vae', {'pt'}):
-        failed_to_find = True
-    if args['sample_prompts'] is not None and not ensure_path(args['sample_prompts'], 'sample_prompts', {"txt"}):
-        failed_to_find = True
-    if args['dataset_config'] is not None and not ensure_path(args['dataset_config'], 'dataset_config', {'toml'}):
-        failed_to_find = True
-    if failed_to_find:
-        raise FileNotFoundError()
-
-
-def get_occurrence_of_tags(args):
-    extension = args['caption_extension']
-    img_folder = args['img_folder']
-    output_folder = args['output_folder']
-    occurrence_dict = {}
-    for folder in os.listdir(img_folder):
-        print(folder)
-        if not os.path.isdir(os.path.join(img_folder, folder)):
-            continue
-        for file in os.listdir(os.path.join(img_folder, folder)):
-            if not os.path.isfile(os.path.join(img_folder, folder, file)):
-                continue
-            ext = os.path.splitext(file)[1]
-            if ext != extension:
-                continue
-            get_tags_from_file(os.path.join(img_folder, folder, file), occurrence_dict)
-    if not args['sort_tag_occurrence_alphabetically']:
-        output_list = {k: v for k, v in sorted(occurrence_dict.items(), key=lambda item: item[1], reverse=True)}
-    else:
-        output_list = {k: v for k, v in sorted(occurrence_dict.items(), key=lambda item: item[0])}
-    name = args['change_output_name'] if args['change_output_name'] else "last"
-    with open(os.path.join(output_folder, f"{name}.txt"), "w") as f:
-        f.write(f"Below is a list of keywords used during the training of {args['change_output_name']}:\n")
-        for k, v in output_list.items():
-            f.write(f"[{v}] {k}\n")
-    print(f"Created a txt file named {name}.txt in the output folder")
-
-
-def get_tags_from_file(file, occurrence_dict):
-    f = open(file)
-    temp = f.read().replace(", ", ",").split(",")
-    f.close()
-    for tag in temp:
-        if tag in occurrence_dict:
-            occurrence_dict[tag] += 1
+    @QtCore.Slot()
+    def save_toml(self):
+        args = self.main_widget.save_args()
+        args = toml.dumps(args)
+        file_name = QtWidgets.QFileDialog().getSaveFileName(self, "Select Where to save to",
+                                                            filter="Config File (*.toml)")
+        print(file_name)
+        if not file_name[0]:
+            return
+        if len(os.path.splitext(file_name[0])) > 1:
+            file = file_name[0]
         else:
-            occurrence_dict[tag] = 1
+            file = file_name[0] + file_name[1]
+        with open(file, 'w') as f:
+            f.write(args)
+
+    @QtCore.Slot()
+    def load_toml(self):
+        file_name, _ = QtWidgets.QFileDialog().getOpenFileName(self, "Select the config file",
+                                                               filter="Config File (*.toml)")
+        if not file_name:
+            return
+        with open(file_name, 'r') as f:
+            args = toml.load(f)
+        self.main_widget.load_args(args)
+        print(args)
+
+    @QtCore.Slot(int, bool)
+    def change_theme(self, theme_index: int, is_light: bool) -> None:
+        prefix = "light" if is_light else "dark"
+        name = self.dark_themes[theme_index].text() if not is_light else self.light_themes[theme_index].text()
+        apply_stylesheet(self.app, theme=os.path.join("css", "themes", f"{prefix}_{name}.xml"),
+                         invert_secondary=is_light)
+        if os.path.exists("config.json"):
+            with open("config.json", 'r') as f:
+                config = json.load(f)
+            config['theme'] = {
+                'location': os.path.join("css", "themes", f"{prefix}_{name}.xml"),
+                'is_light': is_light
+            }
+            with open("config.json", 'w') as f:
+                json.dump(config, f, indent=4)
+        else:
+            with open("config.json", 'w') as f:
+                config = {"theme": {
+                    "location": os.path.join("css", "themes", f"{prefix}_{name}.xml"),
+                    "is_light": is_light
+                }}
+                json.dump(config, f, indent=4)
+
+    @QtCore.Slot(dict, dict, bool)
+    def begin_training(self, args: dict, dataset_args: dict):
+        args_valid = validate_args(args)
+        dataset_args_valid = validate_dataset_args(dataset_args)
+        if not args_valid or not dataset_args_valid:
+            print("failed validation")
+            return
+        if "warmup_ratio" in args_valid:
+            steps = calculate_steps(dataset_args_valid['subsets'], args_valid['max_train_epochs'],
+                                    dataset_args_valid['general']['batch_size']) \
+                if "max_train_steps" not in args_valid else args_valid['max_train_steps']
+            steps = steps * args_valid['warmup_ratio']
+            del args_valid['warmup_ratio']
+            args_valid['lr_warmup_steps'] = round(steps)
+        self.create_config_args_file(args_valid)
+        self.create_dataset_args_file(dataset_args_valid)
+        print("validated, starting training...")
+        python = sys.executable
+        subprocess.check_call([python, os.path.join("sd_scripts", "train_network.py"),
+                               f"--config_file={os.path.join('runtime_store', 'config.toml')}",
+                               f"--dataset_config={os.path.join('runtime_store', 'dataset.toml')}"])
+        os.remove(os.path.join("runtime_store", "config.toml"))
+        os.remove(os.path.join("runtime_store", "dataset.toml"))
+
+    @staticmethod
+    def create_config_args_file(args: dict):
+        with open(os.path.join("runtime_store", "config.toml"), 'w') as f:
+            for key, value in args.items():
+                if isinstance(value, str):
+                    value = f"\'{value}\'"
+                if isinstance(value, bool):
+                    value = f"{value}".lower()
+                f.write(f"{key} = {value}\n")
+
+    @staticmethod
+    def create_dataset_args_file(args: dict):
+        with open(os.path.join("runtime_store", "dataset.toml"), 'w') as f:
+            f.write("[general]\n")
+            for key, value in args['general'].items():
+                if isinstance(value, str):
+                    value = f"\'{value}\'"
+                if isinstance(value, bool):
+                    value = f"{value}".lower()
+                f.write(f"{key} = {value}\n")
+            f.write("\n[[datasets]]\n")
+            for subset in args['subsets']:
+                f.write("\n\t[[datasets.subsets]]\n")
+                for key, value in subset.items():
+                    if isinstance(value, str):
+                        value = f"\'{value}\'"
+                    if isinstance(value, bool):
+                        value = f"{value}".lower()
+                    f.write(f"\t{key} = {value}\n")
+
+    @QtCore.Slot(dict)
+    def create_config_args(self, args: dict):
+        valid = validate_args(args)
+        print(valid)
+        if not valid:
+            print("failed validation")
+
+    @QtCore.Slot(dict)
+    def create_dataset_args(self, args: dict):
+        valid = validate_dataset_args(args)
+        print(valid)
+        if not valid:
+            print("failed validation")
+
+
+def main():
+    if os.path.exists("config.json"):
+        with open("config.json", 'r') as f:
+            config = json.load(f)
+            print(config)
+    else:
+        config = {"theme": {
+            "location": os.path.join("css", "themes", "dark_teal.xml"),
+            "is_light": False
+        }}
+        fp = open("config.json", 'w')
+        json.dump(config, fp=fp, indent=4)
+        fp.close()
+    app = QtWidgets.QApplication(sys.argv)
+    apply_stylesheet(app, theme=config['theme']['location'], invert_secondary=config['theme']['is_light'])
+    window = MainWindow(app)
+    window.show()
+    sys.exit(app.exec())
 
 
 if __name__ == "__main__":

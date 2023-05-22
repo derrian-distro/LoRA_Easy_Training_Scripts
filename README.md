@@ -1,27 +1,31 @@
 # LoRA_Easy_Training_Scripts
 
-A set of training scripts written in python for use in Kohya's [SD-Scripts](https://github.com/kohya-ss/sd-scripts).
+A set of training scripts written in python for use in Kohya's [SD-Scripts](https://github.com/kohya-ss/sd-scripts). It has a UI written in pyside6 to help streamline the process of training models.
 
-**Please ensure you have python 3.10.6 and git installed**
-
-Gone are the two scripts of the past, and now everything is handled in one simple `main.py` and the two accompanying bat files `run_popup.bat` and `run_command_line.bat`. If you are on a linux system you can run them by activating the venv, which has moved to the sd_scripts folder within this project then run it using the command `accelerate launch main.py` for the command line, or `accelerate launch main.py --popup` if you want the popups.
+#### Old scripts can be found [here](https://github.com/derrian-distro/LoRA_Easy_Training_Scripts/tree/old-scripts)
 
 
-the base version was designed for people who want to directly modify the script themselves, which you can now do so in the file `ArgsList.py`. to find out all of the commands and what they do you can run the script with the -h command to list every argument or just look at the list of arguments below
-
-the popups are designed for those who are unable or unwilling to directly edit the script, you give up some control this way, but the defaults are generally good, so you won't need to worry too much about the hidden elements. It attempts to keep things simple by asking the user questions through popups, it's slower than the command line but it is a guided experience
-
-there are also a bunch of small scripts meant to do other things that sd-scripts can do, such as resizing and merging LoRA, or down scaling images for datasets.
+## Table of contents
+- [Installation](#installation)
+  - [Windows](#windows)
+  - [Linux](#linux)
+- [Usage](#usage)
+- [Configuration](#configuration)
+- [Changelog](#changelog)
 
 ## Installation
 
 ### Windows
-
-If you have a windows device I have created batch files [here](https://github.com/derrian-distro/LoRA_Easy_Training_Scripts/releases/latest) that auto install for you. if you want to specifically use _my_ scripts, then grab the one titled `install_sd_scripts.bat` which will install SD-Scripts as well as my scripts. **Make sure you don't have spaces in your path when you install them**
+If you are on windows all you need to do to install the scripts is follow these commands. Open up a command line within the folder that you want to install to then type these one line at a time
+```
+git clone https://github.com/derrian-distro/LoRA_Easy_Training_Scripts
+cd LoRA_Easy_Training_Scripts
+install.bat
+```
+after that, it will begin installing, asking a few questions along the way. Just make sure to answer them.
 
 ### Linux
-
-I don't have installers for my scripts for linux, but here is the setup process so you can do it yourself.
+If you are on linux then I can't create a specific installer for you unfortunately, but I can give you a general outline of what to do to install my scripts. starting at the folder you want to install to,
 ```
 git clone https://github.com/derrian-distro/LoRA_Easy_Training_Scripts
 cd LoRA_Easy_Training_Scripts
@@ -30,12 +34,15 @@ git submodule update
 cd sd_scripts
 python -m venv venv
 source venv/bin/activate
-pip install torch torchvision --extra-index-url https://download.pytorch.org/whl/cu116
-pip install --upgrade -r requirements.txt
-pip install -U xformers
+pip install torch==2.0.0+cu118 torchvision==0.15.1+cu118 --index-url https://download.pytorch.org/whl/cu118
+pip install -r requirements.txt
+pip install xformers==0.0.17
+pip install ../requirements_ui.txt
+pip install ../LyCORIS/.
 accelerate config
 ```
-follow these answers when setting up accelerate
+
+accelerate config will ask you a bunch of questions, answer them like so,
 ```
 - This machine
 - No distributed training
@@ -47,316 +54,102 @@ follow these answers when setting up accelerate
 ```
 
 ## Usage
+You can launch the UI using the `run.bat` file if you are on windows, or `run.sh` file if you are on linux.
 
-### Windows
+The UI looks like this:
+![Main UI Image]()
 
-If you are using windows, then you can just run any of the scripts by using their respective `run_*.bat` files.
+and has a bunch of features to it to make using it as easy as I could. So lets start with the basics. The UI is divided into two parts, the "args list" and the "subset list", this replaces the old naming scheme of \<number\>_\<name\> to try and reduce confusion. The subset list allows you to add and remove subsets to have however many you want!
+![Subset manipulation gif]()
 
-### Linux
+You are also able to collapse and expand the sections of the "args list", so that way you can have open only the section you are working on at the moment.
+![Args manipulation gif]()
 
-If you are using Linux, you can run it by activating your venv then running the scripts like so.
+Pretty much every file selector has two ways to add a file without having to type it all in, a proper file dialog, and a way to drag and drop the value in!
+![File select or dialog gif]()
 
+TOML saving and loading are available so that you don't have to put in every variable every time you launch the program. All you need to do is either use the menu on the top right, or the keybind listed.
+![TOML saving and loading gif]()
+NOTE: This change is entirely different from the old system, so unfortunately the JSON files of the old scripts are no longer valid.
+
+
+And finally, we have the ability to switch themes. These themes are only possible because of the great repo that adds in some material design and the ability to apply them on the fly called [qt-material](https://github.com/UN-GCPDS/qt-material), give them a look as the work they've done is amazing.
+![theme switching gif]()
+The themes also save between boots
+![theme remembering gif]()
+
+## Configuration
+I'd like to take a moment and look at what the output of the TOML saving and loading system looks like so that people can change it if they want outside of the UI.
+
+here is an example of what a config file looks like:
 ```
-source sd_scripts/venv/bin/activate
-then
-accelerate launch main.py
-or
-accelerate launch main.py --popup
+[[subsets]]
+num_repeats = 10
+keep_tokens = 1
+caption_extension = ".txt"
+shuffle_caption = true
+flip_aug = false
+color_aug = false
+random_crop = true
+is_reg = false
+image_dir = "F:/Desktop/stable diffusion/LoRA/lora_datasets/atla_data/10_atla"
+
+[noise_args]
+
+[sample_args]
+
+[logging_args]
+
+[general_args.args]
+pretrained_model_name_or_path = "F:/Desktop/stable diffusion/LoRA/nai-fp16.safetensors"
+mixed_precision = "bf16"
+seed = 23
+clip_skip = 2
+xformers = true
+max_data_loader_n_workers = 1
+persistent_data_loader_workers = true
+max_token_length = 225
+prior_loss_weight = 1.0
+max_train_epochs = 2
+
+[general_args.dataset_args]
+resolution = 768
+batch_size = 2
+
+[network_args.args]
+network_dim = 8
+network_alpha = 1.0
+
+[optimizer_args.args]
+optimizer_type = "AdamW8bit"
+lr_scheduler = "cosine"
+learning_rate = 0.0001
+lr_scheduler_num_cycles = 2
+warmup_ratio = 0.05
+
+[saving_args.args]
+output_dir = "F:/Desktop"
+save_precision = "fp16"
+save_model_as = "safetensors"
+output_name = "test"
+save_every_n_epochs = 1
+
+[bucket_args.dataset_args]
+enable_bucket = true
+min_bucket_reso = 256
+max_bucket_reso = 1024
+bucket_reso_steps = 64
+
+[optimizer_args.args.optimizer_args]
+weight_decay = 0.1
+betas = "0.9,0.99"
 ```
-
-I believe it also works without accelerate if you just want to run it from the venv and python directly.
-
-## Updating
-To check for updates on windows you can use the new `update.bat` that will automatically check for updates and apply them when it finds one, it should also update sd_scripts when there is an update as well. Sometimes when you update you will also need to use the `upgrade.bat` file to make things run, so don't forget to run that once an update as well.
-
-## JSON Saving And Loading
-
-One of the special features of the project is that you can save and load json files.
-
-command_line and popup now handle this the same way as they now use the exact same backend.
-if you load a json file when the `--popup` arg is active, it will skip all popups and just load the json in full, rather than only load parts of it.
-
-Additionally, you can load or save JSON files from the command line with their respective commands, `--save_json_path "path\to\folder"` for saving, and `--load_json_path "path\to\json.json"` for loading. You can also just set them, in `ArgsList.py` and it is asked when using `--popup`. Keep in mind that if you use `--save_json_path` and `--load_json_path` it will take precidence over whatever you inserted into the ArgsList or popups.
-
-Finally, I also set up the JSON loading so that it supports the JSON files Kohya_ss generates
-
-## Queuing Training
-
-I have implemented queues into the project so that it will be able to take in a folder that has a bunch of json files and run through them all. Unlike the previous version, which had the popup version run through the popups for each time you wanted to queue up something, it now just uses the same method as the previous command line version.
-
-you can also supply the path to the folder through the command line argument `--multi_run_path "path\to\folder"`. keep in mind that setting this will override any value set in `ArgsList.py` or through the popups
-
-if you need to generate json files you can do use through changing the `ArgsList.py` and setting the variable `save_json_only` to True, or through the popups by selecting yes on the associated popup. for that popup to appear you must also select yes to generating a json file
-
-## Tag Occurrence Printout
-
-With my scripts, you can create a txt file with a list of all tags used during training. The tags can be output in one of two ways, according to most used to least, or alphabetically.
-
-## LoRA Resize Script
-
-`lora_resize.py` and it's accompanying bat file `lora_resize.bat` is a script I wrote to run the resize script that is within SD-Scripts, much like the other two, it has a batch file that can be used to run it. It does things in the popup style, and supports queueing. This script should simplify reducing the dim size of LoRA. I have changed the queue system to better support multiple resizes, either through providing a txt file, or providing multiple values. Because of this, however, it is more prone to failures. the txt file only contains the values used, no the mode of resize or the model to resize. So, if you are planning on doing a fixed resize, you would only need to enter in 1 value per line, but if you are planning on doing a dynamic resize, you want to put two values per line, the dynamic value, and then the max dim size.
-
-## LoRA Merging and Image Resizing scripts
-
-I added two new scripts to handle the scripts that sd-scripts added since I created the resizing script. The first one, `lora_merge.py` and it's accompanying bat file `lora_merge.bat` can take in any number of loras to merge together, it walks you through the process, so you shouldn't need to know how it works under the hood! I also added support for merging lora into models with this most recent update.
-
-The second one, `image_resize.py` and it's accompanying bat file `image_resize.bat` is a script for downscaling your images. This is great if you are training at a high resolution as you can disable bucket upscaling and have a set of images that are "different" to the model, it should improve gens at lower resolutions, and might even help smaller datasets
-
-## D-Adaption
-I also added support for the new D-Adaption which works differently from the other optimizers.
-It handles the lr by itself, you just need to set the lr values to a value close to or at 1 for each lr. in order to seperate out the lr's for d-adaption though, you must also add the args `{"decouple": "True"}` to seperate the lr's for d-adaption. using the popups automatically sets this for you
-
-## Weighted Captions
-Kohya has introduced a way to weight captions in the txt files, with it is an argument for it, as well as normal tag weight rules. All of the tag weights follow the same setup as auto1111 webui, () for increase, [] for decrease, and (tag:1.2) to increase or decrease according to the weight. As part of this, however, if you have it enabled, make sure to change all () to \\(tag\\) that aren't weighted as to prevent them from accidentally being weighted during training.
-
-
-## DyLoRA training
-DyLoRA is a new method of training LoRA and LoCon that recently popped up in both LyCORIS and sd-scripts. My scripts are configured to train sd-scripts by default, but it is capable of training both. DyLoRA are activated differently depending on the version you are training. It seems like you cannot use Block Weight Training with it so I have diabled it for the time being.
-```python
-# for kohya's implementation
-self.network_args = {
-  'conv_dim': '8', # Optional, must be set to the same as network dim to use kohya's version. conv_alpha is completely ignored if you are doing DyLoRA, instead using the network alpha
-  'unit':'4' # Is required if you want to use DyLoRA in my scripts, as that's how I tell what you want to do.
-}
-
-# for kohaku's implementation
-self.lyco = True
-self.network_args = {
-  'conv_dim': '8', # Unsure if it must be the same dim size like kohya as I didn't fully test it
-  'conv_alpha':'1', # Might end up ignoring it much like kohya does
-  'algo':'dylora' # Required to tell the scripts you want to use dylora
-}
-```
-
-
-## Block Weight Training
-With the introduction of Block Weight Training by kohya in sd-scripts, I had to think about how to implement everything for this. I have a proper popup in the works, but I didn't have it ready in time for this update. So I opted to create a simpler setup for the time being. The popups will guide you through setting all of the values, or you can take a look at the documentation on it [here](https://github.com/kohya-ss/sd-scripts#4-apr-2023-202344-release-060). I tried my hardest to make it easy to use, however, I had to balance the amount of popups with the complexity. The choice I made meant more work for me in the end, but I think it turned out very well. The block weight training allows you to select a different weight for every layer, as well as dims and alphas. **NOTE**: If you want to use this outside of the popups, make sure to disable `lyco` and **not** have `algo` in the `network_args`
-
-## LoCon, LoHa, ia3, and Lokr Training
-I have added support for locon, loha, and ia3 training. You can set the variable `lyco` in the `ArgsList.py` to use LyCORIS, which also has a few variables that need to be set. in the `networks_args` variable, you can set the `conv_dim` and `conv_alpha` as well as the `algo` and if you are using `cp_decomp`. Typically, an example is like so:
-```python
-self.network_args = {
-  'algo': 'lora', # lora corresponds to locon, loha corresponds to loha, ia3 corresponds to ia3, and lokr corresponds to lokr
-  'conv_dim': '8',
-  'conv_alpha': '1'
-}
-```
-The popups handle setting these values for you, if you don't want to set them yourself.
-
-## LoRA and LoCon Extraction
-I have added a popup style script for extracting LoCon from models. It does this using an Add Difference style approach, you much have a base model to compare against to extract this data. The process should guide you through the process. you can start it by running the bat file `lora_locon_extract.bat`. I added a new way to do multiple extractions quickly through either using a txt file or giving multiple values, this is a much better way to set up queues than my original approach, however is more prone to failure. the txt file only contains the values used, not the mode of extract or the models to extract. If you are extracting a LoRA, the file only needs one value per line, LoCon requires two
-
-## LoCon and loha merging
-I have added a popup style script for merging LoCon models into normal models. all you need to do is follow the popups. you can start it by running the bat file `locon_loha_merge.bat`
-
-## Experimental XTI training.
-I created a rudimentary popup script for training XTI. I have only tested that the arguments are getting properly passed, beyond that I have not tested anything as I don't actually know how to train them. Please submit a bug report if you know how to train them, and it doesn't work for you, as I'd not know otherwise.
+As you can see everything is sectioned off into their own sections. Generally they are seperated into two groups, args, and dataset_args, this is because of the nature of the config and dataset_confg files within sd-scripts. Generally speaking, the only section that you might want to edit that doesn't correspond to a UI element (for now) is the `[optimizer_args.args.optimizer_args]` section, which you can add, delete, or change options for the optimizer, A proper UI for it will come later, once I figure out how I want to set it up.
 
 ## Changelog
-- May 5, 2023
-  - Updated sd-scripts and LyCORIS, added all of the new args added to sd-scripts.
-  - re-added the extraction script for kohaku's extraction implementation.
-  - Added new pyramid noise args to the argslist, however not to the popups
-    - `multires_noise_iterations` which is the amount of iterations for pyramid noise. It is recommended to use between 6 and 10, I cannot confirm this to be the best option however.
-    - `multires_noise_discount`, which I have literally no clue what this does, seems like it is recommended to be between the values 0.1 and 0.3, I set the default to 0.3
-  - Added the new logging args
-    - `log_with` which allows you to specify what logging system to use, tensorboard, wandb, or all
-    - `log_tracker_name`, the name of the tracker, if none then it is set to whatever the specific logging system names it.
-    - `wandb_api_key`, the API key for wandb for use with wandb.
-  - Work on the UI update is still on-going, but a bit slow. I recently decided to change out how I'm handling the args, which means I had to remake a lot of the UI elements, but progress is steadily happening.
-- Apr 17, 2023
-  - Updated sd-scripts and LyCORIS, however no changes to the args have been made
-  - Changed the extraction script to kohya's implementation to allow for LoRA extraction.
-- Apr 14, 2023
-  - Updated sd-scripts and LyCORIS
-  - added the weighted captions arguments as well as support for the new DyLoRA.
-  - added support for XTI in the form of a popup script. It's not entirely tested beyond making sure it actually passes arguments correctly to the training scripts as well as making assumptions about what arguments are required. It is *very* rudimentary in comparison to the main scripts, doesn't have a majority of the features the normal scripts have, but at least it has json saving and loading. Since I have no idea how to train TI or XTI, I'm going to need some feedback from people who *do* so I can fix any bugs that might exist
-- Apr 8, 2023
-  - Updated sd-scripts and LyCORIS
-  - added all of the new huggingface commands to the `ArgsList.py` that was added recently by sd-scripts, but I didn't include them in the popups.
-  - Added support for the new algo LyCORIS created, lokr, in the popups.
-  - Added support for the new block weight training that kohya implemented. There is a lot to it, so I suggest you read the documentation [here](https://github.com/kohya-ss/sd-scripts#4-apr-2023-202344-release-060).
-  - Added a mode to reading a json that allows you to specify the folders still.
-  - XTI implementation will be in the next update
-- Apr 4, 2023
-  - Updated sd-scripts and LyCORIS, however sd-scripts is one version behind as I still need time to work in the new sd-scripts elements. Note, this next update will disable LyCORIS for the time being until Kohaku can update their code.
-  - Added new queue systems to the `lora_resize` and `locon_extract` scripts. They allow for much easier queues but it does mean it's more prone to failure. I have included example txt files in the examples folder.
-- Mar 28, 2023
-  - Updated sd-scripts and LyCORIS
-  - Added the new parameters added by sd-scripts for min snr gamma and token warmup
-    - `min_snr_gamma` is an argument that takes in a float, and seemingly improves training
-    - `token_warmup_min` takes in an int, is the smallest amount of tokens that are used when using token warmup
-    - `token_warmup_step` takes in a float, is the last step before all tokens are used in training
-  - Added `min_snr_gamma` to popups as it seems to be a worthwhile addition
-- Mar 21, 2023
-  - Updated sd-scripts and LyCORIS
-  - Added the new parameters added by sd-scripts for a custom scheduler, however I don't do any sort of error checking for it
-  - Added support for torch 2.0.0 and 2.1.0 along with built xformers for both
-  - Added support for triton for torch 2, however it may not be working as expected.
-  - Updated the number of workers to be be 1 by default, as to make it more accessable
-  - Changed the main batch files to not use accelerate to launch anymore, instead option to use python directly instead.
-  - Added a new batch file for updating to torch 2.0.0 or 2.1.0 with the option to install triton as well.
-  - Added new installer that is python based, as to make it easier to check for the correct version of python, as well as check for git being installed. This installer is _still_ only for windows as linux is different for every distro.
-- Mar 13, 2023
-  - Updated sd-scripts and LyCORIS
-  - with it came an update to the resizing scripts, and the locon extraction scripts.
-  - Added new parameters for specifying height seperately from width for training at non square resolutions
-  - Added new popups to handle CP Decomposition for locon and loha as well as the change to how resolution is handled
-- Mar 10, 2023
-  - Updated sd-scripts to the newest version which now natively supports LoCon models
-  - did a small refactor of the arguments to support the new LyCORIS that replaced the old LoCon repo
-  - Removed the old LoCon repo, replacing it with the new LyCORIS repo
-  - Added support for Loha models, as well as changed support for LoCon to follow the new pattern that was introduced in LyCORIS
-  - depricated the original LoCon variables, in favor of using a singluar variable `network_args` which works much like `optimizer_args`.
-  - popups were updated to support the new loha and other changes to setup
-  - Updated both the LoCon extract and merge script to support the changes, extract still only works with LoCon, but you can merge Loha using the new merge script.
-- Mar 7, 2023
-  - Updated the locon dependancies to support the new extraction methods, this also includes writing up a new version of locon extraction to follow the update
-  - Kohya updated their readme with more details on how to use the image preview system. In the attempt to make this a bit more transparent I'm also adding it here
-    - `--n` is the neg prompt, you want to put it _after_ the main prompt
-    - `--h` is height
-    - `--w` is width
-    - `--d` is the seed of the image
-    - `--l` is the CFG scale
-    - `--s` is the step count.
-    - a sample prompt txt document might be like this
-    ```
-    # prompt 1
-    masterpiece, best quality, 1girl, white t-shirt, upper body, looking at viewer, simple background --n low quality, worst quality, bad anatomy, bad composition, poor, low effort --w 768 --h 768 --d 1 --l 7.5 --s 28
+changelog of the old scripts are all in that branch [here](https://github.com/derrian-distro/LoRA_Easy_Training_Scripts/tree/old-scripts#changelog)
 
-    # prompt 2
-    masterpiece, best quality, 1boy, in business suit, standing at street, looking back --n low quality, worst quality, bad anatomy, bad composition, poor, low effort --w 576 --h 832 --d 2 --l 5.5 --s 40
-    ```
-- Mar, 4, 2023
-  - Updated the scripts to support LyCORIS's new algo ia3. Cant guarentee anything at all, have no clue how to train it, and know nothing about it other than that it is seemingly another loha style algo.
-  - Updated the scripts to support the new arguments that Kohya introduced
-    - `dataset config` for the toml file support, I haven't actually played with it, so for now it just sets it and that's it
-    - all of the sample arguments
-      - `sample_every_n_steps` and `sample_every_n_epochs` which allows you to generate a sample image every n steps or epochs
-      - `sample_prompts` which is the file you pass in to generate the preview images. you can only specify a positive prompt, there is no support for negative prompts
-      - `sample_sampler` which is the sampler that is used for generating images, it defaults to ddim, but there are a lot of options, I list them all in ArgsList.py
-    - `tokenizer_cache_dir` which, to be honest, I don't really know what this means, it seems to talk about using this for offline training, but I'm pretty sure training is already offline.
-    - `locon alpha` because this was added as a variable once it was fixed
-  - Added all of the LoCon args to the popups as they have been tested enough that I feel comfortable adding them in as a whole
-  - Added LoCon extracting and merging through their respective scripts `locon_extract.bat` and `locon_merge.bat`. look above for a bit more info on them, but the popups will generally guide you enough.
-- Feb 27, 2023
-  - Updated the LoRA merging scripts to allow for merging LoRA to models, I don't believe this works for locon models for now, I'll look into adding support another time
-  - Added LoCon training to the scripts, as well as added the LoCon repo as a submodule. I added two new commands to facilite this
-    - `locon` which is a bool that activates training with LoCon
-    - `locon_dim` which is the dim for the LoCon layers, you must still set the main dim size
-- Feb 23, 2023
-  - Completely overhauled the scripts, changing everything
-  - command line and popup are no longer seperate scripts
-    - you can acces the popup version by adding --popup to the command call, or by using the associated batch file for that purpose.
-    - you no longer modify the variables directly in the command_line.py script as it no longer exists, instead, there is a script specifically made to house all of the arguments that is seperated from the running logic.
-  - changed the entire structure of the file system so that sd_scripts is now a submodule of my scripts, so that things don't break when sd_scripts updates until I update the scripts to support the new updates.
-  - Updated all of the smaller side scripts to allow them to work with the new structure.
-  - Added the new args, and shuffled around all of the old args to better organize them.
-  - Created a new installer to support the new way everything is set up. (soon, gotta get this up first) This is windows only unfortunately
-- Feb 20, 2023
-  - Updated the scripts to support the new parameters added
-    - Lion support added on both scripts, under the param `use_lion`
-    - added the `lowram` option even though I don't think it will be needed for anybody who actually uses my scripts, as that seems to be geared towards colab users.
-  - Added a script for merging LoRA, called `lora_merge.py` and it's bat file `lora_merge.bat`
-    - It uses the same popup style for the other sub scripts, and will walk you through the process. This script seems to be able to merge more than one LoRA at a time
-  - Added a script for downscaling images, called `image_resize.py` and it's bat file `image_resize.bat`. This will be a very useful tool for replacing repeats with a better alternative if you use the no_upscale feature.
-- Feb 14, 2023
-  - Updated the scripts to support the new parameter Kohya added, noise_offset
-    - I haven't tested it myself yet, but supposedly having this set will improve generation of very bright and very dark elements. Kohya recommends a value of 0.1
-  - Added the verbose option to the `lora_resize` script, I also wanted to add a way to output this to a text file, but I wan't able to find a way to do so cleanly. I will revisit this another time.
-  - Added a queue system to the `lora_resize` script, it works very similar to my queue system when using the `lora_train_popup.py` queue system.
-  - It seems like the multi-gpu option is baked into the code and will automatically use the gpus you have set when using `accelerate config`, I suggest that if you want to use multiple gpus to re-run the `accelerate config` to account for that, as right now, most people have it set up such that only one gpu is used.
-- Feb 12, 2023
-  - released v4 of the installers
-    - had to remove the python and git check because it wasn't working as expected
-    - also fixed an issue where ther cudnn wouldn't download because the website had an incorrect certificate
-  - Small change to the txt file generation system so that you can output the files alphabetically
-  - Added the option to turn on flip_aug for `lora_train_popup.py`
-- Feb 11, 2023
-  - released v3 of the installers
-    - Added the python check system wide as well as user wide, rather than just user wide
-    - Decluttered thing's a bit more for easier reading
-    - Added a way to ask for admin so you no longer need to run it as admin
-- Fab 10, 2023
-  - released v2 of the installers
-    - New guards to make sure that python 3.10 and git are installed
-    - less cluttered messages so that is makes more sense what is going on
-    - the option to install the cudnn patch for higher end 30X0 cards as well as 40X0 cards, using the installer script written by bmaltais. Thanks bmaltais
-    - the option to auto install the patch for 10X0 cards, for the sd-scripts installer only
-- Feb 9, 2023
-  - I modified the bat files to work a bit better on the off chance that bitsandbytes needed to be installed to a different place than expected.
-  - I also fixed the bat file for `lora_resize.bat` because it was looking for the wrong file name.
-  - Added new button prompts for some of the popups to make it easier to know what options you have.
-  - Added in the new arguments that Kohya introduced, as well as added in the arguments for training on SD2 based models, popups got added to change the ckip skip to 1 if using a realistic models as well. new arguments are as follows:
-    - v2
-    - v_parameterization
-    - caption_dropout_rate
-    - caption_dropout_every_n_epochs
-    - caption_tag_dropout_rate
-  - The new paramaters are added at the bottom of the list of arguments
-  - Additionally, I finally decided to rename save_at_n_epochs to save_every_n_epochs internally. This doesn't break the json saving and loading system
-
-## List Of Arguments
-
-| Argument                       | Type      | Required | What It Does                                                                                                                                                                                                                                                             |
-| ------------------------------ | --------- | -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| base_model                     | str       | YES      | Path to the base model                                                                                                                                                                                                                                                   |
-| img_folder                     | str       | YES      | Path to the image folder, make sure to set the folder your image folders are in, not the folders named 1_something                                                                                                                                                       |
-| output_folder                  | str       | YES      | Path to the output of all of your checkpoints                                                                                                                                                                                                                            |
-| save_json_folder               | str       | NO       | Path to the folder where your generated json config files will be placed                                                                                                                                                                                                 |
-| load_json_path                 | str       | NO       | Path to the json file to be loaded                                                                                                                                                                                                                                       |
-| json_load_skip_list            | list[str] | NO       | Is the list of items that will not get loaded when you load a json file, make sure that you type in the exact arg name. example: ["base_model", "img_folder", "output_folder"]                                                                                           |
-| multi_run_folder               | str       | NO       | Is the path to the folder that contains the JSON files to be loaded for queued training. This is exclusive to `lora_train_command_line.py`                                                                                                                               |
-| save_json_only                 | bool      | NO       | Is a switch to prevent training so that you can generate a JSON file                                                                                                                                                                                                     |
-| net_dim                        | int       | YES      | This is the the amount of datapoints that exist within the LoRA, the more you have the more data can be added, as well as the bigger size. However the more you have, the more junk data can be added as well                                                            |
-| alpha                          | float     | YES      | This is the scalar based on the net_dim. you can figure out how much it is scaling by doing the simple calculation of alpha / dim_size.                                                                                                                                  |
-| scheduler                      | str       | YES      | This is the way the learning rate is modified as it trains. the list of schedulers are as follows: linear, cosine, cosine_with_restarts, polynomial, constant, and constant_with_warmup                                                                                  |
-| cosine_restarts                | int       | NO       | This is a value that is only set when cosine_with_restarts is set. This value represents how many times during training the scheduler will reset the learning rate back to default                                                                                       |
-| scheduler_power                | float     | NO       | This is a value that is only set when polynomial is set. This value represents the X in the polynomial function, the higher this is, the faster the learning rate decays, 1 means that it decays "normally", 2 means it decays very fast, and 0.5 means it decays slower |
-| warmup_lr_ratio                | float     | NO       | This is the ratio of steps that will be warmup steps, it is dynamically calculated based on the total number of steps that was given                                                                                                                                     |
-| learning_rate                  | float     | NO       | This is the base learning rate, it determines how much is learned per step. If it is not set, it defaults to 1e-3                                                                                                                                                        |
-| text_encoder_lr                | float     | NO       | This is the lr for specifically the text encoder. it overwrites the base lr                                                                                                                                                                                              |
-| unet_lr                        | float     | NO       | This is the lr for specifically the unet. it overwrites the base lr                                                                                                                                                                                                      |
-| num_workers                    | int       | YES      | This is the number of threads that are used for data processing, lower numbers mean faster epoch starting time, but supposedly slower data loading                                                                                                                       |
-| save_every_n_epochs            | int       | NO       | Saves a checkpoint every n epochs, so save_every_n_epochs = 1 means that it saves every epoch                                                                                                                                                                            |
-| shuffle_captions               | bool      | NO       | This is a switch to turn on shuffle_captions, doing so will shuffle all of the tags in the caption files                                                                                                                                                                 |
-| keep_tokens                    | int       | NO       | This is a way to keep certain tokens at the front of the captions files when shuffling. This only matters if you are shuffling captions                                                                                                                                  |
-| max_steps                      | int       | NO       | This is a way to specify an amount of steps without needing to calculate it. If it is a step amount that doesn't end it a full epoch, it will just train until it hits the final step, then output the final epoch, even if it was not a full epoch                      |
-| tag_occurrence_txt_file        | bool      | NO       | Creates a txt file that contains the list of tags used during training in the order of most to least                                                                                                                                                                     |
-| train_resolution               | int       | YES      | The resolution that is trained at                                                                                                                                                                                                                                        |
-| min_bucket_resolution          | int       | YES      | the minimum bucket size when creating buckets                                                                                                                                                                                                                            |
-| max_bucket_resolution          | int       | YES      | the maximum bucket size when creating buckets                                                                                                                                                                                                                            |
-| lora_model_for_resume          | str       | NO       | Loads a "Hypernetwork" into the training model, also works for LoRA, which is why I have it here, this is not the intended way to continue training though                                                                                                               |
-| clip_skip                      | int       | YES      | Works the same way clip skip does when using webui, defines what layer its trained on                                                                                                                                                                                    |
-| test_seed                      | int       | YES      | represents the "reproducable seed" as well as decides the seed for the RNG used while training, sometimes changing this value is enough to improve a bake                                                                                                                |
-| priot_loss_weight              | float     | YES      | Is something directly related to how Dreambooth is trained, LoRA are trained in a Dreambooth-y way so I guess this is required as well, I honestly don't understand what it is though                                                                                    |
-| gradient_checkpointing         | bool      | NO       | enables or disables gradient checkpointing, allows bigger batch sizes for lower vram, much slower though                                                                                                                                                                 |
-| gradient_acc_steps             | int       | NO       | honestly, I don't exactly know what this means, but I believe it has to do with the size of the batch size                                                                                                                                                               |
-| mixed_precision                | str       | YES      | Is a modification to how it is trained, having mixed precision means that it trains in both fp32 and fp16, the only options are fp16, bf16, and none                                                                                                                     |
-| save_precicion                 | str       | YES      | Determines how it is saved, it can be saved in float(fp32), fp16, and bf16                                                                                                                                                                                               |
-| save_as                        | str       | YES      | the file type that it gets saved as, by default this is set to .safetensors, and should stay that way, but the other two options are .ckpt and .pt                                                                                                                       |
-| caption_extension              | str       | YES      | the file types the captions are in, by default this is set to .txt, but it can accept any filetype it looks like                                                                                                                                                         |
-| max_clip_token_length          | int       | YES      | can be set to any of 75, 150, or 225. 150 is default, and generally, unless you have really long prompts, don't need it to be higher                                                                                                                                     |
-| buckets                        | bool      | NO       | enables/disables buckets, usually you want this on, especially when you didn't crop your images                                                                                                                                                                          |
-| xformers                       | bool      | NO       | enables/disables xformers, I don't believe that AMD cards can use them, so make sure to disable it if you are using one                                                                                                                                                  |
-| use_8bit_adam                  | bool      | NO       | enables/diables 8bit Adam, great as an optimizer but some cards don't support it, if the program fails with it on, try turning it off                                                                                                                                    |
-| cache_latents                  | bool      | NO       | enables/disables caching the latents of the input images, having this enabled will reduce the vram spikes as you train, but it prevents certain things from being enabled                                                                                                |
-| color_aug                      | bool      | NO       | enables/disables color augmentation, this is one of the things that are unable to work with cache latents. it hue shifts the images, so that they provide different colors to input                                                                                      |
-| flip_aug                       | bool      | NO       | enables/disables flip augmentation, flips every image by reversing it's latents, I believe, good to have on usually, but turn it off if you are dealing with something asymetric                                                                                         |
-| random_crop                    | bool      | NO       | enables/disables random cropping, newly available to use with buckets, it is able to crop the images randomly when it fits them into the buckets, this also doesn't work with cache latents                                                                              |
-| vae                            | str       | NO       | allows you to set a vae to train with, You are better off not training with one.                                                                                                                                                                                         |
-| no_meta                        | bool      | NO       | Keep this disabled, enabling it prevents the metadata from being added to the model                                                                                                                                                                                      |
-| log_dir                        | str       | NO       | allows you to output training logs, most people won't be able to make sense of it, so It's not really useful.                                                                                                                                                            |
-| bucket_reso_steps              | int       | NO       | allows you to change how often a new bucket is created, default is 64, under that is untested, can be any value 1 or up                                                                                                                                                  |
-| bucket_no_upscale              | bool      | NO       | enables/disables upscaling images when applying buckets.                                                                                                                                                                                                                 |
-| v2                             | bool      | NO       | Is the switch to set if you are training on a model that is based on SD2                                                                                                                                                                                                 |
-| v_parameterization             | bool      | NO       | Enable this only if you have v2 enabled and are using a model based on the 768x version of SD2                                                                                                                                                                           |
-| caption_dropout_rate           | float     | NO       | The rate at which caption files get dropped while training, not entirely sure what this does, except for the fact that it will occasionally not use the caption file for images                                                                                          |
-| caption_dropout_every_n_epochs | int       | NO       | How often an epoch ignores captions while training, the number set means that every N epochs have ingored captions, EX: 3 = (3, 6, 9,...)                                                                                                                                |
-| caption_tag_dropout_rate       | float     | NO       | The rate at which _tags_ within caption files get ignored, this will not drop tags that are being kept by the keep_tokens argument.                                                                                                                                      |
-| noise_offset                   | float     | NO       | Seemingly allows generation of darker and lighter than usual images. Kohya suggests 0.1, as does the paper on this technique, so I will parrot this and also suggest that you set it to 0.1 if you use it.                                                               |
-| lowram                         | bool      | NO       | Changes how the model is loaded so that it loads into vram, pretty much only useful for people with a lot of vram and no system ram, or colab users.                                                                                                                     |
-| use_lion                       | bool      | NO       | Is the flag to enable using the new lion optimizer. it obviously can't be used with 8bit_adam as they are both optimizers.                                                                                                                                               |
-|save_json_name|str|NO|Is the name that will be appended to the end of the config file output|
-|locon|bool|NO|Enables locon training, which is new, basically works like LoRA but holds more information.|
-|locon_dim|int |NO|The dim that is seperate to the normal network dim, it serves as the dim size for the other layers that aren't the default LoRA layers. No recommendation because not enough testing has been done.|
+- May 22, 2023
+  - First release of the new UI system. This has been a long time coming and I put in a ton of work to make it as user friendly as possible. Some Things to note, This doesn't have support for queues or block weight training for the moment, they are planned though and will be added down the line.
+  - If you find any bugs, *please* tell me, I want to fix them if something is wrong. After all, I am only one person
+  - I'm adding a link to my ko-fi page as of this update so people that want to support me can! Thanks for all of the feedback of the scripts through the development time I spent on it, and I hope to continue to improve it as I go.

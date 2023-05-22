@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>800</width>
+    <height>600</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <widget class="QWidget" name="centralwidget"/>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>800</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menuFile">
+    <property name="title">
+     <string>File</string>
+    </property>
+    <addaction name="save_toml"/>
+    <addaction name="load_toml"/>
+   </widget>
+   <widget class="QMenu" name="menuTheme">
+    <property name="title">
+     <string>Theme</string>
+    </property>
+    <widget class="QMenu" name="dark_theme_menu">
+     <property name="title">
+      <string>Dark</string>
+     </property>
+    </widget>
+    <widget class="QMenu" name="light_theme_menu">
+     <property name="title">
+      <string>Light</string>
+     </property>
+    </widget>
+    <addaction name="dark_theme_menu"/>
+    <addaction name="light_theme_menu"/>
+   </widget>
+   <addaction name="menuFile"/>
+   <addaction name="menuTheme"/>
+  </widget>
+  <action name="save_toml">
+   <property name="text">
+    <string>Save Toml</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+S</string>
+   </property>
+  </action>
+  <action name="load_toml">
+   <property name="text">
+    <string>Load Toml</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+O</string>
+   </property>
+  </action>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

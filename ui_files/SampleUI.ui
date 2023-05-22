@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>sample_ui</class>
+ <widget class="QWidget" name="sample_ui">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>400</width>
+    <height>150</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
+    <widget class="QGroupBox" name="sample_args_box">
+     <property name="title">
+      <string>Enable</string>
+     </property>
+     <property name="checkable">
+      <bool>true</bool>
+     </property>
+     <property name="checked">
+      <bool>false</bool>
+     </property>
+     <layout class="QFormLayout" name="formLayout">
+      <item row="1" column="0">
+       <widget class="QLabel" name="steps_label">
+        <property name="text">
+         <string>Time Between Sample</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <layout class="QHBoxLayout" name="horizontalLayout">
+        <item>
+         <widget class="QComboBox" name="steps_epochs_selector">
+          <property name="toolTip">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The amount of time between samples. I personally suggest you have it generate a sample every epoch, however, again, personal preference.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
+          <item>
+           <property name="text">
+            <string>Steps Per Sample</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Epochs Per Sample</string>
+           </property>
+          </item>
+         </widget>
+        </item>
+        <item>
+         <widget class="QSpinBox" name="steps_epoch_input">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="toolTip">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The amount of time between samples. I personally suggest you have it generate a sample every epoch, however, again, personal preference.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
+          <property name="value">
+           <number>1</number>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item row="0" column="0">
+       <widget class="QLabel" name="sampler_label">
+        <property name="text">
+         <string>Sampler </string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QComboBox" name="sampler_input">
+        <property name="toolTip">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The Sampler used when generating test images. I personally suggest using either DDIM or Euler A, however it's really just personal preference.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
+        <item>
+         <property name="text">
+          <string>DDIM</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>PNDM</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>LMS</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>EULER</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>EULER_A</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>HEUN</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>DPM_2</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>DPM_2_A</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>DPMSOLVER</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>DPMSOLVER++</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>DPMSINGLE</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>K_LMS</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>K_EULER</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>K_EULER_A</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>K_DPM_2</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>K_DPM_2_A</string>
+         </property>
+        </item>
+       </widget>
+      </item>
+      <item row="2" column="0">
+       <widget class="QLabel" name="text_file_label">
+        <property name="text">
+         <string>Prompt Text File</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="1">
+       <layout class="QHBoxLayout" name="horizontalLayout_2">
+        <item>
+         <widget class="DragDropLineEdit" name="sample_prompt_txt_file_input">
+          <property name="toolTip">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The input file that contains all of your prompts. This file must be a txt file and have one prompt per line. you can specify a bunch of args within each line for things like negative prompts, width and height, and more. For documentation on this please visit the sd-scripts github repo.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
+          <property name="placeholderText">
+           <string>Text File</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="sample_prompt_selector">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="text">
+           <string/>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+     </layout>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>DragDropLineEdit</class>
+   <extends>QLineEdit</extends>
+   <header>modules.DragDropLineEdit.h</header>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections/>
+</ui>

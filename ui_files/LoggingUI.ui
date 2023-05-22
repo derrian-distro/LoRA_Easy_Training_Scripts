@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>logging_ui</class>
+ <widget class="QWidget" name="logging_ui">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>440</width>
+    <height>207</height>
+   </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>440</width>
+    <height>0</height>
+   </size>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
+    <widget class="QGroupBox" name="logging_group">
+     <property name="title">
+      <string>Enable</string>
+     </property>
+     <property name="checkable">
+      <bool>true</bool>
+     </property>
+     <property name="checked">
+      <bool>false</bool>
+     </property>
+     <layout class="QFormLayout" name="formLayout">
+      <item row="1" column="0">
+       <widget class="QLabel" name="label">
+        <property name="text">
+         <string>Log Output Directory</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <layout class="QHBoxLayout" name="horizontalLayout">
+        <item>
+         <widget class="DragDropLineEdit" name="log_output_input">
+          <property name="toolTip">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The folder that the log folders will be output to.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
+          <property name="placeholderText">
+           <string>Output Directory</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="log_output_selector">
+          <property name="text">
+           <string/>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item row="0" column="0">
+       <widget class="QLabel" name="label_2">
+        <property name="text">
+         <string>Logging System</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QComboBox" name="log_mode_selector">
+        <property name="toolTip">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The system you use for logging. Tensorboard is local, Wandb is cloud based. You can also opt to log in both of them.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
+        <item>
+         <property name="text">
+          <string>Tensorboard</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Wandb</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>All</string>
+         </property>
+        </item>
+       </widget>
+      </item>
+      <item row="2" column="1">
+       <widget class="LineEditWithHighlight" name="log_prefix_input">
+        <property name="toolTip">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;This is the name that gets added to the front of the folder name so that you can tell what log is what.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
+        <property name="placeholderText">
+         <string>Prefix</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="1">
+       <widget class="LineEditWithHighlight" name="log_tracker_name_input">
+        <property name="toolTip">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Is the name of the tracker in the logged data.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
+        <property name="placeholderText">
+         <string>Tracker Name</string>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="0">
+       <widget class="QLabel" name="label_5">
+        <property name="text">
+         <string>Wandb API Key</string>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="1">
+       <widget class="LineEditWithHighlight" name="log_wandb_key_input">
+        <property name="toolTip">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Required if you are using Wandb as it's how you connect to the service.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
+        <property name="placeholderText">
+         <string>API Key</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="0">
+       <widget class="QCheckBox" name="log_prefix_enable">
+        <property name="text">
+         <string>Prefix For Log Folders</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="0">
+       <widget class="QCheckBox" name="log_tracker_name_enable">
+        <property name="text">
+         <string>Name For Log Tracker</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>DragDropLineEdit</class>
+   <extends>QLineEdit</extends>
+   <header>modules.DragDropLineEdit.h</header>
+  </customwidget>
+  <customwidget>
+   <class>LineEditWithHighlight</class>
+   <extends>QLineEdit</extends>
+   <header>modules.LineEditHighlight.h</header>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections/>
+</ui>
