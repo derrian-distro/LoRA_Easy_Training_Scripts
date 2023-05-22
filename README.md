@@ -57,26 +57,26 @@ accelerate config will ask you a bunch of questions, answer them like so,
 You can launch the UI using the `run.bat` file if you are on windows, or `run.sh` file if you are on linux.
 
 The UI looks like this:
-![Main UI Image]()
+![Main UI Image](https://raw.githubusercontent.com/derrian-distro/LoRA_Easy_Training_Scripts/main/images_gifs/main_ui.png)
 
 and has a bunch of features to it to make using it as easy as I could. So lets start with the basics. The UI is divided into two parts, the "args list" and the "subset list", this replaces the old naming scheme of \<number\>_\<name\> to try and reduce confusion. The subset list allows you to add and remove subsets to have however many you want!
-![Subset manipulation gif]()
+![Subset manipulation gif](https://raw.githubusercontent.com/derrian-distro/LoRA_Easy_Training_Scripts/main/images_gifs/subset_manipulation.gif)
 
 You are also able to collapse and expand the sections of the "args list", so that way you can have open only the section you are working on at the moment.
-![Args manipulation gif]()
+![Args manipulation gif](https://raw.githubusercontent.com/derrian-distro/LoRA_Easy_Training_Scripts/main/images_gifs/args_list_manipulation.gif)
 
 Pretty much every file selector has two ways to add a file without having to type it all in, a proper file dialog, and a way to drag and drop the value in!
-![File select or dialog gif]()
+![File select or dialog gif](https://raw.githubusercontent.com/derrian-distro/LoRA_Easy_Training_Scripts/main/images_gifs/file_selector.gif)
 
 TOML saving and loading are available so that you don't have to put in every variable every time you launch the program. All you need to do is either use the menu on the top right, or the keybind listed.
-![TOML saving and loading gif]()
+![TOML saving and loading gif](https://raw.githubusercontent.com/derrian-distro/LoRA_Easy_Training_Scripts/main/images_gifs/toml_loading_and_saving.gif)
 NOTE: This change is entirely different from the old system, so unfortunately the JSON files of the old scripts are no longer valid.
 
 
 And finally, we have the ability to switch themes. These themes are only possible because of the great repo that adds in some material design and the ability to apply them on the fly called [qt-material](https://github.com/UN-GCPDS/qt-material), give them a look as the work they've done is amazing.
-![theme switching gif]()
+![theme switching gif](https://raw.githubusercontent.com/derrian-distro/LoRA_Easy_Training_Scripts/main/images_gifs/theme_changing.gif)
 The themes also save between boots
-![theme remembering gif]()
+![theme remembering gif](https://raw.githubusercontent.com/derrian-distro/LoRA_Easy_Training_Scripts/main/images_gifs/toml_loading_and_saving.gif)
 
 ## Configuration
 I'd like to take a moment and look at what the output of the TOML saving and loading system looks like so that people can change it if they want outside of the UI.
