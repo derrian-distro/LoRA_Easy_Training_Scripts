@@ -145,6 +145,7 @@ def main():
         shutil.rmtree("temp")
         shutil.rmtree("cudnn_windows")
         shutil.rmtree("cudnn_patch")
+        os.remove("cudnn.zip")
     else:
         reply = None
         while reply not in ('y', 'n'):
