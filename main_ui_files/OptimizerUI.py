@@ -126,7 +126,7 @@ class OptimizerWidget(QtWidgets.QWidget):
         self.widget.poly_power_input.setValue(args.get("lr_scheduler_power", 1.00))
 
         self.widget.optimizer_type_selector.setCurrentText(args['optimizer_type'])
-        self.widget.lr_scheduler_selector.setCurrentText(args['lr_scheduler'])
+        self.widget.lr_scheduler_selector.setCurrentText(args['lr_scheduler'].replace("_", " "))
         self.widget.main_lr_input.setText(str(args['learning_rate']))
 
         checked = True if args.get("unet_lr", False) else False

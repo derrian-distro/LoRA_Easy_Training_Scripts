@@ -1,3 +1,5 @@
 pyside6
 qt-material
 toml
+dadaptation
+lion_pytorch
