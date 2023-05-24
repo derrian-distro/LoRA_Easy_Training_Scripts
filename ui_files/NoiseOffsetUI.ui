@@ -70,13 +70,16 @@
          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The value for the normal noise offset, the original paper reccomends 0.1, so that is why it's default.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
         </property>
         <property name="minimum">
-         <double>0.100000000000000</double>
+         <double>0.010000000000000</double>
         </property>
         <property name="maximum">
          <double>99.000000000000000</double>
         </property>
         <property name="singleStep">
          <double>0.010000000000000</double>
+        </property>
+        <property name="value">
+         <double>0.100000000000000</double>
         </property>
        </widget>
       </item>
@@ -97,6 +100,9 @@
        <widget class="QDoubleSpinBox" name="pyramid_discount_input">
         <property name="toolTip">
          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Not entirely sure what this is, but the recommended value is 0.1-0.3.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
+        <property name="minimum">
+         <double>0.010000000000000</double>
         </property>
         <property name="singleStep">
          <double>0.010000000000000</double>

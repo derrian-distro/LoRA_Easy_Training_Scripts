@@ -56,9 +56,10 @@ class Ui_noise_offset_UI(object):
 
         self.noise_offset_input = QDoubleSpinBox(self.noise_offset_group)
         self.noise_offset_input.setObjectName(u"noise_offset_input")
-        self.noise_offset_input.setMinimum(0.100000000000000)
+        self.noise_offset_input.setMinimum(0.010000000000000)
         self.noise_offset_input.setMaximum(99.000000000000000)
         self.noise_offset_input.setSingleStep(0.010000000000000)
+        self.noise_offset_input.setValue(0.100000000000000)
 
         self.formLayout.setWidget(1, QFormLayout.FieldRole, self.noise_offset_input)
 
@@ -71,6 +72,7 @@ class Ui_noise_offset_UI(object):
 
         self.pyramid_discount_input = QDoubleSpinBox(self.noise_offset_group)
         self.pyramid_discount_input.setObjectName(u"pyramid_discount_input")
+        self.pyramid_discount_input.setMinimum(0.010000000000000)
         self.pyramid_discount_input.setSingleStep(0.010000000000000)
         self.pyramid_discount_input.setValue(0.300000000000000)
 
