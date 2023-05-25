@@ -37,7 +37,7 @@ source venv/bin/activate
 pip install torch==2.0.0+cu118 torchvision==0.15.1+cu118 --index-url https://download.pytorch.org/whl/cu118
 pip install -r requirements.txt
 pip install xformers==0.0.17
-pip install ../requirements_ui.txt
+pip install -r ../requirements_ui.txt
 pip install ../LyCORIS/.
 accelerate config
 ```
