@@ -15,11 +15,12 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QFont, QFontDatabase, QGradient, QIcon,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
-from PySide6.QtWidgets import (QApplication, QComboBox, QFormLayout, QGroupBox,
-    QHBoxLayout, QLabel, QPushButton, QSizePolicy,
-    QSpinBox, QVBoxLayout, QWidget)
+from PySide6.QtWidgets import (QApplication, QFormLayout, QGroupBox, QHBoxLayout,
+    QLabel, QPushButton, QSizePolicy, QVBoxLayout,
+    QWidget)
 
 from modules.DragDropLineEdit import DragDropLineEdit
+from modules.ScrollOnSelect import (ComboBox, SpinBox)
 
 class Ui_sample_ui(object):
     def setupUi(self, sample_ui):
@@ -41,7 +42,7 @@ class Ui_sample_ui(object):
 
         self.horizontalLayout = QHBoxLayout()
         self.horizontalLayout.setObjectName(u"horizontalLayout")
-        self.steps_epochs_selector = QComboBox(self.sample_args_box)
+        self.steps_epochs_selector = ComboBox(self.sample_args_box)
         self.steps_epochs_selector.addItem("")
         self.steps_epochs_selector.addItem("")
         self.steps_epochs_selector.setObjectName(u"steps_epochs_selector")
@@ -50,16 +51,18 @@ class Ui_sample_ui(object):
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.steps_epochs_selector.sizePolicy().hasHeightForWidth())
         self.steps_epochs_selector.setSizePolicy(sizePolicy)
+        self.steps_epochs_selector.setFocusPolicy(Qt.StrongFocus)
 
         self.horizontalLayout.addWidget(self.steps_epochs_selector)
 
-        self.steps_epoch_input = QSpinBox(self.sample_args_box)
+        self.steps_epoch_input = SpinBox(self.sample_args_box)
         self.steps_epoch_input.setObjectName(u"steps_epoch_input")
         sizePolicy1 = QSizePolicy(QSizePolicy.Minimum, QSizePolicy.Fixed)
         sizePolicy1.setHorizontalStretch(0)
         sizePolicy1.setVerticalStretch(0)
         sizePolicy1.setHeightForWidth(self.steps_epoch_input.sizePolicy().hasHeightForWidth())
         self.steps_epoch_input.setSizePolicy(sizePolicy1)
+        self.steps_epoch_input.setFocusPolicy(Qt.StrongFocus)
         self.steps_epoch_input.setMinimum(1)
         self.steps_epoch_input.setMaximum(16777215)
         self.steps_epoch_input.setValue(1)
@@ -74,7 +77,7 @@ class Ui_sample_ui(object):
 
         self.formLayout.setWidget(0, QFormLayout.LabelRole, self.sampler_label)
 
-        self.sampler_input = QComboBox(self.sample_args_box)
+        self.sampler_input = ComboBox(self.sample_args_box)
         self.sampler_input.addItem("")
         self.sampler_input.addItem("")
         self.sampler_input.addItem("")
@@ -92,6 +95,7 @@ class Ui_sample_ui(object):
         self.sampler_input.addItem("")
         self.sampler_input.addItem("")
         self.sampler_input.setObjectName(u"sampler_input")
+        self.sampler_input.setFocusPolicy(Qt.StrongFocus)
 
         self.formLayout.setWidget(0, QFormLayout.FieldRole, self.sampler_input)
 

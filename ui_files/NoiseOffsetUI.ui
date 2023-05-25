@@ -34,7 +34,10 @@
        </widget>
       </item>
       <item row="0" column="0" colspan="2">
-       <widget class="QComboBox" name="noise_offset_selector">
+       <widget class="ComboBox" name="noise_offset_selector">
+        <property name="focusPolicy">
+         <enum>Qt::StrongFocus</enum>
+        </property>
         <property name="toolTip">
          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Noise offset comes in two varieties, normal, and pyramid. Normal works, but has the issue of not having great compatability. Pyramid seems to work about as well, and not have a big impact on compatability.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
         </property>
@@ -65,7 +68,10 @@
        </widget>
       </item>
       <item row="1" column="1">
-       <widget class="QDoubleSpinBox" name="noise_offset_input">
+       <widget class="DoubleSpinBox" name="noise_offset_input">
+        <property name="focusPolicy">
+         <enum>Qt::StrongFocus</enum>
+        </property>
         <property name="toolTip">
          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The value for the normal noise offset, the original paper reccomends 0.1, so that is why it's default.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
         </property>
@@ -84,7 +90,10 @@
        </widget>
       </item>
       <item row="2" column="1">
-       <widget class="QSpinBox" name="pyramid_iteration_input">
+       <widget class="SpinBox" name="pyramid_iteration_input">
+        <property name="focusPolicy">
+         <enum>Qt::StrongFocus</enum>
+        </property>
         <property name="toolTip">
          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The number of iterations. It is said that the values in 6-10 work best.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
         </property>
@@ -97,7 +106,10 @@
        </widget>
       </item>
       <item row="3" column="1">
-       <widget class="QDoubleSpinBox" name="pyramid_discount_input">
+       <widget class="DoubleSpinBox" name="pyramid_discount_input">
+        <property name="focusPolicy">
+         <enum>Qt::StrongFocus</enum>
+        </property>
         <property name="toolTip">
          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Not entirely sure what this is, but the recommended value is 0.1-0.3.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
         </property>
@@ -117,6 +129,23 @@
    </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>SpinBox</class>
+   <extends>QSpinBox</extends>
+   <header>modules.ScrollOnSelect.h</header>
+  </customwidget>
+  <customwidget>
+   <class>DoubleSpinBox</class>
+   <extends>QDoubleSpinBox</extends>
+   <header>modules.ScrollOnSelect.h</header>
+  </customwidget>
+  <customwidget>
+   <class>ComboBox</class>
+   <extends>QComboBox</extends>
+   <header>modules.ScrollOnSelect.h</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>

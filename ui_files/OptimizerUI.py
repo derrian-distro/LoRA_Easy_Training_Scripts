@@ -15,20 +15,20 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QFont, QFontDatabase, QGradient, QIcon,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
-from PySide6.QtWidgets import (QApplication, QCheckBox, QComboBox, QDoubleSpinBox,
-    QFormLayout, QLabel, QSizePolicy, QSpinBox,
-    QWidget)
+from PySide6.QtWidgets import (QApplication, QCheckBox, QFormLayout, QLabel,
+    QSizePolicy, QWidget)
 
 from modules.LineEditHighlight import LineEditWithHighlight
+from modules.ScrollOnSelect import (ComboBox, DoubleSpinBox, SpinBox)
 
 class Ui_optimizer_ui(object):
     def setupUi(self, optimizer_ui):
         if not optimizer_ui.objectName():
             optimizer_ui.setObjectName(u"optimizer_ui")
-        optimizer_ui.resize(400, 283)
+        optimizer_ui.resize(400, 286)
         self.formLayout = QFormLayout(optimizer_ui)
         self.formLayout.setObjectName(u"formLayout")
-        self.optimizer_type_selector = QComboBox(optimizer_ui)
+        self.optimizer_type_selector = ComboBox(optimizer_ui)
         self.optimizer_type_selector.addItem("")
         self.optimizer_type_selector.addItem("")
         self.optimizer_type_selector.addItem("")
@@ -40,10 +40,11 @@ class Ui_optimizer_ui(object):
         self.optimizer_type_selector.addItem("")
         self.optimizer_type_selector.addItem("")
         self.optimizer_type_selector.setObjectName(u"optimizer_type_selector")
+        self.optimizer_type_selector.setFocusPolicy(Qt.StrongFocus)
 
         self.formLayout.setWidget(0, QFormLayout.SpanningRole, self.optimizer_type_selector)
 
-        self.lr_scheduler_selector = QComboBox(optimizer_ui)
+        self.lr_scheduler_selector = ComboBox(optimizer_ui)
         self.lr_scheduler_selector.addItem("")
         self.lr_scheduler_selector.addItem("")
         self.lr_scheduler_selector.addItem("")
@@ -52,6 +53,7 @@ class Ui_optimizer_ui(object):
         self.lr_scheduler_selector.addItem("")
         self.lr_scheduler_selector.addItem("")
         self.lr_scheduler_selector.setObjectName(u"lr_scheduler_selector")
+        self.lr_scheduler_selector.setFocusPolicy(Qt.StrongFocus)
 
         self.formLayout.setWidget(1, QFormLayout.SpanningRole, self.lr_scheduler_selector)
 
@@ -82,9 +84,10 @@ class Ui_optimizer_ui(object):
 
         self.formLayout.setWidget(6, QFormLayout.LabelRole, self.label_4)
 
-        self.cosine_restart_input = QSpinBox(optimizer_ui)
+        self.cosine_restart_input = SpinBox(optimizer_ui)
         self.cosine_restart_input.setObjectName(u"cosine_restart_input")
         self.cosine_restart_input.setEnabled(False)
+        self.cosine_restart_input.setFocusPolicy(Qt.StrongFocus)
         self.cosine_restart_input.setMinimum(1)
 
         self.formLayout.setWidget(6, QFormLayout.FieldRole, self.cosine_restart_input)
@@ -94,17 +97,19 @@ class Ui_optimizer_ui(object):
 
         self.formLayout.setWidget(7, QFormLayout.LabelRole, self.label_5)
 
-        self.poly_power_input = QDoubleSpinBox(optimizer_ui)
+        self.poly_power_input = DoubleSpinBox(optimizer_ui)
         self.poly_power_input.setObjectName(u"poly_power_input")
         self.poly_power_input.setEnabled(False)
+        self.poly_power_input.setFocusPolicy(Qt.StrongFocus)
         self.poly_power_input.setSingleStep(0.010000000000000)
         self.poly_power_input.setValue(1.000000000000000)
 
         self.formLayout.setWidget(7, QFormLayout.FieldRole, self.poly_power_input)
 
-        self.warmup_ratio_input = QDoubleSpinBox(optimizer_ui)
+        self.warmup_ratio_input = DoubleSpinBox(optimizer_ui)
         self.warmup_ratio_input.setObjectName(u"warmup_ratio_input")
         self.warmup_ratio_input.setEnabled(False)
+        self.warmup_ratio_input.setFocusPolicy(Qt.StrongFocus)
         self.warmup_ratio_input.setMaximum(1.000000000000000)
         self.warmup_ratio_input.setSingleStep(0.010000000000000)
 
@@ -130,9 +135,10 @@ class Ui_optimizer_ui(object):
 
         self.formLayout.setWidget(8, QFormLayout.LabelRole, self.min_snr_enable)
 
-        self.min_snr_input = QSpinBox(optimizer_ui)
+        self.min_snr_input = SpinBox(optimizer_ui)
         self.min_snr_input.setObjectName(u"min_snr_input")
         self.min_snr_input.setEnabled(False)
+        self.min_snr_input.setFocusPolicy(Qt.StrongFocus)
         self.min_snr_input.setValue(5)
 
         self.formLayout.setWidget(8, QFormLayout.FieldRole, self.min_snr_input)

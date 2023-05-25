@@ -59,7 +59,10 @@
     </widget>
    </item>
    <item row="2" column="1">
-    <widget class="QComboBox" name="save_precision_selector">
+    <widget class="ComboBox" name="save_precision_selector">
+     <property name="focusPolicy">
+      <enum>Qt::StrongFocus</enum>
+     </property>
      <property name="toolTip">
       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Is the precision that the models are saved in, I suggest you save in fp16 as not all cards support bf16.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
      </property>
@@ -88,7 +91,10 @@
     </widget>
    </item>
    <item row="3" column="1">
-    <widget class="QComboBox" name="save_as_selector">
+    <widget class="ComboBox" name="save_as_selector">
+     <property name="focusPolicy">
+      <enum>Qt::StrongFocus</enum>
+     </property>
      <property name="toolTip">
       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The type of model it outputs as, Safetensors is just flat out the best choice here.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
      </property>
@@ -122,9 +128,12 @@
       <number>3</number>
      </property>
      <item>
-      <widget class="QComboBox" name="save_freq_selector">
+      <widget class="ComboBox" name="save_freq_selector">
        <property name="enabled">
         <bool>false</bool>
+       </property>
+       <property name="focusPolicy">
+        <enum>Qt::StrongFocus</enum>
        </property>
        <property name="toolTip">
         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;How often to save models. You can save according to steps or epochs, setting it to epochs and 1 means it will save a model every epoch.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -142,9 +151,12 @@
       </widget>
      </item>
      <item>
-      <widget class="QSpinBox" name="save_freq_input">
+      <widget class="SpinBox" name="save_freq_input">
        <property name="enabled">
         <bool>false</bool>
+       </property>
+       <property name="focusPolicy">
+        <enum>Qt::StrongFocus</enum>
        </property>
        <property name="toolTip">
         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;How often to save models. You can save according to steps or epochs, setting it to epochs and 1 means it will save a model every epoch.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -167,9 +179,12 @@
     </widget>
    </item>
    <item row="5" column="1">
-    <widget class="QSpinBox" name="save_ratio_input">
+    <widget class="SpinBox" name="save_ratio_input">
      <property name="enabled">
       <bool>false</bool>
+     </property>
+     <property name="focusPolicy">
+      <enum>Qt::StrongFocus</enum>
      </property>
      <property name="toolTip">
       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The ratio of models saved. Basically, it will save x amount of models throughout training equal to the number set here, trying to spread them out as evenly as possible, might not work with save frequency, but doesn't crash when both are enabled.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -195,9 +210,12 @@
       <number>3</number>
      </property>
      <item>
-      <widget class="QComboBox" name="save_last_selector">
+      <widget class="ComboBox" name="save_last_selector">
        <property name="enabled">
         <bool>false</bool>
+       </property>
+       <property name="focusPolicy">
+        <enum>Qt::StrongFocus</enum>
        </property>
        <property name="toolTip">
         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Save only the last x models, either using steps or epochs. I believe it works with save frequency.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -215,9 +233,12 @@
       </widget>
      </item>
      <item>
-      <widget class="QSpinBox" name="save_last_input">
+      <widget class="SpinBox" name="save_last_input">
        <property name="enabled">
         <bool>false</bool>
+       </property>
+       <property name="focusPolicy">
+        <enum>Qt::StrongFocus</enum>
        </property>
        <property name="toolTip">
         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Save only the last x models, either using steps or epochs. I believe it works with save frequency.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -267,9 +288,12 @@
       </widget>
      </item>
      <item>
-      <widget class="QComboBox" name="save_last_state_selector">
+      <widget class="ComboBox" name="save_last_state_selector">
        <property name="enabled">
         <bool>false</bool>
+       </property>
+       <property name="focusPolicy">
+        <enum>Qt::StrongFocus</enum>
        </property>
        <property name="toolTip">
         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Works the exact same way as save last models, only it's for the state folders.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -287,9 +311,12 @@
       </widget>
      </item>
      <item>
-      <widget class="QSpinBox" name="save_last_state_input">
+      <widget class="SpinBox" name="save_last_state_input">
        <property name="enabled">
         <bool>false</bool>
+       </property>
+       <property name="focusPolicy">
+        <enum>Qt::StrongFocus</enum>
        </property>
        <property name="toolTip">
         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Works the exact same way as save last models, only it's for the state folders.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -365,6 +392,16 @@
    <class>DragDropLineEdit</class>
    <extends>QLineEdit</extends>
    <header>modules.DragDropLineEdit.h</header>
+  </customwidget>
+  <customwidget>
+   <class>SpinBox</class>
+   <extends>QSpinBox</extends>
+   <header>modules.ScrollOnSelect.h</header>
+  </customwidget>
+  <customwidget>
+   <class>ComboBox</class>
+   <extends>QComboBox</extends>
+   <header>modules.ScrollOnSelect.h</header>
   </customwidget>
   <customwidget>
    <class>LineEditWithHighlight</class>

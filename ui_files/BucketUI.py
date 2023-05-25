@@ -16,8 +16,9 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
 from PySide6.QtWidgets import (QApplication, QCheckBox, QFormLayout, QGroupBox,
-    QLabel, QSizePolicy, QSpinBox, QVBoxLayout,
-    QWidget)
+    QLabel, QSizePolicy, QVBoxLayout, QWidget)
+
+from modules.ScrollOnSelect import SpinBox
 
 class Ui_bucket_ui(object):
     def setupUi(self, bucket_ui):
@@ -45,8 +46,9 @@ class Ui_bucket_ui(object):
 
         self.main_form_layout.setWidget(0, QFormLayout.LabelRole, self.min_label)
 
-        self.min_input = QSpinBox(self.bucket_group)
+        self.min_input = SpinBox(self.bucket_group)
         self.min_input.setObjectName(u"min_input")
+        self.min_input.setFocusPolicy(Qt.StrongFocus)
         self.min_input.setMinimum(0)
         self.min_input.setMaximum(16777215)
         self.min_input.setSingleStep(8)
@@ -59,8 +61,9 @@ class Ui_bucket_ui(object):
 
         self.main_form_layout.setWidget(1, QFormLayout.LabelRole, self.max_label)
 
-        self.max_input = QSpinBox(self.bucket_group)
+        self.max_input = SpinBox(self.bucket_group)
         self.max_input.setObjectName(u"max_input")
+        self.max_input.setFocusPolicy(Qt.StrongFocus)
         self.max_input.setMinimum(0)
         self.max_input.setMaximum(16777215)
         self.max_input.setSingleStep(8)
@@ -73,8 +76,9 @@ class Ui_bucket_ui(object):
 
         self.main_form_layout.setWidget(2, QFormLayout.LabelRole, self.steps_label)
 
-        self.steps_input = QSpinBox(self.bucket_group)
+        self.steps_input = SpinBox(self.bucket_group)
         self.steps_input.setObjectName(u"steps_input")
+        self.steps_input.setFocusPolicy(Qt.StrongFocus)
         self.steps_input.setMaximum(16777215)
         self.steps_input.setSingleStep(8)
         self.steps_input.setValue(64)

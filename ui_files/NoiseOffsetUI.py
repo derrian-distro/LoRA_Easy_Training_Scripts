@@ -15,9 +15,10 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QFont, QFontDatabase, QGradient, QIcon,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
-from PySide6.QtWidgets import (QApplication, QComboBox, QDoubleSpinBox, QFormLayout,
-    QGroupBox, QLabel, QSizePolicy, QSpinBox,
-    QVBoxLayout, QWidget)
+from PySide6.QtWidgets import (QApplication, QFormLayout, QGroupBox, QLabel,
+    QSizePolicy, QVBoxLayout, QWidget)
+
+from modules.ScrollOnSelect import (ComboBox, DoubleSpinBox, SpinBox)
 
 class Ui_noise_offset_UI(object):
     def setupUi(self, noise_offset_UI):
@@ -37,10 +38,11 @@ class Ui_noise_offset_UI(object):
 
         self.formLayout.setWidget(1, QFormLayout.LabelRole, self.label)
 
-        self.noise_offset_selector = QComboBox(self.noise_offset_group)
+        self.noise_offset_selector = ComboBox(self.noise_offset_group)
         self.noise_offset_selector.addItem("")
         self.noise_offset_selector.addItem("")
         self.noise_offset_selector.setObjectName(u"noise_offset_selector")
+        self.noise_offset_selector.setFocusPolicy(Qt.StrongFocus)
 
         self.formLayout.setWidget(0, QFormLayout.SpanningRole, self.noise_offset_selector)
 
@@ -54,8 +56,9 @@ class Ui_noise_offset_UI(object):
 
         self.formLayout.setWidget(3, QFormLayout.LabelRole, self.label_3)
 
-        self.noise_offset_input = QDoubleSpinBox(self.noise_offset_group)
+        self.noise_offset_input = DoubleSpinBox(self.noise_offset_group)
         self.noise_offset_input.setObjectName(u"noise_offset_input")
+        self.noise_offset_input.setFocusPolicy(Qt.StrongFocus)
         self.noise_offset_input.setMinimum(0.010000000000000)
         self.noise_offset_input.setMaximum(99.000000000000000)
         self.noise_offset_input.setSingleStep(0.010000000000000)
@@ -63,15 +66,17 @@ class Ui_noise_offset_UI(object):
 
         self.formLayout.setWidget(1, QFormLayout.FieldRole, self.noise_offset_input)
 
-        self.pyramid_iteration_input = QSpinBox(self.noise_offset_group)
+        self.pyramid_iteration_input = SpinBox(self.noise_offset_group)
         self.pyramid_iteration_input.setObjectName(u"pyramid_iteration_input")
+        self.pyramid_iteration_input.setFocusPolicy(Qt.StrongFocus)
         self.pyramid_iteration_input.setMinimum(1)
         self.pyramid_iteration_input.setValue(6)
 
         self.formLayout.setWidget(2, QFormLayout.FieldRole, self.pyramid_iteration_input)
 
-        self.pyramid_discount_input = QDoubleSpinBox(self.noise_offset_group)
+        self.pyramid_discount_input = DoubleSpinBox(self.noise_offset_group)
         self.pyramid_discount_input.setObjectName(u"pyramid_discount_input")
+        self.pyramid_discount_input.setFocusPolicy(Qt.StrongFocus)
         self.pyramid_discount_input.setMinimum(0.010000000000000)
         self.pyramid_discount_input.setSingleStep(0.010000000000000)
         self.pyramid_discount_input.setValue(0.300000000000000)

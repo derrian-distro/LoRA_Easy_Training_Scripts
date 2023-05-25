@@ -36,12 +36,15 @@
       <item row="1" column="1">
        <layout class="QHBoxLayout" name="horizontalLayout">
         <item>
-         <widget class="QComboBox" name="steps_epochs_selector">
+         <widget class="ComboBox" name="steps_epochs_selector">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
             <horstretch>0</horstretch>
             <verstretch>0</verstretch>
            </sizepolicy>
+          </property>
+          <property name="focusPolicy">
+           <enum>Qt::StrongFocus</enum>
           </property>
           <property name="toolTip">
            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The amount of time between samples. I personally suggest you have it generate a sample every epoch, however, again, personal preference.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -59,12 +62,15 @@
          </widget>
         </item>
         <item>
-         <widget class="QSpinBox" name="steps_epoch_input">
+         <widget class="SpinBox" name="steps_epoch_input">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
             <horstretch>0</horstretch>
             <verstretch>0</verstretch>
            </sizepolicy>
+          </property>
+          <property name="focusPolicy">
+           <enum>Qt::StrongFocus</enum>
           </property>
           <property name="toolTip">
            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The amount of time between samples. I personally suggest you have it generate a sample every epoch, however, again, personal preference.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -90,7 +96,10 @@
        </widget>
       </item>
       <item row="0" column="1">
-       <widget class="QComboBox" name="sampler_input">
+       <widget class="ComboBox" name="sampler_input">
+        <property name="focusPolicy">
+         <enum>Qt::StrongFocus</enum>
+        </property>
         <property name="toolTip">
          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The Sampler used when generating test images. I personally suggest using either DDIM or Euler A, however it's really just personal preference.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
         </property>
@@ -220,6 +229,16 @@
    <class>DragDropLineEdit</class>
    <extends>QLineEdit</extends>
    <header>modules.DragDropLineEdit.h</header>
+  </customwidget>
+  <customwidget>
+   <class>SpinBox</class>
+   <extends>QSpinBox</extends>
+   <header>modules.ScrollOnSelect.h</header>
+  </customwidget>
+  <customwidget>
+   <class>ComboBox</class>
+   <extends>QComboBox</extends>
+   <header>modules.ScrollOnSelect.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

@@ -15,9 +15,10 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QFont, QFontDatabase, QGradient, QIcon,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
-from PySide6.QtWidgets import (QAbstractSpinBox, QApplication, QDoubleSpinBox, QFormLayout,
-    QGroupBox, QLabel, QSizePolicy, QSpinBox,
-    QVBoxLayout, QWidget)
+from PySide6.QtWidgets import (QAbstractSpinBox, QApplication, QFormLayout, QGroupBox,
+    QLabel, QSizePolicy, QVBoxLayout, QWidget)
+
+from modules.ScrollOnSelect import (DoubleSpinBox, SpinBox)
 
 class Ui_sub_dataset_extra_input(object):
     def setupUi(self, sub_dataset_extra_input):
@@ -40,10 +41,11 @@ class Ui_sub_dataset_extra_input(object):
 
         self.formLayout_4.setWidget(0, QFormLayout.LabelRole, self.face_crop_width_label)
 
-        self.face_crop_width = QDoubleSpinBox(self.face_crop_layout)
+        self.face_crop_width = DoubleSpinBox(self.face_crop_layout)
         self.face_crop_width.setObjectName(u"face_crop_width")
         self.face_crop_width.setEnabled(True)
         self.face_crop_width.setMaximumSize(QSize(16777215, 16777215))
+        self.face_crop_width.setFocusPolicy(Qt.StrongFocus)
         self.face_crop_width.setDecimals(2)
         self.face_crop_width.setMinimum(1.000000000000000)
         self.face_crop_width.setMaximum(16777215.000000000000000)
@@ -57,9 +59,10 @@ class Ui_sub_dataset_extra_input(object):
 
         self.formLayout_4.setWidget(1, QFormLayout.LabelRole, self.face_crop_height_label)
 
-        self.face_crop_height = QDoubleSpinBox(self.face_crop_layout)
+        self.face_crop_height = DoubleSpinBox(self.face_crop_layout)
         self.face_crop_height.setObjectName(u"face_crop_height")
         self.face_crop_height.setEnabled(True)
+        self.face_crop_height.setFocusPolicy(Qt.StrongFocus)
         self.face_crop_height.setDecimals(2)
         self.face_crop_height.setMinimum(1.000000000000000)
         self.face_crop_height.setMaximum(16777215.000000000000000)
@@ -89,9 +92,10 @@ class Ui_sub_dataset_extra_input(object):
 
         self.formLayout.setWidget(0, QFormLayout.LabelRole, self.caption_dropout_rate_label)
 
-        self.caption_dropout_rate_input = QDoubleSpinBox(self.caption_dropout_layout)
+        self.caption_dropout_rate_input = DoubleSpinBox(self.caption_dropout_layout)
         self.caption_dropout_rate_input.setObjectName(u"caption_dropout_rate_input")
         self.caption_dropout_rate_input.setEnabled(True)
+        self.caption_dropout_rate_input.setFocusPolicy(Qt.StrongFocus)
         self.caption_dropout_rate_input.setDecimals(2)
         self.caption_dropout_rate_input.setMinimum(0.000000000000000)
         self.caption_dropout_rate_input.setMaximum(1.000000000000000)
@@ -106,9 +110,10 @@ class Ui_sub_dataset_extra_input(object):
 
         self.formLayout.setWidget(1, QFormLayout.LabelRole, self.caption_epoch_dropout_label)
 
-        self.caption_epoch_dropout_input = QSpinBox(self.caption_dropout_layout)
+        self.caption_epoch_dropout_input = SpinBox(self.caption_dropout_layout)
         self.caption_epoch_dropout_input.setObjectName(u"caption_epoch_dropout_input")
         self.caption_epoch_dropout_input.setEnabled(True)
+        self.caption_epoch_dropout_input.setFocusPolicy(Qt.StrongFocus)
         self.caption_epoch_dropout_input.setMinimum(0)
         self.caption_epoch_dropout_input.setValue(1)
 
@@ -120,7 +125,7 @@ class Ui_sub_dataset_extra_input(object):
 
         self.formLayout.setWidget(2, QFormLayout.LabelRole, self.caption_tag_dropout_label)
 
-        self.caption_tag_dropout_input = QDoubleSpinBox(self.caption_dropout_layout)
+        self.caption_tag_dropout_input = DoubleSpinBox(self.caption_dropout_layout)
         self.caption_tag_dropout_input.setObjectName(u"caption_tag_dropout_input")
         self.caption_tag_dropout_input.setEnabled(True)
         sizePolicy1 = QSizePolicy(QSizePolicy.Minimum, QSizePolicy.Fixed)
@@ -128,6 +133,7 @@ class Ui_sub_dataset_extra_input(object):
         sizePolicy1.setVerticalStretch(0)
         sizePolicy1.setHeightForWidth(self.caption_tag_dropout_input.sizePolicy().hasHeightForWidth())
         self.caption_tag_dropout_input.setSizePolicy(sizePolicy1)
+        self.caption_tag_dropout_input.setFocusPolicy(Qt.StrongFocus)
         self.caption_tag_dropout_input.setDecimals(2)
         self.caption_tag_dropout_input.setMinimum(0.000000000000000)
         self.caption_tag_dropout_input.setMaximum(1.000000000000000)
@@ -153,9 +159,10 @@ class Ui_sub_dataset_extra_input(object):
 
         self.formLayout_3.setWidget(0, QFormLayout.LabelRole, self.token_minimum_warmup_label)
 
-        self.token_minimum_warmup_input = QSpinBox(self.token_warmup_layout)
+        self.token_minimum_warmup_input = SpinBox(self.token_warmup_layout)
         self.token_minimum_warmup_input.setObjectName(u"token_minimum_warmup_input")
         self.token_minimum_warmup_input.setEnabled(True)
+        self.token_minimum_warmup_input.setFocusPolicy(Qt.StrongFocus)
         self.token_minimum_warmup_input.setMinimum(1)
         self.token_minimum_warmup_input.setMaximum(255)
 
@@ -167,9 +174,10 @@ class Ui_sub_dataset_extra_input(object):
 
         self.formLayout_3.setWidget(1, QFormLayout.LabelRole, self.token_warmup_step_label)
 
-        self.token_warmup_step_input = QSpinBox(self.token_warmup_layout)
+        self.token_warmup_step_input = SpinBox(self.token_warmup_layout)
         self.token_warmup_step_input.setObjectName(u"token_warmup_step_input")
         self.token_warmup_step_input.setEnabled(True)
+        self.token_warmup_step_input.setFocusPolicy(Qt.StrongFocus)
         self.token_warmup_step_input.setMinimum(1)
 
         self.formLayout_3.setWidget(1, QFormLayout.FieldRole, self.token_warmup_step_input)

@@ -15,12 +15,12 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QFont, QFontDatabase, QGradient, QIcon,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
-from PySide6.QtWidgets import (QApplication, QCheckBox, QComboBox, QFormLayout,
-    QHBoxLayout, QLabel, QPushButton, QSizePolicy,
-    QSpinBox, QWidget)
+from PySide6.QtWidgets import (QApplication, QCheckBox, QFormLayout, QHBoxLayout,
+    QLabel, QPushButton, QSizePolicy, QWidget)
 
 from modules.DragDropLineEdit import DragDropLineEdit
 from modules.LineEditHighlight import LineEditWithHighlight
+from modules.ScrollOnSelect import (ComboBox, SpinBox)
 
 class Ui_saving_ui(object):
     def setupUi(self, saving_ui):
@@ -56,11 +56,12 @@ class Ui_saving_ui(object):
 
         self.formLayout.setWidget(2, QFormLayout.LabelRole, self.label_2)
 
-        self.save_precision_selector = QComboBox(saving_ui)
+        self.save_precision_selector = ComboBox(saving_ui)
         self.save_precision_selector.addItem("")
         self.save_precision_selector.addItem("")
         self.save_precision_selector.addItem("")
         self.save_precision_selector.setObjectName(u"save_precision_selector")
+        self.save_precision_selector.setFocusPolicy(Qt.StrongFocus)
 
         self.formLayout.setWidget(2, QFormLayout.FieldRole, self.save_precision_selector)
 
@@ -69,11 +70,12 @@ class Ui_saving_ui(object):
 
         self.formLayout.setWidget(3, QFormLayout.LabelRole, self.label_3)
 
-        self.save_as_selector = QComboBox(saving_ui)
+        self.save_as_selector = ComboBox(saving_ui)
         self.save_as_selector.addItem("")
         self.save_as_selector.addItem("")
         self.save_as_selector.addItem("")
         self.save_as_selector.setObjectName(u"save_as_selector")
+        self.save_as_selector.setFocusPolicy(Qt.StrongFocus)
 
         self.formLayout.setWidget(3, QFormLayout.FieldRole, self.save_as_selector)
 
@@ -85,17 +87,19 @@ class Ui_saving_ui(object):
         self.horizontalLayout_2 = QHBoxLayout()
         self.horizontalLayout_2.setSpacing(3)
         self.horizontalLayout_2.setObjectName(u"horizontalLayout_2")
-        self.save_freq_selector = QComboBox(saving_ui)
+        self.save_freq_selector = ComboBox(saving_ui)
         self.save_freq_selector.addItem("")
         self.save_freq_selector.addItem("")
         self.save_freq_selector.setObjectName(u"save_freq_selector")
         self.save_freq_selector.setEnabled(False)
+        self.save_freq_selector.setFocusPolicy(Qt.StrongFocus)
 
         self.horizontalLayout_2.addWidget(self.save_freq_selector)
 
-        self.save_freq_input = QSpinBox(saving_ui)
+        self.save_freq_input = SpinBox(saving_ui)
         self.save_freq_input.setObjectName(u"save_freq_input")
         self.save_freq_input.setEnabled(False)
+        self.save_freq_input.setFocusPolicy(Qt.StrongFocus)
         self.save_freq_input.setMinimum(1)
         self.save_freq_input.setMaximum(16777215)
 
@@ -109,9 +113,10 @@ class Ui_saving_ui(object):
 
         self.formLayout.setWidget(5, QFormLayout.LabelRole, self.save_ratio_enable)
 
-        self.save_ratio_input = QSpinBox(saving_ui)
+        self.save_ratio_input = SpinBox(saving_ui)
         self.save_ratio_input.setObjectName(u"save_ratio_input")
         self.save_ratio_input.setEnabled(False)
+        self.save_ratio_input.setFocusPolicy(Qt.StrongFocus)
         self.save_ratio_input.setMinimum(1)
         self.save_ratio_input.setValue(1)
 
@@ -125,17 +130,19 @@ class Ui_saving_ui(object):
         self.horizontalLayout_3 = QHBoxLayout()
         self.horizontalLayout_3.setSpacing(3)
         self.horizontalLayout_3.setObjectName(u"horizontalLayout_3")
-        self.save_last_selector = QComboBox(saving_ui)
+        self.save_last_selector = ComboBox(saving_ui)
         self.save_last_selector.addItem("")
         self.save_last_selector.addItem("")
         self.save_last_selector.setObjectName(u"save_last_selector")
         self.save_last_selector.setEnabled(False)
+        self.save_last_selector.setFocusPolicy(Qt.StrongFocus)
 
         self.horizontalLayout_3.addWidget(self.save_last_selector)
 
-        self.save_last_input = QSpinBox(saving_ui)
+        self.save_last_input = SpinBox(saving_ui)
         self.save_last_input.setObjectName(u"save_last_input")
         self.save_last_input.setEnabled(False)
+        self.save_last_input.setFocusPolicy(Qt.StrongFocus)
         self.save_last_input.setMinimum(1)
         self.save_last_input.setMaximum(16777215)
 
@@ -163,17 +170,19 @@ class Ui_saving_ui(object):
 
         self.horizontalLayout_4.addWidget(self.save_last_state_enable)
 
-        self.save_last_state_selector = QComboBox(saving_ui)
+        self.save_last_state_selector = ComboBox(saving_ui)
         self.save_last_state_selector.addItem("")
         self.save_last_state_selector.addItem("")
         self.save_last_state_selector.setObjectName(u"save_last_state_selector")
         self.save_last_state_selector.setEnabled(False)
+        self.save_last_state_selector.setFocusPolicy(Qt.StrongFocus)
 
         self.horizontalLayout_4.addWidget(self.save_last_state_selector)
 
-        self.save_last_state_input = QSpinBox(saving_ui)
+        self.save_last_state_input = SpinBox(saving_ui)
         self.save_last_state_input.setObjectName(u"save_last_state_input")
         self.save_last_state_input.setEnabled(False)
+        self.save_last_state_input.setFocusPolicy(Qt.StrongFocus)
         self.save_last_state_input.setMinimum(1)
         self.save_last_state_input.setMaximum(16777215)
 
