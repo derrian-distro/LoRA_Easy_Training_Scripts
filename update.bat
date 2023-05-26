@@ -7,8 +7,8 @@ git submodule update
 
 cd sd_scripts
 call venv\Scripts\activate
-pip install -r requirements.txt
+pip install -U -r requirements.txt
 cd ..
-pip install -r requirements_ui.txt
-pip install LyCORIS\.
+pip install -U -r requirements_ui.txt
+pip install -U LyCORIS\.
 pause
