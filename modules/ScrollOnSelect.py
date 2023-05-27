@@ -7,10 +7,10 @@ class SpinBox(QtWidgets.QSpinBox):
         self.setFocusPolicy(QtCore.Qt.FocusPolicy.StrongFocus)
 
     def wheelEvent(self, event: QtGui.QWheelEvent) -> None:
-        if self.hasFocus():
-            super(SpinBox, self).wheelEvent(event)
-        else:
+        if not self.hasFocus():
             event.setAccepted(False)
+            return
+        super(SpinBox, self).wheelEvent(event)
 
 
 class DoubleSpinBox(QtWidgets.QDoubleSpinBox):
@@ -19,10 +19,11 @@ class DoubleSpinBox(QtWidgets.QDoubleSpinBox):
         self.setFocusPolicy(QtCore.Qt.FocusPolicy.StrongFocus)
 
     def wheelEvent(self, event: QtGui.QWheelEvent) -> None:
-        if self.hasFocus():
-            super(DoubleSpinBox, self).wheelEvent(event)
-        else:
+        if not self.hasFocus():
             event.setAccepted(False)
+            return
+        super(DoubleSpinBox, self).wheelEvent(event)
+
 
 class ComboBox(QtWidgets.QComboBox):
     def __init__(self, parent: QtWidgets.QWidget = None):
@@ -30,8 +31,7 @@ class ComboBox(QtWidgets.QComboBox):
         self.setFocusPolicy(QtCore.Qt.FocusPolicy.StrongFocus)
 
     def wheelEvent(self, event: QtGui.QWheelEvent) -> None:
-        if self.hasFocus():
-            super(ComboBox, self).wheelEvent(event)
-        else:
+        if not self.hasFocus():
             event.setAccepted(False)
-            
+            return
+        super(ComboBox, self).wheelEvent(event)

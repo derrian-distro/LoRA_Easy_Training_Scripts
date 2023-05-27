@@ -1,4 +1,4 @@
-pyside6
+pyside6==6.5.0
 qt-material
 toml
 dadaptation

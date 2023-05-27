@@ -72,6 +72,8 @@ TOML saving and loading are available so that you don't have to put in every var
 ![TOML saving and loading gif](https://raw.githubusercontent.com/derrian-distro/LoRA_Easy_Training_Scripts/main/images_gifs/toml_loading_and_saving.gif)
 NOTE: This change is entirely different from the old system, so unfortunately the JSON files of the old scripts are no longer valid.
 
+The Queue System is intuitive and easy to use, allowing you to save a config into a little button on the bottom left then allowing you to pull it back up for editing if you need to. Additionally you can use the arrow keys to change the positions of the queue items. A cool thing about this is that you can still edit args and even add or remove queue items while something else is training.
+![Queue Manipulation Gif](https://raw.githubusercontent.com/derrian-distro/LoRA_Easy_Training_Scripts/main/images_gifs/queue_manipulation.gif)
 
 And finally, we have the ability to switch themes. These themes are only possible because of the great repo that adds in some material design and the ability to apply them on the fly called [qt-material](https://github.com/UN-GCPDS/qt-material), give them a look as the work they've done is amazing.
 ![theme switching gif](https://raw.githubusercontent.com/derrian-distro/LoRA_Easy_Training_Scripts/main/images_gifs/theme_changing.gif)
@@ -149,6 +151,12 @@ As you can see everything is sectioned off into their own sections. Generally th
 ## Changelog
 changelog of the old scripts are all in that branch [here](https://github.com/derrian-distro/LoRA_Easy_Training_Scripts/tree/old-scripts#changelog)
 
+- May 27, 2023
+  - Fixed noise offset default being 0.1
+  - Fixed the bug in which scrolling into elements would accidently change their values
+  - Fixed an installation issue because of the new Pyside6 update
+  - Added queues to the UI. Now the UI can queue up trainings
+    - this was a sort of big addition, so tell me if anything breaks
 - May 22, 2023 (cont.)
   - Made the training threaded, so that it can be done while still allowing you to use the UI
   - Fixed the way betas was being saved in the toml files so that it doesn't break on load

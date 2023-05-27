@@ -1,11 +1,15 @@
+import os.path
+
+import toml
 from PySide6 import QtWidgets, QtCore
 
 from main_ui_files import GeneralUI, OptimizerUI, NetworkUI, SavingUI, BucketUI, NoiseOffsetUI, SampleUI, LoggingUI, \
-    SubDatasetUI
+    SubDatasetUI, QueueWidget
 
 
 class MainWidget(QtWidgets.QWidget):
     BeginTraining = QtCore.Signal(object, object)
+    BeginQueuedTraining = QtCore.Signal(object)
 
     def __init__(self, parent: QtWidgets.QWidget = None):
         super(MainWidget, self).__init__(parent)
@@ -22,19 +26,29 @@ class MainWidget(QtWidgets.QWidget):
         self.middle_divider = QtWidgets.QFrame()
         self.middle_divider.setFrameShape(QtWidgets.QFrame.Shape.VLine)
         self.middle_divider.setFrameShadow(QtWidgets.QFrame.Shadow.Sunken)
-        self.start_training_button = QtWidgets.QPushButton("Start Training")
+
+        self.queue_widget = QueueWidget.QueueWidget()
+        self.queue_widget.saveQueue.connect(self.save_for_queue)
+        self.queue_widget.loadQueue.connect(self.load_for_queue)
+        self.begin_training_button = QtWidgets.QPushButton("Start Training")
+        self.begin_training_button.setSizePolicy(QtWidgets.QSizePolicy.Policy.Minimum,
+                                                 QtWidgets.QSizePolicy.Policy.Minimum)
 
         self.main_layout.addWidget(self.args_widget, 0, 0, 1, 1)
         self.main_layout.addWidget(self.middle_divider, 0, 1, 1, 1)
         self.main_layout.addWidget(self.subset_widget, 0, 2, 1, 1)
-        self.main_layout.addWidget(self.start_training_button, 1, 0, 1, 3)
+        self.main_layout.addWidget(self.queue_widget, 1, 0, 1, 2)
+        self.main_layout.addWidget(self.begin_training_button, 1, 2, 1, 1)
         self.main_layout.setColumnStretch(0, 1)
         self.main_layout.setColumnStretch(2, 1)
 
-        self.start_training_button.clicked.connect(self.begin_train)
+        self.begin_training_button.clicked.connect(self.begin_train)
         self.args_widget.general_args.CacheLatentsChecked.connect(self.subset_widget.cache_checked)
 
     def begin_train(self):
+        if len(self.queue_widget.elements) > 0:
+            self.BeginQueuedTraining.emit(self.queue_widget.elements)
+            return
         args = self.args_widget.collate_args()
         self.args = args[0].copy()
         self.dataset_args = args[1].copy()
@@ -49,6 +63,24 @@ class MainWidget(QtWidgets.QWidget):
     def load_args(self, args: dict):
         self.args_widget.load_args(args)
         self.subset_widget.load_args(args)
+
+    @QtCore.Slot(str)
+    def save_for_queue(self, file_name: str):
+        file_name = f"{file_name}.toml"
+        args = self.args_widget.save_args()
+        args['subsets'] = self.subset_widget.get_subset_args(skip_check=True)
+        args = toml.dumps(args)
+        with open(os.path.join("runtime_store", file_name), 'w') as f:
+            f.write(args)
+
+    @QtCore.Slot(str)
+    def load_for_queue(self, file_name: str):
+        file_name = f"{file_name}.toml"
+        if not os.path.exists(os.path.join("runtime_store", file_name)):
+            return
+        with open(os.path.join("runtime_store", file_name)) as f:
+            args = toml.load(f)
+            self.load_args(args)
 
 
 class ArgsWidget(QtWidgets.QWidget):
