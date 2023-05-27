@@ -102,7 +102,10 @@
       </widget>
      </item>
      <item row="0" column="1">
-      <widget class="QSpinBox" name="repeats_spinbox">
+      <widget class="SpinBox" name="repeats_spinbox">
+       <property name="focusPolicy">
+        <enum>Qt::StrongFocus</enum>
+       </property>
        <property name="toolTip">
         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;This is the number of times the images in this folder will repeat per epoch. So if you have 30 images in this folder and 4 repeats, it will be treated like as if it has 120 images.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
        </property>
@@ -119,7 +122,10 @@
       </widget>
      </item>
      <item row="1" column="1">
-      <widget class="QSpinBox" name="keep_tokens_spinbox">
+      <widget class="SpinBox" name="keep_tokens_spinbox">
+       <property name="focusPolicy">
+        <enum>Qt::StrongFocus</enum>
+       </property>
        <property name="toolTip">
         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;This is the number of tokens that get kept at the front of the captions. This is great when you want to have a tag that is always weighted the highest, such as the name of a character or an outfit tag.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
        </property>
@@ -133,7 +139,10 @@
       </widget>
      </item>
      <item row="2" column="1">
-      <widget class="QComboBox" name="caption_extension">
+      <widget class="ComboBox" name="caption_extension">
+       <property name="focusPolicy">
+        <enum>Qt::StrongFocus</enum>
+       </property>
        <property name="toolTip">
         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The file type of the captions, technically can be anything but I only included the two most common types, .caption, and .txt.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
        </property>
@@ -192,6 +201,16 @@
    <class>DragDropLineEdit</class>
    <extends>QLineEdit</extends>
    <header>modules.DragDropLineEdit.h</header>
+  </customwidget>
+  <customwidget>
+   <class>SpinBox</class>
+   <extends>QSpinBox</extends>
+   <header>modules.ScrollOnSelect.h</header>
+  </customwidget>
+  <customwidget>
+   <class>ComboBox</class>
+   <extends>QComboBox</extends>
+   <header>modules.ScrollOnSelect.h</header>
   </customwidget>
   <customwidget>
    <class>CollapsibleWidget</class>

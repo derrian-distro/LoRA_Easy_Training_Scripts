@@ -15,12 +15,12 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QFont, QFontDatabase, QGradient, QIcon,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
-from PySide6.QtWidgets import (QApplication, QCheckBox, QComboBox, QDoubleSpinBox,
-    QFormLayout, QGridLayout, QGroupBox, QHBoxLayout,
-    QLabel, QPushButton, QSizePolicy, QSpinBox,
-    QWidget)
+from PySide6.QtWidgets import (QApplication, QCheckBox, QFormLayout, QGridLayout,
+    QGroupBox, QHBoxLayout, QLabel, QPushButton,
+    QSizePolicy, QWidget)
 
 from modules.DragDropLineEdit import DragDropLineEdit
+from modules.ScrollOnSelect import (ComboBox, DoubleSpinBox, SpinBox)
 
 class Ui_base_args_ui(object):
     def setupUi(self, base_args_ui):
@@ -36,8 +36,9 @@ class Ui_base_args_ui(object):
 
         self.formLayout_6.setWidget(0, QFormLayout.LabelRole, self.label_7)
 
-        self.seed_input = QSpinBox(base_args_ui)
+        self.seed_input = SpinBox(base_args_ui)
         self.seed_input.setObjectName(u"seed_input")
+        self.seed_input.setFocusPolicy(Qt.StrongFocus)
         self.seed_input.setMinimum(0)
         self.seed_input.setMaximum(16777215)
         self.seed_input.setValue(23)
@@ -49,8 +50,9 @@ class Ui_base_args_ui(object):
 
         self.formLayout_6.setWidget(1, QFormLayout.LabelRole, self.label_9)
 
-        self.clip_skip_input = QSpinBox(base_args_ui)
+        self.clip_skip_input = SpinBox(base_args_ui)
         self.clip_skip_input.setObjectName(u"clip_skip_input")
+        self.clip_skip_input.setFocusPolicy(Qt.StrongFocus)
         self.clip_skip_input.setMinimum(1)
         self.clip_skip_input.setValue(2)
 
@@ -61,9 +63,10 @@ class Ui_base_args_ui(object):
 
         self.formLayout_6.setWidget(2, QFormLayout.LabelRole, self.label_10)
 
-        self.loss_weight_input = QDoubleSpinBox(base_args_ui)
+        self.loss_weight_input = DoubleSpinBox(base_args_ui)
         self.loss_weight_input.setObjectName(u"loss_weight_input")
-        self.loss_weight_input.setMinimum(0.000000000000000)
+        self.loss_weight_input.setFocusPolicy(Qt.StrongFocus)
+        self.loss_weight_input.setMinimum(0.010000000000000)
         self.loss_weight_input.setSingleStep(0.010000000000000)
         self.loss_weight_input.setValue(1.000000000000000)
 
@@ -149,12 +152,13 @@ class Ui_base_args_ui(object):
         self.gradient_box.setChecked(False)
         self.formLayout_4 = QFormLayout(self.gradient_box)
         self.formLayout_4.setObjectName(u"formLayout_4")
-        self.gradient_selector = QComboBox(self.gradient_box)
+        self.gradient_selector = ComboBox(self.gradient_box)
         self.gradient_selector.addItem("")
         self.gradient_selector.addItem("")
         self.gradient_selector.setObjectName(u"gradient_selector")
         sizePolicy1.setHeightForWidth(self.gradient_selector.sizePolicy().hasHeightForWidth())
         self.gradient_selector.setSizePolicy(sizePolicy1)
+        self.gradient_selector.setFocusPolicy(Qt.StrongFocus)
 
         self.formLayout_4.setWidget(0, QFormLayout.SpanningRole, self.gradient_selector)
 
@@ -163,8 +167,9 @@ class Ui_base_args_ui(object):
 
         self.formLayout_4.setWidget(1, QFormLayout.LabelRole, self.label_8)
 
-        self.gradient_steps_input = QSpinBox(self.gradient_box)
+        self.gradient_steps_input = SpinBox(self.gradient_box)
         self.gradient_steps_input.setObjectName(u"gradient_steps_input")
+        self.gradient_steps_input.setFocusPolicy(Qt.StrongFocus)
         self.gradient_steps_input.setMinimum(1)
 
         self.formLayout_4.setWidget(1, QFormLayout.FieldRole, self.gradient_steps_input)
@@ -181,16 +186,20 @@ class Ui_base_args_ui(object):
 
         self.formLayout.setWidget(0, QFormLayout.LabelRole, self.label)
 
-        self.width_input = QSpinBox(self.resolution_box)
+        self.width_input = SpinBox(self.resolution_box)
         self.width_input.setObjectName(u"width_input")
-        self.width_input.setMinimum(512)
+        self.width_input.setFocusPolicy(Qt.StrongFocus)
+        self.width_input.setMinimum(1)
         self.width_input.setMaximum(16777215)
+        self.width_input.setValue(512)
 
         self.formLayout.setWidget(0, QFormLayout.FieldRole, self.width_input)
 
-        self.height_input = QSpinBox(self.resolution_box)
+        self.height_input = SpinBox(self.resolution_box)
         self.height_input.setObjectName(u"height_input")
         self.height_input.setEnabled(False)
+        self.height_input.setFocusPolicy(Qt.StrongFocus)
+        self.height_input.setMinimum(1)
         self.height_input.setMaximum(16777215)
         self.height_input.setValue(512)
 
@@ -211,8 +220,9 @@ class Ui_base_args_ui(object):
 
         self.formLayout_5.setWidget(0, QFormLayout.LabelRole, self.label_3)
 
-        self.batch_size_input = QSpinBox(base_args_ui)
+        self.batch_size_input = SpinBox(base_args_ui)
         self.batch_size_input.setObjectName(u"batch_size_input")
+        self.batch_size_input.setFocusPolicy(Qt.StrongFocus)
         self.batch_size_input.setMinimum(1)
 
         self.formLayout_5.setWidget(0, QFormLayout.FieldRole, self.batch_size_input)
@@ -222,11 +232,12 @@ class Ui_base_args_ui(object):
 
         self.formLayout_5.setWidget(1, QFormLayout.LabelRole, self.label_2)
 
-        self.max_token_selector = QComboBox(base_args_ui)
+        self.max_token_selector = ComboBox(base_args_ui)
         self.max_token_selector.addItem("")
         self.max_token_selector.addItem("")
         self.max_token_selector.addItem("")
         self.max_token_selector.setObjectName(u"max_token_selector")
+        self.max_token_selector.setFocusPolicy(Qt.StrongFocus)
 
         self.formLayout_5.setWidget(1, QFormLayout.FieldRole, self.max_token_selector)
 
@@ -235,11 +246,12 @@ class Ui_base_args_ui(object):
 
         self.formLayout_5.setWidget(2, QFormLayout.LabelRole, self.label_5)
 
-        self.mixed_precision_selector = QComboBox(base_args_ui)
+        self.mixed_precision_selector = ComboBox(base_args_ui)
         self.mixed_precision_selector.addItem("")
         self.mixed_precision_selector.addItem("")
         self.mixed_precision_selector.addItem("")
         self.mixed_precision_selector.setObjectName(u"mixed_precision_selector")
+        self.mixed_precision_selector.setFocusPolicy(Qt.StrongFocus)
 
         self.formLayout_5.setWidget(2, QFormLayout.FieldRole, self.mixed_precision_selector)
 
@@ -250,15 +262,17 @@ class Ui_base_args_ui(object):
 
         self.horizontalLayout_3 = QHBoxLayout()
         self.horizontalLayout_3.setObjectName(u"horizontalLayout_3")
-        self.max_train_selector = QComboBox(base_args_ui)
+        self.max_train_selector = ComboBox(base_args_ui)
         self.max_train_selector.addItem("")
         self.max_train_selector.addItem("")
         self.max_train_selector.setObjectName(u"max_train_selector")
+        self.max_train_selector.setFocusPolicy(Qt.StrongFocus)
 
         self.horizontalLayout_3.addWidget(self.max_train_selector)
 
-        self.max_train_input = QSpinBox(base_args_ui)
+        self.max_train_input = SpinBox(base_args_ui)
         self.max_train_input.setObjectName(u"max_train_input")
+        self.max_train_input.setFocusPolicy(Qt.StrongFocus)
         self.max_train_input.setMinimum(1)
         self.max_train_input.setMaximum(16777215)
 

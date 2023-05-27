@@ -58,7 +58,10 @@
          </widget>
         </item>
         <item row="0" column="1">
-         <widget class="QSpinBox" name="min_input">
+         <widget class="SpinBox" name="min_input">
+          <property name="focusPolicy">
+           <enum>Qt::StrongFocus</enum>
+          </property>
           <property name="toolTip">
            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The minimum size either edge can be for a bucket.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
           </property>
@@ -84,7 +87,10 @@
          </widget>
         </item>
         <item row="1" column="1">
-         <widget class="QSpinBox" name="max_input">
+         <widget class="SpinBox" name="max_input">
+          <property name="focusPolicy">
+           <enum>Qt::StrongFocus</enum>
+          </property>
           <property name="toolTip">
            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The maximum size either edge can be for a bucket.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
           </property>
@@ -110,7 +116,10 @@
          </widget>
         </item>
         <item row="2" column="1">
-         <widget class="QSpinBox" name="steps_input">
+         <widget class="SpinBox" name="steps_input">
+          <property name="focusPolicy">
+           <enum>Qt::StrongFocus</enum>
+          </property>
           <property name="toolTip">
            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The step size per bucket made.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
           </property>
@@ -132,6 +141,13 @@
    </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>SpinBox</class>
+   <extends>QSpinBox</extends>
+   <header>modules.ScrollOnSelect.h</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>

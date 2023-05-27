@@ -15,12 +15,13 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QFont, QFontDatabase, QGradient, QIcon,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
-from PySide6.QtWidgets import (QApplication, QCheckBox, QComboBox, QFormLayout,
-    QGridLayout, QLabel, QLayout, QPushButton,
-    QSizePolicy, QSpinBox, QWidget)
+from PySide6.QtWidgets import (QApplication, QCheckBox, QFormLayout, QGridLayout,
+    QLabel, QLayout, QPushButton, QSizePolicy,
+    QWidget)
 
 from modules.CollapsibleWidget import CollapsibleWidget
 from modules.DragDropLineEdit import DragDropLineEdit
+from modules.ScrollOnSelect import (ComboBox, SpinBox)
 
 class Ui_sub_dataset_input(object):
     def setupUi(self, sub_dataset_input):
@@ -74,8 +75,9 @@ class Ui_sub_dataset_input(object):
 
         self.other_form_layout.setWidget(0, QFormLayout.LabelRole, self.repeats_label)
 
-        self.repeats_spinbox = QSpinBox(sub_dataset_input)
+        self.repeats_spinbox = SpinBox(sub_dataset_input)
         self.repeats_spinbox.setObjectName(u"repeats_spinbox")
+        self.repeats_spinbox.setFocusPolicy(Qt.StrongFocus)
         self.repeats_spinbox.setMinimum(1)
 
         self.other_form_layout.setWidget(0, QFormLayout.FieldRole, self.repeats_spinbox)
@@ -85,8 +87,9 @@ class Ui_sub_dataset_input(object):
 
         self.other_form_layout.setWidget(1, QFormLayout.LabelRole, self.keep_tokens_label)
 
-        self.keep_tokens_spinbox = QSpinBox(sub_dataset_input)
+        self.keep_tokens_spinbox = SpinBox(sub_dataset_input)
         self.keep_tokens_spinbox.setObjectName(u"keep_tokens_spinbox")
+        self.keep_tokens_spinbox.setFocusPolicy(Qt.StrongFocus)
 
         self.other_form_layout.setWidget(1, QFormLayout.FieldRole, self.keep_tokens_spinbox)
 
@@ -95,10 +98,11 @@ class Ui_sub_dataset_input(object):
 
         self.other_form_layout.setWidget(2, QFormLayout.LabelRole, self.caption_label)
 
-        self.caption_extension = QComboBox(sub_dataset_input)
+        self.caption_extension = ComboBox(sub_dataset_input)
         self.caption_extension.addItem("")
         self.caption_extension.addItem("")
         self.caption_extension.setObjectName(u"caption_extension")
+        self.caption_extension.setFocusPolicy(Qt.StrongFocus)
 
         self.other_form_layout.setWidget(2, QFormLayout.FieldRole, self.caption_extension)
 

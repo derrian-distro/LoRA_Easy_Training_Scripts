@@ -1,6 +1,23 @@
 import os
 
 
+def separate_and_validate(args: dict):
+    new_args = {}
+    new_dataset_args = {}
+    for section, sec_args in args.items():
+        if not sec_args:
+            continue
+        if section == "subsets":
+            new_dataset_args[section] = sec_args
+        if 'args' in sec_args:
+            new_args[section] = sec_args['args']
+        if 'dataset_args' in sec_args:
+            new_dataset_args[section] = sec_args['dataset_args']
+    valid = validate_args(new_args)
+    valid_dataset = validate_dataset_args(new_dataset_args)
+    return valid, valid_dataset
+
+
 def validate_args(args: dict):
     print("starting validation of args...")
     # if one or more sections report a None, then at least one thing isn't filled out correctly

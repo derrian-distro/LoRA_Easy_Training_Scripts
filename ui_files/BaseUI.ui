@@ -24,7 +24,10 @@
       </widget>
      </item>
      <item row="0" column="1">
-      <widget class="QSpinBox" name="seed_input">
+      <widget class="SpinBox" name="seed_input">
+       <property name="focusPolicy">
+        <enum>Qt::StrongFocus</enum>
+       </property>
        <property name="toolTip">
         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The seed that is used for the randomization, it also serves as the &amp;quot;reproducable seed&amp;quot; which you can use to see how close it is to the original.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
        </property>
@@ -47,7 +50,10 @@
       </widget>
      </item>
      <item row="1" column="1">
-      <widget class="QSpinBox" name="clip_skip_input">
+      <widget class="SpinBox" name="clip_skip_input">
+       <property name="focusPolicy">
+        <enum>Qt::StrongFocus</enum>
+       </property>
        <property name="toolTip">
         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;clip skip is how many layers get skipped in training, anime models were trained at clip skip 2 so I suggest you follow that, SD proper was trained at 1.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
        </property>
@@ -67,12 +73,15 @@
       </widget>
      </item>
      <item row="2" column="1">
-      <widget class="QDoubleSpinBox" name="loss_weight_input">
+      <widget class="DoubleSpinBox" name="loss_weight_input">
+       <property name="focusPolicy">
+        <enum>Qt::StrongFocus</enum>
+       </property>
        <property name="toolTip">
         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Prior loss weight is a parameter in machine learning that affects how well a model can reproduce images.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
        </property>
        <property name="minimum">
-        <double>0.000000000000000</double>
+        <double>0.010000000000000</double>
        </property>
        <property name="singleStep">
         <double>0.010000000000000</double>
@@ -215,12 +224,15 @@
      </property>
      <layout class="QFormLayout" name="formLayout_4">
       <item row="0" column="0" colspan="2">
-       <widget class="QComboBox" name="gradient_selector">
+       <widget class="ComboBox" name="gradient_selector">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
           <horstretch>0</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
+        </property>
+        <property name="focusPolicy">
+         <enum>Qt::StrongFocus</enum>
         </property>
         <property name="toolTip">
          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Checkpointing effictively doubles batch size, can't be used with accumulation steps.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -245,7 +257,10 @@
        </widget>
       </item>
       <item row="1" column="1">
-       <widget class="QSpinBox" name="gradient_steps_input">
+       <widget class="SpinBox" name="gradient_steps_input">
+        <property name="focusPolicy">
+         <enum>Qt::StrongFocus</enum>
+        </property>
         <property name="toolTip">
          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Accumulation steps are a multiplier on the batch size, so if batch size is 2 and acc steps is 2, then batch size is in total 4/&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
         </property>
@@ -271,25 +286,37 @@
        </widget>
       </item>
       <item row="0" column="1">
-       <widget class="QSpinBox" name="width_input">
+       <widget class="SpinBox" name="width_input">
+        <property name="focusPolicy">
+         <enum>Qt::StrongFocus</enum>
+        </property>
         <property name="toolTip">
          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Defines the resolution width, or if height isn't selected, both width and height.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
         </property>
         <property name="minimum">
-         <number>512</number>
+         <number>1</number>
         </property>
         <property name="maximum">
          <number>16777215</number>
         </property>
+        <property name="value">
+         <number>512</number>
+        </property>
        </widget>
       </item>
       <item row="1" column="1">
-       <widget class="QSpinBox" name="height_input">
+       <widget class="SpinBox" name="height_input">
         <property name="enabled">
          <bool>false</bool>
         </property>
+        <property name="focusPolicy">
+         <enum>Qt::StrongFocus</enum>
+        </property>
         <property name="toolTip">
          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Defines the height of the training resolution, so that you can have non square resolutions.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
+        <property name="minimum">
+         <number>1</number>
         </property>
         <property name="maximum">
          <number>16777215</number>
@@ -319,7 +346,10 @@
       </widget>
      </item>
      <item row="0" column="1">
-      <widget class="QSpinBox" name="batch_size_input">
+      <widget class="SpinBox" name="batch_size_input">
+       <property name="focusPolicy">
+        <enum>Qt::StrongFocus</enum>
+       </property>
        <property name="toolTip">
         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;How many images that get processed per step, I usually set this to 2.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
        </property>
@@ -336,7 +366,10 @@
       </widget>
      </item>
      <item row="1" column="1">
-      <widget class="QComboBox" name="max_token_selector">
+      <widget class="ComboBox" name="max_token_selector">
+       <property name="focusPolicy">
+        <enum>Qt::StrongFocus</enum>
+       </property>
        <property name="toolTip">
         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The max token length for captions, or the txt files included in the image folders.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
        </property>
@@ -365,7 +398,10 @@
       </widget>
      </item>
      <item row="2" column="1">
-      <widget class="QComboBox" name="mixed_precision_selector">
+      <widget class="ComboBox" name="mixed_precision_selector">
+       <property name="focusPolicy">
+        <enum>Qt::StrongFocus</enum>
+       </property>
        <property name="toolTip">
         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;I suggest bf16 if you have a 30x0 or higher graphics card, but fp16 works as well, float hasn't proven to have a sizable improvement, especially with the extra vram requirement.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
        </property>
@@ -396,7 +432,10 @@
      <item row="3" column="1">
       <layout class="QHBoxLayout" name="horizontalLayout_3">
        <item>
-        <widget class="QComboBox" name="max_train_selector">
+        <widget class="ComboBox" name="max_train_selector">
+         <property name="focusPolicy">
+          <enum>Qt::StrongFocus</enum>
+         </property>
          <item>
           <property name="text">
            <string>Epochs</string>
@@ -410,7 +449,10 @@
         </widget>
        </item>
        <item>
-        <widget class="QSpinBox" name="max_train_input">
+        <widget class="SpinBox" name="max_train_input">
+         <property name="focusPolicy">
+          <enum>Qt::StrongFocus</enum>
+         </property>
          <property name="toolTip">
           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;This is the maximum amount of steps or epochs, use whichever you find more comfortable using, I personally use steps.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
          </property>
@@ -433,6 +475,21 @@
    <class>DragDropLineEdit</class>
    <extends>QLineEdit</extends>
    <header>modules.DragDropLineEdit.h</header>
+  </customwidget>
+  <customwidget>
+   <class>SpinBox</class>
+   <extends>QSpinBox</extends>
+   <header>modules.ScrollOnSelect.h</header>
+  </customwidget>
+  <customwidget>
+   <class>DoubleSpinBox</class>
+   <extends>QDoubleSpinBox</extends>
+   <header>modules.ScrollOnSelect.h</header>
+  </customwidget>
+  <customwidget>
+   <class>ComboBox</class>
+   <extends>QComboBox</extends>
+   <header>modules.ScrollOnSelect.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

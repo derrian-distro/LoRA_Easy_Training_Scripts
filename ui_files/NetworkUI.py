@@ -15,8 +15,10 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QFont, QFontDatabase, QGradient, QIcon,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
-from PySide6.QtWidgets import (QApplication, QComboBox, QDoubleSpinBox, QFormLayout,
-    QLabel, QSizePolicy, QSpinBox, QWidget)
+from PySide6.QtWidgets import (QApplication, QFormLayout, QLabel, QSizePolicy,
+    QWidget)
+
+from modules.ScrollOnSelect import (ComboBox, DoubleSpinBox, SpinBox)
 
 class Ui_network_ui(object):
     def setupUi(self, network_ui):
@@ -25,7 +27,7 @@ class Ui_network_ui(object):
         network_ui.resize(400, 233)
         self.formLayout = QFormLayout(network_ui)
         self.formLayout.setObjectName(u"formLayout")
-        self.algo_select = QComboBox(network_ui)
+        self.algo_select = ComboBox(network_ui)
         self.algo_select.addItem("")
         self.algo_select.addItem("")
         self.algo_select.addItem("")
@@ -33,6 +35,7 @@ class Ui_network_ui(object):
         self.algo_select.addItem("")
         self.algo_select.addItem("")
         self.algo_select.setObjectName(u"algo_select")
+        self.algo_select.setFocusPolicy(Qt.StrongFocus)
 
         self.formLayout.setWidget(0, QFormLayout.SpanningRole, self.algo_select)
 
@@ -41,8 +44,9 @@ class Ui_network_ui(object):
 
         self.formLayout.setWidget(1, QFormLayout.LabelRole, self.network_dim_label)
 
-        self.network_dim_input = QSpinBox(network_ui)
+        self.network_dim_input = SpinBox(network_ui)
         self.network_dim_input.setObjectName(u"network_dim_input")
+        self.network_dim_input.setFocusPolicy(Qt.StrongFocus)
         self.network_dim_input.setMinimum(1)
         self.network_dim_input.setMaximum(16777215)
         self.network_dim_input.setValue(32)
@@ -54,8 +58,9 @@ class Ui_network_ui(object):
 
         self.formLayout.setWidget(2, QFormLayout.LabelRole, self.network_alpha_label)
 
-        self.network_alpha_input = QDoubleSpinBox(network_ui)
+        self.network_alpha_input = DoubleSpinBox(network_ui)
         self.network_alpha_input.setObjectName(u"network_alpha_input")
+        self.network_alpha_input.setFocusPolicy(Qt.StrongFocus)
         self.network_alpha_input.setDecimals(2)
         self.network_alpha_input.setMaximum(16777215.000000000000000)
         self.network_alpha_input.setValue(16.000000000000000)
@@ -67,11 +72,12 @@ class Ui_network_ui(object):
 
         self.formLayout.setWidget(3, QFormLayout.LabelRole, self.unet_te_both_label)
 
-        self.unet_te_both_select = QComboBox(network_ui)
+        self.unet_te_both_select = ComboBox(network_ui)
         self.unet_te_both_select.addItem("")
         self.unet_te_both_select.addItem("")
         self.unet_te_both_select.addItem("")
         self.unet_te_both_select.setObjectName(u"unet_te_both_select")
+        self.unet_te_both_select.setFocusPolicy(Qt.StrongFocus)
 
         self.formLayout.setWidget(3, QFormLayout.FieldRole, self.unet_te_both_select)
 
@@ -81,9 +87,10 @@ class Ui_network_ui(object):
 
         self.formLayout.setWidget(4, QFormLayout.LabelRole, self.conv_dim_label)
 
-        self.conv_dim_input = QSpinBox(network_ui)
+        self.conv_dim_input = SpinBox(network_ui)
         self.conv_dim_input.setObjectName(u"conv_dim_input")
         self.conv_dim_input.setEnabled(False)
+        self.conv_dim_input.setFocusPolicy(Qt.StrongFocus)
         self.conv_dim_input.setMaximum(16777215)
         self.conv_dim_input.setValue(32)
 
@@ -95,9 +102,10 @@ class Ui_network_ui(object):
 
         self.formLayout.setWidget(5, QFormLayout.LabelRole, self.conv_alpha_label)
 
-        self.conv_alpha_input = QDoubleSpinBox(network_ui)
+        self.conv_alpha_input = DoubleSpinBox(network_ui)
         self.conv_alpha_input.setObjectName(u"conv_alpha_input")
         self.conv_alpha_input.setEnabled(False)
+        self.conv_alpha_input.setFocusPolicy(Qt.StrongFocus)
         self.conv_alpha_input.setMaximum(16777215.000000000000000)
         self.conv_alpha_input.setValue(16.000000000000000)
 
@@ -109,9 +117,10 @@ class Ui_network_ui(object):
 
         self.formLayout.setWidget(6, QFormLayout.LabelRole, self.dylora_unit_label)
 
-        self.dylora_unit_input = QSpinBox(network_ui)
+        self.dylora_unit_input = SpinBox(network_ui)
         self.dylora_unit_input.setObjectName(u"dylora_unit_input")
         self.dylora_unit_input.setEnabled(False)
+        self.dylora_unit_input.setFocusPolicy(Qt.StrongFocus)
         self.dylora_unit_input.setValue(4)
 
         self.formLayout.setWidget(6, QFormLayout.FieldRole, self.dylora_unit_input)

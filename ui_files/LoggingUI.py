@@ -15,12 +15,13 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QFont, QFontDatabase, QGradient, QIcon,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
-from PySide6.QtWidgets import (QApplication, QCheckBox, QComboBox, QFormLayout,
-    QGroupBox, QHBoxLayout, QLabel, QPushButton,
-    QSizePolicy, QVBoxLayout, QWidget)
+from PySide6.QtWidgets import (QApplication, QCheckBox, QFormLayout, QGroupBox,
+    QHBoxLayout, QLabel, QPushButton, QSizePolicy,
+    QVBoxLayout, QWidget)
 
 from modules.DragDropLineEdit import DragDropLineEdit
 from modules.LineEditHighlight import LineEditWithHighlight
+from modules.ScrollOnSelect import ComboBox
 
 class Ui_logging_ui(object):
     def setupUi(self, logging_ui):
@@ -61,11 +62,12 @@ class Ui_logging_ui(object):
 
         self.formLayout.setWidget(0, QFormLayout.LabelRole, self.label_2)
 
-        self.log_mode_selector = QComboBox(self.logging_group)
+        self.log_mode_selector = ComboBox(self.logging_group)
         self.log_mode_selector.addItem("")
         self.log_mode_selector.addItem("")
         self.log_mode_selector.addItem("")
         self.log_mode_selector.setObjectName(u"log_mode_selector")
+        self.log_mode_selector.setFocusPolicy(Qt.StrongFocus)
 
         self.formLayout.setWidget(0, QFormLayout.FieldRole, self.log_mode_selector)
 

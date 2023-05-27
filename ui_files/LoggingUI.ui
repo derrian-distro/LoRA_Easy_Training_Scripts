@@ -68,7 +68,10 @@
        </widget>
       </item>
       <item row="0" column="1">
-       <widget class="QComboBox" name="log_mode_selector">
+       <widget class="ComboBox" name="log_mode_selector">
+        <property name="focusPolicy">
+         <enum>Qt::StrongFocus</enum>
+        </property>
         <property name="toolTip">
          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The system you use for logging. Tensorboard is local, Wandb is cloud based. You can also opt to log in both of them.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
         </property>
@@ -150,6 +153,11 @@
    <class>DragDropLineEdit</class>
    <extends>QLineEdit</extends>
    <header>modules.DragDropLineEdit.h</header>
+  </customwidget>
+  <customwidget>
+   <class>ComboBox</class>
+   <extends>QComboBox</extends>
+   <header>modules.ScrollOnSelect.h</header>
   </customwidget>
   <customwidget>
    <class>LineEditWithHighlight</class>

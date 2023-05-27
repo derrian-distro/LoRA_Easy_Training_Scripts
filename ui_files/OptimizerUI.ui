@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>400</width>
-    <height>283</height>
+    <height>286</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -15,7 +15,10 @@
   </property>
   <layout class="QFormLayout" name="formLayout">
    <item row="0" column="0" colspan="2">
-    <widget class="QComboBox" name="optimizer_type_selector">
+    <widget class="ComboBox" name="optimizer_type_selector">
+     <property name="focusPolicy">
+      <enum>Qt::StrongFocus</enum>
+     </property>
      <property name="toolTip">
       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The optimizer to use, The standard, and the one most people use is AdamW8bit.&lt;/p&gt;&lt;p&gt;The various Dadapt modify the lr on their own as you go, however can only take one lr.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
      </property>
@@ -72,7 +75,10 @@
     </widget>
    </item>
    <item row="1" column="0" colspan="2">
-    <widget class="QComboBox" name="lr_scheduler_selector">
+    <widget class="ComboBox" name="lr_scheduler_selector">
+     <property name="focusPolicy">
+      <enum>Qt::StrongFocus</enum>
+     </property>
      <property name="toolTip">
       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The scheduler for the lr. The ones I use personally are cosine and cosine with restarts.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
      </property>
@@ -173,9 +179,12 @@
     </widget>
    </item>
    <item row="6" column="1">
-    <widget class="QSpinBox" name="cosine_restart_input">
+    <widget class="SpinBox" name="cosine_restart_input">
      <property name="enabled">
       <bool>false</bool>
+     </property>
+     <property name="focusPolicy">
+      <enum>Qt::StrongFocus</enum>
      </property>
      <property name="toolTip">
       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The number of times cosine with restarts will restart, note that 1 means it doesn't restart, and 2 means it will restart once.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -193,9 +202,12 @@
     </widget>
    </item>
    <item row="7" column="1">
-    <widget class="QDoubleSpinBox" name="poly_power_input">
+    <widget class="DoubleSpinBox" name="poly_power_input">
      <property name="enabled">
       <bool>false</bool>
+     </property>
+     <property name="focusPolicy">
+      <enum>Qt::StrongFocus</enum>
      </property>
      <property name="toolTip">
       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The power of the polynomial equation. The closer to 0 the more agressive (I think).&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -209,9 +221,12 @@
     </widget>
    </item>
    <item row="5" column="1">
-    <widget class="QDoubleSpinBox" name="warmup_ratio_input">
+    <widget class="DoubleSpinBox" name="warmup_ratio_input">
      <property name="enabled">
       <bool>false</bool>
+     </property>
+     <property name="focusPolicy">
+      <enum>Qt::StrongFocus</enum>
      </property>
      <property name="toolTip">
       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;This is ratio of steps you want to be a warmup to your chosen lr. I personally use 0.05 (5%).&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -253,9 +268,12 @@
     </widget>
    </item>
    <item row="8" column="1">
-    <widget class="QSpinBox" name="min_snr_input">
+    <widget class="SpinBox" name="min_snr_input">
      <property name="enabled">
       <bool>false</bool>
+     </property>
+     <property name="focusPolicy">
+      <enum>Qt::StrongFocus</enum>
      </property>
      <property name="toolTip">
       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;This is a tool that reduces learning of unwanted elements by only learning what is the most common. This can lead to it not learning small details however. The recommended value is 5. Lower values apply more.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -268,6 +286,21 @@
   </layout>
  </widget>
  <customwidgets>
+  <customwidget>
+   <class>SpinBox</class>
+   <extends>QSpinBox</extends>
+   <header>modules.ScrollOnSelect.h</header>
+  </customwidget>
+  <customwidget>
+   <class>DoubleSpinBox</class>
+   <extends>QDoubleSpinBox</extends>
+   <header>modules.ScrollOnSelect.h</header>
+  </customwidget>
+  <customwidget>
+   <class>ComboBox</class>
+   <extends>QComboBox</extends>
+   <header>modules.ScrollOnSelect.h</header>
+  </customwidget>
   <customwidget>
    <class>LineEditWithHighlight</class>
    <extends>QLineEdit</extends>

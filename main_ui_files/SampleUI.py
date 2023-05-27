@@ -48,7 +48,6 @@ class SampleWidget(QtWidgets.QWidget):
                 self.edited_previously = True
                 elem.update_stylesheet()
         self.args[name] = value
-        print(self.args)
 
     @QtCore.Slot()
     def set_from_dialog(self):
