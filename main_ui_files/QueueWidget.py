@@ -32,7 +32,7 @@ class QueueWidget(QtWidgets.QWidget):
         new_item.setText("Unnamed" if not self.widget.queue_name.text() else self.widget.queue_name.text())
         self.elements.append(new_item)
         self.selected = new_item
-        self.uncheck_elements()
+        self.uncheck_elements(True)
         new_item.setChecked(True)
         self.widget.queue_scroll_widget.layout().addWidget(new_item)
         self.saveQueue.emit(new_item.queue_file)
@@ -57,11 +57,12 @@ class QueueWidget(QtWidgets.QWidget):
         if elem == self.selected:
             self.selected = None
 
-    def uncheck_elements(self):
+    def uncheck_elements(self, skip_save: bool = False):
         for elem in self.elements:
             if elem.isChecked() and elem is not self.selected:
                 elem.setChecked(False)
-                self.saveQueue.emit(elem.queue_file)
+                if not skip_save:
+                    self.saveQueue.emit(elem.queue_file)
 
     @QtCore.Slot(object)
     def update_selected(self, widget: QueueItem):
