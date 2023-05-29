@@ -2,7 +2,7 @@ from PySide6 import QtWidgets, QtGui, QtCore
 
 
 class SpinBox(QtWidgets.QSpinBox):
-    def __init__(self, parent: QtWidgets.QWidget = None):
+    def __init__(self, parent: QtWidgets.QWidget = None) -> None:
         super(SpinBox, self).__init__(parent)
         self.setFocusPolicy(QtCore.Qt.FocusPolicy.StrongFocus)
 
@@ -14,7 +14,7 @@ class SpinBox(QtWidgets.QSpinBox):
 
 
 class DoubleSpinBox(QtWidgets.QDoubleSpinBox):
-    def __init__(self, parent: QtWidgets.QWidget = None):
+    def __init__(self, parent: QtWidgets.QWidget = None) -> None:
         super(DoubleSpinBox, self).__init__(parent)
         self.setFocusPolicy(QtCore.Qt.FocusPolicy.StrongFocus)
 
@@ -26,7 +26,7 @@ class DoubleSpinBox(QtWidgets.QDoubleSpinBox):
 
 
 class ComboBox(QtWidgets.QComboBox):
-    def __init__(self, parent: QtWidgets.QWidget = None):
+    def __init__(self, parent: QtWidgets.QWidget = None) -> None:
         super(ComboBox, self).__init__(parent)
         self.setFocusPolicy(QtCore.Qt.FocusPolicy.StrongFocus)
 

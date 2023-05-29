@@ -16,7 +16,7 @@ from ui_files.MainUI import Ui_MainWindow
 
 
 class MainWindow(QtWidgets.QMainWindow, QtStyleTools):
-    def __init__(self, app: QtWidgets.QApplication = None):
+    def __init__(self, app: QtWidgets.QApplication = None) -> None:
         self.training_thread = None
         self.app = app
         super(MainWindow, self).__init__()
@@ -46,7 +46,7 @@ class MainWindow(QtWidgets.QMainWindow, QtStyleTools):
         self.window_.save_toml.triggered.connect(self.save_toml)
         self.window_.load_toml.triggered.connect(self.load_toml)
 
-    def process_themes(self):
+    def process_themes(self) -> tuple[list, list]:
         themes = os.listdir(os.path.join("css", "themes"))
         dark_themes = []
         light_themes = []
@@ -61,7 +61,7 @@ class MainWindow(QtWidgets.QMainWindow, QtStyleTools):
         return dark_themes, light_themes
 
     @QtCore.Slot()
-    def save_toml(self):
+    def save_toml(self) -> None:
         args = self.main_widget.save_args()
         args = toml.dumps(args)
         file_name = QtWidgets.QFileDialog().getSaveFileName(self, "Select Where to save to",
@@ -76,7 +76,7 @@ class MainWindow(QtWidgets.QMainWindow, QtStyleTools):
             f.write(args)
 
     @QtCore.Slot()
-    def load_toml(self):
+    def load_toml(self) -> None:
         file_name, _ = QtWidgets.QFileDialog().getOpenFileName(self, "Select the config file",
                                                                filter="Config File (*.toml)")
         if not file_name:
@@ -109,7 +109,7 @@ class MainWindow(QtWidgets.QMainWindow, QtStyleTools):
                 json.dump(config, f, indent=4)
 
     @QtCore.Slot(dict, dict, bool)
-    def begin_training(self, args: dict, dataset_args: dict):
+    def begin_training(self, args: dict, dataset_args: dict) -> None:
         if self.training_thread and self.training_thread.is_alive():
             return
         self.training_thread = threading.Thread(target=self.begin_training_thread)
@@ -130,7 +130,7 @@ class MainWindow(QtWidgets.QMainWindow, QtStyleTools):
         print("validated, starting training...")
         self.training_thread.start()
 
-    def begin_training_thread(self):
+    def begin_training_thread(self) -> None:
         self.main_widget.begin_training_button.setEnabled(False)
         python = sys.executable
         try:
@@ -148,14 +148,14 @@ class MainWindow(QtWidgets.QMainWindow, QtStyleTools):
         self.main_widget.begin_training_button.setEnabled(True)
 
     @QtCore.Slot(object)
-    def begin_queued_training(self, elements: list):
+    def begin_queued_training(self, elements: list) -> None:
         if self.training_thread and self.training_thread.is_alive():
             return
         self.training_thread = threading.Thread(target=self.begin_queued_training_thread, args=[elements])
         self.training_thread.start()
         pass
 
-    def begin_queued_training_thread(self, elements: list[QueueItem]):
+    def begin_queued_training_thread(self, elements: list[QueueItem]) -> None:
         self.main_widget.begin_training_button.setEnabled(False)
         python = sys.executable
         while len(elements) > 0:
@@ -190,7 +190,7 @@ class MainWindow(QtWidgets.QMainWindow, QtStyleTools):
         self.main_widget.begin_training_button.setEnabled(True)
 
     @staticmethod
-    def create_config_args_file(args: dict):
+    def create_config_args_file(args: dict) -> None:
         with open(os.path.join("runtime_store", "config.toml"), 'w') as f:
             for key, value in args.items():
                 if isinstance(value, str):
@@ -200,7 +200,7 @@ class MainWindow(QtWidgets.QMainWindow, QtStyleTools):
                 f.write(f"{key} = {value}\n")
 
     @staticmethod
-    def create_dataset_args_file(args: dict):
+    def create_dataset_args_file(args: dict) -> None:
         with open(os.path.join("runtime_store", "dataset.toml"), 'w') as f:
             f.write("[general]\n")
             for key, value in args['general'].items():
@@ -220,19 +220,19 @@ class MainWindow(QtWidgets.QMainWindow, QtStyleTools):
                     f.write(f"\t{key} = {value}\n")
 
     @QtCore.Slot(dict)
-    def create_config_args(self, args: dict):
+    def create_config_args(self, args: dict) -> None:
         valid = validate_args(args)
         if not valid:
             print("failed validation")
 
     @QtCore.Slot(dict)
-    def create_dataset_args(self, args: dict):
+    def create_dataset_args(self, args: dict) -> None:
         valid = validate_dataset_args(args)
         if not valid:
             print("failed validation")
 
 
-def main():
+def main() -> None:
     if os.path.exists("config.json"):
         with open("config.json", 'r') as f:
             config = json.load(f)

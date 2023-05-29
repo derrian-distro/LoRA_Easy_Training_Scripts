@@ -11,7 +11,7 @@ class MainWidget(QtWidgets.QWidget):
     BeginTraining = QtCore.Signal(object, object)
     BeginQueuedTraining = QtCore.Signal(object)
 
-    def __init__(self, parent: QtWidgets.QWidget = None):
+    def __init__(self, parent: QtWidgets.QWidget = None) -> None:
         super(MainWidget, self).__init__(parent)
         self.main_layout = QtWidgets.QGridLayout()
         self.setLayout(self.main_layout)
@@ -45,7 +45,7 @@ class MainWidget(QtWidgets.QWidget):
         self.begin_training_button.clicked.connect(self.begin_train)
         self.args_widget.general_args.CacheLatentsChecked.connect(self.subset_widget.cache_checked)
 
-    def begin_train(self):
+    def begin_train(self) -> None:
         if len(self.queue_widget.elements) > 0:
             self.BeginQueuedTraining.emit(self.queue_widget.elements)
             return
@@ -55,17 +55,17 @@ class MainWidget(QtWidgets.QWidget):
         self.dataset_args['subsets'] = self.subset_widget.get_subset_args()
         self.BeginTraining.emit(self.args, self.dataset_args)
 
-    def save_args(self):
+    def save_args(self) -> dict:
         args = self.args_widget.save_args()
         args['subsets'] = self.subset_widget.get_subset_args(skip_check=True)
         return args
 
-    def load_args(self, args: dict):
+    def load_args(self, args: dict) -> None:
         self.args_widget.load_args(args)
         self.subset_widget.load_args(args)
 
     @QtCore.Slot(str)
-    def save_for_queue(self, file_name: str):
+    def save_for_queue(self, file_name: str) -> None:
         file_name = f"{file_name}.toml"
         args = self.args_widget.save_args()
         args['subsets'] = self.subset_widget.get_subset_args(skip_check=True)
@@ -74,7 +74,7 @@ class MainWidget(QtWidgets.QWidget):
             f.write(args)
 
     @QtCore.Slot(str)
-    def load_for_queue(self, file_name: str):
+    def load_for_queue(self, file_name: str) -> None:
         file_name = f"{file_name}.toml"
         if not os.path.exists(os.path.join("runtime_store", file_name)):
             return
@@ -84,7 +84,7 @@ class MainWidget(QtWidgets.QWidget):
 
 
 class ArgsWidget(QtWidgets.QWidget):
-    def __init__(self, parent: QtWidgets.QWidget = None):
+    def __init__(self, parent: QtWidgets.QWidget = None) -> None:
         super(ArgsWidget, self).__init__(parent)
         # setup default values
         self.setMinimumSize(600, 300)
@@ -131,7 +131,7 @@ class ArgsWidget(QtWidgets.QWidget):
         for widget in self.args_widget_array:
             self.scroll_widget.layout().addWidget(widget)
 
-    def collate_args(self):
+    def collate_args(self) -> tuple[object, object]:
         args = {}
         dataset_args = {}
         for widget in self.args_widget_array:
@@ -139,7 +139,7 @@ class ArgsWidget(QtWidgets.QWidget):
             widget.get_dataset_args(dataset_args)
         return args, dataset_args
 
-    def save_args(self):
+    def save_args(self) -> dict:
         args = {}
         for widget in self.args_widget_array:
             widget_args = getattr(widget, "args", None)
@@ -151,7 +151,7 @@ class ArgsWidget(QtWidgets.QWidget):
                 args[widget.name]['dataset_args'] = widget_dataset_args.copy()
         return args
 
-    def load_args(self, args: dict):
+    def load_args(self, args: dict) -> None:
         for widget in self.args_widget_array:
             if hasattr(widget, "load_args"):
                 widget.load_args(args)

@@ -4,7 +4,7 @@ from PySide6 import QtCore
 
 
 class LineEditWithHighlight(QtWidgets.QLineEdit):
-    def __init__(self, parent: QtWidgets.QWidget = None):
+    def __init__(self, parent: QtWidgets.QWidget = None) -> None:
         super(LineEditWithHighlight, self).__init__(parent)
         self.highlight = True
 

@@ -9,7 +9,7 @@ from modules.LineEditHighlight import LineEditWithHighlight
 
 
 class LoggingWidget(QtWidgets.QWidget):
-    def __init__(self, parent: QtWidgets.QWidget = None):
+    def __init__(self, parent: QtWidgets.QWidget = None) -> None:
         super(LoggingWidget, self).__init__(parent)
         self.setLayout(QtWidgets.QVBoxLayout())
 
@@ -48,7 +48,7 @@ class LoggingWidget(QtWidgets.QWidget):
         )
 
     @QtCore.Slot(str, object, bool, QtWidgets.QWidget)
-    def edit_args(self, name: str, value: object, optional: bool = False, elem: QtWidgets.QWidget = None):
+    def edit_args(self, name: str, value: object, optional: bool = False, elem: QtWidgets.QWidget = None) -> None:
         if elem:
             if isinstance(elem, modules.DragDropLineEdit.DragDropLineEdit):
                 self.edited_previously = True
@@ -63,14 +63,15 @@ class LoggingWidget(QtWidgets.QWidget):
                 del self.args[name]
 
     @QtCore.Slot()
-    def set_from_dialog(self):
-        file_name = QtWidgets.QFileDialog.getExistingDirectory(self, "Open Logging Directory")
+    def set_from_dialog(self) -> None:
+        default_dir = self.widget.log_output_input.text() if os.path.exists(self.widget.log_output_input.text()) else ""
+        file_name = QtWidgets.QFileDialog.getExistingDirectory(self, "Open Logging Directory", dir=default_dir)
         if not file_name:
             return
         self.widget.log_output_input.setText(file_name)
 
     @QtCore.Slot(int)
-    def change_log_system(self, index: int):
+    def change_log_system(self, index: int) -> None:
         if index == 0:
             if "wandb_api_key" in self.args:
                 del self.args['wandb_api_key']
@@ -81,7 +82,7 @@ class LoggingWidget(QtWidgets.QWidget):
         self.args['log_with'] = self.widget.log_mode_selector.currentText().lower()
 
     @QtCore.Slot()
-    def enable_disable(self):
+    def enable_disable(self) -> None:
         checked = self.widget.logging_group.isChecked()
         if checked:
             self.args = {}
@@ -98,7 +99,7 @@ class LoggingWidget(QtWidgets.QWidget):
             self.args = {}
 
     @QtCore.Slot(bool, LineEditWithHighlight, str)
-    def enable_disable_lineEdit(self, checked: bool, elem: LineEditWithHighlight, name: str):
+    def enable_disable_lineEdit(self, checked: bool, elem: LineEditWithHighlight, name: str) -> None:
         if checked:
             elem.setEnabled(True)
             self.edit_args(name, elem.text(), True)
@@ -107,7 +108,7 @@ class LoggingWidget(QtWidgets.QWidget):
             if name in self.args:
                 del self.args[name]
 
-    def get_args(self, input_args: dict):
+    def get_args(self, input_args: dict) -> None:
         if not self.widget.logging_group.isChecked():
             if "logging_args" in input_args:
                 del input_args['logging_args']
@@ -120,10 +121,10 @@ class LoggingWidget(QtWidgets.QWidget):
                 self.colap.title_frame.update_arrow(False)
                 self.colap.title_frame.setChecked(True)
 
-    def get_dataset_args(self, input_args: dict):
+    def get_dataset_args(self, input_args: dict) -> None:
         pass
 
-    def load_args(self, args: dict):
+    def load_args(self, args: dict) -> None:
         if self.name not in args:
             return
         args = args[self.name].get("args", None)

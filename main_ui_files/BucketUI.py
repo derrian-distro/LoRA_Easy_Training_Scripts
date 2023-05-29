@@ -4,7 +4,7 @@ from modules.CollapsibleWidget import CollapsibleWidget
 
 
 class BucketWidget(QtWidgets.QWidget):
-    def __init__(self, parent: QtWidgets.QWidget = None):
+    def __init__(self, parent: QtWidgets.QWidget = None) -> None:
         super(BucketWidget, self).__init__(parent)
         self.setLayout(QtWidgets.QVBoxLayout())
         self.colap = CollapsibleWidget(self, "Bucket Args")
@@ -25,7 +25,7 @@ class BucketWidget(QtWidgets.QWidget):
         self.widget.bucket_group.clicked.connect(self.enable_disable_buckets)
 
     @QtCore.Slot(str, object, bool)
-    def edit_args(self, name: str, value: object, optional: bool = False):
+    def edit_args(self, name: str, value: object, optional: bool = False) -> None:
         if not optional:
             self.dataset_args[name] = value
             return
@@ -36,20 +36,20 @@ class BucketWidget(QtWidgets.QWidget):
         self.dataset_args[name] = value
 
     @QtCore.Slot(bool)
-    def enable_disable_buckets(self, checked: bool):
+    def enable_disable_buckets(self, checked: bool) -> None:
         self.dataset_args["enable_bucket"] = checked
 
     def get_args(self, input_args: dict):
         pass
 
-    def get_dataset_args(self, input_args: dict):
+    def get_dataset_args(self, input_args: dict) -> None:
         if not self.widget.bucket_group.isChecked():
             if "bucket_args" in input_args:
                 del input_args['bucket_args']
             return
         input_args['bucket_args'] = self.dataset_args
 
-    def load_args(self, args: dict):
+    def load_args(self, args: dict) -> None:
         if self.name not in args:
             return
         args = args[self.name]['dataset_args']

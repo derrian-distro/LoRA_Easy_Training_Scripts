@@ -1,7 +1,8 @@
 import os
+from typing import Union
 
 
-def separate_and_validate(args: dict):
+def separate_and_validate(args: dict) -> tuple[object, object]:
     new_args = {}
     new_dataset_args = {}
     for section, sec_args in args.items():
@@ -18,7 +19,7 @@ def separate_and_validate(args: dict):
     return valid, valid_dataset
 
 
-def validate_args(args: dict):
+def validate_args(args: dict) -> Union[dict, None]:
     print("starting validation of args...")
     # if one or more sections report a None, then at least one thing isn't filled out correctly
     new_args = {}
@@ -48,7 +49,7 @@ def validate_args(args: dict):
     return new_args
 
 
-def validate_dataset_args(args: dict):
+def validate_dataset_args(args: dict) -> Union[dict, None]:
     print("starting validation of dataset_args...")
     new_args = {"general": {}, "subsets": []}
     for key, value in args.items():
@@ -67,7 +68,7 @@ def validate_dataset_args(args: dict):
     return new_args
 
 
-def validate_subset(args: dict):
+def validate_subset(args: dict) -> dict:
     new_args = {}
     for key, value in args.items():
         if not value:
@@ -76,7 +77,7 @@ def validate_subset(args: dict):
     return new_args
 
 
-def calculate_steps(subsets: list, epochs: int, batch_size: int):
+def calculate_steps(subsets: list, epochs: int, batch_size: int) -> int:
     steps = 0
     for subset in subsets:
         image_count = 0
@@ -86,5 +87,5 @@ def calculate_steps(subsets: list, epochs: int, batch_size: int):
                 continue
             image_count += 1
         steps += (image_count * subset['num_repeats'])
-    steps = (steps * epochs) / batch_size
+    steps = (steps * epochs) // batch_size
     return steps

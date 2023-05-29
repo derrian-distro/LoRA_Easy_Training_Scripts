@@ -6,7 +6,7 @@ from modules.CollapsibleWidget import CollapsibleWidget
 class NetworkWidget(QtWidgets.QWidget):
     args_edited = QtCore.Signal(str, object)
 
-    def __init__(self, parent: QtWidgets.QWidget = None):
+    def __init__(self, parent: QtWidgets.QWidget = None) -> None:
         super(NetworkWidget, self).__init__(parent)
         self.args = {"network_dim": 32, "network_alpha": 16.0}
         self.name = "network_args"
@@ -31,18 +31,18 @@ class NetworkWidget(QtWidgets.QWidget):
         self.layout().addWidget(self.colap)
 
     @QtCore.Slot(str, object)
-    def edit_args(self, name: str, value: object):
+    def edit_args(self, name: str, value: object) -> None:
         self.args[name] = value
         self.args_edited.emit(name, value)
 
     @QtCore.Slot(str, object)
-    def edit_network_args(self, name: str, value: object):
+    def edit_network_args(self, name: str, value: object) -> None:
         if "network_args" not in self.args:
             self.args['network_args'] = {}
         self.args['network_args'][name] = value
 
     @QtCore.Slot(str)
-    def change_training_parts(self, name: str):
+    def change_training_parts(self, name: str) -> None:
         if name == "Unet Only":
             self.args['network_train_unet_only'] = True
             if "network_train_text_encoder_only" in self.args:
@@ -58,7 +58,7 @@ class NetworkWidget(QtWidgets.QWidget):
                 del self.args['network_train_text_encoder_only']
 
     @QtCore.Slot(str)
-    def algo_changed(self, name: str):
+    def algo_changed(self, name: str) -> None:
         if name == "LoRA":
             if "network_args" in self.args:
                 del self.args['network_args']
@@ -87,13 +87,13 @@ class NetworkWidget(QtWidgets.QWidget):
                 if "algo" in self.args['network_args']:
                     del self.args['network_args']['algo']
 
-    def get_args(self, input_args: dict):
+    def get_args(self, input_args: dict) -> None:
         input_args['network_args'] = self.args
 
-    def get_dataset_args(self, input_args: dict):
+    def get_dataset_args(self, input_args: dict) -> None:
         pass
 
-    def load_args(self, args: dict):
+    def load_args(self, args: dict) -> None:
         if self.name not in args:
             return
         args = args[self.name]['args']

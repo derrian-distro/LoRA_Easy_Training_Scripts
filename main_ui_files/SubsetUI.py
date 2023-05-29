@@ -9,7 +9,7 @@ from ui_files.sub_dataset_extra_input import Ui_sub_dataset_extra_input
 class SubsetWidget(QtWidgets.QWidget):
     args_edited = QtCore.Signal(str, object)
 
-    def __init__(self, parent: QtWidgets.QWidget = None):
+    def __init__(self, parent: QtWidgets.QWidget = None) -> None:
         super(SubsetWidget, self).__init__(parent)
         self.args = {
             'num_repeats': 1, 'keep_tokens': 0, 'caption_extension': '.txt', 'shuffle_caption': False,
@@ -67,7 +67,7 @@ class SubsetWidget(QtWidgets.QWidget):
             "token_warmup_min", x))
 
     @QtCore.Slot(str, object, QtWidgets.QWidget)
-    def edit_args(self, name: str, value: object, widget: QtWidgets.QWidget = None):
+    def edit_args(self, name: str, value: object, widget: QtWidgets.QWidget = None) -> None:
         if widget:
             if isinstance(widget, DragDropLineEdit):
                 widget.update_stylesheet()
@@ -75,8 +75,11 @@ class SubsetWidget(QtWidgets.QWidget):
         self.args_edited.emit(name, value)
 
     @QtCore.Slot()
-    def set_from_dialog(self):
-        file_name = QtWidgets.QFileDialog.getExistingDirectory(self, "open directory containing images")
+    def set_from_dialog(self) -> None:
+        folder = self.widget.lineEdit.text()
+        default_dir = folder if os.path.exists(folder) else ""
+        file_name = QtWidgets.QFileDialog.getExistingDirectory(self, "open directory containing images",
+                                                               dir=default_dir)
         if not file_name:
             return
         try:
@@ -87,7 +90,7 @@ class SubsetWidget(QtWidgets.QWidget):
         self.widget.lineEdit.setText(file_name)
 
     @QtCore.Slot(bool)
-    def enable_disable_crop_aug(self, checked: bool):
+    def enable_disable_crop_aug(self, checked: bool) -> None:
         if checked:
             self.args['face_crop_aug_range'] = [
                 self.sub_widget_args.face_crop_width.value(),
@@ -98,7 +101,7 @@ class SubsetWidget(QtWidgets.QWidget):
                 del self.args['face_crop_aug_range']
 
     @QtCore.Slot(bool)
-    def enable_disable_caption_dropout(self, checked: bool):
+    def enable_disable_caption_dropout(self, checked: bool) -> None:
         if checked:
             self.args['caption_dropout_rate'] = self.sub_widget_args.caption_dropout_rate_input.value()
             self.args['caption_dropout_every_n_epochs'] = self.sub_widget_args.caption_epoch_dropout_input.value()
@@ -112,7 +115,7 @@ class SubsetWidget(QtWidgets.QWidget):
                 del self.args['caption_tag_dropout_rate']
 
     @QtCore.Slot(bool)
-    def enable_disable_tag_warmup(self, checked: bool):
+    def enable_disable_tag_warmup(self, checked: bool) -> None:
         if checked:
             self.args['token_warmup_min'] = self.sub_widget_args.token_minimum_warmup_input.value()
             self.args['token_warmup_step'] = self.sub_widget_args.token_warmup_step_input.value()
@@ -122,7 +125,7 @@ class SubsetWidget(QtWidgets.QWidget):
                 del self.args['token_warmup_step']
 
     @QtCore.Slot(bool)
-    def enable_disable_cache_dependants(self, checked: bool):
+    def enable_disable_cache_dependants(self, checked: bool) -> None:
         self.widget.color_aug.setEnabled(not checked)
         self.widget.random_crop.setEnabled(not checked)
         if not checked:
@@ -133,7 +136,7 @@ class SubsetWidget(QtWidgets.QWidget):
                 if name in self.args:
                     del self.args[name]
 
-    def load_args(self, args: dict):
+    def load_args(self, args: dict) -> None:
         self.widget.lineEdit.setText(args['image_dir'])
         self.widget.repeats_spinbox.setValue(args['num_repeats'])
         self.edit_args("num_repeats", args['num_repeats'])

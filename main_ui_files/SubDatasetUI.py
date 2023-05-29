@@ -1,4 +1,5 @@
 import os.path
+from typing import Union
 
 from PySide6 import QtWidgets
 from PySide6 import QtCore
@@ -74,11 +75,11 @@ class SubDatasetWidget(QtWidgets.QWidget):
         self.scrollWidget.layout().update()
 
     @QtCore.Slot(bool)
-    def cache_checked(self, checked: bool):
+    def cache_checked(self, checked: bool) -> None:
         self.cache_latents_checked = checked
         self.CacheChecked.emit(checked)
 
-    def get_subset_args(self, skip_check: bool = False) -> list[dict] | None:
+    def get_subset_args(self, skip_check: bool = False) -> Union[list[dict], None]:
         args_list = []
         failed_args = []
         if skip_check:
@@ -101,7 +102,7 @@ class SubDatasetWidget(QtWidgets.QWidget):
             return None
         return args_list
 
-    def load_args(self, args: dict):
+    def load_args(self, args: dict) -> None:
         if "subsets" not in args:
             return
         for elem in self.elements:
