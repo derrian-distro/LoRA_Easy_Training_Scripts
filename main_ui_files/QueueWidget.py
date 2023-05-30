@@ -1,5 +1,4 @@
 import os
-
 from PySide6 import QtWidgets, QtCore, QtGui
 from modules.QueueItem import QueueItem
 from ui_files.QueueUI import Ui_queue_ui
