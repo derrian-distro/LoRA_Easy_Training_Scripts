@@ -77,8 +77,10 @@ class Ui_sub_dataset_input(object):
 
         self.repeats_spinbox = SpinBox(sub_dataset_input)
         self.repeats_spinbox.setObjectName(u"repeats_spinbox")
+        self.repeats_spinbox.setMaximumSize(QSize(16777215, 16777215))
         self.repeats_spinbox.setFocusPolicy(Qt.StrongFocus)
         self.repeats_spinbox.setMinimum(1)
+        self.repeats_spinbox.setMaximum(16777215)
 
         self.other_form_layout.setWidget(0, QFormLayout.FieldRole, self.repeats_spinbox)
 
