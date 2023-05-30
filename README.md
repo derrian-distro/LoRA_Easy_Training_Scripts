@@ -151,6 +151,13 @@ As you can see everything is sectioned off into their own sections. Generally th
 ## Changelog
 changelog of the old scripts are all in that branch [here](https://github.com/derrian-distro/LoRA_Easy_Training_Scripts/tree/old-scripts#changelog)
 
+- May 29, 2023
+  - Changed the behavior of the Queue so that it doesn't overwrite the previously saved values in the selected queue item when a new one is added
+  - Change the behaviour of file selects so that they go to the folder last selected if valid
+  - Changed up the type hints to (hopefully) fix compatability for arch users
+  - Refactored a lot of the connecting parts of the code to ensure more things have their own accountability, this also makes the code more maintainable and readable
+    - This ended up being bigger than expected, so I may have accidentally introduced a bug
+  - Changed the max for the repeats spinbox so that you can go higher than 99, if for some reason you want to do that.
 - May 27, 2023
   - Fixed noise offset default being 0.1
   - Fixed the bug in which scrolling into elements would accidently change their values

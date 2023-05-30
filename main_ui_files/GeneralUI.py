@@ -10,7 +10,7 @@ from modules.CollapsibleWidget import CollapsibleWidget
 class BaseArgsWidget(QtWidgets.QWidget):
     CacheLatentsChecked = QtCore.Signal(bool)
 
-    def __init__(self, parent: QtWidgets.QWidget = None):
+    def __init__(self, parent: QtWidgets.QWidget = None) -> None:
         super(BaseArgsWidget, self).__init__(parent)
         self.args = {"pretrained_model_name_or_path": "", "mixed_precision": "fp16", "seed": 23, "clip_skip": 2,
                      "xformers": True, "max_train_epochs": 1, "max_data_loader_n_workers": 1,
@@ -69,7 +69,7 @@ class BaseArgsWidget(QtWidgets.QWidget):
             "mixed_precision", x if x != "float" else "no"))
 
     @QtCore.Slot(str, object, bool, QtWidgets.QWidget)
-    def edit_args(self, name: str, value: object, optional: bool = False, elem: QtWidgets.QWidget = None):
+    def edit_args(self, name: str, value: object, optional: bool = False, elem: QtWidgets.QWidget = None) -> None:
         if elem:
             if isinstance(elem, modules.DragDropLineEdit.DragDropLineEdit):
                 elem.update_stylesheet()
@@ -83,7 +83,7 @@ class BaseArgsWidget(QtWidgets.QWidget):
         self.args[name] = value
 
     @QtCore.Slot(str, object, bool)
-    def edit_dataset_args(self, name: str, value: object, optional: bool = False):
+    def edit_dataset_args(self, name: str, value: object, optional: bool = False) -> None:
         if not optional:
             self.dataset_args[name] = value
             return
@@ -94,14 +94,17 @@ class BaseArgsWidget(QtWidgets.QWidget):
         self.dataset_args[name] = value
 
     @QtCore.Slot()
-    def set_from_dialog(self):
+    def set_from_dialog(self) -> None:
         extensions = " ".join(["*" + s for s in self.widget.base_model_input.extensions])
-        file_name, _ = QtWidgets.QFileDialog.getOpenFileName(self, "Open Model File", filter=f"Stable Diffusion Models "
-                                                                                             f"({extensions})")
-        self.widget.base_model_input.setText(file_name)
+        default_folder = os.path.split(self.widget.base_model_input.text())[0] if \
+            os.path.exists(self.widget.base_model_input.text()) else ""
+        file_name, _ = QtWidgets.QFileDialog.getOpenFileName(
+            self, "Open Model File", dir=default_folder,
+            filter=f"Stable Diffusion Models ({extensions})")
+        self.widget.base_model_input.setText(file_name if file_name else self.widget.base_model_input.text())
 
     @QtCore.Slot(bool)
-    def enable_disable_sd2(self, checked: bool):
+    def enable_disable_sd2(self, checked: bool) -> None:
         if checked:
             self.args['v2'] = True
             self.widget.v_param_enable.setEnabled(True)
@@ -113,7 +116,7 @@ class BaseArgsWidget(QtWidgets.QWidget):
                     del self.args[name]
 
     @QtCore.Slot(bool)
-    def enable_disable_height(self, checked: bool):
+    def enable_disable_height(self, checked: bool) -> None:
         if checked:
             self.widget.height_input.setEnabled(True)
             self.dataset_args['resolution'] = [self.widget.width_input.value(), self.widget.height_input.value()]
@@ -122,7 +125,7 @@ class BaseArgsWidget(QtWidgets.QWidget):
             self.dataset_args['resolution'] = self.widget.width_input.value()
 
     @QtCore.Slot(bool, int)
-    def change_resolution(self, width: bool, value: int):
+    def change_resolution(self, width: bool, value: int) -> None:
         if width:
             self.dataset_args['resolution'] = value if not self.widget.height_input.isEnabled() else \
                 [value, self.widget.height_input.value()]
@@ -130,7 +133,7 @@ class BaseArgsWidget(QtWidgets.QWidget):
             self.dataset_args['resolution'] = [self.widget.width_input.value(), value]
 
     @QtCore.Slot(bool)
-    def enable_disable_gradient(self, checked: bool):
+    def enable_disable_gradient(self, checked: bool) -> None:
         for name in ['gradient_checkpointing', 'gradient_accumulation_steps']:
             if name in self.args:
                 del self.args[name]
@@ -144,14 +147,14 @@ class BaseArgsWidget(QtWidgets.QWidget):
                 self.widget.gradient_steps_input.setEnabled(True)
 
     @QtCore.Slot(int)
-    def max_training_select(self, index: int):
+    def max_training_select(self, index: int) -> None:
         for name in ['max_train_epochs', "max_train_steps"]:
             if name in self.args:
                 del self.args[name]
         self.args[f'max_train_{"epochs" if index == 0 else "steps"}'] = self.widget.max_train_input.value()
 
     @QtCore.Slot(bool)
-    def enable_cache_latents(self, checked: bool):
+    def enable_cache_latents(self, checked: bool) -> None:
         for name in ['cache_latents', "cache_latents_to_disk"]:
             if name in self.args:
                 del self.args[name]
@@ -165,20 +168,20 @@ class BaseArgsWidget(QtWidgets.QWidget):
             self.widget.cache_latents_to_disk_enable.setEnabled(False)
 
     @QtCore.Slot(bool)
-    def enable_disable_xformers(self, checked: bool):
+    def enable_disable_xformers(self, checked: bool) -> None:
         if "xformers" in self.args:
             del self.args['xformers']
         if checked:
             self.args['xformers'] = True
 
     @QtCore.Slot(int)
-    def edit_token_length(self, index: int):
+    def edit_token_length(self, index: int) -> None:
         if "max_token_length" in self.dataset_args:
             del self.args['max_token_length']
         if index != 2:
             self.args['max_token_length'] = int(self.widget.max_token_selector.currentText())
 
-    def get_args(self, input_args: dict):
+    def get_args(self, input_args: dict) -> None:
         valid = self.widget.base_model_input.update_stylesheet()
         input_args['general_args'] = None if not valid else self.args
         if not valid:
@@ -187,11 +190,11 @@ class BaseArgsWidget(QtWidgets.QWidget):
                 self.colap.title_frame.update_arrow(False)
                 self.colap.title_frame.setChecked(True)
 
-    def get_dataset_args(self, input_args: dict):
+    def get_dataset_args(self, input_args: dict) -> None:
         valid = self.widget.base_model_input.update_stylesheet()
         input_args['general_args'] = None if not valid else self.dataset_args
 
-    def load_args(self, args: dict):
+    def load_args(self, args: dict) -> None:
         if self.name not in args:
             return
         args, dataset_args = args[self.name]['args'], args[self.name]['dataset_args']

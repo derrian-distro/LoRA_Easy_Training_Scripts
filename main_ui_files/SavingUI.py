@@ -8,7 +8,7 @@ from ui_files.SavingUI import Ui_saving_ui
 
 
 class SavingWidget(QtWidgets.QWidget):
-    def __init__(self, parent: QtWidgets.QWidget = None):
+    def __init__(self, parent: QtWidgets.QWidget = None) -> None:
         super(SavingWidget, self).__init__(parent)
         self.setLayout(QtWidgets.QVBoxLayout())
         self.args = {"output_dir": "", "save_precision": "fp16", "save_model_as": "safetensors"}
@@ -76,7 +76,7 @@ class SavingWidget(QtWidgets.QWidget):
         self.widget.resume_enable.clicked.connect(self.enable_disable_resume)
 
     @QtCore.Slot(str, object, bool, QtWidgets.QWidget)
-    def edit_args(self, name: str, value: object, optional: bool = False, elem: QtWidgets.QWidget = None):
+    def edit_args(self, name: str, value: object, optional: bool = False, elem: QtWidgets.QWidget = None) -> None:
         if elem:
             if isinstance(elem, modules.DragDropLineEdit.DragDropLineEdit):
                 if elem == self.widget.resume_input and not self.resume_edited_previously:
@@ -93,9 +93,14 @@ class SavingWidget(QtWidgets.QWidget):
                 del self.args[name]
 
     @QtCore.Slot(bool)
-    def set_from_dialog(self, is_resume: bool = False):
+    def set_from_dialog(self, is_resume: bool = False) -> None:
+        if is_resume:
+            folder = self.widget.resume_input.text()
+        else:
+            folder = self.widget.output_folder_input.text()
+        default_dir = folder if os.path.exists(folder) else ""
         file_name = QtWidgets.QFileDialog.getExistingDirectory(
-            self, "Select the output Directory" if not is_resume else "Select the resume folder")
+            self, "Select the output Directory" if not is_resume else "Select the resume folder", dir=default_dir)
         if not file_name:
             return
         if not is_resume:
@@ -104,7 +109,7 @@ class SavingWidget(QtWidgets.QWidget):
             self.widget.resume_input.setText(file_name)
 
     @QtCore.Slot(int)
-    def set_freq_type(self, index: int):
+    def set_freq_type(self, index: int) -> None:
         if "save_every_n_epochs" in self.args:
             del self.args['save_every_n_epochs']
         if "save_every_n_steps" in self.args:
@@ -113,7 +118,7 @@ class SavingWidget(QtWidgets.QWidget):
         self.edit_args(name, self.widget.save_freq_input.value(), True)
 
     @QtCore.Slot(int)
-    def set_last_type(self, index: int):
+    def set_last_type(self, index: int) -> None:
         if "save_last_n_epochs" in self.args:
             del self.args['save_last_n_epochs']
         if 'save_last_n_steps' in self.args:
@@ -122,7 +127,7 @@ class SavingWidget(QtWidgets.QWidget):
         self.edit_args(name, self.widget.save_last_input.value(), True)
 
     @QtCore.Slot(bool)
-    def enable_disable_output_name(self, checked: bool):
+    def enable_disable_output_name(self, checked: bool) -> None:
         if checked:
             self.widget.output_name_input.setEnabled(True)
             self.edit_args("output_name", self.widget.output_name_input.text(), True)
@@ -132,7 +137,7 @@ class SavingWidget(QtWidgets.QWidget):
                 del self.args["output_name"]
 
     @QtCore.Slot(bool, bool)
-    def enable_disable_freq_last(self, checked: bool, is_freq: bool):
+    def enable_disable_freq_last(self, checked: bool, is_freq: bool) -> None:
         if is_freq:
             if checked:
                 self.widget.save_freq_selector.setEnabled(True)
@@ -157,7 +162,7 @@ class SavingWidget(QtWidgets.QWidget):
                         del self.args[name]
 
     @QtCore.Slot(bool)
-    def enable_disable_ratio(self, checked: bool):
+    def enable_disable_ratio(self, checked: bool) -> None:
         if checked:
             self.widget.save_ratio_input.setEnabled(True)
             self.edit_args("save_n_epoch_ratio", self.widget.save_ratio_input.value(), True)
@@ -167,7 +172,7 @@ class SavingWidget(QtWidgets.QWidget):
                 del self.args['save_n_epoch_ratio']
 
     @QtCore.Slot(bool)
-    def enable_disable_save_state(self, checked: bool):
+    def enable_disable_save_state(self, checked: bool) -> None:
         self.widget.save_last_state_enable.setEnabled(checked)
         if checked:
             self.enable_disable_last_state(self.widget.save_last_state_enable.isChecked())
@@ -178,7 +183,7 @@ class SavingWidget(QtWidgets.QWidget):
                 del self.args['save_state']
 
     @QtCore.Slot(bool)
-    def enable_disable_last_state(self, checked: bool):
+    def enable_disable_last_state(self, checked: bool) -> None:
         self.widget.save_last_state_selector.setEnabled(checked)
         self.widget.save_last_state_input.setEnabled(checked)
         if checked:
@@ -189,7 +194,7 @@ class SavingWidget(QtWidgets.QWidget):
                     del self.args[name]
 
     @QtCore.Slot(int)
-    def set_last_state(self, index: int):
+    def set_last_state(self, index: int) -> None:
         names = ['save_last_n_epochs_state', 'save_last_n_steps_state']
         for name in names:
             if name in self.args:
@@ -197,7 +202,7 @@ class SavingWidget(QtWidgets.QWidget):
         self.edit_args(names[index], self.widget.save_last_state_input.value(), True)
 
     @QtCore.Slot(bool)
-    def enable_disable_resume(self, checked: bool):
+    def enable_disable_resume(self, checked: bool) -> None:
         self.widget.resume_selector.setEnabled(checked)
         self.widget.resume_input.setEnabled(checked)
         if checked:
@@ -207,7 +212,7 @@ class SavingWidget(QtWidgets.QWidget):
                 del self.args['resume']
             self.widget.resume_input.setStyleSheet("")
 
-    def get_args(self, input_args: dict):
+    def get_args(self, input_args: dict) -> None:
         valid = self.widget.output_folder_input.update_stylesheet()
         if valid and self.widget.resume_enable.isChecked():
             valid = self.widget.resume_input.update_stylesheet()
@@ -218,10 +223,10 @@ class SavingWidget(QtWidgets.QWidget):
                 self.colap.title_frame.update_arrow(False)
                 self.colap.title_frame.setChecked(True)
 
-    def get_dataset_args(self, input_args: dict):
+    def get_dataset_args(self, input_args: dict) -> None:
         return
 
-    def load_args(self, args: dict):
+    def load_args(self, args: dict) -> None:
         if self.name not in args:
             return
         args = args[self.name]['args']

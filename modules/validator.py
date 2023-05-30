@@ -1,7 +1,8 @@
 import os
+from typing import Union
 
 
-def separate_and_validate(args: dict):
+def separate_and_validate(args: dict) -> tuple[Union[dict, None], Union[dict, None]]:
     new_args = {}
     new_dataset_args = {}
     for section, sec_args in args.items():
@@ -18,13 +19,20 @@ def separate_and_validate(args: dict):
     return valid, valid_dataset
 
 
-def validate_args(args: dict):
+def validate_args(args: dict) -> Union[dict, None]:
     print("starting validation of args...")
+    file_inputs = ["pretrained_model_name_or_path", "output_dir"]
     # if one or more sections report a None, then at least one thing isn't filled out correctly
     new_args = {}
     for key, value in args.items():
         if not value:
             return None
+        if key == "sample_args":
+            if "sample_prompts" not in value or not os.path.exists(value['sample_prompts']):
+                return None
+        if key == 'logging_args':
+            if 'logging_dir' not in value or not os.path.exists(value['logging_dir']):
+                return None
         for arg, val in value.items():
             if arg == "network_args":
                 vals = []
@@ -43,12 +51,15 @@ def validate_args(args: dict):
             if not val:
                 continue
             new_args[arg] = val
+    for file in file_inputs:
+        if file not in new_args or not os.path.exists(new_args[file]):
+            return None
     if "network_module" not in new_args:
         new_args['network_module'] = "networks.lora"
     return new_args
 
 
-def validate_dataset_args(args: dict):
+def validate_dataset_args(args: dict) -> Union[dict, None]:
     print("starting validation of dataset_args...")
     new_args = {"general": {}, "subsets": []}
     for key, value in args.items():
@@ -63,20 +74,37 @@ def validate_dataset_args(args: dict):
                 continue
             new_args['general'][arg] = val
     for item in args['subsets']:
-        new_args['subsets'].append(validate_subset(item))
+        sub = validate_subset(item)
+        if not sub:
+            return None
+        new_args['subsets'].append(sub)
     return new_args
 
 
-def validate_subset(args: dict):
+def validate_subset(args: dict) -> Union[dict, None]:
     new_args = {}
     for key, value in args.items():
         if not value:
             continue
         new_args[key] = value
+    if "image_dir" not in new_args or not os.path.exists(new_args['image_dir']):
+        return None
     return new_args
 
 
-def calculate_steps(subsets: list, epochs: int, batch_size: int):
+def validate_warmup_ratio(args: dict, dataset: dict) -> None:
+    if "warmup_ratio" not in args:
+        return
+    if 'max_train_steps' in args:
+        steps = args['max_train_steps']
+    else:
+        steps = calculate_steps(dataset['subsets'], args['max_train_epochs'], dataset['general']['batch_size'])
+    steps = steps * args['warmup_ratio']
+    del args['warmup_ratio']
+    args['warmup_steps'] = steps
+
+
+def calculate_steps(subsets: list, epochs: int, batch_size: int) -> int:
     steps = 0
     for subset in subsets:
         image_count = 0
@@ -86,5 +114,5 @@ def calculate_steps(subsets: list, epochs: int, batch_size: int):
                 continue
             image_count += 1
         steps += (image_count * subset['num_repeats'])
-    steps = (steps * epochs) / batch_size
+    steps = (steps * epochs) // batch_size
     return steps

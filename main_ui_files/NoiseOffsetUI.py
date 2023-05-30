@@ -4,7 +4,7 @@ from ui_files.NoiseOffsetUI import Ui_noise_offset_UI
 
 
 class NoiseOffsetWidget(QtWidgets.QWidget):
-    def __init__(self, parent: QtWidgets.QWidget = None):
+    def __init__(self, parent: QtWidgets.QWidget = None) -> None:
         super(NoiseOffsetWidget, self).__init__(parent)
 
         self.args = {}
@@ -30,7 +30,7 @@ class NoiseOffsetWidget(QtWidgets.QWidget):
         self.widget.noise_offset_group.clicked.connect(self.enable_disable)
 
     @QtCore.Slot(int)
-    def pyramid_switch(self, index: int):
+    def pyramid_switch(self, index: int) -> None:
         if index == 0:
             self.widget.pyramid_discount_input.setEnabled(False)
             self.widget.pyramid_iteration_input.setEnabled(False)
@@ -44,28 +44,28 @@ class NoiseOffsetWidget(QtWidgets.QWidget):
                          "multires_noise_discount": self.widget.pyramid_discount_input.value()}
 
     @QtCore.Slot(str, object)
-    def edit_args(self, name: str, value: object):
+    def edit_args(self, name: str, value: object) -> None:
         self.args[name] = value
 
     @QtCore.Slot()
-    def enable_disable(self):
+    def enable_disable(self) -> None:
         checked = self.widget.noise_offset_group.isChecked()
         if not checked:
             self.args = {}
         else:
             self.pyramid_switch(self.widget.noise_offset_selector.currentIndex())
 
-    def get_args(self, input_args: dict):
+    def get_args(self, input_args: dict) -> None:
         if not self.widget.noise_offset_group.isChecked():
             if "noise_args" in input_args:
                 del input_args['noise_args']
             return
         input_args['noise_args'] = self.args
 
-    def get_dataset_args(self, input_args: dict):
+    def get_dataset_args(self, input_args: dict) -> None:
         pass
 
-    def load_args(self, args: dict):
+    def load_args(self, args: dict) -> None:
         if self.name not in args:
             return
         args = args[self.name].get("args", None)

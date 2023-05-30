@@ -5,7 +5,7 @@ from modules.LineEditHighlight import LineEditWithHighlight
 
 
 class OptimizerWidget(QtWidgets.QWidget):
-    def __init__(self, parent: QtWidgets.QWidget = None):
+    def __init__(self, parent: QtWidgets.QWidget = None) -> None:
         super(OptimizerWidget, self).__init__(parent)
         self.setLayout(QtWidgets.QVBoxLayout())
         self.args = {"optimizer_type": "AdamW", "lr_scheduler": "cosine", "learning_rate": 1e-4,
@@ -39,7 +39,7 @@ class OptimizerWidget(QtWidgets.QWidget):
         self.widget.min_snr_enable.clicked.connect(self.enable_disable_gamma)
 
     @QtCore.Slot(str, object, bool)
-    def edit_args(self, name: str, value: object, optional: bool = False):
+    def edit_args(self, name: str, value: object, optional: bool = False) -> None:
         if not optional:
             if isinstance(value, str):
                 value = value.replace(" ", "_")
@@ -54,7 +54,7 @@ class OptimizerWidget(QtWidgets.QWidget):
                 del self.args[name]
 
     @QtCore.Slot(str, str, bool)
-    def edit_lr(self, name: str, value: str, optional: bool = False):
+    def edit_lr(self, name: str, value: str, optional: bool = False) -> None:
         if not optional:
             try:
                 value = float(value)
@@ -74,7 +74,7 @@ class OptimizerWidget(QtWidgets.QWidget):
                 del self.args[name]
 
     @QtCore.Slot(str)
-    def edit_scheduler(self, value: str):
+    def edit_scheduler(self, value: str) -> None:
         value = value.replace(" ", "_")
         if "lr_scheduler_num_cycles" in self.args:
             del self.args["lr_scheduler_num_cycles"]
@@ -94,7 +94,7 @@ class OptimizerWidget(QtWidgets.QWidget):
         self.args["lr_scheduler"] = value
 
     @QtCore.Slot(bool, LineEditWithHighlight, str)
-    def enable_disable_lr(self, checked: bool, elem: LineEditWithHighlight, name: str):
+    def enable_disable_lr(self, checked: bool, elem: LineEditWithHighlight, name: str) -> None:
         if checked:
             elem.setEnabled(True)
             self.edit_lr(name, elem.text(), True)
@@ -104,7 +104,7 @@ class OptimizerWidget(QtWidgets.QWidget):
                 del self.args[name]
 
     @QtCore.Slot(bool)
-    def enable_disable_warmup(self, checked: bool):
+    def enable_disable_warmup(self, checked: bool) -> None:
         if checked:
             self.widget.warmup_ratio_input.setEnabled(True)
             self.edit_args("warmup_ratio", self.widget.warmup_ratio_input.value(), True)
@@ -114,7 +114,7 @@ class OptimizerWidget(QtWidgets.QWidget):
                 del self.args['warmup_ratio']
 
     @QtCore.Slot(bool)
-    def enable_disable_gamma(self, checked: bool):
+    def enable_disable_gamma(self, checked: bool) -> None:
         if checked:
             self.widget.min_snr_input.setEnabled(True)
             self.edit_args("min_snr_gamma", self.widget.min_snr_input.value(), True)
@@ -123,13 +123,13 @@ class OptimizerWidget(QtWidgets.QWidget):
             if "min_snr_gamma" in self.args:
                 del self.args['min_snr_gamma']
 
-    def get_args(self, input_args: dict):
+    def get_args(self, input_args: dict) -> None:
         input_args['optimizer_args'] = self.args
 
-    def get_dataset_args(self, input_args: dict):
+    def get_dataset_args(self, input_args: dict) -> None:
         pass
 
-    def load_args(self, args: dict):
+    def load_args(self, args: dict) -> None:
         if self.name not in args:
             return
         args = args[self.name]['args']

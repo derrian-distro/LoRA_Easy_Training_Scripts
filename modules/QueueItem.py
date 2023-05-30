@@ -4,7 +4,7 @@ from PySide6 import QtWidgets, QtCore, QtGui
 class QueueItem(QtWidgets.QPushButton):
     QueueSelected = QtCore.Signal(object)
 
-    def __init__(self, parent: QtWidgets.QWidget = None):
+    def __init__(self, parent: QtWidgets.QWidget = None) -> None:
         super(QueueItem, self).__init__(parent)
         self.queue_file = None
         self.setCheckable(True)
@@ -13,7 +13,7 @@ class QueueItem(QtWidgets.QPushButton):
         self.clicked.connect(self.get_queue_file)
 
     @QtCore.Slot()
-    def get_queue_file(self):
+    def get_queue_file(self) -> None:
         if self.isChecked():
             self.QueueSelected.emit(self)
 

@@ -39,10 +39,10 @@ class DragDropLineEdit(QtWidgets.QLineEdit):
                 return
         self.setText(str(event.mimeData().urls()[0].toLocalFile()))
 
-    def setName(self, name: str):
+    def setName(self, name: str) -> None:
         self.name = name
 
-    def setMode(self, mode: str, extensions: [str] = None):
+    def setMode(self, mode: str, extensions: [str] = None) -> None:
         self.mode = mode
         if extensions:
             self.extensions = extensions
