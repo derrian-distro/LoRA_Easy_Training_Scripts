@@ -1,6 +1,7 @@
 from PySide6 import QtWidgets, QtCore
 from ui_files.NetworkUI import Ui_network_ui
 from modules.CollapsibleWidget import CollapsibleWidget
+from modules.BlockWeightWidgets import BlockWidget, BlockWeightWidget
 
 
 class NetworkWidget(QtWidgets.QWidget):
@@ -18,11 +19,34 @@ class NetworkWidget(QtWidgets.QWidget):
         self.widget = QtWidgets.QWidget()
         self.ui = Ui_network_ui()
         self.ui.setupUi(self.widget)
+        self.block_widgets_state = [[self.ui.block_weight_widget, False], [self.ui.dim_block_widget, False],
+                                    [self.ui.alpha_block_widget, False], [self.ui.conv_block_widget, False],
+                                    [self.ui.conv_alpha_block_widget, False]]
+        self.block_widgets = [BlockWeightWidget(), BlockWidget(mode='int', base_value=32),
+                              BlockWidget(mode="float", base_value=16.00), BlockWidget(mode='int', base_value=32),
+                              BlockWidget(mode='float', base_value=16.00)]
+
+        self.ui.block_weight_scroll_widget.layout().setAlignment(QtCore.Qt.AlignmentFlag.AlignTop)
+        self.ui.block_weight_scroll_widget.layout().setSpacing(0)
+
+        for i, elem in enumerate(self.block_widgets_state):
+            elem[0].set_extra('enable')
+            elem[0].title_frame.setEnabled(False)
+            elem[0].add_widget(self.block_widgets[i], 'main_widget')
+        self.ui.block_weight_widget.title_frame.setText("Block Weights")
+        self.ui.dim_block_widget.title_frame.setText("Block Dims")
+        self.ui.alpha_block_widget.title_frame.setText("Block Alphas")
+        self.ui.conv_block_widget.title_frame.setText("Block Conv Dims")
+        self.ui.conv_alpha_block_widget.title_frame.setText("Block Conv Alphas")
 
         self.ui.network_dim_input.valueChanged.connect(lambda x: self.edit_args("network_dim", x))
+        self.ui.network_dim_input.valueChanged.connect(self.block_widgets[1].update_base_value)
         self.ui.network_alpha_input.valueChanged.connect(lambda x: self.edit_args("network_alpha", round(x, 2)))
+        self.ui.network_alpha_input.valueChanged.connect(self.block_widgets[2].update_base_value)
         self.ui.conv_dim_input.valueChanged.connect(lambda x: self.edit_network_args("conv_dim", x))
+        self.ui.conv_dim_input.valueChanged.connect(self.block_widgets[3].update_base_value)
         self.ui.conv_alpha_input.valueChanged.connect(lambda x: self.edit_network_args("conv_alpha", round(x, 2)))
+        self.ui.conv_alpha_input.valueChanged.connect(self.block_widgets[4].update_base_value)
         self.ui.dylora_unit_input.valueChanged.connect(lambda x: self.edit_network_args("unit", x))
         self.ui.algo_select.currentTextChanged.connect(self.algo_changed)
         self.ui.unet_te_both_select.currentTextChanged.connect(self.change_training_parts)
@@ -86,12 +110,99 @@ class NetworkWidget(QtWidgets.QWidget):
             else:
                 if "algo" in self.args['network_args']:
                     del self.args['network_args']['algo']
+        self.change_block_weight_enable(name)
+
+    def change_block_weight_enable(self, algo: str):
+        if algo.lower() == 'lora':
+            for i, elem in enumerate(self.block_widgets_state):
+                if i < 3:
+                    elem[0].setEnabled(True)
+                    if elem[1]:
+                        elem[0].extra_elem.setChecked(True)
+                        elem[0].enable_disable(True)
+                    elem[1] = False
+                else:
+                    elem[0].setEnabled(False)
+                    if elem[0].extra_elem.isChecked():
+                        print(elem[0].title_frame.text())
+                        elem[1] = True
+                        elem[0].extra_elem.setChecked(False)
+                        elem[0].enable_disable(False)
+        elif algo.lower() == 'locon':
+            for elem in self.block_widgets_state:
+                elem[0].setEnabled(True)
+                if elem[1]:
+                    elem[0].extra_elem.setChecked(True)
+                    elem[0].enable_disable(True)
+                elem[1] = False
+        else:
+            for elem in self.block_widgets_state:
+                elem[0].setEnabled(False)
+                if elem[0].extra_elem.isChecked():
+                    elem[1] = True
+                    elem[0].extra_elem.setChecked(False)
+                    elem[0].enable_disable(False)
 
     def get_args(self, input_args: dict) -> None:
         input_args['network_args'] = self.args
+        self.get_block_args(input_args['network_args'])
 
     def get_dataset_args(self, input_args: dict) -> None:
         pass
+
+    def get_block_args(self, input_args: dict) -> None:
+        if "network_args" not in input_args:
+            input_args['network_args'] = {}
+        names = [['down_lr_weight', 'mid_lr_weight', 'up_lr_weight'], 'block_dims',
+                 'block_alphas', 'conv_block_dims', 'conv_block_alphas']
+        for i, elem in enumerate(self.block_widgets_state):
+            if not elem[0].extra_elem.isChecked():
+                continue
+            vals = self.block_widgets[i].vals
+            name = names[i]
+            if isinstance(name, list):
+                for n in name:
+                    input_args['network_args'][n] = vals[n]
+            else:
+                input_args['network_args'][name] = vals
+
+    def load_block_args(self, input_args: dict) -> None:
+        net_args = input_args['network_args']
+        inputs = ['block_dims', 'block_alphas', 'conv_block_dims', 'conv_block_alphas']
+        if "down_lr_weight" in net_args:
+            self.block_widgets_state[0][0].extra_elem.setChecked(True)
+            self.block_widgets_state[0][0].enable_disable(True)
+            self.block_widgets_state[0][1] = False
+            for i, val in enumerate(net_args['down_lr_weight']):
+                self.block_widgets[0].vals['down_lr_weight'][i] = val
+                self.block_widgets[0].down_widgets[i][1].setValue(val)
+            self.block_widgets[0].vals['mid_lr_weight'] = net_args['mid_lr_weight']
+            self.block_widgets[0].mid_widget[1].setValue(net_args['mid_lr_weight'])
+            for i, val in enumerate(net_args['up_lr_weight']):
+                self.block_widgets[0].vals['up_lr_weight'][i] = val
+                self.block_widgets[0].up_widgets[i][1].setValue(val)
+        else:
+            self.block_widgets_state[0][0].extra_elem.setChecked(False)
+            self.block_widgets_state[0][0].enable_disable(False)
+            self.block_widgets_state[0][1] = False
+        for i, name in enumerate(inputs):
+            vals = net_args.get(name, None)
+            if vals:
+                self.block_widgets_state[i + 1][0].extra_elem.setChecked(True)
+                self.block_widgets_state[i + 1][0].enable_disable(True)
+                self.block_widgets_state[i + 1][1] = False
+                for j, val in enumerate(vals):
+                    self.block_widgets[i + 1].vals[j] = val
+                    if j < 12:
+                        self.block_widgets[i + 1].down_widgets[j][1].setValue(val)
+                    elif j == 12:
+                        self.block_widgets[i + 1].mid_widget[1].setValue(val)
+                    else:
+                        self.block_widgets[i + 1].up_widgets[j % 12][1].setValue(val)
+            else:
+                self.block_widgets_state[i + 1][0].extra_elem.setChecked(False)
+                self.block_widgets_state[i + 1][0].enable_disable(False)
+                self.block_widgets_state[i + 1][1] = False
 
     def load_args(self, args: dict) -> None:
         if self.name not in args:
@@ -113,5 +224,8 @@ class NetworkWidget(QtWidgets.QWidget):
                 self.ui.algo_select.setCurrentIndex(index)
             elif "conv_dim" in args['network_args']:
                 self.ui.algo_select.setCurrentIndex(1)
+            else:
+                self.ui.algo_select.setCurrentIndex(0)
+            self.load_block_args(args)
         else:
             self.ui.algo_select.setCurrentIndex(0)

@@ -75,6 +75,9 @@ class SavingWidget(QtWidgets.QWidget):
         self.widget.resume_selector.clicked.connect(lambda: self.set_from_dialog(True))
         self.widget.resume_enable.clicked.connect(self.enable_disable_resume)
 
+        self.widget.save_tags_enable.clicked.connect(lambda x: self.edit_args("tag_occurrence", x, True))
+        self.widget.save_toml_on_train_enable.clicked.connect(lambda x: self.edit_args("save_toml", x, True))
+
     @QtCore.Slot(str, object, bool, QtWidgets.QWidget)
     def edit_args(self, name: str, value: object, optional: bool = False, elem: QtWidgets.QWidget = None) -> None:
         if elem:
@@ -274,3 +277,11 @@ class SavingWidget(QtWidgets.QWidget):
         self.widget.resume_input.setText(args.get("resume", ""))
         self.widget.resume_enable.setChecked(checked)
         self.enable_disable_resume(checked)
+
+        checked = args.get("tag_occurrence", False)
+        self.widget.save_tags_enable.setChecked(checked)
+        self.edit_args("tag_occurrence", checked, True)
+
+        checked = args.get("save_toml", False)
+        self.widget.save_toml_on_train_enable.setChecked(checked)
+        self.edit_args("save_toml", checked, True)
