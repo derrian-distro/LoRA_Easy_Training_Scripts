@@ -65,6 +65,9 @@ and has a bunch of features to it to make using it as easy as I could. So lets s
 You are also able to collapse and expand the sections of the "args list", so that way you can have open only the section you are working on at the moment.
 ![Args manipulation gif](https://raw.githubusercontent.com/derrian-distro/LoRA_Easy_Training_Scripts/main/images_gifs/args_list_manipulation.gif)
 
+Block Weight training is possible through setting the weights, dims, and alpha in the network args.
+![Block weight gif]()
+
 Pretty much every file selector has two ways to add a file without having to type it all in, a proper file dialog, and a way to drag and drop the value in!
 ![File select or dialog gif](https://raw.githubusercontent.com/derrian-distro/LoRA_Easy_Training_Scripts/main/images_gifs/file_selector.gif)
 
