@@ -15,19 +15,31 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QFont, QFontDatabase, QGradient, QIcon,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
-from PySide6.QtWidgets import (QApplication, QFormLayout, QLabel, QSizePolicy,
-    QWidget)
+from PySide6.QtWidgets import (QApplication, QFormLayout, QLabel, QScrollArea,
+    QSizePolicy, QTabWidget, QVBoxLayout, QWidget)
 
+from modules.CollapsibleWidget import CollapsibleWidget
 from modules.ScrollOnSelect import (ComboBox, DoubleSpinBox, SpinBox)
 
 class Ui_network_ui(object):
     def setupUi(self, network_ui):
         if not network_ui.objectName():
             network_ui.setObjectName(u"network_ui")
-        network_ui.resize(400, 233)
-        self.formLayout = QFormLayout(network_ui)
-        self.formLayout.setObjectName(u"formLayout")
-        self.algo_select = ComboBox(network_ui)
+        network_ui.resize(400, 480)
+        network_ui.setMinimumSize(QSize(0, 0))
+        self.verticalLayout = QVBoxLayout(network_ui)
+        self.verticalLayout.setObjectName(u"verticalLayout")
+        self.verticalLayout.setContentsMargins(0, 0, 0, 0)
+        self.tabWidget = QTabWidget(network_ui)
+        self.tabWidget.setObjectName(u"tabWidget")
+        self.tabWidget.setEnabled(True)
+        self.tabWidget.setTabPosition(QTabWidget.North)
+        self.tabWidget.setTabShape(QTabWidget.Rounded)
+        self.main_tab = QWidget()
+        self.main_tab.setObjectName(u"main_tab")
+        self.formLayout_2 = QFormLayout(self.main_tab)
+        self.formLayout_2.setObjectName(u"formLayout_2")
+        self.algo_select = ComboBox(self.main_tab)
         self.algo_select.addItem("")
         self.algo_select.addItem("")
         self.algo_select.addItem("")
@@ -37,96 +49,152 @@ class Ui_network_ui(object):
         self.algo_select.setObjectName(u"algo_select")
         self.algo_select.setFocusPolicy(Qt.StrongFocus)
 
-        self.formLayout.setWidget(0, QFormLayout.SpanningRole, self.algo_select)
+        self.formLayout_2.setWidget(0, QFormLayout.SpanningRole, self.algo_select)
 
-        self.network_dim_label = QLabel(network_ui)
+        self.network_dim_label = QLabel(self.main_tab)
         self.network_dim_label.setObjectName(u"network_dim_label")
 
-        self.formLayout.setWidget(1, QFormLayout.LabelRole, self.network_dim_label)
+        self.formLayout_2.setWidget(1, QFormLayout.LabelRole, self.network_dim_label)
 
-        self.network_dim_input = SpinBox(network_ui)
+        self.network_dim_input = SpinBox(self.main_tab)
         self.network_dim_input.setObjectName(u"network_dim_input")
         self.network_dim_input.setFocusPolicy(Qt.StrongFocus)
         self.network_dim_input.setMinimum(1)
         self.network_dim_input.setMaximum(16777215)
         self.network_dim_input.setValue(32)
 
-        self.formLayout.setWidget(1, QFormLayout.FieldRole, self.network_dim_input)
+        self.formLayout_2.setWidget(1, QFormLayout.FieldRole, self.network_dim_input)
 
-        self.network_alpha_label = QLabel(network_ui)
+        self.network_alpha_label = QLabel(self.main_tab)
         self.network_alpha_label.setObjectName(u"network_alpha_label")
 
-        self.formLayout.setWidget(2, QFormLayout.LabelRole, self.network_alpha_label)
+        self.formLayout_2.setWidget(2, QFormLayout.LabelRole, self.network_alpha_label)
 
-        self.network_alpha_input = DoubleSpinBox(network_ui)
+        self.network_alpha_input = DoubleSpinBox(self.main_tab)
         self.network_alpha_input.setObjectName(u"network_alpha_input")
         self.network_alpha_input.setFocusPolicy(Qt.StrongFocus)
         self.network_alpha_input.setDecimals(2)
         self.network_alpha_input.setMaximum(16777215.000000000000000)
         self.network_alpha_input.setValue(16.000000000000000)
 
-        self.formLayout.setWidget(2, QFormLayout.FieldRole, self.network_alpha_input)
+        self.formLayout_2.setWidget(2, QFormLayout.FieldRole, self.network_alpha_input)
 
-        self.unet_te_both_label = QLabel(network_ui)
+        self.unet_te_both_label = QLabel(self.main_tab)
         self.unet_te_both_label.setObjectName(u"unet_te_both_label")
 
-        self.formLayout.setWidget(3, QFormLayout.LabelRole, self.unet_te_both_label)
+        self.formLayout_2.setWidget(3, QFormLayout.LabelRole, self.unet_te_both_label)
 
-        self.unet_te_both_select = ComboBox(network_ui)
+        self.unet_te_both_select = ComboBox(self.main_tab)
         self.unet_te_both_select.addItem("")
         self.unet_te_both_select.addItem("")
         self.unet_te_both_select.addItem("")
         self.unet_te_both_select.setObjectName(u"unet_te_both_select")
         self.unet_te_both_select.setFocusPolicy(Qt.StrongFocus)
 
-        self.formLayout.setWidget(3, QFormLayout.FieldRole, self.unet_te_both_select)
+        self.formLayout_2.setWidget(3, QFormLayout.FieldRole, self.unet_te_both_select)
 
-        self.conv_dim_label = QLabel(network_ui)
+        self.conv_dim_label = QLabel(self.main_tab)
         self.conv_dim_label.setObjectName(u"conv_dim_label")
         self.conv_dim_label.setEnabled(True)
 
-        self.formLayout.setWidget(4, QFormLayout.LabelRole, self.conv_dim_label)
+        self.formLayout_2.setWidget(4, QFormLayout.LabelRole, self.conv_dim_label)
 
-        self.conv_dim_input = SpinBox(network_ui)
+        self.conv_dim_input = SpinBox(self.main_tab)
         self.conv_dim_input.setObjectName(u"conv_dim_input")
         self.conv_dim_input.setEnabled(False)
         self.conv_dim_input.setFocusPolicy(Qt.StrongFocus)
         self.conv_dim_input.setMaximum(16777215)
         self.conv_dim_input.setValue(32)
 
-        self.formLayout.setWidget(4, QFormLayout.FieldRole, self.conv_dim_input)
+        self.formLayout_2.setWidget(4, QFormLayout.FieldRole, self.conv_dim_input)
 
-        self.conv_alpha_label = QLabel(network_ui)
+        self.conv_alpha_label = QLabel(self.main_tab)
         self.conv_alpha_label.setObjectName(u"conv_alpha_label")
         self.conv_alpha_label.setEnabled(True)
 
-        self.formLayout.setWidget(5, QFormLayout.LabelRole, self.conv_alpha_label)
+        self.formLayout_2.setWidget(5, QFormLayout.LabelRole, self.conv_alpha_label)
 
-        self.conv_alpha_input = DoubleSpinBox(network_ui)
+        self.conv_alpha_input = DoubleSpinBox(self.main_tab)
         self.conv_alpha_input.setObjectName(u"conv_alpha_input")
         self.conv_alpha_input.setEnabled(False)
         self.conv_alpha_input.setFocusPolicy(Qt.StrongFocus)
         self.conv_alpha_input.setMaximum(16777215.000000000000000)
         self.conv_alpha_input.setValue(16.000000000000000)
 
-        self.formLayout.setWidget(5, QFormLayout.FieldRole, self.conv_alpha_input)
+        self.formLayout_2.setWidget(5, QFormLayout.FieldRole, self.conv_alpha_input)
 
-        self.dylora_unit_label = QLabel(network_ui)
+        self.dylora_unit_label = QLabel(self.main_tab)
         self.dylora_unit_label.setObjectName(u"dylora_unit_label")
         self.dylora_unit_label.setEnabled(True)
 
-        self.formLayout.setWidget(6, QFormLayout.LabelRole, self.dylora_unit_label)
+        self.formLayout_2.setWidget(6, QFormLayout.LabelRole, self.dylora_unit_label)
 
-        self.dylora_unit_input = SpinBox(network_ui)
+        self.dylora_unit_input = SpinBox(self.main_tab)
         self.dylora_unit_input.setObjectName(u"dylora_unit_input")
         self.dylora_unit_input.setEnabled(False)
         self.dylora_unit_input.setFocusPolicy(Qt.StrongFocus)
         self.dylora_unit_input.setValue(4)
 
-        self.formLayout.setWidget(6, QFormLayout.FieldRole, self.dylora_unit_input)
+        self.formLayout_2.setWidget(6, QFormLayout.FieldRole, self.dylora_unit_input)
+
+        self.tabWidget.addTab(self.main_tab, "")
+        self.block_weight_tab = QWidget()
+        self.block_weight_tab.setObjectName(u"block_weight_tab")
+        self.verticalLayout_2 = QVBoxLayout(self.block_weight_tab)
+        self.verticalLayout_2.setObjectName(u"verticalLayout_2")
+        self.verticalLayout_2.setContentsMargins(0, 0, 0, 0)
+        self.block_weight_scroll_area = QScrollArea(self.block_weight_tab)
+        self.block_weight_scroll_area.setObjectName(u"block_weight_scroll_area")
+        self.block_weight_scroll_area.setWidgetResizable(True)
+        self.block_weight_scroll_widget = QWidget()
+        self.block_weight_scroll_widget.setObjectName(u"block_weight_scroll_widget")
+        self.block_weight_scroll_widget.setGeometry(QRect(0, 0, 394, 227))
+        self.verticalLayout_3 = QVBoxLayout(self.block_weight_scroll_widget)
+        self.verticalLayout_3.setObjectName(u"verticalLayout_3")
+        self.verticalLayout_3.setContentsMargins(0, 0, 0, 0)
+        self.block_weight_widget = CollapsibleWidget(self.block_weight_scroll_widget)
+        self.block_weight_widget.setObjectName(u"block_weight_widget")
+        self.block_weight_widget.setEnabled(True)
+
+        self.verticalLayout_3.addWidget(self.block_weight_widget)
+
+        self.dim_block_widget = CollapsibleWidget(self.block_weight_scroll_widget)
+        self.dim_block_widget.setObjectName(u"dim_block_widget")
+        self.dim_block_widget.setEnabled(True)
+
+        self.verticalLayout_3.addWidget(self.dim_block_widget)
+
+        self.alpha_block_widget = CollapsibleWidget(self.block_weight_scroll_widget)
+        self.alpha_block_widget.setObjectName(u"alpha_block_widget")
+        self.alpha_block_widget.setEnabled(True)
+
+        self.verticalLayout_3.addWidget(self.alpha_block_widget)
+
+        self.conv_block_widget = CollapsibleWidget(self.block_weight_scroll_widget)
+        self.conv_block_widget.setObjectName(u"conv_block_widget")
+        self.conv_block_widget.setEnabled(False)
+
+        self.verticalLayout_3.addWidget(self.conv_block_widget)
+
+        self.conv_alpha_block_widget = CollapsibleWidget(self.block_weight_scroll_widget)
+        self.conv_alpha_block_widget.setObjectName(u"conv_alpha_block_widget")
+        self.conv_alpha_block_widget.setEnabled(False)
+
+        self.verticalLayout_3.addWidget(self.conv_alpha_block_widget)
+
+        self.block_weight_scroll_area.setWidget(self.block_weight_scroll_widget)
+
+        self.verticalLayout_2.addWidget(self.block_weight_scroll_area)
+
+        self.tabWidget.addTab(self.block_weight_tab, "")
+
+        self.verticalLayout.addWidget(self.tabWidget)
 
 
         self.retranslateUi(network_ui)
+
+        self.tabWidget.setCurrentIndex(0)
+
 
         QMetaObject.connectSlotsByName(network_ui)
     # setupUi
@@ -171,5 +239,7 @@ class Ui_network_ui(object):
 #if QT_CONFIG(tooltip)
         self.dylora_unit_input.setToolTip(QCoreApplication.translate("network_ui", u"<html><head/><body><p>The unit is the unit for dividing rank. so if you have dim 16, unit 4, then it can learn 4 lora models of dims 4, 8, 12, and 16.</p></body></html>", None))
 #endif // QT_CONFIG(tooltip)
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.main_tab), QCoreApplication.translate("network_ui", u"Main Args", None))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.block_weight_tab), QCoreApplication.translate("network_ui", u"Block Weights", None))
     # retranslateUi
 

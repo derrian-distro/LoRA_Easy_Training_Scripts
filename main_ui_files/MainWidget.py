@@ -61,6 +61,11 @@ class MainWidget(QtWidgets.QWidget):
             print("failed validation")
             return False
         validator.validate_warmup_ratio(args, dataset_args)
+        validator.validate_save_tags(args, dataset_args)
+        if "save_toml" in args:
+            del args['save_toml']
+            TomlFunctions.save_toml(self.save_args(), os.path.join(args['output_dir'],
+                                                                   f"auto_save_{args.get('output_name', 'last')}.toml"))
         self.create_config_args_file(args)
         self.create_dataset_args_file(dataset_args)
         print("validated, starting training...")
@@ -91,12 +96,17 @@ class MainWidget(QtWidgets.QWidget):
             try:
                 file = os.path.join("runtime_store", f"{self.queue_widget.elements[0].queue_file}.toml")
                 self.queue_widget.remove_first_from_queue()
-                args = TomlFunctions.load_toml(file)
-                args, dataset_args = validator.separate_and_validate(args)
+                base_args = TomlFunctions.load_toml(file)
+                args, dataset_args = validator.separate_and_validate(base_args)
                 if not args or not dataset_args:
                     print("some args are not valid, skipping.")
                     continue
                 validator.validate_warmup_ratio(args, dataset_args)
+                validator.validate_save_tags(args, dataset_args)
+                if "save_toml" in args:
+                    del args['save_toml']
+                    TomlFunctions.save_toml(base_args, os.path.join(args['output_dir'],
+                                                                    f"auto_save_{args.get('output_name', 'last')}.toml"))
                 self.create_config_args_file(args)
                 self.create_dataset_args_file(dataset_args)
                 print("validated, starting training...")
@@ -233,6 +243,8 @@ class ArgsWidget(QtWidgets.QWidget):
             args[widget.name] = {}
             if widget_args:
                 args[widget.name]['args'] = widget_args.copy()
+                if widget.name == 'network_args':
+                    widget.get_block_args(args[widget.name]['args'])
             if widget_dataset_args:
                 args[widget.name]['dataset_args'] = widget_dataset_args.copy()
         return args

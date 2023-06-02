@@ -41,6 +41,12 @@ def validate_args(args: dict) -> Union[dict, None]:
                         new_args['network_module'] = "lycoris.kohya"
                     if k == 'unit':
                         new_args['network_module'] = 'networks.dylora'
+                    if k in ['down_lr_weight', 'up_lr_weight', 'block_dims',
+                             'block_alphas', 'conv_block_dims', 'conv_block_alphas']:
+                        for i in range(len(v)):
+                            v[i] = str(v[i])
+                        vals.append(f"{k}={','.join(v)}")
+                        continue
                     vals.append(f"{k}={v}")
                 val = vals
             if arg == "optimizer_args":
@@ -102,6 +108,37 @@ def validate_warmup_ratio(args: dict, dataset: dict) -> None:
     steps = steps * args['warmup_ratio']
     del args['warmup_ratio']
     args['warmup_steps'] = steps
+
+
+def validate_save_tags(args: dict, dataset: dict) -> None:
+    if "tag_occurrence" not in args:
+        return
+    tags = {}
+    for subset in dataset['subsets']:
+        if not os.path.isdir(subset['image_dir']):
+            continue
+        for file in os.listdir(subset['image_dir']):
+            if not os.path.isfile(os.path.join(subset['image_dir'], file)):
+                continue
+            if os.path.splitext(file)[1] != subset['caption_extension']:
+                continue
+            get_tags_from_file(os.path.join(subset['image_dir'], file), tags)
+    output_list = {k: v for k, v in sorted(tags.items(), key=lambda item: item[1], reverse=True)}
+    with open(os.path.join(args['output_dir'], f"{args['output_name']}_tags.txt"), "w") as f:
+        f.write("Below is a list of keywords used during the training of this model:\n")
+        for k, v in output_list.items():
+            f.write(f"[{v}] {k}\n")
+    del args['tag_occurrence']
+
+
+def get_tags_from_file(file: str, tags: dict) -> None:
+    with open(file, 'r') as f:
+        temp = f.read().replace(", ", ",").split(",")
+        for tag in temp:
+            if tag in tags:
+                tags[tag] += 1
+            else:
+                tags[tag] = 1
 
 
 def calculate_steps(subsets: list, epochs: int, batch_size: int) -> int:

@@ -26,7 +26,7 @@ class Ui_saving_ui(object):
     def setupUi(self, saving_ui):
         if not saving_ui.objectName():
             saving_ui.setObjectName(u"saving_ui")
-        saving_ui.resize(515, 296)
+        saving_ui.resize(515, 324)
         saving_ui.setMinimumSize(QSize(515, 0))
         self.formLayout = QFormLayout(saving_ui)
         self.formLayout.setObjectName(u"formLayout")
@@ -50,6 +50,17 @@ class Ui_saving_ui(object):
 
 
         self.formLayout.setLayout(0, QFormLayout.FieldRole, self.horizontalLayout)
+
+        self.output_name_enable = QCheckBox(saving_ui)
+        self.output_name_enable.setObjectName(u"output_name_enable")
+
+        self.formLayout.setWidget(1, QFormLayout.LabelRole, self.output_name_enable)
+
+        self.output_name_input = LineEditWithHighlight(saving_ui)
+        self.output_name_input.setObjectName(u"output_name_input")
+        self.output_name_input.setEnabled(False)
+
+        self.formLayout.setWidget(1, QFormLayout.FieldRole, self.output_name_input)
 
         self.label_2 = QLabel(saving_ui)
         self.label_2.setObjectName(u"label_2")
@@ -191,17 +202,6 @@ class Ui_saving_ui(object):
 
         self.formLayout.setLayout(7, QFormLayout.FieldRole, self.horizontalLayout_4)
 
-        self.output_name_input = LineEditWithHighlight(saving_ui)
-        self.output_name_input.setObjectName(u"output_name_input")
-        self.output_name_input.setEnabled(False)
-
-        self.formLayout.setWidget(1, QFormLayout.FieldRole, self.output_name_input)
-
-        self.output_name_enable = QCheckBox(saving_ui)
-        self.output_name_enable.setObjectName(u"output_name_enable")
-
-        self.formLayout.setWidget(1, QFormLayout.LabelRole, self.output_name_enable)
-
         self.resume_enable = QCheckBox(saving_ui)
         self.resume_enable.setObjectName(u"resume_enable")
 
@@ -224,6 +224,21 @@ class Ui_saving_ui(object):
 
         self.formLayout.setLayout(8, QFormLayout.FieldRole, self.horizontalLayout_5)
 
+        self.horizontalLayout_7 = QHBoxLayout()
+        self.horizontalLayout_7.setObjectName(u"horizontalLayout_7")
+        self.save_tags_enable = QCheckBox(saving_ui)
+        self.save_tags_enable.setObjectName(u"save_tags_enable")
+
+        self.horizontalLayout_7.addWidget(self.save_tags_enable)
+
+        self.save_toml_on_train_enable = QCheckBox(saving_ui)
+        self.save_toml_on_train_enable.setObjectName(u"save_toml_on_train_enable")
+
+        self.horizontalLayout_7.addWidget(self.save_toml_on_train_enable)
+
+
+        self.formLayout.setLayout(9, QFormLayout.SpanningRole, self.horizontalLayout_7)
+
 
         self.retranslateUi(saving_ui)
 
@@ -238,6 +253,11 @@ class Ui_saving_ui(object):
 #endif // QT_CONFIG(tooltip)
         self.output_folder_input.setPlaceholderText(QCoreApplication.translate("saving_ui", u"Output Folder", None))
         self.output_folder_selector.setText("")
+        self.output_name_enable.setText(QCoreApplication.translate("saving_ui", u"Output Name", None))
+#if QT_CONFIG(tooltip)
+        self.output_name_input.setToolTip(QCoreApplication.translate("saving_ui", u"<html><head/><body><p>Replaces the default naming behavior so that it will output this name instead of &quot;last&quot;.</p></body></html>", None))
+#endif // QT_CONFIG(tooltip)
+        self.output_name_input.setPlaceholderText(QCoreApplication.translate("saving_ui", u"Output Name", None))
         self.label_2.setText(QCoreApplication.translate("saving_ui", u"Save Precision", None))
         self.save_precision_selector.setItemText(0, QCoreApplication.translate("saving_ui", u"fp16", None))
         self.save_precision_selector.setItemText(1, QCoreApplication.translate("saving_ui", u"bf16", None))
@@ -295,16 +315,19 @@ class Ui_saving_ui(object):
 #if QT_CONFIG(tooltip)
         self.save_last_state_input.setToolTip(QCoreApplication.translate("saving_ui", u"<html><head/><body><p>Works the exact same way as save last models, only it's for the state folders.</p></body></html>", None))
 #endif // QT_CONFIG(tooltip)
-#if QT_CONFIG(tooltip)
-        self.output_name_input.setToolTip(QCoreApplication.translate("saving_ui", u"<html><head/><body><p>Replaces the default naming behavior so that it will output this name instead of &quot;last&quot;.</p></body></html>", None))
-#endif // QT_CONFIG(tooltip)
-        self.output_name_input.setPlaceholderText(QCoreApplication.translate("saving_ui", u"Output Name", None))
-        self.output_name_enable.setText(QCoreApplication.translate("saving_ui", u"Output Name", None))
-        self.resume_enable.setText(QCoreApplication.translate("saving_ui", u"resume state", None))
+        self.resume_enable.setText(QCoreApplication.translate("saving_ui", u"Resume State", None))
 #if QT_CONFIG(tooltip)
         self.resume_input.setToolTip(QCoreApplication.translate("saving_ui", u"<html><head/><body><p>The folder path to a previous state so that you can resume training.</p></body></html>", None))
 #endif // QT_CONFIG(tooltip)
         self.resume_input.setPlaceholderText(QCoreApplication.translate("saving_ui", u"Folder To Resume From", None))
         self.resume_selector.setText("")
+#if QT_CONFIG(tooltip)
+        self.save_tags_enable.setToolTip(QCoreApplication.translate("saving_ui", u"<html><head/><body><p>Saves a txt file that is a formatted list of all of the tags within all subsets provided when training is started</p></body></html>", None))
+#endif // QT_CONFIG(tooltip)
+        self.save_tags_enable.setText(QCoreApplication.translate("saving_ui", u"Save Tag Occurance File", None))
+#if QT_CONFIG(tooltip)
+        self.save_toml_on_train_enable.setToolTip(QCoreApplication.translate("saving_ui", u"<html><head/><body><p>Saves a toml file when training begins, as a way to prevent accidentally losing args</p></body></html>", None))
+#endif // QT_CONFIG(tooltip)
+        self.save_toml_on_train_enable.setText(QCoreApplication.translate("saving_ui", u"Save Toml File on Train", None))
     # retranslateUi
 
