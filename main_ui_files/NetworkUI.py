@@ -1,3 +1,5 @@
+from typing import Union
+
 from PySide6 import QtWidgets, QtCore
 from ui_files.NetworkUI import Ui_network_ui
 from modules.CollapsibleWidget import CollapsibleWidget
@@ -51,6 +53,13 @@ class NetworkWidget(QtWidgets.QWidget):
         self.ui.algo_select.currentTextChanged.connect(self.algo_changed)
         self.ui.unet_te_both_select.currentTextChanged.connect(self.change_training_parts)
 
+        self.ui.network_dropout_enable.clicked.connect(lambda x: self.enable_disable_dropout("network", x))
+        self.ui.network_dropout_input.valueChanged.connect(lambda x: self.edit_args('network_dropout', x))
+        self.ui.rank_dropout_enable.clicked.connect(lambda x: self.enable_disable_dropout('rank', x))
+        self.ui.rank_dropout_input.valueChanged.connect(lambda x: self.edit_network_args('rank_dropout', x))
+        self.ui.module_dropout_enable.clicked.connect(lambda x: self.enable_disable_dropout('module', x))
+        self.ui.module_dropout_input.valueChanged.connect(lambda x: self.edit_network_args('module_dropout', x))
+
         self.colap.add_widget(self.widget, "main_widget")
         self.layout().addWidget(self.colap)
 
@@ -81,6 +90,34 @@ class NetworkWidget(QtWidgets.QWidget):
             if "network_train_text_encoder_only" in self.args:
                 del self.args['network_train_text_encoder_only']
 
+    @QtCore.Slot(str, bool)
+    def enable_disable_dropout(self, mode: str, checked: bool):
+        if mode == 'network':
+            self.ui.network_dropout_input.setEnabled(checked)
+            if checked:
+                self.edit_args('network_dropout', self.ui.network_dropout_input.value())
+            else:
+                if 'network_dropout' in self.args:
+                    del self.args['network_dropout']
+        elif mode == 'rank':
+            self.ui.rank_dropout_input.setEnabled(checked)
+            if checked:
+                self.edit_network_args("rank_dropout", self.ui.rank_dropout_input.value())
+            else:
+                if 'network_args' not in self.args:
+                    return
+                if 'rank_dropout' in self.args['network_args']:
+                    del self.args['network_args']['rank_dropout']
+        else:
+            self.ui.module_dropout_input.setEnabled(checked)
+            if checked:
+                self.edit_network_args('module_dropout', self.ui.module_dropout_input.value())
+            else:
+                if 'network_args' not in self.args:
+                    return
+                if 'module_dropout' in self.args['network_args']:
+                    del self.args['network_args']['module_dropout']
+
     @QtCore.Slot(str)
     def algo_changed(self, name: str) -> None:
         if name == "LoRA":
@@ -89,9 +126,29 @@ class NetworkWidget(QtWidgets.QWidget):
             self.ui.conv_alpha_input.setEnabled(False)
             self.ui.conv_dim_input.setEnabled(False)
             self.ui.dylora_unit_input.setEnabled(False)
+            self.ui.network_dropout_enable.setEnabled(True)
+            self.enable_disable_dropout('network', self.ui.network_dropout_enable.isChecked())
+            self.ui.rank_dropout_enable.setEnabled(True)
+            self.enable_disable_dropout('rank', self.ui.rank_dropout_enable.isChecked())
+            self.ui.module_dropout_enable.setEnabled(True)
+            self.enable_disable_dropout('module', self.ui.module_dropout_enable.isChecked())
         else:
             self.ui.conv_alpha_input.setEnabled(True)
             self.ui.conv_dim_input.setEnabled(True)
+            if name.lower() == 'locon':
+                self.ui.network_dropout_enable.setEnabled(True)
+                self.enable_disable_dropout('network', self.ui.network_dropout_enable.isChecked())
+                self.ui.rank_dropout_enable.setEnabled(True)
+                self.enable_disable_dropout('rank', self.ui.rank_dropout_enable.isChecked())
+                self.ui.module_dropout_enable.setEnabled(True)
+                self.enable_disable_dropout('module', self.ui.module_dropout_enable.isChecked())
+            else:
+                self.ui.network_dropout_enable.setEnabled(False)
+                self.enable_disable_dropout('network', False)
+                self.ui.rank_dropout_enable.setEnabled(False)
+                self.enable_disable_dropout('rank', False)
+                self.ui.module_dropout_enable.setEnabled(False)
+                self.enable_disable_dropout('module', False)
             if "network_args" not in self.args:
                 self.args['network_args'] = {}
             self.args['network_args']["conv_dim"] = self.ui.conv_dim_input.value()
@@ -151,13 +208,21 @@ class NetworkWidget(QtWidgets.QWidget):
         pass
 
     def get_block_args(self, input_args: dict) -> None:
-        if "network_args" not in input_args:
-            input_args['network_args'] = {}
         names = [['down_lr_weight', 'mid_lr_weight', 'up_lr_weight'], 'block_dims',
                  'block_alphas', 'conv_block_dims', 'conv_block_alphas']
         for i, elem in enumerate(self.block_widgets_state):
             if not elem[0].extra_elem.isChecked():
+                if "network_args" in input_args:
+                    if i == 0:
+                        for n in names[i]:
+                            if n in input_args['network_args']:
+                                del input_args['network_args'][n]
+                    else:
+                        if names[i] in input_args['network_args']:
+                            del input_args['network_args'][names[i]]
                 continue
+            if "network_args" not in input_args:
+                input_args['network_args'] = {}
             vals = self.block_widgets[i].vals
             name = names[i]
             if isinstance(name, list):
@@ -165,6 +230,8 @@ class NetworkWidget(QtWidgets.QWidget):
                     input_args['network_args'][n] = vals[n]
             else:
                 input_args['network_args'][name] = vals
+        if 'network_args' in input_args and len(input_args['network_args'].keys()) == 0:
+            del input_args['network_args']
 
     def load_block_args(self, input_args: dict) -> None:
         net_args = input_args['network_args']
@@ -212,10 +279,27 @@ class NetworkWidget(QtWidgets.QWidget):
         self.ui.network_alpha_input.setValue(args['network_alpha'])
         index = 1 if "network_train_unet_only" in args else 2 if "network_train_text_encoder_only" in args else 0
         self.ui.unet_te_both_select.setCurrentIndex(index)
+
+        checked = True if args.get('network_dropout', False) else False
+        self.ui.network_dropout_enable.setChecked(checked)
+        self.ui.network_dropout_input.setValue(args.get('network_dropout', 0.1))
+        self.enable_disable_dropout('network', checked)
+
         if "network_args" in args:
             self.ui.conv_dim_input.setValue(args['network_args'].get("conv_dim", 32))
             self.ui.conv_alpha_input.setValue(args['network_args'].get("conv_alpha", 16))
             self.ui.dylora_unit_input.setValue(args['network_args'].get("unit", 4))
+
+            checked = True if args['network_args'].get('rank_dropout', False) else False
+            self.ui.rank_dropout_enable.setChecked(checked)
+            self.ui.rank_dropout_input.setValue(args['network_args'].get('rank_dropout', 0.1))
+            self.enable_disable_dropout('rank', checked)
+
+            checked = True if args['network_args'].get('module_dropout', False) else False
+            self.ui.module_dropout_enable.setChecked(checked)
+            self.ui.module_dropout_input.setValue(args['network_args'].get('module_dropout', 0.1))
+            self.enable_disable_dropout('module', checked)
+
             if "unit" in args['network_args']:
                 self.ui.algo_select.setCurrentIndex(5)
             elif "algo" in args['network_args']:
@@ -229,3 +313,10 @@ class NetworkWidget(QtWidgets.QWidget):
             self.load_block_args(args)
         else:
             self.ui.algo_select.setCurrentIndex(0)
+
+    def save_args(self) -> Union[dict, None]:
+        self.get_block_args(self.args)
+        return self.args
+
+    def save_dataset_args(self) -> Union[dict, None]:
+        pass

@@ -1,4 +1,5 @@
 import os.path
+from typing import Union
 
 from PySide6 import QtCore, QtWidgets, QtGui
 
@@ -146,3 +147,9 @@ class LoggingWidget(QtWidgets.QWidget):
         self.widget.log_wandb_key_input.setText(args.get("wandb_api_key", ""))
         self.widget.logging_group.setChecked(True)
         self.enable_disable()
+
+    def save_args(self) -> Union[dict, None]:
+        return self.args
+
+    def save_dataset_args(self) -> Union[dict, None]:
+        pass

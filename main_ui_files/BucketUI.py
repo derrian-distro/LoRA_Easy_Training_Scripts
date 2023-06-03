@@ -1,3 +1,5 @@
+from typing import Union
+
 from PySide6 import QtWidgets, QtCore
 from ui_files.BucketUI import Ui_bucket_ui
 from modules.CollapsibleWidget import CollapsibleWidget
@@ -60,3 +62,8 @@ class BucketWidget(QtWidgets.QWidget):
         self.enable_disable_buckets(args['enable_bucket'])
         self.widget.bucket_group.setChecked(args['enable_bucket'])
 
+    def save_args(self) -> Union[dict, None]:
+        pass
+
+    def save_dataset_args(self) -> Union[dict, None]:
+        return self.dataset_args

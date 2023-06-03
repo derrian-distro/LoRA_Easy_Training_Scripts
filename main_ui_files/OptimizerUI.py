@@ -1,3 +1,5 @@
+from typing import Union
+
 from PySide6 import QtCore, QtWidgets
 from ui_files.OptimizerUI import Ui_optimizer_ui
 from modules.CollapsibleWidget import CollapsibleWidget
@@ -29,14 +31,16 @@ class OptimizerWidget(QtWidgets.QWidget):
         self.widget.poly_power_input.valueChanged.connect(lambda x: self.edit_args("lr_scheduler_power", x))
         self.widget.warmup_ratio_input.valueChanged.connect(lambda x: self.edit_args("warmup_ratio", x, True))
         self.widget.min_snr_input.valueChanged.connect(lambda x: self.edit_args("min_snr_gamma", x, True))
+        self.widget.scale_weight_input.valueChanged.connect(lambda x: self.edit_args("scale_weight_norms", x))
 
         # set all of the slots for enable and disable
-        self.widget.unet_lr_enable.clicked.connect(lambda x: self.enable_disable_lr(x, self.widget.unet_lr_input,
-                                                                                    "unet_lr"))
-        self.widget.te_lr_enable.clicked.connect(lambda x: self.enable_disable_lr(x, self.widget.te_lr_input,
-                                                                                  "text_encoder_lr"))
+        self.widget.unet_lr_enable.clicked.connect(
+            lambda x: self.enable_disable_lr(x, self.widget.unet_lr_input, "unet_lr"))
+        self.widget.te_lr_enable.clicked.connect(
+            lambda x: self.enable_disable_lr(x, self.widget.te_lr_input, "text_encoder_lr"))
         self.widget.warmup_enable.clicked.connect(self.enable_disable_warmup)
         self.widget.min_snr_enable.clicked.connect(self.enable_disable_gamma)
+        self.widget.scale_weight_enable.clicked.connect(self.enable_disable_scale_weight)
 
     @QtCore.Slot(str, object, bool)
     def edit_args(self, name: str, value: object, optional: bool = False) -> None:
@@ -123,6 +127,11 @@ class OptimizerWidget(QtWidgets.QWidget):
             if "min_snr_gamma" in self.args:
                 del self.args['min_snr_gamma']
 
+    @QtCore.Slot(bool)
+    def enable_disable_scale_weight(self, checked: bool) -> None:
+        self.widget.scale_weight_input.setEnabled(checked)
+        self.edit_args("scale_weight_norms", None if not checked else self.widget.scale_weight_input.value(), True)
+
     def get_args(self, input_args: dict) -> None:
         input_args['optimizer_args'] = self.args
 
@@ -161,6 +170,11 @@ class OptimizerWidget(QtWidgets.QWidget):
         self.widget.min_snr_input.setValue(args.get('min_snr_gamma', 5))
         self.enable_disable_gamma(checked)
 
+        checked = True if args.get('scale_weight_norms', False) else False
+        self.widget.scale_weight_enable.setChecked(checked)
+        self.widget.scale_weight_input.setValue(args.get('scale_weight_norms', 1.0))
+        self.enable_disable_scale_weight(checked)
+
         if "optimizer_args" in args:
             self.args['optimizer_args'] = {}
             for key, value in args['optimizer_args'].items():
@@ -173,3 +187,9 @@ class OptimizerWidget(QtWidgets.QWidget):
                     self.args['optimizer_args'][key] = value
         else:
             self.args['optimizer_args'] = {"weight_decay": 0.1, "betas": "0.9,0.99"}
+
+    def save_args(self) -> Union[dict, None]:
+        return self.args
+
+    def save_dataset_args(self) -> Union[dict, None]:
+        pass

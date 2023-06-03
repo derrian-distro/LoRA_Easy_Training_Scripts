@@ -1,4 +1,5 @@
 import os.path
+from typing import Union
 
 from PySide6 import QtWidgets, QtCore, QtGui
 
@@ -285,3 +286,9 @@ class SavingWidget(QtWidgets.QWidget):
         checked = args.get("save_toml", False)
         self.widget.save_toml_on_train_enable.setChecked(checked)
         self.edit_args("save_toml", checked, True)
+
+    def save_args(self) -> Union[dict, None]:
+        return self.args
+
+    def save_dataset_args(self) -> Union[dict, None]:
+        pass

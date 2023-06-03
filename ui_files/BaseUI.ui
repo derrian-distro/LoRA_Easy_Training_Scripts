@@ -187,17 +187,31 @@
        </widget>
       </item>
       <item row="1" column="1">
-       <widget class="QCheckBox" name="v_param_enable">
-        <property name="enabled">
-         <bool>false</bool>
-        </property>
-        <property name="toolTip">
-         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Select this if your model uses the SD2.x 768x model, such as WD1.5.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-        </property>
-        <property name="text">
-         <string>Uses V Parameterization</string>
-        </property>
-       </widget>
+       <layout class="QHBoxLayout" name="horizontalLayout_6">
+        <item>
+         <widget class="QCheckBox" name="v_param_enable">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
+          <property name="toolTip">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Select this if your model uses the SD2.x 768x model, such as WD1.5.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
+          <property name="text">
+           <string>Uses V Parameterization</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QCheckBox" name="v_pred_enable">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
+          <property name="text">
+           <string>Scale V Prediction Loss to Noise Prediction</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
       </item>
      </layout>
     </widget>
@@ -472,13 +486,13 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>DragDropLineEdit</class>
-   <extends>QLineEdit</extends>
-   <header>modules.DragDropLineEdit.h</header>
-  </customwidget>
-  <customwidget>
    <class>SpinBox</class>
    <extends>QSpinBox</extends>
+   <header>modules.ScrollOnSelect.h</header>
+  </customwidget>
+  <customwidget>
+   <class>ComboBox</class>
+   <extends>QComboBox</extends>
    <header>modules.ScrollOnSelect.h</header>
   </customwidget>
   <customwidget>
@@ -487,9 +501,9 @@
    <header>modules.ScrollOnSelect.h</header>
   </customwidget>
   <customwidget>
-   <class>ComboBox</class>
-   <extends>QComboBox</extends>
-   <header>modules.ScrollOnSelect.h</header>
+   <class>DragDropLineEdit</class>
+   <extends>QLineEdit</extends>
+   <header>modules.DragDropLineEdit.h</header>
   </customwidget>
  </customwidgets>
  <resources/>
