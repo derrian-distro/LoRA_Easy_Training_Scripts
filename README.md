@@ -155,6 +155,16 @@ As you can see everything is sectioned off into their own sections. Generally th
 ## Changelog
 changelog of the old scripts are all in that branch [here](https://github.com/derrian-distro/LoRA_Easy_Training_Scripts/tree/old-scripts#changelog)
 
+- June 6, 2023
+  - Updated sd-scripts
+  - Added the new args related to the new update,
+    - `scale_weight_norms` to the optimizer args
+    - `network_dropout`, `rank_dropout`, and `module_dropout` to the network args
+    - `scale_v_pred_loss_like_noise_pred` to the general args, as that is directly tied to using a V Param based SD2.x model.
+  - Added tooltips for above args, so give those a read to explain what they do
+- June 5, 2023
+  - Added support for the block weight training
+  - Added support for the tag file output and toml file output on train, disabled by default, is in the saving args
 - May 29, 2023
   - Changed the behavior of the Queue so that it doesn't overwrite the previously saved values in the selected queue item when a new one is added
   - Change the behaviour of file selects so that they go to the folder last selected if valid
