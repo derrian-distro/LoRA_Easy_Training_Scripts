@@ -14,6 +14,7 @@ A set of training scripts written in python for use in Kohya's [SD-Scripts](http
 - [Changelog](#changelog)
 
 ## Installation
+### You **Must** have python 3.10 installed, and it **Must** be the running version of python
 
 ### Windows
 If you are on windows all you need to do to install the scripts is follow these commands. Open up a command line within the folder that you want to install to then type these one line at a time

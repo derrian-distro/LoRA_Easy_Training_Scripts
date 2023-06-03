@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>400</width>
-    <height>286</height>
+    <height>317</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -139,6 +139,13 @@
      </property>
     </widget>
    </item>
+   <item row="3" column="0">
+    <widget class="QCheckBox" name="unet_lr_enable">
+     <property name="text">
+      <string>Unet Learning Rate</string>
+     </property>
+    </widget>
+   </item>
    <item row="3" column="1">
     <widget class="LineEditWithHighlight" name="unet_lr_input">
      <property name="enabled">
@@ -155,6 +162,13 @@
      </property>
     </widget>
    </item>
+   <item row="4" column="0">
+    <widget class="QCheckBox" name="te_lr_enable">
+     <property name="text">
+      <string>TE Learning Rate</string>
+     </property>
+    </widget>
+   </item>
    <item row="4" column="1">
     <widget class="LineEditWithHighlight" name="te_lr_input">
      <property name="enabled">
@@ -168,6 +182,32 @@
      </property>
      <property name="placeholderText">
       <string>TE Learning Rate</string>
+     </property>
+    </widget>
+   </item>
+   <item row="5" column="0">
+    <widget class="QCheckBox" name="warmup_enable">
+     <property name="text">
+      <string>Warmup Ratio</string>
+     </property>
+    </widget>
+   </item>
+   <item row="5" column="1">
+    <widget class="DoubleSpinBox" name="warmup_ratio_input">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
+     <property name="focusPolicy">
+      <enum>Qt::StrongFocus</enum>
+     </property>
+     <property name="toolTip">
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;This is ratio of steps you want to be a warmup to your chosen lr. I personally use 0.05 (5%).&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     </property>
+     <property name="maximum">
+      <double>1.000000000000000</double>
+     </property>
+     <property name="singleStep">
+      <double>0.010000000000000</double>
      </property>
     </widget>
    </item>
@@ -220,46 +260,6 @@
      </property>
     </widget>
    </item>
-   <item row="5" column="1">
-    <widget class="DoubleSpinBox" name="warmup_ratio_input">
-     <property name="enabled">
-      <bool>false</bool>
-     </property>
-     <property name="focusPolicy">
-      <enum>Qt::StrongFocus</enum>
-     </property>
-     <property name="toolTip">
-      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;This is ratio of steps you want to be a warmup to your chosen lr. I personally use 0.05 (5%).&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-     </property>
-     <property name="maximum">
-      <double>1.000000000000000</double>
-     </property>
-     <property name="singleStep">
-      <double>0.010000000000000</double>
-     </property>
-    </widget>
-   </item>
-   <item row="3" column="0">
-    <widget class="QCheckBox" name="unet_lr_enable">
-     <property name="text">
-      <string>Unet Learning Rate</string>
-     </property>
-    </widget>
-   </item>
-   <item row="4" column="0">
-    <widget class="QCheckBox" name="te_lr_enable">
-     <property name="text">
-      <string>TE Learning Rate</string>
-     </property>
-    </widget>
-   </item>
-   <item row="5" column="0">
-    <widget class="QCheckBox" name="warmup_enable">
-     <property name="text">
-      <string>Warmup Ratio</string>
-     </property>
-    </widget>
-   </item>
    <item row="8" column="0">
     <widget class="QCheckBox" name="min_snr_enable">
      <property name="text">
@@ -283,6 +283,29 @@
      </property>
     </widget>
    </item>
+   <item row="9" column="0">
+    <widget class="QCheckBox" name="scale_weight_enable">
+     <property name="text">
+      <string>Scale Weight Normals</string>
+     </property>
+    </widget>
+   </item>
+   <item row="9" column="1">
+    <widget class="DoubleSpinBox" name="scale_weight_input">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
+     <property name="focusPolicy">
+      <enum>Qt::StrongFocus</enum>
+     </property>
+     <property name="toolTip">
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;An implementation of the idea of max norm regularization. Basically, this will help stabilize network training by limiting the normal of network weights. Might work well for limiting overfitting or baking.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     </property>
+     <property name="value">
+      <double>1.000000000000000</double>
+     </property>
+    </widget>
+   </item>
   </layout>
  </widget>
  <customwidgets>
@@ -292,13 +315,13 @@
    <header>modules.ScrollOnSelect.h</header>
   </customwidget>
   <customwidget>
-   <class>DoubleSpinBox</class>
-   <extends>QDoubleSpinBox</extends>
+   <class>ComboBox</class>
+   <extends>QComboBox</extends>
    <header>modules.ScrollOnSelect.h</header>
   </customwidget>
   <customwidget>
-   <class>ComboBox</class>
-   <extends>QComboBox</extends>
+   <class>DoubleSpinBox</class>
+   <extends>QDoubleSpinBox</extends>
    <header>modules.ScrollOnSelect.h</header>
   </customwidget>
   <customwidget>

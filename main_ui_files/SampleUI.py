@@ -1,4 +1,5 @@
 import os.path
+from typing import Union
 
 from PySide6 import QtWidgets, QtCore, QtGui
 
@@ -125,3 +126,9 @@ class SampleWidget(QtWidgets.QWidget):
         self.widget.sample_prompt_txt_file_input.setText(args['sample_prompts'])
         self.widget.sample_args_box.setChecked(True)
         self.enable_disable()
+
+    def save_args(self) -> Union[dict, None]:
+        return self.args
+
+    def save_dataset_args(self) -> Union[dict, None]:
+        pass

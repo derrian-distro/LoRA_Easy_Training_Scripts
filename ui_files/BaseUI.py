@@ -132,11 +132,22 @@ class Ui_base_args_ui(object):
 
         self.formLayout_3.setWidget(1, QFormLayout.LabelRole, self.v2_enable)
 
+        self.horizontalLayout_6 = QHBoxLayout()
+        self.horizontalLayout_6.setObjectName(u"horizontalLayout_6")
         self.v_param_enable = QCheckBox(self.base_model_box)
         self.v_param_enable.setObjectName(u"v_param_enable")
         self.v_param_enable.setEnabled(False)
 
-        self.formLayout_3.setWidget(1, QFormLayout.FieldRole, self.v_param_enable)
+        self.horizontalLayout_6.addWidget(self.v_param_enable)
+
+        self.v_pred_enable = QCheckBox(self.base_model_box)
+        self.v_pred_enable.setObjectName(u"v_pred_enable")
+        self.v_pred_enable.setEnabled(False)
+
+        self.horizontalLayout_6.addWidget(self.v_pred_enable)
+
+
+        self.formLayout_3.setLayout(1, QFormLayout.FieldRole, self.horizontalLayout_6)
 
 
         self.gridLayout_3.addWidget(self.base_model_box, 3, 1, 1, 2)
@@ -331,6 +342,7 @@ class Ui_base_args_ui(object):
         self.v_param_enable.setToolTip(QCoreApplication.translate("base_args_ui", u"<html><head/><body><p>Select this if your model uses the SD2.x 768x model, such as WD1.5.</p></body></html>", None))
 #endif // QT_CONFIG(tooltip)
         self.v_param_enable.setText(QCoreApplication.translate("base_args_ui", u"Uses V Parameterization", None))
+        self.v_pred_enable.setText(QCoreApplication.translate("base_args_ui", u"Scale V Prediction Loss to Noise Prediction", None))
 #if QT_CONFIG(tooltip)
         self.gradient_box.setToolTip(QCoreApplication.translate("base_args_ui", u"<html><head/><body><p>Gradient checkpointing and accumulation are ways to have higher batch sizes with less vram.</p></body></html>", None))
 #endif // QT_CONFIG(tooltip)

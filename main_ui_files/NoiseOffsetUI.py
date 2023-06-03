@@ -1,3 +1,5 @@
+from typing import Union
+
 from PySide6 import QtCore, QtWidgets
 from modules.CollapsibleWidget import CollapsibleWidget
 from ui_files.NoiseOffsetUI import Ui_noise_offset_UI
@@ -80,3 +82,9 @@ class NoiseOffsetWidget(QtWidgets.QWidget):
         checked = True if "noise_offset" in args or "multires_noise_iterations" in args else False
         self.widget.noise_offset_group.setChecked(checked)
         self.enable_disable()
+
+    def save_args(self) -> Union[dict, None]:
+        return self.args
+
+    def save_dataset_args(self) -> Union[dict, None]:
+        pass

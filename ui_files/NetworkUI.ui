@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>400</width>
-    <height>259</height>
+    <height>352</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -259,6 +259,96 @@
          </property>
         </widget>
        </item>
+       <item row="7" column="0">
+        <widget class="QCheckBox" name="network_dropout_enable">
+         <property name="enabled">
+          <bool>true</bool>
+         </property>
+         <property name="text">
+          <string>Network Dropout</string>
+         </property>
+        </widget>
+       </item>
+       <item row="7" column="1">
+        <widget class="DoubleSpinBox" name="network_dropout_input">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
+         <property name="focusPolicy">
+          <enum>Qt::StrongFocus</enum>
+         </property>
+         <property name="toolTip">
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Is a random chance that on any given step a neuron will be dropped out, encourages the model to diversify it's training &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         </property>
+         <property name="maximum">
+          <double>1.000000000000000</double>
+         </property>
+         <property name="singleStep">
+          <double>0.010000000000000</double>
+         </property>
+         <property name="value">
+          <double>0.100000000000000</double>
+         </property>
+        </widget>
+       </item>
+       <item row="8" column="0">
+        <widget class="QCheckBox" name="rank_dropout_enable">
+         <property name="text">
+          <string>Rank Dropout</string>
+         </property>
+        </widget>
+       </item>
+       <item row="8" column="1">
+        <widget class="DoubleSpinBox" name="rank_dropout_input">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
+         <property name="focusPolicy">
+          <enum>Qt::StrongFocus</enum>
+         </property>
+         <property name="toolTip">
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Dropouts each dim of a lora at the rate specified, This is unproven, use at your own risk.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         </property>
+         <property name="maximum">
+          <double>1.000000000000000</double>
+         </property>
+         <property name="singleStep">
+          <double>0.010000000000000</double>
+         </property>
+         <property name="value">
+          <double>0.100000000000000</double>
+         </property>
+        </widget>
+       </item>
+       <item row="9" column="0">
+        <widget class="QCheckBox" name="module_dropout_enable">
+         <property name="text">
+          <string>Module Dropout</string>
+         </property>
+        </widget>
+       </item>
+       <item row="9" column="1">
+        <widget class="DoubleSpinBox" name="module_dropout_input">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
+         <property name="focusPolicy">
+          <enum>Qt::StrongFocus</enum>
+         </property>
+         <property name="toolTip">
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Drops out each module at the specified probability. Module dropout has not be verified, use at your own risk.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         </property>
+         <property name="maximum">
+          <double>1.000000000000000</double>
+         </property>
+         <property name="singleStep">
+          <double>0.010000000000000</double>
+         </property>
+         <property name="value">
+          <double>0.100000000000000</double>
+         </property>
+        </widget>
+       </item>
       </layout>
      </widget>
      <widget class="QWidget" name="block_weight_tab">
@@ -289,7 +379,7 @@
             <x>0</x>
             <y>0</y>
             <width>394</width>
-            <height>227</height>
+            <height>320</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_3">

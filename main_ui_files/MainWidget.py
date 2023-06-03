@@ -238,13 +238,11 @@ class ArgsWidget(QtWidgets.QWidget):
     def save_args(self) -> dict:
         args = {}
         for widget in self.args_widget_array:
-            widget_args = getattr(widget, "args", None)
-            widget_dataset_args = getattr(widget, "dataset_args", None)
+            widget_args = widget.save_args()
+            widget_dataset_args = widget.save_dataset_args()
             args[widget.name] = {}
             if widget_args:
                 args[widget.name]['args'] = widget_args.copy()
-                if widget.name == 'network_args':
-                    widget.get_block_args(args[widget.name]['args'])
             if widget_dataset_args:
                 args[widget.name]['dataset_args'] = widget_dataset_args.copy()
         return args

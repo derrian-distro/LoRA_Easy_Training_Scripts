@@ -15,8 +15,9 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QFont, QFontDatabase, QGradient, QIcon,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
-from PySide6.QtWidgets import (QApplication, QFormLayout, QLabel, QScrollArea,
-    QSizePolicy, QTabWidget, QVBoxLayout, QWidget)
+from PySide6.QtWidgets import (QApplication, QCheckBox, QFormLayout, QLabel,
+    QScrollArea, QSizePolicy, QTabWidget, QVBoxLayout,
+    QWidget)
 
 from modules.CollapsibleWidget import CollapsibleWidget
 from modules.ScrollOnSelect import (ComboBox, DoubleSpinBox, SpinBox)
@@ -25,7 +26,7 @@ class Ui_network_ui(object):
     def setupUi(self, network_ui):
         if not network_ui.objectName():
             network_ui.setObjectName(u"network_ui")
-        network_ui.resize(400, 480)
+        network_ui.resize(400, 352)
         network_ui.setMinimumSize(QSize(0, 0))
         self.verticalLayout = QVBoxLayout(network_ui)
         self.verticalLayout.setObjectName(u"verticalLayout")
@@ -137,6 +138,52 @@ class Ui_network_ui(object):
 
         self.formLayout_2.setWidget(6, QFormLayout.FieldRole, self.dylora_unit_input)
 
+        self.network_dropout_enable = QCheckBox(self.main_tab)
+        self.network_dropout_enable.setObjectName(u"network_dropout_enable")
+        self.network_dropout_enable.setEnabled(True)
+
+        self.formLayout_2.setWidget(7, QFormLayout.LabelRole, self.network_dropout_enable)
+
+        self.network_dropout_input = DoubleSpinBox(self.main_tab)
+        self.network_dropout_input.setObjectName(u"network_dropout_input")
+        self.network_dropout_input.setEnabled(False)
+        self.network_dropout_input.setFocusPolicy(Qt.StrongFocus)
+        self.network_dropout_input.setMaximum(1.000000000000000)
+        self.network_dropout_input.setSingleStep(0.010000000000000)
+        self.network_dropout_input.setValue(0.100000000000000)
+
+        self.formLayout_2.setWidget(7, QFormLayout.FieldRole, self.network_dropout_input)
+
+        self.rank_dropout_enable = QCheckBox(self.main_tab)
+        self.rank_dropout_enable.setObjectName(u"rank_dropout_enable")
+
+        self.formLayout_2.setWidget(8, QFormLayout.LabelRole, self.rank_dropout_enable)
+
+        self.rank_dropout_input = DoubleSpinBox(self.main_tab)
+        self.rank_dropout_input.setObjectName(u"rank_dropout_input")
+        self.rank_dropout_input.setEnabled(False)
+        self.rank_dropout_input.setFocusPolicy(Qt.StrongFocus)
+        self.rank_dropout_input.setMaximum(1.000000000000000)
+        self.rank_dropout_input.setSingleStep(0.010000000000000)
+        self.rank_dropout_input.setValue(0.100000000000000)
+
+        self.formLayout_2.setWidget(8, QFormLayout.FieldRole, self.rank_dropout_input)
+
+        self.module_dropout_enable = QCheckBox(self.main_tab)
+        self.module_dropout_enable.setObjectName(u"module_dropout_enable")
+
+        self.formLayout_2.setWidget(9, QFormLayout.LabelRole, self.module_dropout_enable)
+
+        self.module_dropout_input = DoubleSpinBox(self.main_tab)
+        self.module_dropout_input.setObjectName(u"module_dropout_input")
+        self.module_dropout_input.setEnabled(False)
+        self.module_dropout_input.setFocusPolicy(Qt.StrongFocus)
+        self.module_dropout_input.setMaximum(1.000000000000000)
+        self.module_dropout_input.setSingleStep(0.010000000000000)
+        self.module_dropout_input.setValue(0.100000000000000)
+
+        self.formLayout_2.setWidget(9, QFormLayout.FieldRole, self.module_dropout_input)
+
         self.tabWidget.addTab(self.main_tab, "")
         self.block_weight_tab = QWidget()
         self.block_weight_tab.setObjectName(u"block_weight_tab")
@@ -148,7 +195,7 @@ class Ui_network_ui(object):
         self.block_weight_scroll_area.setWidgetResizable(True)
         self.block_weight_scroll_widget = QWidget()
         self.block_weight_scroll_widget.setObjectName(u"block_weight_scroll_widget")
-        self.block_weight_scroll_widget.setGeometry(QRect(0, 0, 394, 227))
+        self.block_weight_scroll_widget.setGeometry(QRect(0, 0, 394, 320))
         self.verticalLayout_3 = QVBoxLayout(self.block_weight_scroll_widget)
         self.verticalLayout_3.setObjectName(u"verticalLayout_3")
         self.verticalLayout_3.setContentsMargins(0, 0, 0, 0)
@@ -238,6 +285,18 @@ class Ui_network_ui(object):
         self.dylora_unit_label.setText(QCoreApplication.translate("network_ui", u"DyLoRA Unit", None))
 #if QT_CONFIG(tooltip)
         self.dylora_unit_input.setToolTip(QCoreApplication.translate("network_ui", u"<html><head/><body><p>The unit is the unit for dividing rank. so if you have dim 16, unit 4, then it can learn 4 lora models of dims 4, 8, 12, and 16.</p></body></html>", None))
+#endif // QT_CONFIG(tooltip)
+        self.network_dropout_enable.setText(QCoreApplication.translate("network_ui", u"Network Dropout", None))
+#if QT_CONFIG(tooltip)
+        self.network_dropout_input.setToolTip(QCoreApplication.translate("network_ui", u"<html><head/><body><p>Is a random chance that on any given step a neuron will be dropped out, encourages the model to diversify it's training </p></body></html>", None))
+#endif // QT_CONFIG(tooltip)
+        self.rank_dropout_enable.setText(QCoreApplication.translate("network_ui", u"Rank Dropout", None))
+#if QT_CONFIG(tooltip)
+        self.rank_dropout_input.setToolTip(QCoreApplication.translate("network_ui", u"<html><head/><body><p>Dropouts each dim of a lora at the rate specified, This is unproven, use at your own risk.</p></body></html>", None))
+#endif // QT_CONFIG(tooltip)
+        self.module_dropout_enable.setText(QCoreApplication.translate("network_ui", u"Module Dropout", None))
+#if QT_CONFIG(tooltip)
+        self.module_dropout_input.setToolTip(QCoreApplication.translate("network_ui", u"<html><head/><body><p>Drops out each module at the specified probability. Module dropout has not be verified, use at your own risk.</p></body></html>", None))
 #endif // QT_CONFIG(tooltip)
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.main_tab), QCoreApplication.translate("network_ui", u"Main Args", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.block_weight_tab), QCoreApplication.translate("network_ui", u"Block Weights", None))

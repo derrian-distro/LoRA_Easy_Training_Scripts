@@ -1,4 +1,5 @@
 import os.path
+from typing import Union
 
 from PySide6 import QtWidgets, QtCore, QtGui
 
@@ -36,6 +37,7 @@ class BaseArgsWidget(QtWidgets.QWidget):
         self.widget.base_model_selector.clicked.connect(self.set_from_dialog)
         self.widget.v2_enable.clicked.connect(self.enable_disable_sd2)
         self.widget.v_param_enable.clicked.connect(lambda x: self.enable_disable_sd2(self.widget.v2_enable.isChecked()))
+        self.widget.v_pred_enable.clicked.connect(lambda x: self.edit_args("scale_v_pred_loss_like_noise_pred", x, True))
 
         # resolution connections
         self.widget.width_input.valueChanged.connect(lambda x: self.change_resolution(True, x))
@@ -109,9 +111,16 @@ class BaseArgsWidget(QtWidgets.QWidget):
             self.args['v2'] = True
             self.widget.v_param_enable.setEnabled(True)
             self.edit_args("v_parameterization", self.widget.v_param_enable.isChecked(), True)
+            if self.widget.v_param_enable.isChecked():
+                self.widget.v_pred_enable.setEnabled(True)
+                self.edit_args("scale_v_pred_loss_like_noise_pred", self.widget.v_pred_enable.isChecked(), True)
+            else:
+                self.widget.v_pred_enable.setEnabled(False)
+                self.edit_args("scale_v_pred_loss_like_noise_pred", False, True)
         else:
             self.widget.v_param_enable.setEnabled(False)
-            for name in ['v2', 'v_parameterization']:
+            self.widget.v_pred_enable.setEnabled(False)
+            for name in ['v2', 'v_parameterization', 'scale_v_pred_loss_like_noise_pred']:
                 if name in self.args:
                     del self.args[name]
 
@@ -205,6 +214,7 @@ class BaseArgsWidget(QtWidgets.QWidget):
         # v2 args
         self.widget.v2_enable.setChecked(args.get('v2', False))
         self.widget.v_param_enable.setChecked(args.get("v_parameterization", False))
+        self.widget.v_pred_enable.setChecked(args.get('scale_v_pred_loss_like_noise_pred', False))
         self.enable_disable_sd2(self.widget.v2_enable.isChecked())
 
         # resolution args
@@ -247,3 +257,9 @@ class BaseArgsWidget(QtWidgets.QWidget):
         index = 0 if args.get("max_train_epochs", None) else 1
         self.widget.max_train_selector.setCurrentIndex(index)
         self.widget.max_train_input.setValue(args['max_train_epochs'] if index == 0 else args['max_train_steps'])
+
+    def save_args(self) -> Union[dict, None]:
+        return self.args
+
+    def save_dataset_args(self) -> Union[dict, None]:
+        return self.dataset_args
