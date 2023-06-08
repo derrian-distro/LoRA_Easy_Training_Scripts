@@ -7,303 +7,361 @@
     <x>0</x>
     <y>0</y>
     <width>400</width>
-    <height>317</height>
+    <height>349</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Form</string>
   </property>
-  <layout class="QFormLayout" name="formLayout">
-   <item row="0" column="0" colspan="2">
-    <widget class="ComboBox" name="optimizer_type_selector">
-     <property name="focusPolicy">
-      <enum>Qt::StrongFocus</enum>
-     </property>
-     <property name="toolTip">
-      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The optimizer to use, The standard, and the one most people use is AdamW8bit.&lt;/p&gt;&lt;p&gt;The various Dadapt modify the lr on their own as you go, however can only take one lr.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-     </property>
-     <item>
-      <property name="text">
-       <string>AdamW</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>AdamW8bit</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>Lion</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>SGDNesterov</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>SGDNesterov8bit</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>DAdaptAdam</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>DAdaptAdaGrad</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>DAdaptAdan</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>DAdaptSGD</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>AdaFactor</string>
-      </property>
-     </item>
-    </widget>
-   </item>
-   <item row="1" column="0" colspan="2">
-    <widget class="ComboBox" name="lr_scheduler_selector">
-     <property name="focusPolicy">
-      <enum>Qt::StrongFocus</enum>
-     </property>
-     <property name="toolTip">
-      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The scheduler for the lr. The ones I use personally are cosine and cosine with restarts.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-     </property>
-     <item>
-      <property name="text">
-       <string>cosine</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>cosine with restarts</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>linear</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>constant</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>constant with warmup</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>adafactor</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>polynomial</string>
-      </property>
-     </item>
-    </widget>
-   </item>
-   <item row="2" column="0">
-    <widget class="QLabel" name="label">
-     <property name="text">
-      <string>Learning Rate</string>
-     </property>
-    </widget>
-   </item>
-   <item row="2" column="1">
-    <widget class="LineEditWithHighlight" name="main_lr_input">
-     <property name="toolTip">
-      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The main lr. If you have both unet and te set though it is just completely overwritten.&lt;/p&gt;&lt;p&gt;note that if you don't put in a proper number, it will just be read as 0.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-     </property>
-     <property name="text">
-      <string>1e-4</string>
-     </property>
-     <property name="placeholderText">
-      <string>Learning Rate</string>
-     </property>
-    </widget>
-   </item>
-   <item row="3" column="0">
-    <widget class="QCheckBox" name="unet_lr_enable">
-     <property name="text">
-      <string>Unet Learning Rate</string>
-     </property>
-    </widget>
-   </item>
-   <item row="3" column="1">
-    <widget class="LineEditWithHighlight" name="unet_lr_input">
-     <property name="enabled">
-      <bool>false</bool>
-     </property>
-     <property name="toolTip">
-      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The Unet lr. Overrides the base lr, if you don't have a proper number set, it will be 0&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-     </property>
-     <property name="text">
-      <string>1e-4</string>
-     </property>
-     <property name="placeholderText">
-      <string>Unet Learning Rate</string>
-     </property>
-    </widget>
-   </item>
-   <item row="4" column="0">
-    <widget class="QCheckBox" name="te_lr_enable">
-     <property name="text">
-      <string>TE Learning Rate</string>
-     </property>
-    </widget>
-   </item>
-   <item row="4" column="1">
-    <widget class="LineEditWithHighlight" name="te_lr_input">
-     <property name="enabled">
-      <bool>false</bool>
-     </property>
-     <property name="toolTip">
-      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The Text Encoder lr. Overrides the base lr, if you don't have a proper number set, it will be 0&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-     </property>
-     <property name="text">
-      <string>1e-4</string>
-     </property>
-     <property name="placeholderText">
-      <string>TE Learning Rate</string>
-     </property>
-    </widget>
-   </item>
-   <item row="5" column="0">
-    <widget class="QCheckBox" name="warmup_enable">
-     <property name="text">
-      <string>Warmup Ratio</string>
-     </property>
-    </widget>
-   </item>
-   <item row="5" column="1">
-    <widget class="DoubleSpinBox" name="warmup_ratio_input">
-     <property name="enabled">
-      <bool>false</bool>
-     </property>
-     <property name="focusPolicy">
-      <enum>Qt::StrongFocus</enum>
-     </property>
-     <property name="toolTip">
-      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;This is ratio of steps you want to be a warmup to your chosen lr. I personally use 0.05 (5%).&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-     </property>
-     <property name="maximum">
-      <double>1.000000000000000</double>
-     </property>
-     <property name="singleStep">
-      <double>0.010000000000000</double>
-     </property>
-    </widget>
-   </item>
-   <item row="6" column="0">
-    <widget class="QLabel" name="label_4">
-     <property name="text">
-      <string>Num Restarts</string>
-     </property>
-    </widget>
-   </item>
-   <item row="6" column="1">
-    <widget class="SpinBox" name="cosine_restart_input">
-     <property name="enabled">
-      <bool>false</bool>
-     </property>
-     <property name="focusPolicy">
-      <enum>Qt::StrongFocus</enum>
-     </property>
-     <property name="toolTip">
-      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The number of times cosine with restarts will restart, note that 1 means it doesn't restart, and 2 means it will restart once.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-     </property>
-     <property name="minimum">
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <property name="leftMargin">
+    <number>0</number>
+   </property>
+   <property name="topMargin">
+    <number>0</number>
+   </property>
+   <property name="rightMargin">
+    <number>0</number>
+   </property>
+   <property name="bottomMargin">
+    <number>0</number>
+   </property>
+   <item>
+    <widget class="QTabWidget" name="tabWidget">
+     <property name="currentIndex">
       <number>1</number>
      </property>
-    </widget>
-   </item>
-   <item row="7" column="0">
-    <widget class="QLabel" name="label_5">
-     <property name="text">
-      <string>Polynomial Power</string>
-     </property>
-    </widget>
-   </item>
-   <item row="7" column="1">
-    <widget class="DoubleSpinBox" name="poly_power_input">
-     <property name="enabled">
-      <bool>false</bool>
-     </property>
-     <property name="focusPolicy">
-      <enum>Qt::StrongFocus</enum>
-     </property>
-     <property name="toolTip">
-      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The power of the polynomial equation. The closer to 0 the more agressive (I think).&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-     </property>
-     <property name="singleStep">
-      <double>0.010000000000000</double>
-     </property>
-     <property name="value">
-      <double>1.000000000000000</double>
-     </property>
-    </widget>
-   </item>
-   <item row="8" column="0">
-    <widget class="QCheckBox" name="min_snr_enable">
-     <property name="text">
-      <string>Minimum SNR Gamma</string>
-     </property>
-    </widget>
-   </item>
-   <item row="8" column="1">
-    <widget class="SpinBox" name="min_snr_input">
-     <property name="enabled">
-      <bool>false</bool>
-     </property>
-     <property name="focusPolicy">
-      <enum>Qt::StrongFocus</enum>
-     </property>
-     <property name="toolTip">
-      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;This is a tool that reduces learning of unwanted elements by only learning what is the most common. This can lead to it not learning small details however. The recommended value is 5. Lower values apply more.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-     </property>
-     <property name="value">
-      <number>5</number>
-     </property>
-    </widget>
-   </item>
-   <item row="9" column="0">
-    <widget class="QCheckBox" name="scale_weight_enable">
-     <property name="text">
-      <string>Scale Weight Normals</string>
-     </property>
-    </widget>
-   </item>
-   <item row="9" column="1">
-    <widget class="DoubleSpinBox" name="scale_weight_input">
-     <property name="enabled">
-      <bool>false</bool>
-     </property>
-     <property name="focusPolicy">
-      <enum>Qt::StrongFocus</enum>
-     </property>
-     <property name="toolTip">
-      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;An implementation of the idea of max norm regularization. Basically, this will help stabilize network training by limiting the normal of network weights. Might work well for limiting overfitting or baking.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-     </property>
-     <property name="value">
-      <double>1.000000000000000</double>
-     </property>
+     <widget class="QWidget" name="optimizer_tab_main">
+      <attribute name="title">
+       <string>Tab 1</string>
+      </attribute>
+      <layout class="QFormLayout" name="formLayout_2">
+       <item row="0" column="0" colspan="2">
+        <widget class="ComboBox" name="optimizer_type_selector">
+         <property name="focusPolicy">
+          <enum>Qt::StrongFocus</enum>
+         </property>
+         <property name="toolTip">
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The optimizer to use, The standard, and the one most people use is AdamW8bit.&lt;/p&gt;&lt;p&gt;The various Dadapt modify the lr on their own as you go, however can only take one lr.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         </property>
+         <item>
+          <property name="text">
+           <string>AdamW</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>AdamW8bit</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Lion</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>SGDNesterov</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>SGDNesterov8bit</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>DAdaptAdam</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>DAdaptAdaGrad</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>DAdaptAdan</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>DAdaptSGD</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>AdaFactor</string>
+          </property>
+         </item>
+        </widget>
+       </item>
+       <item row="1" column="0" colspan="2">
+        <widget class="ComboBox" name="lr_scheduler_selector">
+         <property name="focusPolicy">
+          <enum>Qt::StrongFocus</enum>
+         </property>
+         <property name="toolTip">
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The scheduler for the lr. The ones I use personally are cosine and cosine with restarts.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         </property>
+         <item>
+          <property name="text">
+           <string>cosine</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>cosine with restarts</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>linear</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>constant</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>constant with warmup</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>adafactor</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>polynomial</string>
+          </property>
+         </item>
+        </widget>
+       </item>
+       <item row="2" column="0">
+        <widget class="QLabel" name="label">
+         <property name="text">
+          <string>Learning Rate</string>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="1">
+        <widget class="LineEditWithHighlight" name="main_lr_input">
+         <property name="toolTip">
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The main lr. If you have both unet and te set though it is just completely overwritten.&lt;/p&gt;&lt;p&gt;note that if you don't put in a proper number, it will just be read as 0.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         </property>
+         <property name="text">
+          <string>1e-4</string>
+         </property>
+         <property name="placeholderText">
+          <string>Learning Rate</string>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="0">
+        <widget class="QCheckBox" name="unet_lr_enable">
+         <property name="text">
+          <string>Unet Learning Rate</string>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="1">
+        <widget class="LineEditWithHighlight" name="unet_lr_input">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
+         <property name="toolTip">
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The Unet lr. Overrides the base lr, if you don't have a proper number set, it will be 0&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         </property>
+         <property name="text">
+          <string>1e-4</string>
+         </property>
+         <property name="placeholderText">
+          <string>Unet Learning Rate</string>
+         </property>
+        </widget>
+       </item>
+       <item row="4" column="0">
+        <widget class="QCheckBox" name="te_lr_enable">
+         <property name="text">
+          <string>TE Learning Rate</string>
+         </property>
+        </widget>
+       </item>
+       <item row="4" column="1">
+        <widget class="LineEditWithHighlight" name="te_lr_input">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
+         <property name="toolTip">
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The Text Encoder lr. Overrides the base lr, if you don't have a proper number set, it will be 0&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         </property>
+         <property name="text">
+          <string>1e-4</string>
+         </property>
+         <property name="placeholderText">
+          <string>TE Learning Rate</string>
+         </property>
+        </widget>
+       </item>
+       <item row="5" column="0">
+        <widget class="QCheckBox" name="warmup_enable">
+         <property name="text">
+          <string>Warmup Ratio</string>
+         </property>
+        </widget>
+       </item>
+       <item row="5" column="1">
+        <widget class="DoubleSpinBox" name="warmup_ratio_input">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
+         <property name="focusPolicy">
+          <enum>Qt::StrongFocus</enum>
+         </property>
+         <property name="toolTip">
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;This is ratio of steps you want to be a warmup to your chosen lr. I personally use 0.05 (5%).&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         </property>
+         <property name="maximum">
+          <double>1.000000000000000</double>
+         </property>
+         <property name="singleStep">
+          <double>0.010000000000000</double>
+         </property>
+        </widget>
+       </item>
+       <item row="6" column="0">
+        <widget class="QLabel" name="label_4">
+         <property name="text">
+          <string>Num Restarts</string>
+         </property>
+        </widget>
+       </item>
+       <item row="6" column="1">
+        <widget class="SpinBox" name="cosine_restart_input">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
+         <property name="focusPolicy">
+          <enum>Qt::StrongFocus</enum>
+         </property>
+         <property name="toolTip">
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The number of times cosine with restarts will restart, note that 1 means it doesn't restart, and 2 means it will restart once.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         </property>
+         <property name="minimum">
+          <number>1</number>
+         </property>
+        </widget>
+       </item>
+       <item row="7" column="0">
+        <widget class="QLabel" name="label_5">
+         <property name="text">
+          <string>Polynomial Power</string>
+         </property>
+        </widget>
+       </item>
+       <item row="7" column="1">
+        <widget class="DoubleSpinBox" name="poly_power_input">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
+         <property name="focusPolicy">
+          <enum>Qt::StrongFocus</enum>
+         </property>
+         <property name="toolTip">
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The power of the polynomial equation. The closer to 0 the more agressive (I think).&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         </property>
+         <property name="singleStep">
+          <double>0.010000000000000</double>
+         </property>
+         <property name="value">
+          <double>1.000000000000000</double>
+         </property>
+        </widget>
+       </item>
+       <item row="8" column="0">
+        <widget class="QCheckBox" name="min_snr_enable">
+         <property name="text">
+          <string>Minimum SNR Gamma</string>
+         </property>
+        </widget>
+       </item>
+       <item row="8" column="1">
+        <widget class="SpinBox" name="min_snr_input">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
+         <property name="focusPolicy">
+          <enum>Qt::StrongFocus</enum>
+         </property>
+         <property name="toolTip">
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;This is a tool that reduces learning of unwanted elements by only learning what is the most common. This can lead to it not learning small details however. The recommended value is 5. Lower values apply more.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         </property>
+         <property name="value">
+          <number>5</number>
+         </property>
+        </widget>
+       </item>
+       <item row="9" column="0">
+        <widget class="QCheckBox" name="scale_weight_enable">
+         <property name="text">
+          <string>Scale Weight Normals</string>
+         </property>
+        </widget>
+       </item>
+       <item row="9" column="1">
+        <widget class="DoubleSpinBox" name="scale_weight_input">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
+         <property name="focusPolicy">
+          <enum>Qt::StrongFocus</enum>
+         </property>
+         <property name="toolTip">
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;An implementation of the idea of max norm regularization. Basically, this will help stabilize network training by limiting the normal of network weights. Might work well for limiting overfitting or baking.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         </property>
+         <property name="value">
+          <double>1.000000000000000</double>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="optimizer_tab_args">
+      <attribute name="title">
+       <string>Tab 2</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="verticalLayout_2">
+       <item>
+        <widget class="QPushButton" name="add_opt_button">
+         <property name="text">
+          <string>Add Optimizer Arg</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QScrollArea" name="scrollArea">
+         <property name="widgetResizable">
+          <bool>true</bool>
+         </property>
+         <widget class="QWidget" name="optimizer_item_widget">
+          <property name="geometry">
+           <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>376</width>
+            <height>269</height>
+           </rect>
+          </property>
+          <layout class="QVBoxLayout" name="verticalLayout_3"/>
+         </widget>
+        </widget>
+       </item>
+      </layout>
+     </widget>
     </widget>
    </item>
   </layout>
