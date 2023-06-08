@@ -4,14 +4,16 @@ from PySide6 import QtCore, QtWidgets
 from ui_files.OptimizerUI import Ui_optimizer_ui
 from modules.CollapsibleWidget import CollapsibleWidget
 from modules.LineEditHighlight import LineEditWithHighlight
+from modules.OptimizerItem import OptimizerItem
 
 
 class OptimizerWidget(QtWidgets.QWidget):
     def __init__(self, parent: QtWidgets.QWidget = None) -> None:
         super(OptimizerWidget, self).__init__(parent)
         self.setLayout(QtWidgets.QVBoxLayout())
-        self.args = {"optimizer_type": "AdamW", "lr_scheduler": "cosine", "learning_rate": 1e-4,
-                     "optimizer_args": {"weight_decay": 0.1, "betas": "0.9,0.99"}}
+        self.args = {"optimizer_type": "AdamW", "lr_scheduler": "cosine", "learning_rate": 1e-4}
+        self.opt_arg_list = [OptimizerItem(arg_name="weight_decay", arg_value="0.1"),
+                             OptimizerItem(arg_name="betas", arg_value="0.9,0.99")]
         self.name = "optimizer_args"
         self.colap = CollapsibleWidget(self, "Optimizer Args")
         self.content = QtWidgets.QWidget()
@@ -20,6 +22,10 @@ class OptimizerWidget(QtWidgets.QWidget):
         self.widget.setupUi(self.content)
         self.layout().addWidget(self.colap)
         self.layout().setContentsMargins(9, 0, 9, 0)
+        self.widget.optimizer_item_widget.layout().setAlignment(QtCore.Qt.AlignmentFlag.AlignTop)
+        for opt_item in self.opt_arg_list:
+            self.widget.optimizer_item_widget.layout().addWidget(opt_item)
+            opt_item.delete_item.connect(self.remove_optimizer_arg)
 
         # set all of the slots for inputs
         self.widget.optimizer_type_selector.currentTextChanged.connect(lambda x: self.edit_args("optimizer_type", x))
@@ -32,6 +38,7 @@ class OptimizerWidget(QtWidgets.QWidget):
         self.widget.warmup_ratio_input.valueChanged.connect(lambda x: self.edit_args("warmup_ratio", x, True))
         self.widget.min_snr_input.valueChanged.connect(lambda x: self.edit_args("min_snr_gamma", x, True))
         self.widget.scale_weight_input.valueChanged.connect(lambda x: self.edit_args("scale_weight_norms", x))
+        self.widget.add_opt_button.clicked.connect(self.add_optimizer_arg)
 
         # set all of the slots for enable and disable
         self.widget.unet_lr_enable.clicked.connect(
@@ -133,10 +140,24 @@ class OptimizerWidget(QtWidgets.QWidget):
         self.edit_args("scale_weight_norms", None if not checked else self.widget.scale_weight_input.value(), True)
 
     def get_args(self, input_args: dict) -> None:
-        input_args['optimizer_args'] = self.args
+        input_args['optimizer_args'] = self.save_args()
 
     def get_dataset_args(self, input_args: dict) -> None:
         pass
+
+    @QtCore.Slot()
+    def add_optimizer_arg(self):
+        self.opt_arg_list.append(OptimizerItem())
+        self.widget.optimizer_item_widget.layout().addWidget(self.opt_arg_list[-1])
+        self.opt_arg_list[-1].delete_item.connect(self.remove_optimizer_arg)
+
+    @QtCore.Slot(object)
+    def remove_optimizer_arg(self, widget: OptimizerItem):
+        self.layout().removeWidget(widget)
+        if "optimizer_args" in self.args and widget.arg_name in self.args['optimizer_args']:
+            del self.args['optimizer_args'][widget.arg_name]
+        widget.deleteLater()
+        self.opt_arg_list.remove(widget)
 
     def load_args(self, args: dict) -> None:
         if self.name not in args:
@@ -175,21 +196,42 @@ class OptimizerWidget(QtWidgets.QWidget):
         self.widget.scale_weight_input.setValue(args.get('scale_weight_norms', 1.0))
         self.enable_disable_scale_weight(checked)
 
-        if "optimizer_args" in args:
-            self.args['optimizer_args'] = {}
+        if 'optimizer_args' in args:
+            for i in range(len(self.opt_arg_list)):
+                self.remove_optimizer_arg(self.opt_arg_list[0])
             for key, value in args['optimizer_args'].items():
-                if key == "betas":
-                    if isinstance(value, float):
-                        self.args['optimizer_args'][key] = f"\"{value}\""
-                    else:
-                        self.args['optimizer_args'][key] = value
-                else:
-                    self.args['optimizer_args'][key] = value
+                if not isinstance(value, str):
+                    value = str(value)
+                self.opt_arg_list.append(OptimizerItem(arg_name=key, arg_value=value))
+                self.widget.optimizer_item_widget.layout().addWidget(self.opt_arg_list[-1])
+                self.opt_arg_list[-1].delete_item.connect(self.remove_optimizer_arg)
         else:
-            self.args['optimizer_args'] = {"weight_decay": 0.1, "betas": "0.9,0.99"}
+            for i in range(len(self.opt_arg_list)):
+                self.remove_optimizer_arg(self.opt_arg_list[0])
+
+        # if "optimizer_args" in args:
+        #     self.args['optimizer_args'] = {}
+        #     for key, value in args['optimizer_args'].items():
+        #         if key == "betas":
+        #             if isinstance(value, float):
+        #                 self.args['optimizer_args'][key] = f"\"{value}\""
+        #             else:
+        #                 self.args['optimizer_args'][key] = value
+        #         else:
+        #             self.args['optimizer_args'][key] = value
+        # else:
+        #     self.args['optimizer_args'] = {"weight_decay": 0.1, "betas": "0.9,0.99"}
 
     def save_args(self) -> Union[dict, None]:
-        return self.args
+        new_args = self.args.copy()
+        for arg in self.opt_arg_list:
+            if "optimizer_args" not in new_args:
+                new_args['optimizer_args'] = {}
+            name, value = arg.get_arg()
+            new_args['optimizer_args'][name] = value
+        if "optimizer_args" in new_args and len(new_args['optimizer_args']) == 0:
+            del new_args['optimizer_args']
+        return new_args
 
     def save_dataset_args(self) -> Union[dict, None]:
         pass
