@@ -61,11 +61,6 @@
          </item>
          <item>
           <property name="text">
-           <string>Lion8bit</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
            <string>SGDNesterov</string>
           </property>
          </item>
