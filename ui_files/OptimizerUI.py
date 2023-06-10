@@ -47,6 +47,7 @@ class Ui_optimizer_ui(object):
         self.optimizer_type_selector.addItem("")
         self.optimizer_type_selector.addItem("")
         self.optimizer_type_selector.addItem("")
+        self.optimizer_type_selector.addItem("")
         self.optimizer_type_selector.setObjectName(u"optimizer_type_selector")
         self.optimizer_type_selector.setFocusPolicy(Qt.StrongFocus)
 
@@ -193,7 +194,7 @@ class Ui_optimizer_ui(object):
 
         self.retranslateUi(optimizer_ui)
 
-        self.tabWidget.setCurrentIndex(1)
+        self.tabWidget.setCurrentIndex(0)
 
 
         QMetaObject.connectSlotsByName(optimizer_ui)
@@ -204,13 +205,14 @@ class Ui_optimizer_ui(object):
         self.optimizer_type_selector.setItemText(0, QCoreApplication.translate("optimizer_ui", u"AdamW", None))
         self.optimizer_type_selector.setItemText(1, QCoreApplication.translate("optimizer_ui", u"AdamW8bit", None))
         self.optimizer_type_selector.setItemText(2, QCoreApplication.translate("optimizer_ui", u"Lion", None))
-        self.optimizer_type_selector.setItemText(3, QCoreApplication.translate("optimizer_ui", u"SGDNesterov", None))
-        self.optimizer_type_selector.setItemText(4, QCoreApplication.translate("optimizer_ui", u"SGDNesterov8bit", None))
-        self.optimizer_type_selector.setItemText(5, QCoreApplication.translate("optimizer_ui", u"DAdaptAdam", None))
-        self.optimizer_type_selector.setItemText(6, QCoreApplication.translate("optimizer_ui", u"DAdaptAdaGrad", None))
-        self.optimizer_type_selector.setItemText(7, QCoreApplication.translate("optimizer_ui", u"DAdaptAdan", None))
-        self.optimizer_type_selector.setItemText(8, QCoreApplication.translate("optimizer_ui", u"DAdaptSGD", None))
-        self.optimizer_type_selector.setItemText(9, QCoreApplication.translate("optimizer_ui", u"AdaFactor", None))
+        self.optimizer_type_selector.setItemText(3, QCoreApplication.translate("optimizer_ui", u"Lion8bit", None))
+        self.optimizer_type_selector.setItemText(4, QCoreApplication.translate("optimizer_ui", u"SGDNesterov", None))
+        self.optimizer_type_selector.setItemText(5, QCoreApplication.translate("optimizer_ui", u"SGDNesterov8bit", None))
+        self.optimizer_type_selector.setItemText(6, QCoreApplication.translate("optimizer_ui", u"DAdaptAdam", None))
+        self.optimizer_type_selector.setItemText(7, QCoreApplication.translate("optimizer_ui", u"DAdaptAdaGrad", None))
+        self.optimizer_type_selector.setItemText(8, QCoreApplication.translate("optimizer_ui", u"DAdaptAdan", None))
+        self.optimizer_type_selector.setItemText(9, QCoreApplication.translate("optimizer_ui", u"DAdaptSGD", None))
+        self.optimizer_type_selector.setItemText(10, QCoreApplication.translate("optimizer_ui", u"AdaFactor", None))
 
 #if QT_CONFIG(tooltip)
         self.optimizer_type_selector.setToolTip(QCoreApplication.translate("optimizer_ui", u"<html><head/><body><p>The optimizer to use, The standard, and the one most people use is AdamW8bit.</p><p>The various Dadapt modify the lr on their own as you go, however can only take one lr.</p></body></html>", None))

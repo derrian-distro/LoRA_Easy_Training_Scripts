@@ -59,6 +59,11 @@ class BaseArgsWidget(QtWidgets.QWidget):
         self.widget.cache_latents_enable.clicked.connect(self.enable_cache_latents)
         self.widget.cache_latents_to_disk_enable.clicked.connect(lambda x: self.enable_cache_latents(True))
 
+        # Comment in Metadata
+        self.widget.comment_enable.clicked.connect(self.enable_disable_comment)
+        self.widget.comment_input.textChanged.connect(lambda: self.edit_args(
+            "training_comment", self.widget.comment_input.toPlainText(), True))
+
         # generic connections
         self.widget.seed_input.valueChanged.connect(lambda x: self.edit_args("seed", x))
         self.widget.clip_skip_input.valueChanged.connect(lambda x: self.edit_args("clip_skip", x))
@@ -154,6 +159,11 @@ class BaseArgsWidget(QtWidgets.QWidget):
             else:
                 self.args['gradient_accumulation_steps'] = self.widget.gradient_steps_input.value()
                 self.widget.gradient_steps_input.setEnabled(True)
+
+    @QtCore.Slot(bool)
+    def enable_disable_comment(self, checked: bool) -> None:
+        self.widget.comment_input.setEnabled(checked)
+        self.edit_args("training_comment", self.widget.comment_input.toPlainText() if checked else None, True)
 
     @QtCore.Slot(int)
     def max_training_select(self, index: int) -> None:
@@ -257,6 +267,10 @@ class BaseArgsWidget(QtWidgets.QWidget):
         index = 0 if args.get("max_train_epochs", None) else 1
         self.widget.max_train_selector.setCurrentIndex(index)
         self.widget.max_train_input.setValue(args['max_train_epochs'] if index == 0 else args['max_train_steps'])
+        checked = True if args.get('training_comment', False) else False
+        self.widget.comment_input.setText(args.get('training_comment', ""))
+        self.widget.comment_enable.setChecked(checked)
+        self.enable_disable_comment(checked)
 
     def save_args(self) -> Union[dict, None]:
         return self.args
