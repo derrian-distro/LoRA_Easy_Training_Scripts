@@ -160,7 +160,7 @@ def main():
             os.remove(os.path.join('venv', 'Lib', 'site-packages', 'bitsandbytes', 'cuda_setup', 'main.py'))
             shutil.copy(os.path.join('..', 'installables', 'main.py'),
                         os.path.join('venv', 'Lib', 'site-packages', 'bitsandbytes', 'cuda_setup'))
-    subprocess.check_call([python, '-m', 'pip', 'install', "https://github.com/jllllll/bitsandbytes-windows-webui/raw/main/bitsandbytes-0.38.1-py3-none-any.whl"])
+    subprocess.check_call([python, 'install', "https://github.com/jllllll/bitsandbytes-windows-webui/raw/main/bitsandbytes-0.38.1-py3-none-any.whl"])
     print("Completed installing, you can launch the ui by launching run.bat")
 
 
