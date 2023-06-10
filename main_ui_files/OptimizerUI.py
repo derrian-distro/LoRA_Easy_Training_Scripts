@@ -209,19 +209,6 @@ class OptimizerWidget(QtWidgets.QWidget):
             for i in range(len(self.opt_arg_list)):
                 self.remove_optimizer_arg(self.opt_arg_list[0])
 
-        # if "optimizer_args" in args:
-        #     self.args['optimizer_args'] = {}
-        #     for key, value in args['optimizer_args'].items():
-        #         if key == "betas":
-        #             if isinstance(value, float):
-        #                 self.args['optimizer_args'][key] = f"\"{value}\""
-        #             else:
-        #                 self.args['optimizer_args'][key] = value
-        #         else:
-        #             self.args['optimizer_args'][key] = value
-        # else:
-        #     self.args['optimizer_args'] = {"weight_decay": 0.1, "betas": "0.9,0.99"}
-
     def save_args(self) -> Union[dict, None]:
         new_args = self.args.copy()
         for arg in self.opt_arg_list:
