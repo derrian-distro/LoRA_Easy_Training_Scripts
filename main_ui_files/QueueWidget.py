@@ -30,9 +30,8 @@ class QueueWidget(QtWidgets.QWidget):
         new_item.QueueSelected.connect(self.update_selected)
         new_item.setText("Unnamed" if not self.widget.queue_name.text() else self.widget.queue_name.text())
         self.elements.append(new_item)
-        self.selected = new_item
+        self.selected = None
         self.uncheck_elements(True)
-        new_item.setChecked(True)
         self.widget.queue_scroll_widget.layout().addWidget(new_item)
         self.saveQueue.emit(new_item.queue_file)
 

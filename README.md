@@ -155,6 +155,10 @@ As you can see everything is sectioned off into their own sections. Generally th
 ## Changelog
 changelog of the old scripts are all in that branch [here](https://github.com/derrian-distro/LoRA_Easy_Training_Scripts/tree/old-scripts#changelog)
 
+- June 11, 2023
+  - Changed queue behavior slightly to better fit what is actually happening
+  - added an "optimizer args" section to the UI so that you can put in values for things like betas and weight decay
+  - Added training comment
 - June 6, 2023
   - Updated sd-scripts
   - Added the new args related to the new update,
