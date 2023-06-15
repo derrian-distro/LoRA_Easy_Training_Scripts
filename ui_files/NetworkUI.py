@@ -15,9 +15,9 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QFont, QFontDatabase, QGradient, QIcon,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
-from PySide6.QtWidgets import (QApplication, QCheckBox, QFormLayout, QLabel,
-    QScrollArea, QSizePolicy, QTabWidget, QVBoxLayout,
-    QWidget)
+from PySide6.QtWidgets import (QApplication, QCheckBox, QFormLayout, QHBoxLayout,
+    QLabel, QScrollArea, QSizePolicy, QTabWidget,
+    QVBoxLayout, QWidget)
 
 from modules.CollapsibleWidget import CollapsibleWidget
 from modules.ScrollOnSelect import (ComboBox, DoubleSpinBox, SpinBox)
@@ -26,7 +26,7 @@ class Ui_network_ui(object):
     def setupUi(self, network_ui):
         if not network_ui.objectName():
             network_ui.setObjectName(u"network_ui")
-        network_ui.resize(400, 352)
+        network_ui.resize(400, 391)
         network_ui.setMinimumSize(QSize(0, 0))
         self.verticalLayout = QVBoxLayout(network_ui)
         self.verticalLayout.setObjectName(u"verticalLayout")
@@ -41,6 +41,7 @@ class Ui_network_ui(object):
         self.formLayout_2 = QFormLayout(self.main_tab)
         self.formLayout_2.setObjectName(u"formLayout_2")
         self.algo_select = ComboBox(self.main_tab)
+        self.algo_select.addItem("")
         self.algo_select.addItem("")
         self.algo_select.addItem("")
         self.algo_select.addItem("")
@@ -184,6 +185,32 @@ class Ui_network_ui(object):
 
         self.formLayout_2.setWidget(9, QFormLayout.FieldRole, self.module_dropout_input)
 
+        self.cp_enable = QCheckBox(self.main_tab)
+        self.cp_enable.setObjectName(u"cp_enable")
+        self.cp_enable.setEnabled(False)
+
+        self.formLayout_2.setWidget(10, QFormLayout.LabelRole, self.cp_enable)
+
+        self.horizontalLayout = QHBoxLayout()
+        self.horizontalLayout.setObjectName(u"horizontalLayout")
+        self.lyco_dropout_enable = QCheckBox(self.main_tab)
+        self.lyco_dropout_enable.setObjectName(u"lyco_dropout_enable")
+        self.lyco_dropout_enable.setEnabled(False)
+
+        self.horizontalLayout.addWidget(self.lyco_dropout_enable)
+
+        self.lyco_dropout_input = DoubleSpinBox(self.main_tab)
+        self.lyco_dropout_input.setObjectName(u"lyco_dropout_input")
+        self.lyco_dropout_input.setEnabled(False)
+        self.lyco_dropout_input.setFocusPolicy(Qt.StrongFocus)
+        self.lyco_dropout_input.setMaximum(1.000000000000000)
+        self.lyco_dropout_input.setSingleStep(0.010000000000000)
+
+        self.horizontalLayout.addWidget(self.lyco_dropout_input)
+
+
+        self.formLayout_2.setLayout(10, QFormLayout.FieldRole, self.horizontalLayout)
+
         self.tabWidget.addTab(self.main_tab, "")
         self.block_weight_tab = QWidget()
         self.block_weight_tab.setObjectName(u"block_weight_tab")
@@ -195,7 +222,7 @@ class Ui_network_ui(object):
         self.block_weight_scroll_area.setWidgetResizable(True)
         self.block_weight_scroll_widget = QWidget()
         self.block_weight_scroll_widget.setObjectName(u"block_weight_scroll_widget")
-        self.block_weight_scroll_widget.setGeometry(QRect(0, 0, 394, 320))
+        self.block_weight_scroll_widget.setGeometry(QRect(0, 0, 394, 359))
         self.verticalLayout_3 = QVBoxLayout(self.block_weight_scroll_widget)
         self.verticalLayout_3.setObjectName(u"verticalLayout_3")
         self.verticalLayout_3.setContentsMargins(0, 0, 0, 0)
@@ -250,10 +277,11 @@ class Ui_network_ui(object):
         network_ui.setWindowTitle(QCoreApplication.translate("network_ui", u"Form", None))
         self.algo_select.setItemText(0, QCoreApplication.translate("network_ui", u"LoRA", None))
         self.algo_select.setItemText(1, QCoreApplication.translate("network_ui", u"LoCon", None))
-        self.algo_select.setItemText(2, QCoreApplication.translate("network_ui", u"LoHa", None))
-        self.algo_select.setItemText(3, QCoreApplication.translate("network_ui", u"IA3", None))
-        self.algo_select.setItemText(4, QCoreApplication.translate("network_ui", u"Lokr", None))
-        self.algo_select.setItemText(5, QCoreApplication.translate("network_ui", u"DyLoRA", None))
+        self.algo_select.setItemText(2, QCoreApplication.translate("network_ui", u"LoCon (LyCORIS)", None))
+        self.algo_select.setItemText(3, QCoreApplication.translate("network_ui", u"LoHa", None))
+        self.algo_select.setItemText(4, QCoreApplication.translate("network_ui", u"IA3", None))
+        self.algo_select.setItemText(5, QCoreApplication.translate("network_ui", u"Lokr", None))
+        self.algo_select.setItemText(6, QCoreApplication.translate("network_ui", u"DyLoRA", None))
 
 #if QT_CONFIG(tooltip)
         self.algo_select.setToolTip(QCoreApplication.translate("network_ui", u"<html><head/><body><p>The algorithm that is used for training, LoRA is the only one that doesn't train on all layers. LoCon is just LoRA that train on all layers LoHa has a ton of compression, and that is basically true for ia3 and Lokr as well. DyLora is a type of LoRA (or LoCon) that basically allows you to train multiple dim sized models in one, it does take a lot longer to train.</p></body></html>", None))
@@ -297,6 +325,14 @@ class Ui_network_ui(object):
         self.module_dropout_enable.setText(QCoreApplication.translate("network_ui", u"Module Dropout", None))
 #if QT_CONFIG(tooltip)
         self.module_dropout_input.setToolTip(QCoreApplication.translate("network_ui", u"<html><head/><body><p>Drops out each module at the specified probability. Module dropout has not be verified, use at your own risk.</p></body></html>", None))
+#endif // QT_CONFIG(tooltip)
+#if QT_CONFIG(tooltip)
+        self.cp_enable.setToolTip(QCoreApplication.translate("network_ui", u"<html><head/><body><p>Enables Conv CP, which is some form of compression algorithm that further reduces file size, I personally suggest you don't use it</p></body></html>", None))
+#endif // QT_CONFIG(tooltip)
+        self.cp_enable.setText(QCoreApplication.translate("network_ui", u"Enable Conv CP", None))
+        self.lyco_dropout_enable.setText(QCoreApplication.translate("network_ui", u"LyCORIS Dropout", None))
+#if QT_CONFIG(tooltip)
+        self.lyco_dropout_input.setToolTip(QCoreApplication.translate("network_ui", u"<html><head/><body><p>Dropout from LyCORIS. Not clearly explained in the readme, not entirely sure what it does.</p></body></html>", None))
 #endif // QT_CONFIG(tooltip)
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.main_tab), QCoreApplication.translate("network_ui", u"Main Args", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.block_weight_tab), QCoreApplication.translate("network_ui", u"Block Weights", None))
