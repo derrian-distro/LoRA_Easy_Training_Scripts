@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>400</width>
-    <height>352</height>
+    <height>391</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -67,6 +67,11 @@
          <item>
           <property name="text">
            <string>LoCon</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>LoCon (LyCORIS)</string>
           </property>
          </item>
          <item>
@@ -349,6 +354,52 @@
          </property>
         </widget>
        </item>
+       <item row="10" column="0">
+        <widget class="QCheckBox" name="cp_enable">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
+         <property name="toolTip">
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Enables Conv CP, which is some form of compression algorithm that further reduces file size, I personally suggest you don't use it&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         </property>
+         <property name="text">
+          <string>Enable Conv CP</string>
+         </property>
+        </widget>
+       </item>
+       <item row="10" column="1">
+        <layout class="QHBoxLayout" name="horizontalLayout">
+         <item>
+          <widget class="QCheckBox" name="lyco_dropout_enable">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
+           <property name="text">
+            <string>LyCORIS Dropout</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="DoubleSpinBox" name="lyco_dropout_input">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
+           <property name="focusPolicy">
+            <enum>Qt::StrongFocus</enum>
+           </property>
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Dropout from LyCORIS. Not clearly explained in the readme, not entirely sure what it does.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="maximum">
+            <double>1.000000000000000</double>
+           </property>
+           <property name="singleStep">
+            <double>0.010000000000000</double>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
       </layout>
      </widget>
      <widget class="QWidget" name="block_weight_tab">
@@ -379,7 +430,7 @@
             <x>0</x>
             <y>0</y>
             <width>394</width>
-            <height>320</height>
+            <height>359</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_3">

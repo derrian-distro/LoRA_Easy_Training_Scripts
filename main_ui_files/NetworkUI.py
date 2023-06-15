@@ -59,6 +59,9 @@ class NetworkWidget(QtWidgets.QWidget):
         self.ui.rank_dropout_input.valueChanged.connect(lambda x: self.edit_network_args('rank_dropout', x))
         self.ui.module_dropout_enable.clicked.connect(lambda x: self.enable_disable_dropout('module', x))
         self.ui.module_dropout_input.valueChanged.connect(lambda x: self.edit_network_args('module_dropout', x))
+        self.ui.cp_enable.clicked.connect(lambda x: self.edit_network_args('use_conv_cp', x))
+        self.ui.lyco_dropout_enable.clicked.connect(self.enable_disable_lyco_dropout)
+        self.ui.lyco_dropout_input.valueChanged.connect(lambda x: self.edit_network_args("dropout", x))
 
         self.colap.add_widget(self.widget, "main_widget")
         self.layout().addWidget(self.colap)
@@ -118,6 +121,15 @@ class NetworkWidget(QtWidgets.QWidget):
                 if 'module_dropout' in self.args['network_args']:
                     del self.args['network_args']['module_dropout']
 
+    @QtCore.Slot(bool)
+    def enable_disable_lyco_dropout(self, checked: bool):
+        self.ui.lyco_dropout_input.setEnabled(checked)
+        if checked:
+            self.edit_network_args('dropout', self.ui.lyco_dropout_input.value())
+        else:
+            if 'network_args' in self.args and 'dropout' in self.args['network_args']:
+                del self.args['network_args']['dropout']
+
     @QtCore.Slot(str)
     def algo_changed(self, name: str) -> None:
         if name == "LoRA":
@@ -132,6 +144,9 @@ class NetworkWidget(QtWidgets.QWidget):
             self.enable_disable_dropout('rank', self.ui.rank_dropout_enable.isChecked())
             self.ui.module_dropout_enable.setEnabled(True)
             self.enable_disable_dropout('module', self.ui.module_dropout_enable.isChecked())
+            self.ui.cp_enable.setEnabled(False)
+            self.ui.lyco_dropout_enable.setEnabled(False)
+            self.ui.lyco_dropout_input.setEnabled(False)
         else:
             self.ui.conv_alpha_input.setEnabled(True)
             self.ui.conv_dim_input.setEnabled(True)
@@ -163,10 +178,21 @@ class NetworkWidget(QtWidgets.QWidget):
                 if "unit" in self.args['network_args']:
                     del self.args['network_args']['unit']
             if name not in {"LoCon", "DyLoRA"}:
-                self.args['network_args']['algo'] = name.lower()
+                self.args['network_args']['algo'] = name.lower() if name != 'LoCon (LyCORIS)' else 'locon'
+                self.ui.cp_enable.setEnabled(True)
+                self.edit_network_args('use_conv_cp', self.ui.cp_enable.isChecked())
+                self.ui.lyco_dropout_enable.setEnabled(True)
+                self.enable_disable_lyco_dropout(self.ui.lyco_dropout_enable.isChecked())
             else:
+                self.ui.cp_enable.setEnabled(False)
+                self.ui.lyco_dropout_enable.setEnabled(False)
+                self.ui.lyco_dropout_input.setEnabled(False)
                 if "algo" in self.args['network_args']:
                     del self.args['network_args']['algo']
+                if 'use_conv_cp' in self.args['network_args']:
+                    del self.args['network_args']['use_conv_cp']
+                if 'dropout' in self.args['network_args']:
+                    del self.args['network_args']['dropout']
         self.change_block_weight_enable(name)
 
     def change_block_weight_enable(self, algo: str):
@@ -261,6 +287,19 @@ class NetworkWidget(QtWidgets.QWidget):
                 for j, val in enumerate(vals):
                     self.block_widgets[i + 1].vals[j] = val
                     if j < 12:
+                        if isinstance(val, str):
+                            if name in ['block_alphas', 'conv_block_alphas']:
+                                try:
+                                    val = float(val)
+                                except:
+                                    print("failed to load some or all of the block weights")
+                                    return
+                            else:
+                                try:
+                                    val = int(val)
+                                except:
+                                    print("failed to load some of all of the block weights")
+                                    return
                         self.block_widgets[i + 1].down_widgets[j][1].setValue(val)
                     elif j == 12:
                         self.block_widgets[i + 1].mid_widget[1].setValue(val)
@@ -301,10 +340,15 @@ class NetworkWidget(QtWidgets.QWidget):
             self.enable_disable_dropout('module', checked)
 
             if "unit" in args['network_args']:
-                self.ui.algo_select.setCurrentIndex(5)
+                self.ui.algo_select.setCurrentIndex(6)
             elif "algo" in args['network_args']:
                 algo = args['network_args']['algo']
-                index = 2 if algo == 'loha' else 3 if algo == "ia3" else 4
+                index = 2 if algo == 'locon' else 3 if algo == 'loha' else 4 if algo == "ia3" else 5
+                self.ui.cp_enable.setChecked(args['network_args'].get("use_conv_cp", False))
+                self.ui.lyco_dropout_enable.setChecked(True if args['network_args'].get('dropout', False) else False)
+                self.ui.lyco_dropout_input.setValue(args['network_args'].get('dropout', 0.0))
+                self.ui.cp_enable.setEnabled(True)
+                self.enable_disable_lyco_dropout(self.ui.lyco_dropout_enable.isChecked())
                 self.ui.algo_select.setCurrentIndex(index)
             elif "conv_dim" in args['network_args']:
                 self.ui.algo_select.setCurrentIndex(1)

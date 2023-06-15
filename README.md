@@ -155,6 +155,11 @@ As you can see everything is sectioned off into their own sections. Generally th
 ## Changelog
 changelog of the old scripts are all in that branch [here](https://github.com/derrian-distro/LoRA_Easy_Training_Scripts/tree/old-scripts#changelog)
 
+- June 14, 2023
+  - Updated sd-scripts and Lycoris
+  - Nothing new was added, just bug fixes for them
+  - Added support for LyCORIS's dropout and and CP decomposition
+  - This update should fix a bunch of the issues people were having in relation to using LoHa, and other LyCORIS types.
 - June 11, 2023
   - Changed queue behavior slightly to better fit what is actually happening
   - added an "optimizer args" section to the UI so that you can put in values for things like betas and weight decay
