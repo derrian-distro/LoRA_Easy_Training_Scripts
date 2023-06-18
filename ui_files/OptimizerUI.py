@@ -16,11 +16,11 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
 from PySide6.QtWidgets import (QApplication, QCheckBox, QFormLayout, QLabel,
-    QPushButton, QScrollArea, QSizePolicy, QTabWidget,
-    QVBoxLayout, QWidget)
+    QPushButton, QScrollArea, QSizePolicy, QVBoxLayout,
+    QWidget)
 
 from modules.LineEditHighlight import LineEditWithHighlight
-from modules.ScrollOnSelect import (ComboBox, DoubleSpinBox, SpinBox)
+from modules.ScrollOnSelect import (ComboBox, DoubleSpinBox, SpinBox, TabView)
 
 class Ui_optimizer_ui(object):
     def setupUi(self, optimizer_ui):
@@ -30,10 +30,12 @@ class Ui_optimizer_ui(object):
         self.verticalLayout = QVBoxLayout(optimizer_ui)
         self.verticalLayout.setObjectName(u"verticalLayout")
         self.verticalLayout.setContentsMargins(0, 0, 0, 0)
-        self.tabWidget = QTabWidget(optimizer_ui)
+        self.tabWidget = TabView(optimizer_ui)
         self.tabWidget.setObjectName(u"tabWidget")
+        self.tabWidget.setFocusPolicy(Qt.StrongFocus)
         self.optimizer_tab_main = QWidget()
         self.optimizer_tab_main.setObjectName(u"optimizer_tab_main")
+        self.optimizer_tab_main.setFocusPolicy(Qt.StrongFocus)
         self.formLayout_2 = QFormLayout(self.optimizer_tab_main)
         self.formLayout_2.setObjectName(u"formLayout_2")
         self.optimizer_type_selector = ComboBox(self.optimizer_tab_main)
@@ -167,6 +169,7 @@ class Ui_optimizer_ui(object):
         self.tabWidget.addTab(self.optimizer_tab_main, "")
         self.optimizer_tab_args = QWidget()
         self.optimizer_tab_args.setObjectName(u"optimizer_tab_args")
+        self.optimizer_tab_args.setFocusPolicy(Qt.StrongFocus)
         self.verticalLayout_2 = QVBoxLayout(self.optimizer_tab_args)
         self.verticalLayout_2.setObjectName(u"verticalLayout_2")
         self.add_opt_button = QPushButton(self.optimizer_tab_args)
@@ -264,8 +267,8 @@ class Ui_optimizer_ui(object):
 #if QT_CONFIG(tooltip)
         self.scale_weight_input.setToolTip(QCoreApplication.translate("optimizer_ui", u"<html><head/><body><p>An implementation of the idea of max norm regularization. Basically, this will help stabilize network training by limiting the normal of network weights. Might work well for limiting overfitting or baking.</p></body></html>", None))
 #endif // QT_CONFIG(tooltip)
-        self.tabWidget.setTabText(self.tabWidget.indexOf(self.optimizer_tab_main), QCoreApplication.translate("optimizer_ui", u"Tab 1", None))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.optimizer_tab_main), QCoreApplication.translate("optimizer_ui", u"Main Args", None))
         self.add_opt_button.setText(QCoreApplication.translate("optimizer_ui", u"Add Optimizer Arg", None))
-        self.tabWidget.setTabText(self.tabWidget.indexOf(self.optimizer_tab_args), QCoreApplication.translate("optimizer_ui", u"Tab 2", None))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.optimizer_tab_args), QCoreApplication.translate("optimizer_ui", u"Optional Args", None))
     # retranslateUi
 

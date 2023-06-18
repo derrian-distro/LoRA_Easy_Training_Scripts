@@ -20,7 +20,7 @@ from PySide6.QtWidgets import (QApplication, QCheckBox, QFormLayout, QHBoxLayout
     QVBoxLayout, QWidget)
 
 from modules.CollapsibleWidget import CollapsibleWidget
-from modules.ScrollOnSelect import (ComboBox, DoubleSpinBox, SpinBox)
+from modules.ScrollOnSelect import (ComboBox, DoubleSpinBox, SpinBox, TabView)
 
 class Ui_network_ui(object):
     def setupUi(self, network_ui):
@@ -31,13 +31,16 @@ class Ui_network_ui(object):
         self.verticalLayout = QVBoxLayout(network_ui)
         self.verticalLayout.setObjectName(u"verticalLayout")
         self.verticalLayout.setContentsMargins(0, 0, 0, 0)
-        self.tabWidget = QTabWidget(network_ui)
+        self.tabWidget = TabView(network_ui)
         self.tabWidget.setObjectName(u"tabWidget")
         self.tabWidget.setEnabled(True)
+        self.tabWidget.setFocusPolicy(Qt.NoFocus)
         self.tabWidget.setTabPosition(QTabWidget.North)
         self.tabWidget.setTabShape(QTabWidget.Rounded)
+        self.tabWidget.setUsesScrollButtons(False)
         self.main_tab = QWidget()
         self.main_tab.setObjectName(u"main_tab")
+        self.main_tab.setFocusPolicy(Qt.NoFocus)
         self.formLayout_2 = QFormLayout(self.main_tab)
         self.formLayout_2.setObjectName(u"formLayout_2")
         self.algo_select = ComboBox(self.main_tab)
@@ -214,6 +217,7 @@ class Ui_network_ui(object):
         self.tabWidget.addTab(self.main_tab, "")
         self.block_weight_tab = QWidget()
         self.block_weight_tab.setObjectName(u"block_weight_tab")
+        self.block_weight_tab.setFocusPolicy(Qt.NoFocus)
         self.verticalLayout_2 = QVBoxLayout(self.block_weight_tab)
         self.verticalLayout_2.setObjectName(u"verticalLayout_2")
         self.verticalLayout_2.setContentsMargins(0, 0, 0, 0)

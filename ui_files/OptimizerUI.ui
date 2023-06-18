@@ -27,13 +27,19 @@
     <number>0</number>
    </property>
    <item>
-    <widget class="QTabWidget" name="tabWidget">
+    <widget class="TabView" name="tabWidget">
+     <property name="focusPolicy">
+      <enum>Qt::StrongFocus</enum>
+     </property>
      <property name="currentIndex">
       <number>0</number>
      </property>
      <widget class="QWidget" name="optimizer_tab_main">
+      <property name="focusPolicy">
+       <enum>Qt::StrongFocus</enum>
+      </property>
       <attribute name="title">
-       <string>Tab 1</string>
+       <string>Main Args</string>
       </attribute>
       <layout class="QFormLayout" name="formLayout_2">
        <item row="0" column="0" colspan="2">
@@ -331,8 +337,11 @@
       </layout>
      </widget>
      <widget class="QWidget" name="optimizer_tab_args">
+      <property name="focusPolicy">
+       <enum>Qt::StrongFocus</enum>
+      </property>
       <attribute name="title">
-       <string>Tab 2</string>
+       <string>Optional Args</string>
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout_2">
        <item>
@@ -381,6 +390,12 @@
    <class>DoubleSpinBox</class>
    <extends>QDoubleSpinBox</extends>
    <header>modules.ScrollOnSelect.h</header>
+  </customwidget>
+  <customwidget>
+   <class>TabView</class>
+   <extends>QTabWidget</extends>
+   <header>modules.ScrollOnSelect.h</header>
+   <container>1</container>
   </customwidget>
   <customwidget>
    <class>LineEditWithHighlight</class>

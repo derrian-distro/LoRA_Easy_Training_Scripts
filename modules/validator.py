@@ -105,9 +105,9 @@ def validate_warmup_ratio(args: dict, dataset: dict) -> None:
         steps = args['max_train_steps']
     else:
         steps = calculate_steps(dataset['subsets'], args['max_train_epochs'], dataset['general']['batch_size'])
-    steps = steps * args['warmup_ratio']
+    steps = round(steps * args['warmup_ratio'])
     del args['warmup_ratio']
-    args['warmup_steps'] = steps
+    args['lr_warmup_steps'] = steps
 
 
 def validate_save_tags(args: dict, dataset: dict) -> None:

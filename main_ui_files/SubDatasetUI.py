@@ -79,13 +79,16 @@ class SubsetItem(QtWidgets.QWidget):
         self.args_edited.emit(name, value)
 
     @QtCore.Slot()
-    def set_from_dialog(self) -> None:
+    def set_from_dialog(self, path: str = None) -> None:
         folder = self.widget.lineEdit.text()
         default_dir = folder if os.path.exists(folder) else ""
-        file_name = QtWidgets.QFileDialog.getExistingDirectory(self, "open directory containing images",
-                                                               dir=default_dir)
-        if not file_name:
-            return
+        if not path:
+            file_name = QtWidgets.QFileDialog.getExistingDirectory(self, "open directory containing images",
+                                                                   dir=default_dir)
+            if not file_name:
+                return
+        else:
+            file_name = path
         try:
             repeats = int(os.path.split(file_name)[-1].split("_")[0])
             self.widget.repeats_spinbox.setValue(repeats)
@@ -186,75 +189,91 @@ class SubsetItem(QtWidgets.QWidget):
 
 
 class SubDatasetWidget(QtWidgets.QWidget):
-    CacheChecked = QtCore.Signal(bool)
-
     def __init__(self, parent: QtWidgets.QWidget = None) -> None:
         super(SubDatasetWidget, self).__init__(parent)
         self.setMinimumSize(600, 300)
 
-        self.elements = set()
         self.cache_latents_checked = False
+        self.elements: list[tuple[QtWidgets.QWidget, CollapsibleWidget, SubsetItem]] = []
 
-        self.setLayout(QtWidgets.QGridLayout())
+        self.main_layout = QtWidgets.QGridLayout()
+        self.setLayout(self.main_layout)
+        self.main_layout.setAlignment(QtCore.Qt.AlignmentFlag.AlignTop)
 
-        self.layout().setAlignment(QtCore.Qt.AlignmentFlag.AlignTop)
+        self.add_bulk_button = QtWidgets.QPushButton()
+        self.add_bulk_button.setText("Add all subfolders from folder")
+        self.add_bulk_button.clicked.connect(self.add_from_root_folder)
+        self.add_bulk_button.setSizePolicy(QtWidgets.QSizePolicy.Policy.Minimum, QtWidgets.QSizePolicy.Policy.Fixed)
+        self.main_layout.addWidget(self.add_bulk_button, 0, 0, 1, 2)
 
         self.add_button = QtWidgets.QPushButton()
         self.add_button.setText("Add Data Subset")
         self.add_button.clicked.connect(self.add_empty_subset)
         self.add_button.setSizePolicy(QtWidgets.QSizePolicy.Policy.Minimum, QtWidgets.QSizePolicy.Policy.Fixed)
-        self.layout().addWidget(self.add_button, 0, 1, 1, 1)
+        self.main_layout.addWidget(self.add_button, 1, 1, 1, 1)
 
         self.add_label = LineEditWithHighlight()
         self.add_label.setPlaceholderText("Name of subset")
         self.add_label.setSizePolicy(QtWidgets.QSizePolicy.Policy.Maximum, QtWidgets.QSizePolicy.Policy.Fixed)
-        self.layout().addWidget(self.add_label, 0, 0, 1, 1)
+        self.main_layout.addWidget(self.add_label, 1, 0, 1, 1)
 
         self.scrollArea = QtWidgets.QScrollArea(self)
         self.scrollArea.setWidgetResizable(True)
         self.scrollWidget = QtWidgets.QWidget()
         self.scrollArea.setWidget(self.scrollWidget)
-        self.layout().addWidget(self.scrollArea, 1, 0, 1, 2)
+        self.main_layout.addWidget(self.scrollArea, 2, 0, 1, 2)
         self.scrollLayout = QtWidgets.QVBoxLayout(self.scrollWidget)
         self.scrollLayout.setSpacing(0)
         self.scrollLayout.setAlignment(QtCore.Qt.AlignmentFlag.AlignTop)
         self.scrollLayout.setContentsMargins(9, 0, 9, 0)
 
     @QtCore.Slot()
-    def add_empty_subset(self, name: str = None) -> SubsetItem:
-        widget = QtWidgets.QWidget(self.scrollArea)
-        widget.setLayout(QtWidgets.QHBoxLayout())
-        self.scrollWidget.layout().addWidget(widget)
+    def add_empty_subset(self, name: str = "") -> SubsetItem:
+        scroll_widget = QtWidgets.QWidget(self.scrollArea)
+        scroll_widget.setLayout(QtWidgets.QHBoxLayout())
+        self.scrollWidget.layout().addWidget(scroll_widget)
 
-        colap = CollapsibleWidget(widget, title=self.add_label.text() if not name else name, remove_elem=True)
+        colap = CollapsibleWidget(scroll_widget, title=self.add_label.text() if not name else name, remove_elem=True)
         colap.layout().setContentsMargins(9, 9, 9, 0)
-        colap.extra_elem.clicked.connect(lambda: self.delete_subset((widget, colap, subset)))
-        widget.layout().addWidget(colap)
+        colap.extra_elem.clicked.connect(lambda: self.delete_subset((scroll_widget, colap, subset)))
+        scroll_widget.layout().addWidget(colap)
         if len(self.elements) == 0:
             colap.toggle_collapsed()
             colap.title_frame.setChecked(True)
 
         subset = SubsetItem()
-        self.CacheChecked.connect(subset.enable_disable_cache_dependants)
-        self.cache_checked(self.cache_latents_checked)
         subset.sub_widget.layout().setContentsMargins(9, 9, 9, 0)
-        colap.add_widget(subset, "main_widget")
-
-        self.elements.add((widget, colap, subset))
+        subset.enable_disable_cache_dependants(self.cache_latents_checked)
+        colap.add_widget(subset, 'main_widget')
+        self.elements.append((scroll_widget, colap, subset))
         return subset
 
     @QtCore.Slot(tuple)
     def delete_subset(self, elem: tuple) -> None:
-        temp = {elem}
-        self.elements = self.elements - temp
-        self.scrollWidget.layout().removeWidget(elem[0])
-        elem[0].deleteLater()
-        self.scrollWidget.layout().update()
+        self.elements.pop(self.elements.index(elem))
+        index = self.scrollWidget.layout().indexOf(elem[0])
+        val = self.scrollWidget.layout().takeAt(index)
+        if val.widget() is not None:
+            val.widget().deleteLater()
 
     @QtCore.Slot(bool)
     def cache_checked(self, checked: bool) -> None:
         self.cache_latents_checked = checked
-        self.CacheChecked.emit(checked)
+        for elem in self.elements:
+            elem[2].enable_disable_cache_dependants(checked)
+
+    @QtCore.Slot()
+    def add_from_root_folder(self):
+        file_path = QtWidgets.QFileDialog.getExistingDirectory(self, "Root folder that all image folders are in")
+        if not file_path or not os.path.isdir(file_path):
+            return
+        while len(self.elements) > 0:
+            self.delete_subset(self.elements[0])
+        for elem in os.listdir(file_path):
+            if not os.path.isdir(os.path.join(file_path, elem)):
+                continue
+            subset = self.add_empty_subset(elem)
+            subset.set_from_dialog(os.path.join(file_path, elem))
 
     def get_subset_args(self, skip_check: bool = False) -> Union[list[dict], None]:
         args_list = []
@@ -282,11 +301,11 @@ class SubDatasetWidget(QtWidgets.QWidget):
     def load_args(self, args: dict) -> None:
         if "subsets" not in args:
             return
-        for elem in self.elements:
-            self.delete_subset(elem)
+        while len(self.elements) > 0:
+            self.delete_subset(self.elements[0])
 
         subsets = args['subsets']
         for subset in subsets:
-            elem = self.add_empty_subset()
+            elem = self.add_empty_subset(os.path.split(subset['image_dir'])[-1])
             elem.load_args(subset)
         self.cache_checked(self.cache_latents_checked)

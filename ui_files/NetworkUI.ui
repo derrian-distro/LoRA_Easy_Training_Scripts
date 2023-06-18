@@ -33,9 +33,12 @@
     <number>0</number>
    </property>
    <item>
-    <widget class="QTabWidget" name="tabWidget">
+    <widget class="TabView" name="tabWidget">
      <property name="enabled">
       <bool>true</bool>
+     </property>
+     <property name="focusPolicy">
+      <enum>Qt::NoFocus</enum>
      </property>
      <property name="tabPosition">
       <enum>QTabWidget::North</enum>
@@ -46,7 +49,13 @@
      <property name="currentIndex">
       <number>0</number>
      </property>
+     <property name="usesScrollButtons">
+      <bool>false</bool>
+     </property>
      <widget class="QWidget" name="main_tab">
+      <property name="focusPolicy">
+       <enum>Qt::NoFocus</enum>
+      </property>
       <attribute name="title">
        <string>Main Args</string>
       </attribute>
@@ -403,6 +412,9 @@
       </layout>
      </widget>
      <widget class="QWidget" name="block_weight_tab">
+      <property name="focusPolicy">
+       <enum>Qt::NoFocus</enum>
+      </property>
       <attribute name="title">
        <string>Block Weights</string>
       </attribute>
@@ -511,6 +523,12 @@
    <class>CollapsibleWidget</class>
    <extends>QWidget</extends>
    <header>modules.CollapsibleWidget.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>TabView</class>
+   <extends>QTabWidget</extends>
+   <header>modules.ScrollOnSelect.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>
