@@ -60,6 +60,7 @@ class MainWidget(QtWidgets.QWidget):
         if not args or not dataset_args:
             print("failed validation")
             return False
+        validator.validate_restarts(args, dataset_args)
         validator.validate_warmup_ratio(args, dataset_args)
         validator.validate_save_tags(args, dataset_args)
         if "save_toml" in args:

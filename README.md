@@ -76,6 +76,8 @@ TOML saving and loading are available so that you don't have to put in every var
 ![TOML saving and loading gif](https://raw.githubusercontent.com/derrian-distro/LoRA_Easy_Training_Scripts/main/images_gifs/toml_loading_and_saving.gif)
 NOTE: This change is entirely different from the old system, so unfortunately the JSON files of the old scripts are no longer valid.
 
+I have added a custom scheduler, CosineAnnealingWarmupRestarts. This scheduler allows restarts which restart with a decay, so that each restart has a bit less lr than the last, A few things to note about it though, warmup steps are not all applied at the beginning, but rather per epoch, I have set it up so that the warmup steps get divided evenly among them, decay is settable, and it uniquely has a minimum lr, which is set to 0 instead if the lr provided is smaller.
+
 The Queue System is intuitive and easy to use, allowing you to save a config into a little button on the bottom left then allowing you to pull it back up for editing if you need to. Additionally you can use the arrow keys to change the positions of the queue items. A cool thing about this is that you can still edit args and even add or remove queue items while something else is training.
 ![queue manipulation gif](https://raw.githubusercontent.com/derrian-distro/LoRA_Easy_Training_Scripts/main/images_gifs/queue_manipulation.gif)
 
@@ -155,8 +157,14 @@ As you can see everything is sectioned off into their own sections. Generally th
 ## Changelog
 changelog of the old scripts are all in that branch [here](https://github.com/derrian-distro/LoRA_Easy_Training_Scripts/tree/old-scripts#changelog)
 
+- June 24, 2023
+  - Updated sd-scripts and LyCORIS
+  - Added support for a new LR Scheduler, Cosine Annealing Warmup Restarts
+  - Fixed a bug in which warmup_steps wasn't being applied
+  - Added a button that you can use to add all folders in a folder to the subset section
+  - Updated the toml loading slightly so that it sets the name of the folder in the subsets when it loads
 - June 14, 2023
-  - Updated sd-scripts and Lycoris
+  - Updated sd-scripts and LyCORIS
   - Nothing new was added, just bug fixes for them
   - Added support for LyCORIS's dropout and and CP decomposition
   - This update should fix a bunch of the issues people were having in relation to using LoHa, and other LyCORIS types.

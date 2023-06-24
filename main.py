@@ -1,6 +1,7 @@
 import os.path
 import sys
 import json
+
 from PySide6 import QtWidgets
 from qt_material import apply_stylesheet
 from main_ui_files.MainWindow import MainWindow

@@ -31,11 +31,13 @@ class OptimizerWidget(QtWidgets.QWidget):
         self.widget.optimizer_type_selector.currentTextChanged.connect(lambda x: self.edit_args("optimizer_type", x))
         self.widget.lr_scheduler_selector.currentTextChanged.connect(self.edit_scheduler)
         self.widget.main_lr_input.textChanged.connect(lambda x: self.edit_lr("learning_rate", x))
+        self.widget.min_lr_input.textChanged.connect(lambda x: self.edit_lr("min_lr", x, True))
         self.widget.unet_lr_input.textChanged.connect(lambda x: self.edit_lr("unet_lr", x, True))
         self.widget.te_lr_input.textChanged.connect(lambda x: self.edit_lr("text_encoder_lr", x, True))
         self.widget.cosine_restart_input.valueChanged.connect(lambda x: self.edit_args("lr_scheduler_num_cycles", x))
         self.widget.poly_power_input.valueChanged.connect(lambda x: self.edit_args("lr_scheduler_power", x))
         self.widget.warmup_ratio_input.valueChanged.connect(lambda x: self.edit_args("warmup_ratio", x, True))
+        self.widget.gamma_input.valueChanged.connect(lambda x: self.edit_lr_args('gamma', 1 - x, True))
         self.widget.min_snr_input.valueChanged.connect(lambda x: self.edit_args("min_snr_gamma", x, True))
         self.widget.scale_weight_input.valueChanged.connect(lambda x: self.edit_args("scale_weight_norms", x))
         self.widget.add_opt_button.clicked.connect(self.add_optimizer_arg)
@@ -69,21 +71,50 @@ class OptimizerWidget(QtWidgets.QWidget):
         if not optional:
             try:
                 value = float(value)
+                if name == "min_lr":
+                    self.edit_lr_args(name, value, True)
+                    return
                 self.args[name] = value
             except ValueError:
+                if name == 'min_lr':
+                    self.edit_lr_args(name, 0.0, True)
+                    return
                 self.args[name] = 0.0
             return
         if value:
             try:
                 value = float(value)
+                if name == "min_lr":
+                    self.edit_lr_args(name, value, True)
+                    return
                 self.args[name] = value
             except ValueError:
+                if name == 'min_lr':
+                    self.edit_lr_args(name, None, True)
+                    return
                 if name in self.args:
                     del self.args[name]
         else:
+            if name == 'min_lr':
+                self.edit_lr_args(name, None, True)
+                return
             if name in self.args:
                 del self.args[name]
 
+    @QtCore.Slot(str, object, bool)
+    def edit_lr_args(self, name: str, value: object, optional: bool = False) -> None:
+        if "lr_scheduler_args" not in self.args:
+            self.args['lr_scheduler_args'] = {}
+        if not optional:
+            self.args['lr_scheduler_args'][name] = value
+            return
+        if value is not None:
+            self.args['lr_scheduler_args'][name] = value
+        elif name in self.args['lr_scheduler_args']:
+            del self.args['lr_scheduler_args'][name]
+
+    # TODO: remember to handle cosine_restarts at validation time for the custom scheduler
+    #  Make sure to handle the warmup ratio at validation time as well
     @QtCore.Slot(str)
     def edit_scheduler(self, value: str) -> None:
         value = value.replace(" ", "_")
@@ -91,17 +122,29 @@ class OptimizerWidget(QtWidgets.QWidget):
             del self.args["lr_scheduler_num_cycles"]
         if "lr_scheduler_power" in self.args:
             del self.args['lr_scheduler_power']
+        if "lr_scheduler_type" in self.args:
+            del self.args['lr_scheduler_type']
+        if "lr_scheduler_args" in self.args:
+            del self.args['lr_scheduler_args']
+        self.widget.cosine_restart_input.setEnabled(False)
+        self.widget.poly_power_input.setEnabled(False)
+        self.widget.min_lr_input.setEnabled(False)
+        self.widget.gamma_input.setEnabled(False)
         if value == "cosine_with_restarts":
             self.widget.cosine_restart_input.setEnabled(True)
-            self.widget.poly_power_input.setEnabled(False)
             self.edit_args("lr_scheduler_num_cycles", self.widget.cosine_restart_input.value())
+        elif value == "cosine_annealing_warmup_restarts":
+            self.args['lr_scheduler_type'] = "modules.CustomOptimizers.CosineAnnealingWarmupRestarts"
+            self.widget.cosine_restart_input.setEnabled(True)
+            self.widget.min_lr_input.setEnabled(True)
+            self.widget.gamma_input.setEnabled(True)
+            self.edit_lr("min_lr", self.widget.min_lr_input.text(), True)
+            self.edit_args("lr_scheduler_num_cycles", self.widget.cosine_restart_input.value())
+            self.edit_lr_args('gamma', 1 - self.widget.gamma_input.value(), True)
+            return
         elif value == "polynomial":
-            self.widget.cosine_restart_input.setEnabled(False)
             self.widget.poly_power_input.setEnabled(True)
             self.edit_args("lr_scheduler_power", self.widget.poly_power_input.value())
-        else:
-            self.widget.cosine_restart_input.setEnabled(False)
-            self.widget.poly_power_input.setEnabled(False)
         self.args["lr_scheduler"] = value
 
     @QtCore.Slot(bool, LineEditWithHighlight, str)
@@ -167,8 +210,13 @@ class OptimizerWidget(QtWidgets.QWidget):
         self.widget.cosine_restart_input.setValue(args.get('lr_scheduler_num_cycles', 1))
         self.widget.poly_power_input.setValue(args.get("lr_scheduler_power", 1.00))
 
+        if 'lr_scheduler_type' in args:
+            self.widget.lr_scheduler_selector.setCurrentText("cosine annealing warmup restarts")
+        else:
+            if 'lr_scheduler_type' in self.args:
+                del self.args['lr_scheduler_type']
+            self.widget.lr_scheduler_selector.setCurrentText(args['lr_scheduler'].replace("_", " "))
         self.widget.optimizer_type_selector.setCurrentText(args['optimizer_type'])
-        self.widget.lr_scheduler_selector.setCurrentText(args['lr_scheduler'].replace("_", " "))
         self.widget.main_lr_input.setText(str(args['learning_rate']))
 
         checked = True if args.get("unet_lr", False) else False
@@ -208,6 +256,20 @@ class OptimizerWidget(QtWidgets.QWidget):
         else:
             for i in range(len(self.opt_arg_list)):
                 self.remove_optimizer_arg(self.opt_arg_list[0])
+
+        if "lr_scheduler_args" in args:
+            if 'lr_scheduler_args' in self.args:
+                del self.args['lr_scheduler_args']
+            self.args['lr_scheduler_args'] = {}
+            for key, value in args['lr_scheduler_args'].items():
+                if key == 'min_lr':
+                    self.widget.min_lr_input.setText(str(value))
+                if key == 'gamma':
+                    self.widget.gamma_input.setValue(1 - value)
+                self.args['lr_scheduler_args'][key] = value
+        else:
+            if 'lr_scheduler_args' in self.args:
+                del self.args['lr_scheduler_args']
 
     def save_args(self) -> Union[dict, None]:
         new_args = self.args.copy()

@@ -22,6 +22,7 @@ def separate_and_validate(args: dict) -> tuple[Union[dict, None], Union[dict, No
 def validate_args(args: dict) -> Union[dict, None]:
     print("starting validation of args...")
     file_inputs = ["pretrained_model_name_or_path", "output_dir"]
+
     # if one or more sections report a None, then at least one thing isn't filled out correctly
     new_args = {}
     for key, value in args.items():
@@ -50,6 +51,11 @@ def validate_args(args: dict) -> Union[dict, None]:
                     vals.append(f"{k}={v}")
                 val = vals
             if arg == "optimizer_args":
+                vals = []
+                for k, v in val.items():
+                    vals.append(f"{k}={v}")
+                val = vals
+            if arg == 'lr_scheduler_args':
                 vals = []
                 for k, v in val.items():
                     vals.append(f"{k}={v}")
@@ -98,6 +104,19 @@ def validate_subset(args: dict) -> Union[dict, None]:
     return new_args
 
 
+def validate_restarts(args: dict, dataset: dict) -> None:
+    if "lr_scheduler_num_cycles" not in args:
+        return
+    if 'lr_scheduler_type' not in args:
+        return
+    if 'max_train_steps' in args:
+        steps = args['max_train_steps']
+    else:
+        steps = calculate_steps(dataset['subsets'], args['max_train_epochs'], dataset['general']['batch_size'])
+    steps = steps // args['lr_scheduler_num_cycles']
+    args['lr_scheduler_args'].append(f"first_cycle_steps={steps}")
+
+
 def validate_warmup_ratio(args: dict, dataset: dict) -> None:
     if "warmup_ratio" not in args:
         return
@@ -106,8 +125,12 @@ def validate_warmup_ratio(args: dict, dataset: dict) -> None:
     else:
         steps = calculate_steps(dataset['subsets'], args['max_train_epochs'], dataset['general']['batch_size'])
     steps = round(steps * args['warmup_ratio'])
+    if "lr_scheduler_type" in args:
+        args['lr_scheduler_args'].append(f"warmup_steps={steps // args.get('lr_scheduler_num_cycles', 1)}")
+    else:
+        args['lr_warmup_steps'] = steps
     del args['warmup_ratio']
-    args['lr_warmup_steps'] = steps
+    del args['lr_scheduler_num_cycles']
 
 
 def validate_save_tags(args: dict, dataset: dict) -> None:
