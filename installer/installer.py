@@ -93,6 +93,8 @@ def main():
 
     subprocess.check_call(f"{python} install -r ../requirements_ui.txt")
     subprocess.check_call(f"{python} install ../LyCORIS/.")
+    subprocess.check_call(f"{python} install ../custom_scheduler/.")
+    
     
     print("Setting up default config of accelerate")
     with open("default_config.yaml", 'w') as f:
