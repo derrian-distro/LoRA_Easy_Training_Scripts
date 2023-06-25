@@ -113,8 +113,6 @@ class OptimizerWidget(QtWidgets.QWidget):
         elif name in self.args['lr_scheduler_args']:
             del self.args['lr_scheduler_args'][name]
 
-    # TODO: remember to handle cosine_restarts at validation time for the custom scheduler
-    #  Make sure to handle the warmup ratio at validation time as well
     @QtCore.Slot(str)
     def edit_scheduler(self, value: str) -> None:
         value = value.replace(" ", "_")
@@ -134,7 +132,7 @@ class OptimizerWidget(QtWidgets.QWidget):
             self.widget.cosine_restart_input.setEnabled(True)
             self.edit_args("lr_scheduler_num_cycles", self.widget.cosine_restart_input.value())
         elif value == "cosine_annealing_warmup_restarts":
-            self.args['lr_scheduler_type'] = "modules.CustomOptimizers.CosineAnnealingWarmupRestarts"
+            self.args['lr_scheduler_type'] = "LoraEasyCustomOptimizer.CustomOptimizers.CosineAnnealingWarmupRestarts"
             self.widget.cosine_restart_input.setEnabled(True)
             self.widget.min_lr_input.setEnabled(True)
             self.widget.gamma_input.setEnabled(True)

@@ -3,4 +3,3 @@ qt-material
 toml
 dadaptation
 lion_pytorch
-pytorch-optimizer
