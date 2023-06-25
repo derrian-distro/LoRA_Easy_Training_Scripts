@@ -127,10 +127,10 @@ def validate_warmup_ratio(args: dict, dataset: dict) -> None:
     steps = round(steps * args['warmup_ratio'])
     if "lr_scheduler_type" in args:
         args['lr_scheduler_args'].append(f"warmup_steps={steps // args.get('lr_scheduler_num_cycles', 1)}")
+        del args['lr_scheduler_num_cycles']
     else:
         args['lr_warmup_steps'] = steps
     del args['warmup_ratio']
-    del args['lr_scheduler_num_cycles']
 
 
 def validate_save_tags(args: dict, dataset: dict) -> None:
