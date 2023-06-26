@@ -1,14 +1,14 @@
 import math
 from typing import List, Optional
 
-from torch.optim.lr_scheduler import LRScheduler
+from torch.optim.lr_scheduler import _LRScheduler
 
 
 # TODO: process first_cycle_steps according to restarts set, skip cycle_mult, add min_lr to the args, ensure warmup
 #  steps is properly set up to be handled according to restart, and allow gamma to be set, rename it to "decay" or
 #  something
 #  args to add to the UI: min_lr, gamma
-class CosineAnnealingWarmupRestarts(LRScheduler):
+class CosineAnnealingWarmupRestarts(_LRScheduler):
     def __init__(self, optimizer, first_cycle_steps: int, cycle_mult: float = 1.0, min_lr: float = 1e-6,
                  warmup_steps: int = 0, gamma: float = 0.9, last_epoch: int = -1):
         self.first_cycle_steps = first_cycle_steps
