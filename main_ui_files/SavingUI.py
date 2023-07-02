@@ -33,10 +33,21 @@ class SavingWidget(QtWidgets.QWidget):
         self.widget.resume_input.highlight = True
         self.widget.resume_selector.setIcon(QtGui.QIcon(os.path.join("icons", "more-horizontal.svg")))
 
+        # setup tag occurance
+        self.widget.save_tag_input.setMode('folder')
+        self.widget.save_tag_input.highlight = True
+        self.widget.save_tag_selector.setIcon(QtGui.QIcon(os.path.join("icons", "more-horizontal.svg")))
+
+        # setup toml file
+        self.widget.save_toml_input.setMode("folder")
+        self.widget.save_toml_input.highlight = True
+        self.widget.save_toml_selector.setIcon(QtGui.QIcon(os.path.join("icons", "more-horizontal.svg")))
+
         # connections for output folder
         self.widget.output_folder_input.textChanged.connect(lambda x: self.edit_args(
             "output_dir", x, elem=self.widget.output_folder_input))
-        self.widget.output_folder_selector.clicked.connect(lambda: self.set_from_dialog(False))
+        self.widget.output_folder_selector.clicked.connect(lambda: self.set_from_dialog(self.widget.output_folder_input,
+                                                                                        "Select the output Directory"))
 
         # connections for output name
         self.widget.output_name_enable.clicked.connect(self.enable_disable_output_name)
@@ -73,11 +84,19 @@ class SavingWidget(QtWidgets.QWidget):
         # connections for resume
         self.widget.resume_input.textChanged.connect(lambda x: self.edit_args(
             "resume", x, elem=self.widget.resume_input))
-        self.widget.resume_selector.clicked.connect(lambda: self.set_from_dialog(True))
+        self.widget.resume_selector.clicked.connect(lambda: self.set_from_dialog(self.widget.resume_input,
+                                                                                 "Select the resume folder"))
         self.widget.resume_enable.clicked.connect(self.enable_disable_resume)
 
-        self.widget.save_tags_enable.clicked.connect(lambda x: self.edit_args("tag_occurrence", x, True))
-        self.widget.save_toml_on_train_enable.clicked.connect(lambda x: self.edit_args("save_toml", x, True))
+        self.widget.save_tags_enable.clicked.connect(self.enable_disable_tag_file)
+        self.widget.save_tag_input.textChanged.connect(lambda x: self.edit_args("tag_file_location", x, True))
+        self.widget.save_tag_selector.clicked.connect(lambda: self.set_from_dialog(self.widget.save_tag_input,
+                                                                                   "Select the output Directory"))
+
+        self.widget.save_toml_on_train_enable.clicked.connect(self.enable_disable_toml_file)
+        self.widget.save_toml_input.textChanged.connect(lambda x: self.edit_args("save_toml_location", x, True))
+        self.widget.save_toml_selector.clicked.connect(lambda: self.set_from_dialog(self.widget.save_toml_input,
+                                                                                    "Select the output Directory"))
 
     @QtCore.Slot(str, object, bool, QtWidgets.QWidget)
     def edit_args(self, name: str, value: object, optional: bool = False, elem: QtWidgets.QWidget = None) -> None:
@@ -96,21 +115,30 @@ class SavingWidget(QtWidgets.QWidget):
             if name in self.args:
                 del self.args[name]
 
-    @QtCore.Slot(bool)
-    def set_from_dialog(self, is_resume: bool = False) -> None:
-        if is_resume:
-            folder = self.widget.resume_input.text()
-        else:
-            folder = self.widget.output_folder_input.text()
+    # @QtCore.Slot(bool)
+    # def set_from_dialog(self, is_resume: bool = False) -> None:
+    #     if is_resume:
+    #         folder = self.widget.resume_input.text()
+    #     else:
+    #         folder = self.widget.output_folder_input.text()
+    #     default_dir = folder if os.path.exists(folder) else ""
+    #     file_name = QtWidgets.QFileDialog.getExistingDirectory(
+    #         self, "Select the output Directory" if not is_resume else "Select the resume folder", dir=default_dir)
+    #     if not file_name:
+    #         return
+    #     if not is_resume:
+    #         self.widget.output_folder_input.setText(file_name)
+    #     else:
+    #         self.widget.resume_input.setText(file_name)
+
+    @QtCore.Slot(modules.DragDropLineEdit.DragDropLineEdit, str)
+    def set_from_dialog(self, text_edit: modules.DragDropLineEdit.DragDropLineEdit, prompt: str):
+        folder = text_edit.text()
         default_dir = folder if os.path.exists(folder) else ""
-        file_name = QtWidgets.QFileDialog.getExistingDirectory(
-            self, "Select the output Directory" if not is_resume else "Select the resume folder", dir=default_dir)
+        file_name = QtWidgets.QFileDialog.getExistingDirectory(self, prompt, dir=default_dir)
         if not file_name:
             return
-        if not is_resume:
-            self.widget.output_folder_input.setText(file_name)
-        else:
-            self.widget.resume_input.setText(file_name)
+        text_edit.setText(file_name)
 
     @QtCore.Slot(int)
     def set_freq_type(self, index: int) -> None:
@@ -197,6 +225,32 @@ class SavingWidget(QtWidgets.QWidget):
                 if name in self.args:
                     del self.args[name]
 
+    @QtCore.Slot(bool)
+    def enable_disable_tag_file(self, checked: bool):
+        self.widget.save_tag_input.setEnabled(checked)
+        self.widget.save_tag_selector.setEnabled(checked)
+        if checked:
+            self.edit_args("tag_occurrence", checked, True)
+            self.edit_args('tag_file_location', self.widget.save_tag_input.text(), True)
+        else:
+            if 'tag_occurrence' in self.args:
+                del self.args['tag_occurrence']
+            if "tag_file_location" in self.args:
+                del self.args['tag_file_location']
+
+    @QtCore.Slot(bool)
+    def enable_disable_toml_file(self, checked: bool):
+        self.widget.save_toml_selector.setEnabled(checked)
+        self.widget.save_toml_input.setEnabled(checked)
+        if checked:
+            self.edit_args("save_toml", checked, True)
+            self.edit_args("save_toml_location", self.widget.save_toml_input.text(), True)
+        else:
+            if 'save_toml' in self.args:
+                del self.args['save_toml']
+            if 'save_toml_location' in self.args:
+                del self.args['save_toml_location']
+
     @QtCore.Slot(int)
     def set_last_state(self, index: int) -> None:
         names = ['save_last_n_epochs_state', 'save_last_n_steps_state']
@@ -281,11 +335,13 @@ class SavingWidget(QtWidgets.QWidget):
 
         checked = args.get("tag_occurrence", False)
         self.widget.save_tags_enable.setChecked(checked)
-        self.edit_args("tag_occurrence", checked, True)
+        self.enable_disable_tag_file(checked)
+        self.widget.save_tag_input.setText(args.get('tag_file_location', ""))
 
         checked = args.get("save_toml", False)
         self.widget.save_toml_on_train_enable.setChecked(checked)
-        self.edit_args("save_toml", checked, True)
+        self.enable_disable_toml_file(checked)
+        self.widget.save_toml_input.setText(args.get('save_toml_location', ""))
 
     def save_args(self) -> Union[dict, None]:
         return self.args

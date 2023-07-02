@@ -12,9 +12,12 @@ class MainWindow(QtWidgets.QMainWindow, QtStyleTools):
         self.app = app
         self.window_ = Ui_MainWindow()
         self.window_.setupUi(self)
-        self.setMinimumSize(1450, 725)
+        self.setMinimumWidth(739)
+        self.setGeometry(QtWidgets.QApplication.screens()[0].size().width() / 2 - (self.geometry().width() / 2),
+                         QtWidgets.QApplication.screens()[0].size().height() / 2 - (self.geometry().height() / 2),
+                         self.geometry().width(), 650)
         self.main_widget = MainWidget()
-        self.setCentralWidget(self.main_widget)
+        self.centralWidget().layout().addWidget(self.main_widget)
 
         # setup theme actions for menu bar
         self.dark_themes, self.light_themes = self.process_themes()

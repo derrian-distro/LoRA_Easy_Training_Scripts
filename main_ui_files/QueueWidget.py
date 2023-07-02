@@ -48,12 +48,13 @@ class QueueWidget(QtWidgets.QWidget):
 
     def remove_first_from_queue(self) -> None:
         elem = self.elements[0]
+        if elem == self.selected:
+            self.selected = None
+            self.uncheck_elements()
         self.widget.queue_scroll_widget.layout().removeWidget(elem)
         self.elements.remove(elem)
         elem.deleteLater()
         self.widget.queue_scroll_widget.layout().update()
-        if elem == self.selected:
-            self.selected = None
 
     def uncheck_elements(self, skip_save: bool = False) -> None:
         for elem in self.elements:
