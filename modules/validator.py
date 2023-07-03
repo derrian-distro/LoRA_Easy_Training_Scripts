@@ -23,16 +23,18 @@ def validate_args(args: dict) -> Union[dict, None]:
     print("starting validation of args...")
     file_inputs = ["pretrained_model_name_or_path", "output_dir"]
 
-    # if one or more sections report a None, then at least one thing isn't filled out correctly
     new_args = {}
     for key, value in args.items():
         if not value:
+            print(f"No data filled in for {key}")
             return None
         if key == "sample_args":
             if "sample_prompts" not in value or not os.path.exists(value['sample_prompts']):
+                print(f"Sample prompt path '{value['sample_prompts']}' does not exist")
                 return None
         if key == 'logging_args':
             if 'logging_dir' not in value or not os.path.exists(value['logging_dir']):
+                print(f"Logging directory path '{value['logging_dir']}' does not exist")
                 return None
         for arg, val in value.items():
             if arg == "network_args":
@@ -65,6 +67,7 @@ def validate_args(args: dict) -> Union[dict, None]:
             new_args[arg] = val
     for file in file_inputs:
         if file not in new_args or not os.path.exists(new_args[file]):
+            print(f"File input path '{new_args[file]}' does not exist")
             return None
     if "network_module" not in new_args:
         new_args['network_module'] = "networks.lora"
@@ -76,6 +79,7 @@ def validate_dataset_args(args: dict) -> Union[dict, None]:
     new_args = {"general": {}, "subsets": []}
     for key, value in args.items():
         if not value:
+            print(f"No data filled in for {key}")
             return None
         if key == "subsets":
             continue
@@ -88,6 +92,7 @@ def validate_dataset_args(args: dict) -> Union[dict, None]:
     for item in args['subsets']:
         sub = validate_subset(item)
         if not sub:
+            print(f"Data subset failed validation")
             return None
         new_args['subsets'].append(sub)
     return new_args
@@ -100,6 +105,7 @@ def validate_subset(args: dict) -> Union[dict, None]:
             continue
         new_args[key] = value
     if "image_dir" not in new_args or not os.path.exists(new_args['image_dir']):
+        print(f"Image directory path '{new_args['image_dir']}' does not exist")
         return None
     return new_args
 
