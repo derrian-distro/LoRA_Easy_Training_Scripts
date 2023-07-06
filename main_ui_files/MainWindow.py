@@ -15,7 +15,7 @@ class MainWindow(QtWidgets.QMainWindow, QtStyleTools):
         self.setMinimumWidth(739)
         self.setGeometry(QtWidgets.QApplication.screens()[0].size().width() / 2 - (self.geometry().width() / 2),
                          QtWidgets.QApplication.screens()[0].size().height() / 2 - (self.geometry().height() / 2),
-                         self.geometry().width(), 650)
+                         self.geometry().width() + 10, 750)
         self.main_widget = MainWidget()
         self.centralWidget().layout().addWidget(self.main_widget)
 

@@ -12,6 +12,8 @@ from modules import TomlFunctions, validator
 
 
 class MainWidget(QtWidgets.QWidget):
+    trainingSignal = QtCore.Signal(bool)
+
     def __init__(self, parent: QtWidgets.QWidget = None) -> None:
         super(MainWidget, self).__init__(parent)
         self.main_layout = QtWidgets.QGridLayout()
@@ -34,15 +36,17 @@ class MainWidget(QtWidgets.QWidget):
         self.tab_widget.addTab(self.subset_widget, "Subset Args")
 
         self.queue_widget = QueueWidget.QueueWidget()
+        self.queue_widget.setSizePolicy(QtWidgets.QSizePolicy.Policy.Minimum,
+                                        QtWidgets.QSizePolicy.Policy.Minimum)
         self.queue_widget.saveQueue.connect(self.save_toml)
         self.queue_widget.loadQueue.connect(self.load_toml)
         self.begin_training_button = QtWidgets.QPushButton("Start Training")
         self.begin_training_button.setSizePolicy(QtWidgets.QSizePolicy.Policy.Minimum,
-                                                 QtWidgets.QSizePolicy.Policy.Minimum)
+                                                 QtWidgets.QSizePolicy.Policy.Maximum)
 
-        self.main_layout.addWidget(self.tab_widget, 0, 0, 1, 2)
-        self.main_layout.addWidget(self.queue_widget, 1, 0, 1, 2)
-        self.main_layout.addWidget(self.begin_training_button, 2, 0, 1, 2)
+        self.main_layout.addWidget(self.tab_widget, 0, 0, 3, 1)
+        self.main_layout.addWidget(self.queue_widget, 0, 1, 2, 1)
+        self.main_layout.addWidget(self.begin_training_button, 2, 1, 1, 1)
         # self.main_layout.addWidget(self.args_widget, 0, 0, 1, 1)
         # self.main_layout.addWidget(self.middle_divider, 0, 1, 1, 1)
         # self.main_layout.addWidget(self.subset_widget, 0, 2, 1, 1)
@@ -58,6 +62,7 @@ class MainWidget(QtWidgets.QWidget):
             return
         self.training_thread = threading.Thread(target=self.train_thread)
         self.training_thread.start()
+        self.trainingSignal.emit(True)
 
     def validate_args(self) -> bool:
         args, dataset_args = self.args_widget.collate_args()
@@ -93,6 +98,7 @@ class MainWidget(QtWidgets.QWidget):
         if len(self.queue_widget.elements) == 0:
             if not self.validate_args():
                 self.begin_training_button.setEnabled(True)
+                self.trainingSignal.emit(False)
                 return
             try:
                 subprocess.check_call([python, os.path.join("sd_scripts", "train_network.py"),
@@ -107,6 +113,7 @@ class MainWidget(QtWidgets.QWidget):
                 except FileNotFoundError:
                     pass
             self.begin_training_button.setEnabled(True)
+            self.trainingSignal.emit(False)
             return
         while len(self.queue_widget.elements) > 0:
             try:
@@ -144,6 +151,7 @@ class MainWidget(QtWidgets.QWidget):
             if file != '.gitignore':
                 os.remove(os.path.join("runtime_store", file))
         self.begin_training_button.setEnabled(True)
+        self.trainingSignal.emit(False)
 
     def save_args(self) -> dict:
         args = self.args_widget.save_args()
@@ -219,6 +227,10 @@ class MainWidget(QtWidgets.QWidget):
                     if isinstance(value, bool):
                         value = f"{value}".lower()
                     f.write(f"\t{key} = {value}\n")
+
+    @QtCore.Slot(bool)
+    def disable_training_button(self, training: bool) -> None:
+        self.begin_training_button.setEnabled(not training)
 
 
 class ArgsWidget(QtWidgets.QWidget):

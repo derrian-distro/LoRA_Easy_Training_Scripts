@@ -33,7 +33,7 @@ cd LoRA_Easy_Training_Scripts
 git submodule init
 git submodule update
 cd sd_scripts
-python -m venv venv
+python3.10 -m venv venv
 source venv/bin/activate
 pip install torch==2.0.0+cu118 torchvision==0.15.1+cu118 --index-url https://download.pytorch.org/whl/cu118
 pip install -r requirements.txt
