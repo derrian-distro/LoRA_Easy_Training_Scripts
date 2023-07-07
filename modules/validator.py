@@ -112,6 +112,13 @@ def validate_subset(args: dict) -> Union[dict, None]:
     return new_args
 
 
+def validate_sdxl(args: dict) -> str:
+    if 'sdxl' not in args:
+        return 'train_network.py'
+    del args['sdxl']
+    return 'sdxl_train_network.py'
+
+
 def validate_restarts(args: dict, dataset: dict) -> None:
     if "lr_scheduler_num_cycles" not in args:
         return

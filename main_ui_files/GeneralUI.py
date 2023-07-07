@@ -10,6 +10,7 @@ from modules.CollapsibleWidget import CollapsibleWidget
 
 class BaseArgsWidget(QtWidgets.QWidget):
     CacheLatentsChecked = QtCore.Signal(bool)
+    SdxlChecked = QtCore.Signal(bool)
 
     def __init__(self, parent: QtWidgets.QWidget = None) -> None:
         super(BaseArgsWidget, self).__init__(parent)
@@ -35,6 +36,7 @@ class BaseArgsWidget(QtWidgets.QWidget):
         self.widget.base_model_input.textChanged.connect(lambda x: self.edit_args("pretrained_model_name_or_path", x,
                                                                                   elem=self.widget.base_model_input))
         self.widget.base_model_selector.clicked.connect(self.set_from_dialog)
+        self.widget.sdxl_enable.clicked.connect(self.enable_disable_sdxl)
         self.widget.v2_enable.clicked.connect(self.enable_disable_sd2)
         self.widget.v_param_enable.clicked.connect(lambda x: self.enable_disable_sd2(self.widget.v2_enable.isChecked()))
         self.widget.v_pred_enable.clicked.connect(lambda x: self.edit_args("scale_v_pred_loss_like_noise_pred", x, True))
@@ -115,6 +117,7 @@ class BaseArgsWidget(QtWidgets.QWidget):
             self.args['v2'] = True
             self.widget.v_param_enable.setEnabled(True)
             self.edit_args("v_parameterization", self.widget.v_param_enable.isChecked(), True)
+            self.widget.sdxl_enable.setEnabled(False)
             if self.widget.v_param_enable.isChecked():
                 self.widget.v_pred_enable.setEnabled(True)
                 self.edit_args("scale_v_pred_loss_like_noise_pred", self.widget.v_pred_enable.isChecked(), True)
@@ -124,9 +127,25 @@ class BaseArgsWidget(QtWidgets.QWidget):
         else:
             self.widget.v_param_enable.setEnabled(False)
             self.widget.v_pred_enable.setEnabled(False)
+            self.widget.sdxl_enable.setEnabled(True)
             for name in ['v2', 'v_parameterization', 'scale_v_pred_loss_like_noise_pred']:
                 if name in self.args:
                     del self.args[name]
+
+    @QtCore.Slot(bool)
+    def enable_disable_sdxl(self, checked: bool) -> None:
+        if checked:
+            self.args['sdxl'] = True
+            self.widget.v2_enable.setEnabled(False)
+            self.enable_disable_sd2(False)
+            self.SdxlChecked.emit(True)
+        else:
+            if 'sdxl' in self.args:
+                del self.args['sdxl']
+            self.widget.v2_enable.setEnabled(True)
+            if self.widget.v2_enable.isChecked():
+                self.enable_disable_sd2(True)
+            self.SdxlChecked.emit(False)
 
     @QtCore.Slot(bool)
     def enable_disable_height(self, checked: bool) -> None:
@@ -224,6 +243,12 @@ class BaseArgsWidget(QtWidgets.QWidget):
         self.widget.v_param_enable.setChecked(args.get("v_parameterization", False))
         self.widget.v_pred_enable.setChecked(args.get('scale_v_pred_loss_like_noise_pred', False))
         self.enable_disable_sd2(self.widget.v2_enable.isChecked())
+
+        self.widget.sdxl_enable.setChecked(args.get('sdxl', False))
+        if self.widget.sdxl_enable.isChecked():
+            self.enable_disable_sdxl(True)
+        else:
+            self.enable_disable_sdxl(False)
 
         # resolution args
         if isinstance(dataset_args['resolution'], list):

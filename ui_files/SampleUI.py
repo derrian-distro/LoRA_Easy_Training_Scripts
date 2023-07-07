@@ -15,9 +15,9 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QFont, QFontDatabase, QGradient, QIcon,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
-from PySide6.QtWidgets import (QApplication, QFormLayout, QGroupBox, QHBoxLayout,
-    QLabel, QPushButton, QSizePolicy, QVBoxLayout,
-    QWidget)
+from PySide6.QtWidgets import (QApplication, QCheckBox, QFormLayout, QGroupBox,
+    QHBoxLayout, QLabel, QPushButton, QSizePolicy,
+    QVBoxLayout, QWidget)
 
 from modules.DragDropLineEdit import DragDropLineEdit
 from modules.ScrollOnSelect import (ComboBox, SpinBox)
@@ -26,7 +26,7 @@ class Ui_sample_ui(object):
     def setupUi(self, sample_ui):
         if not sample_ui.objectName():
             sample_ui.setObjectName(u"sample_ui")
-        sample_ui.resize(400, 150)
+        sample_ui.resize(400, 178)
         self.verticalLayout = QVBoxLayout(sample_ui)
         self.verticalLayout.setObjectName(u"verticalLayout")
         self.sample_args_box = QGroupBox(sample_ui)
@@ -124,6 +124,11 @@ class Ui_sample_ui(object):
 
         self.formLayout.setLayout(2, QFormLayout.FieldRole, self.horizontalLayout_2)
 
+        self.no_half_vae_enable = QCheckBox(self.sample_args_box)
+        self.no_half_vae_enable.setObjectName(u"no_half_vae_enable")
+
+        self.formLayout.setWidget(3, QFormLayout.SpanningRole, self.no_half_vae_enable)
+
 
         self.verticalLayout.addWidget(self.sample_args_box)
 
@@ -173,5 +178,6 @@ class Ui_sample_ui(object):
 #endif // QT_CONFIG(tooltip)
         self.sample_prompt_txt_file_input.setPlaceholderText(QCoreApplication.translate("sample_ui", u"Text File", None))
         self.sample_prompt_selector.setText("")
+        self.no_half_vae_enable.setText(QCoreApplication.translate("sample_ui", u"No Half Vae", None))
     # retranslateUi
 

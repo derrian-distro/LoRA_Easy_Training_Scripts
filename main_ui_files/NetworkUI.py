@@ -64,6 +64,10 @@ class NetworkWidget(QtWidgets.QWidget):
 
         self.ui.cp_enable.clicked.connect(lambda x: self.edit_network_args('use_conv_cp', x))
 
+        self.ui.min_timestep_input.editingFinished.connect(lambda: self.edit_timesteps('min_timestep'))
+        self.ui.max_timestep_input.editingFinished.connect(lambda: self.edit_timesteps('max_timestep'))
+        self.ui.cache_te_outputs_enable.clicked.connect(self.enable_disable_cache_tenc)
+
         self.colap.add_widget(self.widget, "main_widget")
         self.layout().addWidget(self.colap)
 
@@ -104,6 +108,31 @@ class NetworkWidget(QtWidgets.QWidget):
             self.edit_args('network_dropout', value)
         else:
             self.edit_network_args('dropout', value)
+
+    @QtCore.Slot(str)
+    def edit_timesteps(self, name: str) -> None:
+        if name == 'min_timestep':
+            self.edit_args('min_timestep', self.ui.min_timestep_input.value())
+            if self.ui.max_timestep_input.value() <= self.ui.min_timestep_input.value():
+                self.ui.max_timestep_input.setValue(self.ui.min_timestep_input.value() + 1)
+                self.edit_args('max_timestep', self.ui.max_timestep_input.value())
+        else:
+            self.edit_args('max_timestep', self.ui.max_timestep_input.value())
+            if self.ui.max_timestep_input.value() <= self.ui.min_timestep_input.value():
+                self.ui.min_timestep_input.setValue(self.ui.max_timestep_input.value() - 1)
+                self.edit_args('min_timestep', self.ui.min_timestep_input.value())
+
+    @QtCore.Slot(bool)
+    def enable_disable_cache_tenc(self, checked: bool):
+        if 'cache_text_encoder_outputs' in self.args:
+            del self.args['cache_text_encoder_outputs']
+        if checked:
+            self.edit_args('cache_text_encoder_outputs', True)
+
+    @QtCore.Slot(bool)
+    def enable_disable_cache_text_encoder_outputs(self, checked: bool):
+        self.ui.cache_te_outputs_enable.setEnabled(checked)
+        self.enable_disable_cache_tenc(self.ui.cache_te_outputs_enable.isChecked() if checked else False)
 
     @QtCore.Slot(str, bool)
     def enable_disable_dropout(self, mode: str, checked: bool):
@@ -321,6 +350,7 @@ class NetworkWidget(QtWidgets.QWidget):
     def load_args(self, args: dict) -> None:
         if self.name not in args:
             return
+        sdxl = args['general_args']['args'].get('sdxl', False)
         args = args[self.name]['args']
         self.ui.network_dim_input.setValue(args['network_dim'])
         self.ui.network_alpha_input.setValue(args['network_alpha'])
@@ -331,6 +361,14 @@ class NetworkWidget(QtWidgets.QWidget):
         self.ui.network_dropout_enable.setChecked(checked)
         self.ui.network_dropout_input.setValue(args.get('network_dropout', 0.1))
         self.enable_disable_dropout('network', checked)
+
+        self.ui.min_timestep_input.setValue(args.get('min_timestep', 0))
+        self.ui.max_timestep_input.setValue(args.get('max_timestep', 1000))
+        self.edit_timesteps('min_timestep')
+        self.edit_timesteps('max_timestep')
+        self.ui.cache_te_outputs_enable.setChecked(args.get('cache_text_encoder_outputs', False))
+        self.enable_disable_cache_text_encoder_outputs(sdxl)
+
 
         if "network_args" in args:
             self.ui.conv_dim_input.setValue(args['network_args'].get("conv_dim", 32))

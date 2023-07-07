@@ -55,6 +55,8 @@ class MainWidget(QtWidgets.QWidget):
 
         self.begin_training_button.clicked.connect(self.begin_train)
         self.args_widget.general_args.CacheLatentsChecked.connect(self.subset_widget.cache_checked)
+        self.args_widget.general_args.SdxlChecked.connect(
+            self.args_widget.network_args.enable_disable_cache_text_encoder_outputs)
 
     @QtCore.Slot()
     def begin_train(self) -> None:
@@ -64,7 +66,7 @@ class MainWidget(QtWidgets.QWidget):
         self.training_thread.start()
         self.trainingSignal.emit(True)
 
-    def validate_args(self) -> bool:
+    def validate_args(self) -> tuple[bool, str]:
         args, dataset_args = self.args_widget.collate_args()
         dataset_args['subsets'] = self.subset_widget.get_subset_args()
         self.training_thread = threading.Thread(target=self.train_thread)
@@ -72,7 +74,8 @@ class MainWidget(QtWidgets.QWidget):
         dataset_args = validator.validate_dataset_args(dataset_args)
         if not args or not dataset_args:
             print("failed validation")
-            return False
+            return False, ""
+        script = validator.validate_sdxl(args)
         validator.validate_restarts(args, dataset_args)
         validator.validate_warmup_ratio(args, dataset_args)
         validator.validate_save_tags(args, dataset_args)
@@ -90,18 +93,19 @@ class MainWidget(QtWidgets.QWidget):
         self.create_config_args_file(args)
         self.create_dataset_args_file(dataset_args)
         print("validated, starting training...")
-        return True
+        return True, script
 
     def train_thread(self):
         self.begin_training_button.setEnabled(False)
         python = sys.executable
         if len(self.queue_widget.elements) == 0:
-            if not self.validate_args():
+            valid, py_script = self.validate_args()
+            if not valid:
                 self.begin_training_button.setEnabled(True)
                 self.trainingSignal.emit(False)
                 return
             try:
-                subprocess.check_call([python, os.path.join("sd_scripts", "train_network.py"),
+                subprocess.check_call([python, os.path.join("sd_scripts", py_script),
                                        f"--config_file={os.path.join('runtime_store', 'config.toml')}",
                                        f"--dataset_config={os.path.join('runtime_store', 'dataset.toml')}"])
             except subprocess.SubprocessError as e:
@@ -124,6 +128,7 @@ class MainWidget(QtWidgets.QWidget):
                 if not args or not dataset_args:
                     print("some args are not valid, skipping.")
                     continue
+                py_script = validator.validate_sdxl(args)
                 validator.validate_restarts(args, dataset_args)
                 validator.validate_warmup_ratio(args, dataset_args)
                 validator.validate_save_tags(args, dataset_args)
@@ -141,7 +146,7 @@ class MainWidget(QtWidgets.QWidget):
                 self.create_config_args_file(args)
                 self.create_dataset_args_file(dataset_args)
                 print("validated, starting training...")
-                subprocess.check_call([python, os.path.join("sd_scripts", "train_network.py"),
+                subprocess.check_call([python, os.path.join("sd_scripts", py_script),
                                        f"--config_file={os.path.join('runtime_store', 'config.toml')}",
                                        f"--dataset_config={os.path.join('runtime_store', 'dataset.toml')}"])
             except BaseException as e:

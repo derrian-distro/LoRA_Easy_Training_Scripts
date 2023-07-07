@@ -36,6 +36,7 @@ class SampleWidget(QtWidgets.QWidget):
         self.widget.sample_prompt_selector.clicked.connect(self.set_from_dialog)
         self.widget.steps_epochs_selector.currentIndexChanged.connect(self.steps_epochs_changed)
         self.widget.steps_epoch_input.valueChanged.connect(self.steps_epochs_input_changed)
+        self.widget.no_half_vae_enable.clicked.connect(lambda x: self.edit_args('no_half_vae', x))
         self.widget.sample_args_box.clicked.connect(self.enable_disable)
 
     @QtCore.Slot(str)
@@ -92,6 +93,7 @@ class SampleWidget(QtWidgets.QWidget):
             self.args['sample_prompts'] = self.widget.sample_prompt_txt_file_input.text()
             self.args['sample_sampler'] = self.widget.sampler_input.currentText().lower()
             self.steps_epochs_input_changed(self.widget.steps_epoch_input.value())
+            self.edit_args('no_half_vae', self.widget.no_half_vae_enable.isChecked())
             if self.edited_previously:
                 self.widget.sample_prompt_txt_file_input.update_stylesheet()
 
@@ -125,6 +127,7 @@ class SampleWidget(QtWidgets.QWidget):
         self.widget.steps_epochs_selector.setCurrentIndex(0 if value == "sample_every_n_steps" else 1)
         self.widget.sample_prompt_txt_file_input.setText(args['sample_prompts'])
         self.widget.sample_args_box.setChecked(True)
+        self.widget.no_half_vae_enable.setChecked(args.get('no_half_vae', False))
         self.enable_disable()
 
     def save_args(self) -> Union[dict, None]:

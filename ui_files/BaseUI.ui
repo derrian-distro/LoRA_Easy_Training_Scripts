@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>553</width>
-    <height>426</height>
+    <height>456</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -186,17 +186,7 @@
         </item>
        </layout>
       </item>
-      <item row="1" column="0">
-       <widget class="QCheckBox" name="v2_enable">
-        <property name="toolTip">
-         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Select this if you are using an SD2.x based model, such as WD1.5.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-        </property>
-        <property name="text">
-         <string>SD2.X Based</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="1">
+      <item row="2" column="0" colspan="2">
        <layout class="QHBoxLayout" name="horizontalLayout_6">
         <item>
          <widget class="QCheckBox" name="v_param_enable">
@@ -207,7 +197,7 @@
            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Select this if your model uses the SD2.x 768x model, such as WD1.5.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
           </property>
           <property name="text">
-           <string>Uses V Parameterization</string>
+           <string>V Param</string>
           </property>
          </widget>
         </item>
@@ -217,7 +207,28 @@
            <bool>false</bool>
           </property>
           <property name="text">
-           <string>Scale V Prediction Loss to Noise Prediction</string>
+           <string>Scale V pred loss</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item row="1" column="0" colspan="2">
+       <layout class="QHBoxLayout" name="horizontalLayout_2">
+        <item>
+         <widget class="QCheckBox" name="v2_enable">
+          <property name="toolTip">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Select this if you are using an SD2.x based model, such as WD1.5.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
+          <property name="text">
+           <string>SD2.X Based</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QCheckBox" name="sdxl_enable">
+          <property name="text">
+           <string>SDXL Based</string>
           </property>
          </widget>
         </item>

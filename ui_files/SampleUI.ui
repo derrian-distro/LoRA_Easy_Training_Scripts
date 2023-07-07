@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>400</width>
-    <height>150</height>
+    <height>178</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -219,17 +219,19 @@
         </item>
        </layout>
       </item>
+      <item row="3" column="0" colspan="2">
+       <widget class="QCheckBox" name="no_half_vae_enable">
+        <property name="text">
+         <string>No Half Vae</string>
+        </property>
+       </widget>
+      </item>
      </layout>
     </widget>
    </item>
   </layout>
  </widget>
  <customwidgets>
-  <customwidget>
-   <class>DragDropLineEdit</class>
-   <extends>QLineEdit</extends>
-   <header>modules.DragDropLineEdit.h</header>
-  </customwidget>
   <customwidget>
    <class>SpinBox</class>
    <extends>QSpinBox</extends>
@@ -239,6 +241,11 @@
    <class>ComboBox</class>
    <extends>QComboBox</extends>
    <header>modules.ScrollOnSelect.h</header>
+  </customwidget>
+  <customwidget>
+   <class>DragDropLineEdit</class>
+   <extends>QLineEdit</extends>
+   <header>modules.DragDropLineEdit.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

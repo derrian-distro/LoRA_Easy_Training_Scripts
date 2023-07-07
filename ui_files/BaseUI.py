@@ -26,7 +26,7 @@ class Ui_base_args_ui(object):
     def setupUi(self, base_args_ui):
         if not base_args_ui.objectName():
             base_args_ui.setObjectName(u"base_args_ui")
-        base_args_ui.resize(553, 426)
+        base_args_ui.resize(553, 456)
         self.gridLayout_3 = QGridLayout(base_args_ui)
         self.gridLayout_3.setObjectName(u"gridLayout_3")
         self.formLayout_5 = QFormLayout()
@@ -129,11 +129,6 @@ class Ui_base_args_ui(object):
 
         self.formLayout_3.setLayout(0, QFormLayout.FieldRole, self.horizontalLayout)
 
-        self.v2_enable = QCheckBox(self.base_model_box)
-        self.v2_enable.setObjectName(u"v2_enable")
-
-        self.formLayout_3.setWidget(1, QFormLayout.LabelRole, self.v2_enable)
-
         self.horizontalLayout_6 = QHBoxLayout()
         self.horizontalLayout_6.setObjectName(u"horizontalLayout_6")
         self.v_param_enable = QCheckBox(self.base_model_box)
@@ -149,7 +144,22 @@ class Ui_base_args_ui(object):
         self.horizontalLayout_6.addWidget(self.v_pred_enable)
 
 
-        self.formLayout_3.setLayout(1, QFormLayout.FieldRole, self.horizontalLayout_6)
+        self.formLayout_3.setLayout(2, QFormLayout.SpanningRole, self.horizontalLayout_6)
+
+        self.horizontalLayout_2 = QHBoxLayout()
+        self.horizontalLayout_2.setObjectName(u"horizontalLayout_2")
+        self.v2_enable = QCheckBox(self.base_model_box)
+        self.v2_enable.setObjectName(u"v2_enable")
+
+        self.horizontalLayout_2.addWidget(self.v2_enable)
+
+        self.sdxl_enable = QCheckBox(self.base_model_box)
+        self.sdxl_enable.setObjectName(u"sdxl_enable")
+
+        self.horizontalLayout_2.addWidget(self.sdxl_enable)
+
+
+        self.formLayout_3.setLayout(1, QFormLayout.SpanningRole, self.horizontalLayout_2)
 
 
         self.gridLayout_3.addWidget(self.base_model_box, 3, 1, 1, 2)
@@ -354,14 +364,15 @@ class Ui_base_args_ui(object):
         self.base_model_input.setPlaceholderText(QCoreApplication.translate("base_args_ui", u"Base Model To Train With", None))
         self.base_model_selector.setText("")
 #if QT_CONFIG(tooltip)
+        self.v_param_enable.setToolTip(QCoreApplication.translate("base_args_ui", u"<html><head/><body><p>Select this if your model uses the SD2.x 768x model, such as WD1.5.</p></body></html>", None))
+#endif // QT_CONFIG(tooltip)
+        self.v_param_enable.setText(QCoreApplication.translate("base_args_ui", u"V Param", None))
+        self.v_pred_enable.setText(QCoreApplication.translate("base_args_ui", u"Scale V pred loss", None))
+#if QT_CONFIG(tooltip)
         self.v2_enable.setToolTip(QCoreApplication.translate("base_args_ui", u"<html><head/><body><p>Select this if you are using an SD2.x based model, such as WD1.5.</p></body></html>", None))
 #endif // QT_CONFIG(tooltip)
         self.v2_enable.setText(QCoreApplication.translate("base_args_ui", u"SD2.X Based", None))
-#if QT_CONFIG(tooltip)
-        self.v_param_enable.setToolTip(QCoreApplication.translate("base_args_ui", u"<html><head/><body><p>Select this if your model uses the SD2.x 768x model, such as WD1.5.</p></body></html>", None))
-#endif // QT_CONFIG(tooltip)
-        self.v_param_enable.setText(QCoreApplication.translate("base_args_ui", u"Uses V Parameterization", None))
-        self.v_pred_enable.setText(QCoreApplication.translate("base_args_ui", u"Scale V Prediction Loss to Noise Prediction", None))
+        self.sdxl_enable.setText(QCoreApplication.translate("base_args_ui", u"SDXL Based", None))
         self.resolution_box.setTitle(QCoreApplication.translate("base_args_ui", u"Resolution", None))
         self.label.setText(QCoreApplication.translate("base_args_ui", u"Width", None))
 #if QT_CONFIG(tooltip)

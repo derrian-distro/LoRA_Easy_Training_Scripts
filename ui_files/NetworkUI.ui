@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>443</width>
-    <height>233</height>
+    <width>417</width>
+    <height>288</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -66,51 +66,6 @@
        <string>Main Args</string>
       </attribute>
       <layout class="QGridLayout" name="gridLayout">
-       <item row="0" column="0" colspan="2">
-        <widget class="ComboBox" name="algo_select">
-         <property name="focusPolicy">
-          <enum>Qt::StrongFocus</enum>
-         </property>
-         <property name="toolTip">
-          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The algorithm that is used for training, LoRA is the only one that doesn't train on all layers. LoCon is just LoRA that train on all layers LoHa has a ton of compression, and that is basically true for ia3 and Lokr as well. DyLora is a type of LoRA (or LoCon) that basically allows you to train multiple dim sized models in one, it does take a lot longer to train.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-         </property>
-         <item>
-          <property name="text">
-           <string>LoRA</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>LoCon</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>LoCon (LyCORIS)</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>LoHa</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>IA3</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Lokr</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>DyLoRA</string>
-          </property>
-         </item>
-        </widget>
-       </item>
        <item row="1" column="0">
         <layout class="QFormLayout" name="formLayout">
          <item row="0" column="0">
@@ -177,170 +132,26 @@
            </property>
           </widget>
          </item>
-        </layout>
-       </item>
-       <item row="1" column="1">
-        <layout class="QFormLayout" name="formLayout_2">
-         <item row="0" column="0">
-          <widget class="QLabel" name="conv_dim_label">
-           <property name="enabled">
-            <bool>true</bool>
-           </property>
+         <item row="2" column="0">
+          <widget class="QLabel" name="min_timestep_label">
            <property name="text">
-            <string>Conv Dimension</string>
+            <string>Min Timestep</string>
            </property>
           </widget>
          </item>
-         <item row="0" column="1">
-          <widget class="SpinBox" name="conv_dim_input">
+         <item row="2" column="1">
+          <widget class="SpinBox" name="min_timestep_input">
            <property name="enabled">
-            <bool>false</bool>
-           </property>
-           <property name="focusPolicy">
-            <enum>Qt::StrongFocus</enum>
-           </property>
-           <property name="toolTip">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The dimension size for the conv layers. These layers carry more style with them, so be careful about setting them too high. I personally suggest you never go higher than 32 with them.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            <bool>true</bool>
            </property>
            <property name="maximum">
-            <number>16777215</number>
-           </property>
-           <property name="value">
-            <number>32</number>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="0">
-          <widget class="QLabel" name="conv_alpha_label">
-           <property name="enabled">
-            <bool>true</bool>
-           </property>
-           <property name="text">
-            <string>Conv Alpha</string>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="1">
-          <widget class="DoubleSpinBox" name="conv_alpha_input">
-           <property name="enabled">
-            <bool>false</bool>
-           </property>
-           <property name="focusPolicy">
-            <enum>Qt::StrongFocus</enum>
-           </property>
-           <property name="toolTip">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The scalar of the conv dims. Much like the normal dim, I suggest you use half conv dim, or 1 if the dim size is 8 or lower.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-           </property>
-           <property name="maximum">
-            <double>16777215.000000000000000</double>
-           </property>
-           <property name="value">
-            <double>16.000000000000000</double>
+            <number>999</number>
            </property>
           </widget>
          </item>
         </layout>
        </item>
-       <item row="2" column="0">
-        <layout class="QFormLayout" name="formLayout_3">
-         <item row="0" column="0">
-          <widget class="QLabel" name="unet_te_both_label">
-           <property name="text">
-            <string>Train on</string>
-           </property>
-          </widget>
-         </item>
-         <item row="0" column="1">
-          <widget class="ComboBox" name="unet_te_both_select">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="minimumSize">
-            <size>
-             <width>0</width>
-             <height>0</height>
-            </size>
-           </property>
-           <property name="maximumSize">
-            <size>
-             <width>16777215</width>
-             <height>16777215</height>
-            </size>
-           </property>
-           <property name="focusPolicy">
-            <enum>Qt::StrongFocus</enum>
-           </property>
-           <property name="toolTip">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;You can train on both the text encoder and unet or only one or the other, most of the time you want to train on both.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-           </property>
-           <item>
-            <property name="text">
-             <string>Both</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>Unet Only</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>TE Only</string>
-            </property>
-           </item>
-          </widget>
-         </item>
-         <item row="1" column="0">
-          <widget class="QLabel" name="dylora_unit_label">
-           <property name="enabled">
-            <bool>true</bool>
-           </property>
-           <property name="text">
-            <string>DyLoRA Unit</string>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="1">
-          <widget class="SpinBox" name="dylora_unit_input">
-           <property name="enabled">
-            <bool>false</bool>
-           </property>
-           <property name="maximumSize">
-            <size>
-             <width>16777215</width>
-             <height>16777215</height>
-            </size>
-           </property>
-           <property name="focusPolicy">
-            <enum>Qt::StrongFocus</enum>
-           </property>
-           <property name="toolTip">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The unit is the unit for dividing rank. so if you have dim 16, unit 4, then it can learn 4 lora models of dims 4, 8, 12, and 16.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-           </property>
-           <property name="value">
-            <number>4</number>
-           </property>
-          </widget>
-         </item>
-         <item row="2" column="0" colspan="2">
-          <widget class="QCheckBox" name="cp_enable">
-           <property name="enabled">
-            <bool>false</bool>
-           </property>
-           <property name="toolTip">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Enables Conv CP, which is some form of compression algorithm that further reduces file size, I personally suggest you don't use it&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-           </property>
-           <property name="text">
-            <string>Enable Conv CP</string>
-           </property>
-          </widget>
-         </item>
-        </layout>
-       </item>
-       <item row="2" column="1">
+       <item row="3" column="1">
         <layout class="QFormLayout" name="formLayout_4">
          <item row="0" column="0">
           <widget class="QCheckBox" name="network_dropout_enable">
@@ -434,6 +245,245 @@
          </item>
         </layout>
        </item>
+       <item row="0" column="0" colspan="2">
+        <widget class="ComboBox" name="algo_select">
+         <property name="focusPolicy">
+          <enum>Qt::StrongFocus</enum>
+         </property>
+         <property name="toolTip">
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The algorithm that is used for training, LoRA is the only one that doesn't train on all layers. LoCon is just LoRA that train on all layers LoHa has a ton of compression, and that is basically true for ia3 and Lokr as well. DyLora is a type of LoRA (or LoCon) that basically allows you to train multiple dim sized models in one, it does take a lot longer to train.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         </property>
+         <item>
+          <property name="text">
+           <string>LoRA</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>LoCon</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>LoCon (LyCORIS)</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>LoHa</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>IA3</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Lokr</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>DyLoRA</string>
+          </property>
+         </item>
+        </widget>
+       </item>
+       <item row="3" column="0">
+        <layout class="QFormLayout" name="formLayout_3">
+         <item row="0" column="0">
+          <widget class="QLabel" name="unet_te_both_label">
+           <property name="text">
+            <string>Train on</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="1">
+          <widget class="ComboBox" name="unet_te_both_select">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>0</width>
+             <height>0</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>16777215</width>
+             <height>16777215</height>
+            </size>
+           </property>
+           <property name="focusPolicy">
+            <enum>Qt::StrongFocus</enum>
+           </property>
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;You can train on both the text encoder and unet or only one or the other, most of the time you want to train on both.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <item>
+            <property name="text">
+             <string>Both</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Unet Only</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>TE Only</string>
+            </property>
+           </item>
+          </widget>
+         </item>
+         <item row="2" column="0">
+          <widget class="QLabel" name="dylora_unit_label">
+           <property name="enabled">
+            <bool>true</bool>
+           </property>
+           <property name="text">
+            <string>DyLoRA Unit</string>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="1">
+          <widget class="SpinBox" name="dylora_unit_input">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>16777215</width>
+             <height>16777215</height>
+            </size>
+           </property>
+           <property name="focusPolicy">
+            <enum>Qt::StrongFocus</enum>
+           </property>
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The unit is the unit for dividing rank. so if you have dim 16, unit 4, then it can learn 4 lora models of dims 4, 8, 12, and 16.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="value">
+            <number>4</number>
+           </property>
+          </widget>
+         </item>
+         <item row="3" column="0" colspan="2">
+          <widget class="QCheckBox" name="cp_enable">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Enables Conv CP, which is some form of compression algorithm that further reduces file size, I personally suggest you don't use it&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="text">
+            <string>Enable Conv CP</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="0" colspan="2">
+          <widget class="QCheckBox" name="cache_te_outputs_enable">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
+           <property name="text">
+            <string>Cache Text Encoder Outputs</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item row="1" column="1">
+        <layout class="QFormLayout" name="formLayout_2">
+         <item row="0" column="0">
+          <widget class="QLabel" name="conv_dim_label">
+           <property name="enabled">
+            <bool>true</bool>
+           </property>
+           <property name="text">
+            <string>Conv Dimension</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="1">
+          <widget class="SpinBox" name="conv_dim_input">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
+           <property name="focusPolicy">
+            <enum>Qt::StrongFocus</enum>
+           </property>
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The dimension size for the conv layers. These layers carry more style with them, so be careful about setting them too high. I personally suggest you never go higher than 32 with them.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="maximum">
+            <number>16777215</number>
+           </property>
+           <property name="value">
+            <number>32</number>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="0">
+          <widget class="QLabel" name="conv_alpha_label">
+           <property name="enabled">
+            <bool>true</bool>
+           </property>
+           <property name="text">
+            <string>Conv Alpha</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="1">
+          <widget class="DoubleSpinBox" name="conv_alpha_input">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
+           <property name="focusPolicy">
+            <enum>Qt::StrongFocus</enum>
+           </property>
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The scalar of the conv dims. Much like the normal dim, I suggest you use half conv dim, or 1 if the dim size is 8 or lower.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="maximum">
+            <double>16777215.000000000000000</double>
+           </property>
+           <property name="value">
+            <double>16.000000000000000</double>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="0">
+          <widget class="QLabel" name="max_timestep_label">
+           <property name="text">
+            <string>Max Timestep</string>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="1">
+          <widget class="SpinBox" name="max_timestep_input">
+           <property name="enabled">
+            <bool>true</bool>
+           </property>
+           <property name="minimum">
+            <number>1</number>
+           </property>
+           <property name="maximum">
+            <number>1000</number>
+           </property>
+           <property name="value">
+            <number>1000</number>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
       </layout>
      </widget>
      <widget class="QWidget" name="block_weight_tab">
@@ -466,8 +516,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>437</width>
-            <height>201</height>
+            <width>411</width>
+            <height>256</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_3">
