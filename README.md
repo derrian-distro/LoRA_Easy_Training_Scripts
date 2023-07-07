@@ -4,8 +4,8 @@ A set of training scripts written in python for use in Kohya's [SD-Scripts](http
 
 #### Old scripts can be found [here](https://github.com/derrian-distro/LoRA_Easy_Training_Scripts/tree/old-scripts)
 
-
 ## Table of contents
+
 - [Installation](#installation)
   - [Windows](#windows)
   - [Linux](#linux)
@@ -14,19 +14,25 @@ A set of training scripts written in python for use in Kohya's [SD-Scripts](http
 - [Changelog](#changelog)
 
 ## Installation
+
 ### You **Must** have python 3.10 installed, and it **Must** be the running version of python
 
 ### Windows
+
 If you are on windows all you need to do to install the scripts is follow these commands. Open up a command line within the folder that you want to install to then type these one line at a time
+
 ```
 git clone https://github.com/derrian-distro/LoRA_Easy_Training_Scripts
 cd LoRA_Easy_Training_Scripts
 install.bat
 ```
+
 after that, it will begin installing, asking a few questions along the way. Just make sure to answer them.
 
 ### Linux
+
 If you are on linux then I can't create a specific installer for you unfortunately, but I can give you a general outline of what to do to install my scripts. starting at the folder you want to install to,
+
 ```
 git clone https://github.com/derrian-distro/LoRA_Easy_Training_Scripts
 cd LoRA_Easy_Training_Scripts
@@ -44,6 +50,7 @@ accelerate config
 ```
 
 accelerate config will ask you a bunch of questions, answer them like so,
+
 ```
 - This machine
 - No distributed training
@@ -55,12 +62,13 @@ accelerate config will ask you a bunch of questions, answer them like so,
 ```
 
 ## Usage
+
 You can launch the UI using the `run.bat` file if you are on windows, or `run.sh` file if you are on linux.
 
 The UI looks like this:
 ![Main UI Image](https://raw.githubusercontent.com/derrian-distro/LoRA_Easy_Training_Scripts/main/images_gifs/main_ui.png)
 
-and has a bunch of features to it to make using it as easy as I could. So lets start with the basics. The UI is divided into two parts, the "args list" and the "subset list", this replaces the old naming scheme of \<number\>_\<name\> to try and reduce confusion. The subset list allows you to add and remove subsets to have however many you want!
+and has a bunch of features to it to make using it as easy as I could. So lets start with the basics. The UI is divided into two parts, the "args list" and the "subset list", this replaces the old naming scheme of \<number\>\_\<name\> to try and reduce confusion. The subset list allows you to add and remove subsets to have however many you want!
 ![Subset manipulation gif](https://raw.githubusercontent.com/derrian-distro/LoRA_Easy_Training_Scripts/main/images_gifs/subset_manipulation.gif)
 
 You are also able to collapse and expand the sections of the "args list", so that way you can have open only the section you are working on at the moment.
@@ -87,9 +95,11 @@ The themes also save between boots
 ![theme remembering gif](https://raw.githubusercontent.com/derrian-distro/LoRA_Easy_Training_Scripts/main/images_gifs/remember_theme_on_reload.gif)
 
 ## Configuration
+
 I'd like to take a moment and look at what the output of the TOML saving and loading system looks like so that people can change it if they want outside of the UI.
 
 here is an example of what a config file looks like:
+
 ```
 [[subsets]]
 num_repeats = 10
@@ -152,11 +162,24 @@ bucket_reso_steps = 64
 weight_decay = 0.1
 betas = "0.9,0.99"
 ```
+
 As you can see everything is sectioned off into their own sections. Generally they are seperated into two groups, args, and dataset_args, this is because of the nature of the config and dataset_confg files within sd-scripts. Generally speaking, the only section that you might want to edit that doesn't correspond to a UI element (for now) is the `[optimizer_args.args.optimizer_args]` section, which you can add, delete, or change options for the optimizer, A proper UI for it will come later, once I figure out how I want to set it up.
 
 ## Changelog
+
 changelog of the old scripts are all in that branch [here](https://github.com/derrian-distro/LoRA_Easy_Training_Scripts/tree/old-scripts#changelog)
 
+- July 6, 2023
+  - Updated LyCORIS
+  - Overhauled the UI, to fit on smaller screens
+  - changed the saving ui to better use space
+  - save the last location when saving and loading toml, only when you actually save or load a toml
+  - added a folder selection to the save toml and tag occurrence inputs.
+  - Added a system to prevent overwriting by renaming the file name to \<name\>\_\<number\>
+  - Reorganized the network args to better fit with what LyCORIS now supports
+  - Refactored the algo select to be better maintainable down the line
+  - Changed the behavior of the dropouts as LyCORIS now supports all of them, they no longer get disabled.
+  - Fixed a bug in which gradient checkpointing doesn't load correctly
 - June 24, 2023
   - Updated sd-scripts and LyCORIS
   - Added support for a new LR Scheduler, Cosine Annealing Warmup Restarts
@@ -206,5 +229,5 @@ changelog of the old scripts are all in that branch [here](https://github.com/de
   - Added the forgotten min_snr_gamma
 - May 22, 2023
   - First release of the new UI system. This has been a long time coming and I put in a ton of work to make it as user friendly as possible. Some Things to note, This doesn't have support for queues or block weight training for the moment, they are planned though and will be added down the line.
-  - If you find any bugs, *please* tell me, I want to fix them if something is wrong. After all, I am only one person
+  - If you find any bugs, _please_ tell me, I want to fix them if something is wrong. After all, I am only one person
   - I'm adding a link to my ko-fi page as of this update so people that want to support me can! Thanks for all of the feedback of the scripts through the development time I spent on it, and I hope to continue to improve it as I go.

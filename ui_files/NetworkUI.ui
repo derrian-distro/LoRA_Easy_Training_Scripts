@@ -109,11 +109,6 @@
            <string>DyLoRA</string>
           </property>
          </item>
-         <item>
-          <property name="text">
-           <string>DyLoRA (LyCORIS)</string>
-          </property>
-         </item>
         </widget>
        </item>
        <item row="1" column="0">
@@ -472,7 +467,7 @@
             <x>0</x>
             <y>0</y>
             <width>437</width>
-            <height>228</height>
+            <height>201</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_3">

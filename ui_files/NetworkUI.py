@@ -56,7 +56,6 @@ class Ui_network_ui(object):
         self.algo_select.addItem("")
         self.algo_select.addItem("")
         self.algo_select.addItem("")
-        self.algo_select.addItem("")
         self.algo_select.setObjectName(u"algo_select")
         self.algo_select.setFocusPolicy(Qt.StrongFocus)
 
@@ -242,7 +241,7 @@ class Ui_network_ui(object):
         self.block_weight_scroll_area.setWidgetResizable(True)
         self.block_weight_scroll_widget = QWidget()
         self.block_weight_scroll_widget.setObjectName(u"block_weight_scroll_widget")
-        self.block_weight_scroll_widget.setGeometry(QRect(0, 0, 437, 228))
+        self.block_weight_scroll_widget.setGeometry(QRect(0, 0, 437, 201))
         self.verticalLayout_3 = QVBoxLayout(self.block_weight_scroll_widget)
         self.verticalLayout_3.setObjectName(u"verticalLayout_3")
         self.verticalLayout_3.setContentsMargins(0, 0, 0, 0)
@@ -302,7 +301,6 @@ class Ui_network_ui(object):
         self.algo_select.setItemText(4, QCoreApplication.translate("network_ui", u"IA3", None))
         self.algo_select.setItemText(5, QCoreApplication.translate("network_ui", u"Lokr", None))
         self.algo_select.setItemText(6, QCoreApplication.translate("network_ui", u"DyLoRA", None))
-        self.algo_select.setItemText(7, QCoreApplication.translate("network_ui", u"DyLoRA (LyCORIS)", None))
 
 #if QT_CONFIG(tooltip)
         self.algo_select.setToolTip(QCoreApplication.translate("network_ui", u"<html><head/><body><p>The algorithm that is used for training, LoRA is the only one that doesn't train on all layers. LoCon is just LoRA that train on all layers LoHa has a ton of compression, and that is basically true for ia3 and Lokr as well. DyLora is a type of LoRA (or LoCon) that basically allows you to train multiple dim sized models in one, it does take a lot longer to train.</p></body></html>", None))
