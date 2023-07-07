@@ -56,9 +56,13 @@ class BucketWidget(QtWidgets.QWidget):
             return
         args = args[self.name]['dataset_args']
         self.widget.bucket_no_upscale.setChecked(args.get("bucket_no_upscale", False))
+        self.edit_args('bucket_no_upscale', args.get('bucket_no_upscale', False), True)
         self.widget.min_input.setValue(args.get("min_bucket_reso", 256))
+        self.edit_args('min_bucket_reso', args.get('min_bucket_reso', 256))
         self.widget.max_input.setValue(args.get("max_bucket_reso", 1024))
+        self.edit_args('max_bucket_reso', args.get('max_bucket_reso', 1024))
         self.widget.steps_input.setValue(args.get("bucket_reso_steps", 64))
+        self.edit_args('bucket_reso_steps', args.get('bucket_reso_steps', 64))
         self.enable_disable_buckets(args['enable_bucket'])
         self.widget.bucket_group.setChecked(args['enable_bucket'])
 
