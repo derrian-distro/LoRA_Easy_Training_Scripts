@@ -23,16 +23,18 @@ def validate_args(args: dict) -> Union[dict, None]:
     print("starting validation of args...")
     file_inputs = ["pretrained_model_name_or_path", "output_dir"]
 
-    # if one or more sections report a None, then at least one thing isn't filled out correctly
     new_args = {}
     for key, value in args.items():
         if not value:
+            print(f"No data filled in for {key}")
             return None
         if key == "sample_args":
             if "sample_prompts" not in value or not os.path.exists(value['sample_prompts']):
+                print(f"Sample prompt path '{value['sample_prompts']}' does not exist")
                 return None
         if key == 'logging_args':
             if 'logging_dir' not in value or not os.path.exists(value['logging_dir']):
+                print(f"Logging directory path '{value['logging_dir']}' does not exist")
                 return None
         for arg, val in value.items():
             if arg == "network_args":
@@ -65,6 +67,7 @@ def validate_args(args: dict) -> Union[dict, None]:
             new_args[arg] = val
     for file in file_inputs:
         if file not in new_args or not os.path.exists(new_args[file]):
+            print(f"File input path '{new_args[file]}' does not exist")
             return None
     if "network_module" not in new_args:
         new_args['network_module'] = "networks.lora"
@@ -76,6 +79,7 @@ def validate_dataset_args(args: dict) -> Union[dict, None]:
     new_args = {"general": {}, "subsets": []}
     for key, value in args.items():
         if not value:
+            print(f"No data filled in for {key}")
             return None
         if key == "subsets":
             continue
@@ -88,6 +92,7 @@ def validate_dataset_args(args: dict) -> Union[dict, None]:
     for item in args['subsets']:
         sub = validate_subset(item)
         if not sub:
+            print(f"Data subset failed validation")
             return None
         new_args['subsets'].append(sub)
     return new_args
@@ -100,6 +105,7 @@ def validate_subset(args: dict) -> Union[dict, None]:
             continue
         new_args[key] = value
     if "image_dir" not in new_args or not os.path.exists(new_args['image_dir']):
+        print(f"Image directory path '{new_args['image_dir']}' does not exist")
         return None
     return new_args
 
@@ -147,11 +153,16 @@ def validate_save_tags(args: dict, dataset: dict) -> None:
                 continue
             get_tags_from_file(os.path.join(subset['image_dir'], file), tags)
     output_list = {k: v for k, v in sorted(tags.items(), key=lambda item: item[1], reverse=True)}
-    with open(os.path.join(args['output_dir'], f"{args['output_name']}_tags.txt"), "w") as f:
+    file_path = args.get("tag_file_location", "")
+    if not os.path.exists(file_path):
+        file_path = args['output_dir']
+    with open(os.path.join(file_path, f"{args['output_name']}_tags.txt"), "w") as f:
         f.write("Below is a list of keywords used during the training of this model:\n")
         for k, v in output_list.items():
             f.write(f"[{v}] {k}\n")
     del args['tag_occurrence']
+    if "tag_file_location" in args:
+        del args['tag_file_location']
 
 
 def get_tags_from_file(file: str, tags: dict) -> None:
@@ -176,3 +187,14 @@ def calculate_steps(subsets: list, epochs: int, batch_size: int) -> int:
         steps += (image_count * subset['num_repeats'])
     steps = (steps * epochs) // batch_size
     return steps
+
+
+def validate_existing_files(args: dict) -> None:
+    file_name = os.path.join(args['output_dir'], args.get("output_name", 'last') + ".safetensors")
+    offset = 1
+    while os.path.exists(file_name):
+        file_name = os.path.join(args['output_dir'], args.get('output_name', 'last') + f"_{offset}" + ".safetensors")
+        offset += 1
+    if offset > 1:
+        print(f"Duplicate file found, changing file name to {os.path.split(file_name)[1]}")
+        args['output_name'] = os.path.splitext(os.path.split(file_name)[1])[0]

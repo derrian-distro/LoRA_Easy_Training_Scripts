@@ -26,7 +26,7 @@ class Ui_network_ui(object):
     def setupUi(self, network_ui):
         if not network_ui.objectName():
             network_ui.setObjectName(u"network_ui")
-        network_ui.resize(443, 260)
+        network_ui.resize(443, 233)
         sizePolicy = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -133,43 +133,6 @@ class Ui_network_ui(object):
 
         self.formLayout_3 = QFormLayout()
         self.formLayout_3.setObjectName(u"formLayout_3")
-        self.dylora_unit_label = QLabel(self.main_tab)
-        self.dylora_unit_label.setObjectName(u"dylora_unit_label")
-        self.dylora_unit_label.setEnabled(True)
-
-        self.formLayout_3.setWidget(1, QFormLayout.LabelRole, self.dylora_unit_label)
-
-        self.dylora_unit_input = SpinBox(self.main_tab)
-        self.dylora_unit_input.setObjectName(u"dylora_unit_input")
-        self.dylora_unit_input.setEnabled(False)
-        self.dylora_unit_input.setMaximumSize(QSize(16777215, 16777215))
-        self.dylora_unit_input.setFocusPolicy(Qt.StrongFocus)
-        self.dylora_unit_input.setValue(4)
-
-        self.formLayout_3.setWidget(1, QFormLayout.FieldRole, self.dylora_unit_input)
-
-        self.lyco_dropout_enable = QCheckBox(self.main_tab)
-        self.lyco_dropout_enable.setObjectName(u"lyco_dropout_enable")
-        self.lyco_dropout_enable.setEnabled(False)
-
-        self.formLayout_3.setWidget(2, QFormLayout.LabelRole, self.lyco_dropout_enable)
-
-        self.lyco_dropout_input = DoubleSpinBox(self.main_tab)
-        self.lyco_dropout_input.setObjectName(u"lyco_dropout_input")
-        self.lyco_dropout_input.setEnabled(False)
-        self.lyco_dropout_input.setMaximumSize(QSize(16777215, 16777215))
-        self.lyco_dropout_input.setFocusPolicy(Qt.StrongFocus)
-        self.lyco_dropout_input.setMaximum(1.000000000000000)
-        self.lyco_dropout_input.setSingleStep(0.010000000000000)
-
-        self.formLayout_3.setWidget(2, QFormLayout.FieldRole, self.lyco_dropout_input)
-
-        self.cp_enable = QCheckBox(self.main_tab)
-        self.cp_enable.setObjectName(u"cp_enable")
-        self.cp_enable.setEnabled(False)
-
-        self.formLayout_3.setWidget(3, QFormLayout.SpanningRole, self.cp_enable)
-
         self.unet_te_both_label = QLabel(self.main_tab)
         self.unet_te_both_label.setObjectName(u"unet_te_both_label")
 
@@ -190,6 +153,27 @@ class Ui_network_ui(object):
         self.unet_te_both_select.setFocusPolicy(Qt.StrongFocus)
 
         self.formLayout_3.setWidget(0, QFormLayout.FieldRole, self.unet_te_both_select)
+
+        self.dylora_unit_label = QLabel(self.main_tab)
+        self.dylora_unit_label.setObjectName(u"dylora_unit_label")
+        self.dylora_unit_label.setEnabled(True)
+
+        self.formLayout_3.setWidget(1, QFormLayout.LabelRole, self.dylora_unit_label)
+
+        self.dylora_unit_input = SpinBox(self.main_tab)
+        self.dylora_unit_input.setObjectName(u"dylora_unit_input")
+        self.dylora_unit_input.setEnabled(False)
+        self.dylora_unit_input.setMaximumSize(QSize(16777215, 16777215))
+        self.dylora_unit_input.setFocusPolicy(Qt.StrongFocus)
+        self.dylora_unit_input.setValue(4)
+
+        self.formLayout_3.setWidget(1, QFormLayout.FieldRole, self.dylora_unit_input)
+
+        self.cp_enable = QCheckBox(self.main_tab)
+        self.cp_enable.setObjectName(u"cp_enable")
+        self.cp_enable.setEnabled(False)
+
+        self.formLayout_3.setWidget(2, QFormLayout.SpanningRole, self.cp_enable)
 
 
         self.gridLayout.addLayout(self.formLayout_3, 2, 0, 1, 1)
@@ -257,7 +241,7 @@ class Ui_network_ui(object):
         self.block_weight_scroll_area.setWidgetResizable(True)
         self.block_weight_scroll_widget = QWidget()
         self.block_weight_scroll_widget.setObjectName(u"block_weight_scroll_widget")
-        self.block_weight_scroll_widget.setGeometry(QRect(0, 0, 437, 228))
+        self.block_weight_scroll_widget.setGeometry(QRect(0, 0, 437, 201))
         self.verticalLayout_3 = QVBoxLayout(self.block_weight_scroll_widget)
         self.verticalLayout_3.setObjectName(u"verticalLayout_3")
         self.verticalLayout_3.setContentsMargins(0, 0, 0, 0)
@@ -337,18 +321,6 @@ class Ui_network_ui(object):
 #if QT_CONFIG(tooltip)
         self.conv_alpha_input.setToolTip(QCoreApplication.translate("network_ui", u"<html><head/><body><p>The scalar of the conv dims. Much like the normal dim, I suggest you use half conv dim, or 1 if the dim size is 8 or lower.</p></body></html>", None))
 #endif // QT_CONFIG(tooltip)
-        self.dylora_unit_label.setText(QCoreApplication.translate("network_ui", u"DyLoRA Unit", None))
-#if QT_CONFIG(tooltip)
-        self.dylora_unit_input.setToolTip(QCoreApplication.translate("network_ui", u"<html><head/><body><p>The unit is the unit for dividing rank. so if you have dim 16, unit 4, then it can learn 4 lora models of dims 4, 8, 12, and 16.</p></body></html>", None))
-#endif // QT_CONFIG(tooltip)
-        self.lyco_dropout_enable.setText(QCoreApplication.translate("network_ui", u"Lyco Dropout", None))
-#if QT_CONFIG(tooltip)
-        self.lyco_dropout_input.setToolTip(QCoreApplication.translate("network_ui", u"<html><head/><body><p>Dropout from LyCORIS. Not clearly explained in the readme, not entirely sure what it does.</p></body></html>", None))
-#endif // QT_CONFIG(tooltip)
-#if QT_CONFIG(tooltip)
-        self.cp_enable.setToolTip(QCoreApplication.translate("network_ui", u"<html><head/><body><p>Enables Conv CP, which is some form of compression algorithm that further reduces file size, I personally suggest you don't use it</p></body></html>", None))
-#endif // QT_CONFIG(tooltip)
-        self.cp_enable.setText(QCoreApplication.translate("network_ui", u"Enable Conv CP", None))
         self.unet_te_both_label.setText(QCoreApplication.translate("network_ui", u"Train on", None))
         self.unet_te_both_select.setItemText(0, QCoreApplication.translate("network_ui", u"Both", None))
         self.unet_te_both_select.setItemText(1, QCoreApplication.translate("network_ui", u"Unet Only", None))
@@ -357,6 +329,14 @@ class Ui_network_ui(object):
 #if QT_CONFIG(tooltip)
         self.unet_te_both_select.setToolTip(QCoreApplication.translate("network_ui", u"<html><head/><body><p>You can train on both the text encoder and unet or only one or the other, most of the time you want to train on both.</p></body></html>", None))
 #endif // QT_CONFIG(tooltip)
+        self.dylora_unit_label.setText(QCoreApplication.translate("network_ui", u"DyLoRA Unit", None))
+#if QT_CONFIG(tooltip)
+        self.dylora_unit_input.setToolTip(QCoreApplication.translate("network_ui", u"<html><head/><body><p>The unit is the unit for dividing rank. so if you have dim 16, unit 4, then it can learn 4 lora models of dims 4, 8, 12, and 16.</p></body></html>", None))
+#endif // QT_CONFIG(tooltip)
+#if QT_CONFIG(tooltip)
+        self.cp_enable.setToolTip(QCoreApplication.translate("network_ui", u"<html><head/><body><p>Enables Conv CP, which is some form of compression algorithm that further reduces file size, I personally suggest you don't use it</p></body></html>", None))
+#endif // QT_CONFIG(tooltip)
+        self.cp_enable.setText(QCoreApplication.translate("network_ui", u"Enable Conv CP", None))
         self.network_dropout_enable.setText(QCoreApplication.translate("network_ui", u"Network Dropout", None))
 #if QT_CONFIG(tooltip)
         self.network_dropout_input.setToolTip(QCoreApplication.translate("network_ui", u"<html><head/><body><p>Is a random chance that on any given step a neuron will be dropped out, encourages the model to diversify it's training </p></body></html>", None))

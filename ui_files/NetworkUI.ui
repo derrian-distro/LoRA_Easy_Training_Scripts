@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>443</width>
-    <height>260</height>
+    <height>233</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -243,86 +243,6 @@
        </item>
        <item row="2" column="0">
         <layout class="QFormLayout" name="formLayout_3">
-         <item row="1" column="0">
-          <widget class="QLabel" name="dylora_unit_label">
-           <property name="enabled">
-            <bool>true</bool>
-           </property>
-           <property name="text">
-            <string>DyLoRA Unit</string>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="1">
-          <widget class="SpinBox" name="dylora_unit_input">
-           <property name="enabled">
-            <bool>false</bool>
-           </property>
-           <property name="maximumSize">
-            <size>
-             <width>16777215</width>
-             <height>16777215</height>
-            </size>
-           </property>
-           <property name="focusPolicy">
-            <enum>Qt::StrongFocus</enum>
-           </property>
-           <property name="toolTip">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The unit is the unit for dividing rank. so if you have dim 16, unit 4, then it can learn 4 lora models of dims 4, 8, 12, and 16.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-           </property>
-           <property name="value">
-            <number>4</number>
-           </property>
-          </widget>
-         </item>
-         <item row="2" column="0">
-          <widget class="QCheckBox" name="lyco_dropout_enable">
-           <property name="enabled">
-            <bool>false</bool>
-           </property>
-           <property name="text">
-            <string>Lyco Dropout</string>
-           </property>
-          </widget>
-         </item>
-         <item row="2" column="1">
-          <widget class="DoubleSpinBox" name="lyco_dropout_input">
-           <property name="enabled">
-            <bool>false</bool>
-           </property>
-           <property name="maximumSize">
-            <size>
-             <width>16777215</width>
-             <height>16777215</height>
-            </size>
-           </property>
-           <property name="focusPolicy">
-            <enum>Qt::StrongFocus</enum>
-           </property>
-           <property name="toolTip">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Dropout from LyCORIS. Not clearly explained in the readme, not entirely sure what it does.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-           </property>
-           <property name="maximum">
-            <double>1.000000000000000</double>
-           </property>
-           <property name="singleStep">
-            <double>0.010000000000000</double>
-           </property>
-          </widget>
-         </item>
-         <item row="3" column="0" colspan="2">
-          <widget class="QCheckBox" name="cp_enable">
-           <property name="enabled">
-            <bool>false</bool>
-           </property>
-           <property name="toolTip">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Enables Conv CP, which is some form of compression algorithm that further reduces file size, I personally suggest you don't use it&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-           </property>
-           <property name="text">
-            <string>Enable Conv CP</string>
-           </property>
-          </widget>
-         </item>
          <item row="0" column="0">
           <widget class="QLabel" name="unet_te_both_label">
            <property name="text">
@@ -371,6 +291,51 @@
              <string>TE Only</string>
             </property>
            </item>
+          </widget>
+         </item>
+         <item row="1" column="0">
+          <widget class="QLabel" name="dylora_unit_label">
+           <property name="enabled">
+            <bool>true</bool>
+           </property>
+           <property name="text">
+            <string>DyLoRA Unit</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="1">
+          <widget class="SpinBox" name="dylora_unit_input">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>16777215</width>
+             <height>16777215</height>
+            </size>
+           </property>
+           <property name="focusPolicy">
+            <enum>Qt::StrongFocus</enum>
+           </property>
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The unit is the unit for dividing rank. so if you have dim 16, unit 4, then it can learn 4 lora models of dims 4, 8, 12, and 16.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="value">
+            <number>4</number>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="0" colspan="2">
+          <widget class="QCheckBox" name="cp_enable">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Enables Conv CP, which is some form of compression algorithm that further reduces file size, I personally suggest you don't use it&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="text">
+            <string>Enable Conv CP</string>
+           </property>
           </widget>
          </item>
         </layout>
@@ -502,7 +467,7 @@
             <x>0</x>
             <y>0</y>
             <width>437</width>
-            <height>228</height>
+            <height>201</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_3">
@@ -580,15 +545,15 @@
    <header>modules.ScrollOnSelect.h</header>
   </customwidget>
   <customwidget>
-   <class>CollapsibleWidget</class>
-   <extends>QWidget</extends>
-   <header>modules.CollapsibleWidget.h</header>
-   <container>1</container>
-  </customwidget>
-  <customwidget>
    <class>TabView</class>
    <extends>QTabWidget</extends>
    <header>modules.ScrollOnSelect.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>CollapsibleWidget</class>
+   <extends>QWidget</extends>
+   <header>modules.CollapsibleWidget.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

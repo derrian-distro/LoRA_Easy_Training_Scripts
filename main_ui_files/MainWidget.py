@@ -1,14 +1,19 @@
+import json
 import os.path
 import subprocess
 import sys
 import threading
 from PySide6 import QtWidgets, QtCore
+
+import modules.ScrollOnSelect
 from main_ui_files import GeneralUI, OptimizerUI, NetworkUI, SavingUI, BucketUI, NoiseOffsetUI, SampleUI, LoggingUI, \
     SubDatasetUI, QueueWidget
 from modules import TomlFunctions, validator
 
 
 class MainWidget(QtWidgets.QWidget):
+    trainingSignal = QtCore.Signal(bool)
+
     def __init__(self, parent: QtWidgets.QWidget = None) -> None:
         super(MainWidget, self).__init__(parent)
         self.main_layout = QtWidgets.QGridLayout()
@@ -22,24 +27,31 @@ class MainWidget(QtWidgets.QWidget):
         self.dataset_args = {}
         self.training_thread = None
 
-        self.middle_divider = QtWidgets.QFrame()
-        self.middle_divider.setFrameShape(QtWidgets.QFrame.Shape.VLine)
-        self.middle_divider.setFrameShadow(QtWidgets.QFrame.Shadow.Sunken)
+        # self.middle_divider = QtWidgets.QFrame()
+        # self.middle_divider.setFrameShape(QtWidgets.QFrame.Shape.VLine)
+        # self.middle_divider.setFrameShadow(QtWidgets.QFrame.Shadow.Sunken)
+
+        self.tab_widget = modules.ScrollOnSelect.TabView()
+        self.tab_widget.addTab(self.args_widget, "Main Args")
+        self.tab_widget.addTab(self.subset_widget, "Subset Args")
 
         self.queue_widget = QueueWidget.QueueWidget()
+        self.queue_widget.setSizePolicy(QtWidgets.QSizePolicy.Policy.Minimum,
+                                        QtWidgets.QSizePolicy.Policy.Minimum)
         self.queue_widget.saveQueue.connect(self.save_toml)
         self.queue_widget.loadQueue.connect(self.load_toml)
         self.begin_training_button = QtWidgets.QPushButton("Start Training")
         self.begin_training_button.setSizePolicy(QtWidgets.QSizePolicy.Policy.Minimum,
-                                                 QtWidgets.QSizePolicy.Policy.Minimum)
+                                                 QtWidgets.QSizePolicy.Policy.Maximum)
 
-        self.main_layout.addWidget(self.args_widget, 0, 0, 1, 1)
-        self.main_layout.addWidget(self.middle_divider, 0, 1, 1, 1)
-        self.main_layout.addWidget(self.subset_widget, 0, 2, 1, 1)
-        self.main_layout.addWidget(self.queue_widget, 1, 0, 1, 2)
-        self.main_layout.addWidget(self.begin_training_button, 1, 2, 1, 1)
-        self.main_layout.setColumnStretch(0, 1)
-        self.main_layout.setColumnStretch(2, 1)
+        self.main_layout.addWidget(self.tab_widget, 0, 0, 3, 1)
+        self.main_layout.addWidget(self.queue_widget, 0, 1, 2, 1)
+        self.main_layout.addWidget(self.begin_training_button, 2, 1, 1, 1)
+        # self.main_layout.addWidget(self.args_widget, 0, 0, 1, 1)
+        # self.main_layout.addWidget(self.middle_divider, 0, 1, 1, 1)
+        # self.main_layout.addWidget(self.subset_widget, 0, 2, 1, 1)
+        # self.main_layout.setColumnStretch(0, 1)
+        # self.main_layout.setColumnStretch(2, 1)
 
         self.begin_training_button.clicked.connect(self.begin_train)
         self.args_widget.general_args.CacheLatentsChecked.connect(self.subset_widget.cache_checked)
@@ -50,6 +62,7 @@ class MainWidget(QtWidgets.QWidget):
             return
         self.training_thread = threading.Thread(target=self.train_thread)
         self.training_thread.start()
+        self.trainingSignal.emit(True)
 
     def validate_args(self) -> bool:
         args, dataset_args = self.args_widget.collate_args()
@@ -63,10 +76,17 @@ class MainWidget(QtWidgets.QWidget):
         validator.validate_restarts(args, dataset_args)
         validator.validate_warmup_ratio(args, dataset_args)
         validator.validate_save_tags(args, dataset_args)
+        validator.validate_existing_files(args)
         if "save_toml" in args:
             del args['save_toml']
-            TomlFunctions.save_toml(self.save_args(), os.path.join(args['output_dir'],
-                                                                   f"auto_save_{args.get('output_name', 'last')}.toml"))
+            save_toml_path = args.get('save_toml_location', "")
+            if 'save_toml_location' in args:
+                del args['save_toml_location']
+            if not os.path.exists(save_toml_path):
+                save_toml_path = args['output_dir']
+            TomlFunctions.save_toml(
+                self.save_args(), os.path.join(save_toml_path, f"auto_save_{args.get('output_name', 'last')}.toml")
+            )
         self.create_config_args_file(args)
         self.create_dataset_args_file(dataset_args)
         print("validated, starting training...")
@@ -78,6 +98,7 @@ class MainWidget(QtWidgets.QWidget):
         if len(self.queue_widget.elements) == 0:
             if not self.validate_args():
                 self.begin_training_button.setEnabled(True)
+                self.trainingSignal.emit(False)
                 return
             try:
                 subprocess.check_call([python, os.path.join("sd_scripts", "train_network.py"),
@@ -92,6 +113,7 @@ class MainWidget(QtWidgets.QWidget):
                 except FileNotFoundError:
                     pass
             self.begin_training_button.setEnabled(True)
+            self.trainingSignal.emit(False)
             return
         while len(self.queue_widget.elements) > 0:
             try:
@@ -105,10 +127,17 @@ class MainWidget(QtWidgets.QWidget):
                 validator.validate_restarts(args, dataset_args)
                 validator.validate_warmup_ratio(args, dataset_args)
                 validator.validate_save_tags(args, dataset_args)
+                validator.validate_existing_files(args)
                 if "save_toml" in args:
                     del args['save_toml']
-                    TomlFunctions.save_toml(base_args, os.path.join(args['output_dir'],
-                                                                    f"auto_save_{args.get('output_name', 'last')}.toml"))
+                    save_toml_path = args.get('save_toml_location', "")
+                    if 'save_toml_location' in args:
+                        del args['save_toml_location']
+                    if not os.path.exists(save_toml_path):
+                        save_toml_path = args['output_dir']
+                    TomlFunctions.save_toml(
+                        base_args, os.path.join(save_toml_path, f"auto_save_{args.get('output_name', 'last')}.toml")
+                    )
                 self.create_config_args_file(args)
                 self.create_dataset_args_file(dataset_args)
                 print("validated, starting training...")
@@ -122,6 +151,7 @@ class MainWidget(QtWidgets.QWidget):
             if file != '.gitignore':
                 os.remove(os.path.join("runtime_store", file))
         self.begin_training_button.setEnabled(True)
+        self.trainingSignal.emit(False)
 
     def save_args(self) -> dict:
         args = self.args_widget.save_args()
@@ -138,14 +168,32 @@ class MainWidget(QtWidgets.QWidget):
         if file_name:
             TomlFunctions.save_toml(args, os.path.join("runtime_store", f"{file_name}.toml"))
         else:
-            TomlFunctions.save_toml(args)
+            if os.path.exists('config.json'):
+                with open('config.json', 'r') as f:
+                    config = json.load(f)
+                    if "toml_default" in config:
+                        default_toml = config['toml_default']
+                    else:
+                        default_toml = ""
+            else:
+                default_toml = ""
+            TomlFunctions.save_toml(args, default_toml)
 
     @QtCore.Slot(str)
     def load_toml(self, file_name: str = None) -> None:
         if file_name:
             args = TomlFunctions.load_toml(os.path.join("runtime_store", f"{file_name}.toml"))
         else:
-            args = TomlFunctions.load_toml()
+            if os.path.exists('config.json'):
+                with open('config.json', 'r') as f:
+                    config = json.load(f)
+                    if "toml_default" in config:
+                        default_toml = config['toml_default']
+                    else:
+                        default_toml = ""
+            else:
+                default_toml = ""
+            args = TomlFunctions.load_toml(default_toml)
         if not args:
             return
         self.load_args(args)
@@ -179,6 +227,10 @@ class MainWidget(QtWidgets.QWidget):
                     if isinstance(value, bool):
                         value = f"{value}".lower()
                     f.write(f"\t{key} = {value}\n")
+
+    @QtCore.Slot(bool)
+    def disable_training_button(self, training: bool) -> None:
+        self.begin_training_button.setEnabled(not training)
 
 
 class ArgsWidget(QtWidgets.QWidget):

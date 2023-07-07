@@ -9,7 +9,7 @@ class QueueItem(QtWidgets.QPushButton):
         self.queue_file = None
         self.setCheckable(True)
         self.setChecked(False)
-        self.setSizePolicy(QtWidgets.QSizePolicy.Policy.Minimum, QtWidgets.QSizePolicy.Policy.Expanding)
+        self.setSizePolicy(QtWidgets.QSizePolicy.Policy.Minimum, QtWidgets.QSizePolicy.Policy.Maximum)
         self.clicked.connect(self.get_queue_file)
 
     @QtCore.Slot()

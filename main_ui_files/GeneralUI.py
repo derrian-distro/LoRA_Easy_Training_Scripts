@@ -77,9 +77,8 @@ class BaseArgsWidget(QtWidgets.QWidget):
 
     @QtCore.Slot(str, object, bool, QtWidgets.QWidget)
     def edit_args(self, name: str, value: object, optional: bool = False, elem: QtWidgets.QWidget = None) -> None:
-        if elem:
-            if isinstance(elem, modules.DragDropLineEdit.DragDropLineEdit):
-                elem.update_stylesheet()
+        if elem and isinstance(elem, modules.DragDropLineEdit.DragDropLineEdit):
+            elem.update_stylesheet()
         if not optional:
             self.args[name] = value
             return
@@ -108,7 +107,7 @@ class BaseArgsWidget(QtWidgets.QWidget):
         file_name, _ = QtWidgets.QFileDialog.getOpenFileName(
             self, "Open Model File", dir=default_folder,
             filter=f"Stable Diffusion Models ({extensions})")
-        self.widget.base_model_input.setText(file_name if file_name else self.widget.base_model_input.text())
+        self.widget.base_model_input.setText(file_name or self.widget.base_model_input.text())
 
     @QtCore.Slot(bool)
     def enable_disable_sd2(self, checked: bool) -> None:
@@ -141,8 +140,8 @@ class BaseArgsWidget(QtWidgets.QWidget):
     @QtCore.Slot(bool, int)
     def change_resolution(self, width: bool, value: int) -> None:
         if width:
-            self.dataset_args['resolution'] = value if not self.widget.height_input.isEnabled() else \
-                [value, self.widget.height_input.value()]
+            self.dataset_args['resolution'] = [value, self.widget.height_input.value()] if \
+                self.widget.height_input.isEnabled() else value
         else:
             self.dataset_args['resolution'] = [self.widget.width_input.value(), value]
 
@@ -202,16 +201,15 @@ class BaseArgsWidget(QtWidgets.QWidget):
 
     def get_args(self, input_args: dict) -> None:
         valid = self.widget.base_model_input.update_stylesheet()
-        input_args['general_args'] = None if not valid else self.args
-        if not valid:
-            if self.colap.is_collapsed:
-                self.colap.toggle_collapsed()
-                self.colap.title_frame.update_arrow(False)
-                self.colap.title_frame.setChecked(True)
+        input_args['general_args'] = self.args if valid else None
+        if not valid and self.colap.is_collapsed:
+            self.colap.toggle_collapsed()
+            self.colap.title_frame.update_arrow(False)
+            self.colap.title_frame.setChecked(True)
 
     def get_dataset_args(self, input_args: dict) -> None:
         valid = self.widget.base_model_input.update_stylesheet()
-        input_args['general_args'] = None if not valid else self.dataset_args
+        input_args['general_args'] = self.dataset_args if valid else None
 
     def load_args(self, args: dict) -> None:
         if self.name not in args:
@@ -239,13 +237,11 @@ class BaseArgsWidget(QtWidgets.QWidget):
             self.widget.width_input.setValue(dataset_args['resolution'])
 
         # gradient args
-        if "gradient_checkpointing" in args:
+        if "gradient_checkpointing" in args or 'gradient_accumulation_steps' in args:
             self.widget.gradient_box.setChecked(True)
-            self.widget.gradient_selector.setCurrentIndex(0)
-        elif "gradient_accumulation_steps" in args:
-            self.widget.gradient_box.setChecked(True)
-            self.widget.gradient_selector.setCurrentIndex(1)
-            self.widget.gradient_steps_input.setValue(args['gradient_accumulation_steps'])
+            self.widget.gradient_selector.setCurrentIndex(0 if "gradient_checkpointing" in args else 1)
+            self.widget.gradient_steps_input.setValue(args.get('gradient_accumulation_steps', 1))
+            self.enable_disable_gradient(True)
         else:
             self.widget.gradient_box.setChecked(False)
             self.enable_disable_gradient(False)
@@ -264,7 +260,7 @@ class BaseArgsWidget(QtWidgets.QWidget):
         train_prec = args['mixed_precision']
         index = 0 if train_prec == 'fp16' else 1 if train_prec == 'bf16' else 2
         self.widget.mixed_precision_selector.setCurrentIndex(index)
-        index = 0 if args.get("max_train_epochs", None) else 1
+        index = 0 if args.get("max_train_epochs") else 1
         self.widget.max_train_selector.setCurrentIndex(index)
         self.widget.max_train_input.setValue(args['max_train_epochs'] if index == 0 else args['max_train_steps'])
         checked = True if args.get('training_comment', False) else False

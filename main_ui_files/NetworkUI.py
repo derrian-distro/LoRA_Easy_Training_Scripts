@@ -54,14 +54,15 @@ class NetworkWidget(QtWidgets.QWidget):
         self.ui.unet_te_both_select.currentTextChanged.connect(self.change_training_parts)
 
         self.ui.network_dropout_enable.clicked.connect(lambda x: self.enable_disable_dropout("network", x))
-        self.ui.network_dropout_input.valueChanged.connect(lambda x: self.edit_args('network_dropout', x))
+        self.ui.network_dropout_input.valueChanged.connect(self.change_network_dropout)
+
         self.ui.rank_dropout_enable.clicked.connect(lambda x: self.enable_disable_dropout('rank', x))
         self.ui.rank_dropout_input.valueChanged.connect(lambda x: self.edit_network_args('rank_dropout', x))
+
         self.ui.module_dropout_enable.clicked.connect(lambda x: self.enable_disable_dropout('module', x))
         self.ui.module_dropout_input.valueChanged.connect(lambda x: self.edit_network_args('module_dropout', x))
+
         self.ui.cp_enable.clicked.connect(lambda x: self.edit_network_args('use_conv_cp', x))
-        self.ui.lyco_dropout_enable.clicked.connect(self.enable_disable_lyco_dropout)
-        self.ui.lyco_dropout_input.valueChanged.connect(lambda x: self.edit_network_args("dropout", x))
 
         self.colap.add_widget(self.widget, "main_widget")
         self.layout().addWidget(self.colap)
@@ -93,107 +94,85 @@ class NetworkWidget(QtWidgets.QWidget):
             if "network_train_text_encoder_only" in self.args:
                 del self.args['network_train_text_encoder_only']
 
+    @QtCore.Slot(float)
+    def change_network_dropout(self, value: float) -> None:
+        if 'network_args' in self.args and 'dropout' in self.args['network_args']:
+            del self.args['network_args']['dropout']
+        if 'network_dropout' in self.args:
+            del self.args['network_dropout']
+        if self.ui.algo_select.currentText() in {'lora', 'locon', 'dylora'}:
+            self.edit_args('network_dropout', value)
+        else:
+            self.edit_network_args('dropout', value)
+
+
     @QtCore.Slot(str, bool)
     def enable_disable_dropout(self, mode: str, checked: bool):
         if mode == 'network':
+            if 'network_args' in self.args and 'dropout' in self.args['network_args']:
+                del self.args['network_args']['dropout']
+            if 'network_dropout' in self.args:
+                del self.args['network_dropout']
             self.ui.network_dropout_input.setEnabled(checked)
             if checked:
-                self.edit_args('network_dropout', self.ui.network_dropout_input.value())
-            else:
-                if 'network_dropout' in self.args:
-                    del self.args['network_dropout']
+                self.change_network_dropout(self.ui.network_dropout_input.value())
         elif mode == 'rank':
+            if 'network_args' in self.args and 'rank_dropout' in self.args['network_args']:
+                del self.args['network_args']['rank_dropout']
             self.ui.rank_dropout_input.setEnabled(checked)
             if checked:
                 self.edit_network_args("rank_dropout", self.ui.rank_dropout_input.value())
-            else:
-                if 'network_args' not in self.args:
-                    return
-                if 'rank_dropout' in self.args['network_args']:
-                    del self.args['network_args']['rank_dropout']
         else:
+            if 'network_args' in self.args and 'module_dropout' in self.args['network_args']:
+                del self.args['network_args']['module_dropout']
             self.ui.module_dropout_input.setEnabled(checked)
             if checked:
                 self.edit_network_args('module_dropout', self.ui.module_dropout_input.value())
-            else:
-                if 'network_args' not in self.args:
-                    return
-                if 'module_dropout' in self.args['network_args']:
-                    del self.args['network_args']['module_dropout']
-
-    @QtCore.Slot(bool)
-    def enable_disable_lyco_dropout(self, checked: bool):
-        self.ui.lyco_dropout_input.setEnabled(checked)
-        if checked:
-            self.edit_network_args('dropout', self.ui.lyco_dropout_input.value())
-        else:
-            if 'network_args' in self.args and 'dropout' in self.args['network_args']:
-                del self.args['network_args']['dropout']
 
     @QtCore.Slot(str)
     def algo_changed(self, name: str) -> None:
-        if name == "LoRA":
-            if "network_args" in self.args:
-                del self.args['network_args']
-            self.ui.conv_alpha_input.setEnabled(False)
-            self.ui.conv_dim_input.setEnabled(False)
-            self.ui.dylora_unit_input.setEnabled(False)
-            self.ui.network_dropout_enable.setEnabled(True)
-            self.enable_disable_dropout('network', self.ui.network_dropout_enable.isChecked())
-            self.ui.rank_dropout_enable.setEnabled(True)
-            self.enable_disable_dropout('rank', self.ui.rank_dropout_enable.isChecked())
-            self.ui.module_dropout_enable.setEnabled(True)
-            self.enable_disable_dropout('module', self.ui.module_dropout_enable.isChecked())
-            self.ui.cp_enable.setEnabled(False)
-            self.ui.lyco_dropout_enable.setEnabled(False)
-            self.ui.lyco_dropout_input.setEnabled(False)
-        else:
-            self.ui.conv_alpha_input.setEnabled(True)
+        if 'network_args' in self.args:
+            del self.args['network_args']
+        self.ui.conv_dim_input.setEnabled(False)
+        self.ui.conv_alpha_input.setEnabled(False)
+        self.ui.dylora_unit_input.setEnabled(False)
+        self.ui.cp_enable.setEnabled(False)
+        if name.lower() == 'lora':
+            self.enable_dropouts(lyco=False)
+        elif name.lower() in {'locon', 'dylora'}:
+            self.enable_dropouts(lyco=False)
             self.ui.conv_dim_input.setEnabled(True)
-            if name.lower() == 'locon':
-                self.ui.network_dropout_enable.setEnabled(True)
-                self.enable_disable_dropout('network', self.ui.network_dropout_enable.isChecked())
-                self.ui.rank_dropout_enable.setEnabled(True)
-                self.enable_disable_dropout('rank', self.ui.rank_dropout_enable.isChecked())
-                self.ui.module_dropout_enable.setEnabled(True)
-                self.enable_disable_dropout('module', self.ui.module_dropout_enable.isChecked())
-            else:
-                self.ui.network_dropout_enable.setEnabled(False)
-                self.enable_disable_dropout('network', False)
-                self.ui.rank_dropout_enable.setEnabled(False)
-                self.enable_disable_dropout('rank', False)
-                self.ui.module_dropout_enable.setEnabled(False)
-                self.enable_disable_dropout('module', False)
-            if "network_args" not in self.args:
-                self.args['network_args'] = {}
-            self.args['network_args']["conv_dim"] = self.ui.conv_dim_input.value()
-            self.args['network_args']["conv_alpha"] = round(self.ui.conv_alpha_input.value(), 2)
-            if name == "DyLoRA":
+            self.edit_network_args('conv_dim', self.ui.conv_dim_input.value())
+            self.ui.conv_alpha_input.setEnabled(True)
+            self.edit_network_args('conv_alpha', self.ui.conv_alpha_input.value())
+            if name.lower() == 'dylora':
                 self.ui.dylora_unit_input.setEnabled(True)
-                self.args['network_args']['unit'] = self.ui.dylora_unit_input.value()
-                if 'algo' in self.args['network_args']:
-                    del self.args['network_args']['algo']
-            else:
-                self.ui.dylora_unit_input.setEnabled(False)
-                if "unit" in self.args['network_args']:
-                    del self.args['network_args']['unit']
-            if name not in {"LoCon", "DyLoRA"}:
-                self.args['network_args']['algo'] = name.lower() if name != 'LoCon (LyCORIS)' else 'locon'
-                self.ui.cp_enable.setEnabled(True)
-                self.edit_network_args('use_conv_cp', self.ui.cp_enable.isChecked())
-                self.ui.lyco_dropout_enable.setEnabled(True)
-                self.enable_disable_lyco_dropout(self.ui.lyco_dropout_enable.isChecked())
-            else:
-                self.ui.cp_enable.setEnabled(False)
-                self.ui.lyco_dropout_enable.setEnabled(False)
-                self.ui.lyco_dropout_input.setEnabled(False)
-                if "algo" in self.args['network_args']:
-                    del self.args['network_args']['algo']
-                if 'use_conv_cp' in self.args['network_args']:
-                    del self.args['network_args']['use_conv_cp']
-                if 'dropout' in self.args['network_args']:
-                    del self.args['network_args']['dropout']
+                self.edit_network_args('unit', self.ui.dylora_unit_input.value())
+        else:
+            self.enable_dropouts(lyco=True)
+            self.ui.conv_dim_input.setEnabled(True)
+            self.edit_network_args('conv_dim', self.ui.conv_dim_input.value())
+            self.ui.conv_alpha_input.setEnabled(True)
+            self.edit_network_args('conv_alpha', self.ui.conv_alpha_input.value())
+            self.ui.cp_enable.setEnabled(True)
+            if self.ui.cp_enable.isChecked():
+                self.edit_network_args('use_conv_cp', True)
+            if name.lower() == 'dylora (lycoris)':
+                self.ui.dylora_unit_input.setEnabled(True)
+                self.edit_network_args('block_size', self.ui.dylora_unit_input.value())
+            self.edit_network_args('algo', name.lower().split(" (lycoris)")[0])
         self.change_block_weight_enable(name)
+
+    def enable_dropouts(self, lyco: bool):
+        if self.ui.network_dropout_enable.isChecked():
+            if lyco:
+                self.edit_network_args('dropout', self.ui.network_dropout_input.value())
+            else:
+                self.edit_args('network_dropout', self.ui.network_dropout_input.value())
+        if self.ui.rank_dropout_enable.isChecked():
+            self.edit_network_args('rank_dropout', self.ui.rank_dropout_input.value())
+        if self.ui.module_dropout_enable.isChecked():
+            self.edit_network_args('module_dropout', self.ui.module_dropout_input.value())
 
     def change_block_weight_enable(self, algo: str):
         if algo.lower() == 'lora':
@@ -329,6 +308,11 @@ class NetworkWidget(QtWidgets.QWidget):
             self.ui.conv_alpha_input.setValue(args['network_args'].get("conv_alpha", 16))
             self.ui.dylora_unit_input.setValue(args['network_args'].get("unit", 4))
 
+            checked = True if args['network_args'].get('dropout', False) else False
+            self.ui.network_dropout_enable.setChecked(checked)
+            self.ui.network_dropout_input.setValue(args['network_args'].get('dropout', 0.1))
+            self.enable_disable_dropout('network', checked)
+
             checked = True if args['network_args'].get('rank_dropout', False) else False
             self.ui.rank_dropout_enable.setChecked(checked)
             self.ui.rank_dropout_input.setValue(args['network_args'].get('rank_dropout', 0.1))
@@ -343,12 +327,10 @@ class NetworkWidget(QtWidgets.QWidget):
                 self.ui.algo_select.setCurrentIndex(6)
             elif "algo" in args['network_args']:
                 algo = args['network_args']['algo']
-                index = 2 if algo == 'locon' else 3 if algo == 'loha' else 4 if algo == "ia3" else 5
+                index = 2 if algo == 'locon' else 3 if algo == 'loha' else 4 if algo == "ia3" else 5 if algo == 'lokr' \
+                    else 7
                 self.ui.cp_enable.setChecked(args['network_args'].get("use_conv_cp", False))
-                self.ui.lyco_dropout_enable.setChecked(True if args['network_args'].get('dropout', False) else False)
-                self.ui.lyco_dropout_input.setValue(args['network_args'].get('dropout', 0.0))
                 self.ui.cp_enable.setEnabled(True)
-                self.enable_disable_lyco_dropout(self.ui.lyco_dropout_enable.isChecked())
                 self.ui.algo_select.setCurrentIndex(index)
             elif "conv_dim" in args['network_args']:
                 self.ui.algo_select.setCurrentIndex(1)

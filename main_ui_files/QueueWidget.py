@@ -1,7 +1,8 @@
 import os
 from PySide6 import QtWidgets, QtCore, QtGui
 from modules.QueueItem import QueueItem
-from ui_files.QueueUI import Ui_queue_ui
+# from ui_files.QueueUI import Ui_queue_ui
+from ui_files.QueueUIVertical import Ui_queue_ui
 import time
 
 
@@ -17,12 +18,12 @@ class QueueWidget(QtWidgets.QWidget):
         self.widget.setupUi(self)
         self.widget.add_to_queue_button.clicked.connect(self.add_to_queue)
         self.widget.remove_from_queue_button.clicked.connect(self.remove_from_queue)
-        self.widget.queue_scroll_widget.layout().setAlignment(QtCore.Qt.AlignmentFlag.AlignLeft)
+        self.widget.queue_scroll_widget.layout().setAlignment(QtCore.Qt.AlignmentFlag.AlignTop)
 
-        self.widget.left_arrow.setIcon(QtGui.QIcon(os.path.join("icons", "chevron-left.svg")))
-        self.widget.left_arrow.clicked.connect(lambda: self.change_position(True))
-        self.widget.right_arrow.setIcon(QtGui.QIcon(os.path.join("icons", "chevron-right.svg")))
-        self.widget.right_arrow.clicked.connect(lambda: self.change_position(False))
+        self.widget.top_arrow.setIcon(QtGui.QIcon(os.path.join("icons", "chevron-up.svg")))
+        self.widget.top_arrow.clicked.connect(lambda: self.change_position(True))
+        self.widget.bottom_arrow.setIcon(QtGui.QIcon(os.path.join("icons", "chevron-down.svg")))
+        self.widget.bottom_arrow.clicked.connect(lambda: self.change_position(False))
 
     def add_to_queue(self) -> None:
         new_item = QueueItem()
@@ -48,12 +49,13 @@ class QueueWidget(QtWidgets.QWidget):
 
     def remove_first_from_queue(self) -> None:
         elem = self.elements[0]
+        if elem == self.selected:
+            self.selected = None
+            self.uncheck_elements()
         self.widget.queue_scroll_widget.layout().removeWidget(elem)
         self.elements.remove(elem)
         elem.deleteLater()
         self.widget.queue_scroll_widget.layout().update()
-        if elem == self.selected:
-            self.selected = None
 
     def uncheck_elements(self, skip_save: bool = False) -> None:
         for elem in self.elements:
