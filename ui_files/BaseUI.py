@@ -158,6 +158,11 @@ class Ui_base_args_ui(object):
 
         self.horizontalLayout_2.addWidget(self.sdxl_enable)
 
+        self.no_half_vae_enable = QCheckBox(self.base_model_box)
+        self.no_half_vae_enable.setObjectName(u"no_half_vae_enable")
+
+        self.horizontalLayout_2.addWidget(self.no_half_vae_enable)
+
 
         self.formLayout_3.setLayout(1, QFormLayout.SpanningRole, self.horizontalLayout_2)
 
@@ -373,6 +378,7 @@ class Ui_base_args_ui(object):
 #endif // QT_CONFIG(tooltip)
         self.v2_enable.setText(QCoreApplication.translate("base_args_ui", u"SD2.X Based", None))
         self.sdxl_enable.setText(QCoreApplication.translate("base_args_ui", u"SDXL Based", None))
+        self.no_half_vae_enable.setText(QCoreApplication.translate("base_args_ui", u"No Half Vae", None))
         self.resolution_box.setTitle(QCoreApplication.translate("base_args_ui", u"Resolution", None))
         self.label.setText(QCoreApplication.translate("base_args_ui", u"Width", None))
 #if QT_CONFIG(tooltip)

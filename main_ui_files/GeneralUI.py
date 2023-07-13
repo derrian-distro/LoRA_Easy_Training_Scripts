@@ -76,6 +76,7 @@ class BaseArgsWidget(QtWidgets.QWidget):
         self.widget.max_token_selector.currentIndexChanged.connect(self.edit_token_length)
         self.widget.mixed_precision_selector.currentTextChanged.connect(lambda x: self.edit_args(
             "mixed_precision", x if x != "float" else "no"))
+        self.widget.no_half_vae_enable.clicked.connect(lambda x: self.edit_args('no_half_vae', x, True))
 
     @QtCore.Slot(str, object, bool, QtWidgets.QWidget)
     def edit_args(self, name: str, value: object, optional: bool = False, elem: QtWidgets.QWidget = None) -> None:
@@ -292,6 +293,7 @@ class BaseArgsWidget(QtWidgets.QWidget):
         self.widget.comment_input.setText(args.get('training_comment', ""))
         self.widget.comment_enable.setChecked(checked)
         self.enable_disable_comment(checked)
+        self.widget.no_half_vae_enable.setChecked(args.get('no_half_vae', False))
 
     def save_args(self) -> Union[dict, None]:
         return self.args

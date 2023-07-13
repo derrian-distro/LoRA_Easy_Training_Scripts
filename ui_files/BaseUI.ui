@@ -232,6 +232,13 @@
           </property>
          </widget>
         </item>
+        <item>
+         <widget class="QCheckBox" name="no_half_vae_enable">
+          <property name="text">
+           <string>No Half Vae</string>
+          </property>
+         </widget>
+        </item>
        </layout>
       </item>
      </layout>
@@ -531,14 +538,14 @@
    <header>modules.ScrollOnSelect.h</header>
   </customwidget>
   <customwidget>
-   <class>DoubleSpinBox</class>
-   <extends>QDoubleSpinBox</extends>
-   <header>modules.ScrollOnSelect.h</header>
-  </customwidget>
-  <customwidget>
    <class>DragDropLineEdit</class>
    <extends>QLineEdit</extends>
    <header>modules.DragDropLineEdit.h</header>
+  </customwidget>
+  <customwidget>
+   <class>DoubleSpinBox</class>
+   <extends>QDoubleSpinBox</extends>
+   <header>modules.ScrollOnSelect.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

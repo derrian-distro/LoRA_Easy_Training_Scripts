@@ -15,9 +15,9 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QFont, QFontDatabase, QGradient, QIcon,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
-from PySide6.QtWidgets import (QApplication, QCheckBox, QFormLayout, QGroupBox,
-    QHBoxLayout, QLabel, QPushButton, QSizePolicy,
-    QVBoxLayout, QWidget)
+from PySide6.QtWidgets import (QApplication, QFormLayout, QGroupBox, QHBoxLayout,
+    QLabel, QPushButton, QSizePolicy, QVBoxLayout,
+    QWidget)
 
 from modules.DragDropLineEdit import DragDropLineEdit
 from modules.ScrollOnSelect import (ComboBox, SpinBox)
@@ -26,7 +26,7 @@ class Ui_sample_ui(object):
     def setupUi(self, sample_ui):
         if not sample_ui.objectName():
             sample_ui.setObjectName(u"sample_ui")
-        sample_ui.resize(400, 178)
+        sample_ui.resize(400, 150)
         self.verticalLayout = QVBoxLayout(sample_ui)
         self.verticalLayout.setObjectName(u"verticalLayout")
         self.sample_args_box = QGroupBox(sample_ui)
@@ -35,6 +35,33 @@ class Ui_sample_ui(object):
         self.sample_args_box.setChecked(False)
         self.formLayout = QFormLayout(self.sample_args_box)
         self.formLayout.setObjectName(u"formLayout")
+        self.sampler_label = QLabel(self.sample_args_box)
+        self.sampler_label.setObjectName(u"sampler_label")
+
+        self.formLayout.setWidget(0, QFormLayout.LabelRole, self.sampler_label)
+
+        self.sampler_input = ComboBox(self.sample_args_box)
+        self.sampler_input.addItem("")
+        self.sampler_input.addItem("")
+        self.sampler_input.addItem("")
+        self.sampler_input.addItem("")
+        self.sampler_input.addItem("")
+        self.sampler_input.addItem("")
+        self.sampler_input.addItem("")
+        self.sampler_input.addItem("")
+        self.sampler_input.addItem("")
+        self.sampler_input.addItem("")
+        self.sampler_input.addItem("")
+        self.sampler_input.addItem("")
+        self.sampler_input.addItem("")
+        self.sampler_input.addItem("")
+        self.sampler_input.addItem("")
+        self.sampler_input.addItem("")
+        self.sampler_input.setObjectName(u"sampler_input")
+        self.sampler_input.setFocusPolicy(Qt.StrongFocus)
+
+        self.formLayout.setWidget(0, QFormLayout.FieldRole, self.sampler_input)
+
         self.steps_label = QLabel(self.sample_args_box)
         self.steps_label.setObjectName(u"steps_label")
 
@@ -72,33 +99,6 @@ class Ui_sample_ui(object):
 
         self.formLayout.setLayout(1, QFormLayout.FieldRole, self.horizontalLayout)
 
-        self.sampler_label = QLabel(self.sample_args_box)
-        self.sampler_label.setObjectName(u"sampler_label")
-
-        self.formLayout.setWidget(0, QFormLayout.LabelRole, self.sampler_label)
-
-        self.sampler_input = ComboBox(self.sample_args_box)
-        self.sampler_input.addItem("")
-        self.sampler_input.addItem("")
-        self.sampler_input.addItem("")
-        self.sampler_input.addItem("")
-        self.sampler_input.addItem("")
-        self.sampler_input.addItem("")
-        self.sampler_input.addItem("")
-        self.sampler_input.addItem("")
-        self.sampler_input.addItem("")
-        self.sampler_input.addItem("")
-        self.sampler_input.addItem("")
-        self.sampler_input.addItem("")
-        self.sampler_input.addItem("")
-        self.sampler_input.addItem("")
-        self.sampler_input.addItem("")
-        self.sampler_input.addItem("")
-        self.sampler_input.setObjectName(u"sampler_input")
-        self.sampler_input.setFocusPolicy(Qt.StrongFocus)
-
-        self.formLayout.setWidget(0, QFormLayout.FieldRole, self.sampler_input)
-
         self.text_file_label = QLabel(self.sample_args_box)
         self.text_file_label.setObjectName(u"text_file_label")
 
@@ -124,11 +124,6 @@ class Ui_sample_ui(object):
 
         self.formLayout.setLayout(2, QFormLayout.FieldRole, self.horizontalLayout_2)
 
-        self.no_half_vae_enable = QCheckBox(self.sample_args_box)
-        self.no_half_vae_enable.setObjectName(u"no_half_vae_enable")
-
-        self.formLayout.setWidget(3, QFormLayout.SpanningRole, self.no_half_vae_enable)
-
 
         self.verticalLayout.addWidget(self.sample_args_box)
 
@@ -141,16 +136,6 @@ class Ui_sample_ui(object):
     def retranslateUi(self, sample_ui):
         sample_ui.setWindowTitle(QCoreApplication.translate("sample_ui", u"Form", None))
         self.sample_args_box.setTitle(QCoreApplication.translate("sample_ui", u"Enable", None))
-        self.steps_label.setText(QCoreApplication.translate("sample_ui", u"Time Between Sample", None))
-        self.steps_epochs_selector.setItemText(0, QCoreApplication.translate("sample_ui", u"Steps Per Sample", None))
-        self.steps_epochs_selector.setItemText(1, QCoreApplication.translate("sample_ui", u"Epochs Per Sample", None))
-
-#if QT_CONFIG(tooltip)
-        self.steps_epochs_selector.setToolTip(QCoreApplication.translate("sample_ui", u"<html><head/><body><p>The amount of time between samples. I personally suggest you have it generate a sample every epoch, however, again, personal preference.</p></body></html>", None))
-#endif // QT_CONFIG(tooltip)
-#if QT_CONFIG(tooltip)
-        self.steps_epoch_input.setToolTip(QCoreApplication.translate("sample_ui", u"<html><head/><body><p>The amount of time between samples. I personally suggest you have it generate a sample every epoch, however, again, personal preference.</p></body></html>", None))
-#endif // QT_CONFIG(tooltip)
         self.sampler_label.setText(QCoreApplication.translate("sample_ui", u"Sampler ", None))
         self.sampler_input.setItemText(0, QCoreApplication.translate("sample_ui", u"DDIM", None))
         self.sampler_input.setItemText(1, QCoreApplication.translate("sample_ui", u"PNDM", None))
@@ -172,12 +157,21 @@ class Ui_sample_ui(object):
 #if QT_CONFIG(tooltip)
         self.sampler_input.setToolTip(QCoreApplication.translate("sample_ui", u"<html><head/><body><p>The Sampler used when generating test images. I personally suggest using either DDIM or Euler A, however it's really just personal preference.</p></body></html>", None))
 #endif // QT_CONFIG(tooltip)
+        self.steps_label.setText(QCoreApplication.translate("sample_ui", u"Time Between Sample", None))
+        self.steps_epochs_selector.setItemText(0, QCoreApplication.translate("sample_ui", u"Steps Per Sample", None))
+        self.steps_epochs_selector.setItemText(1, QCoreApplication.translate("sample_ui", u"Epochs Per Sample", None))
+
+#if QT_CONFIG(tooltip)
+        self.steps_epochs_selector.setToolTip(QCoreApplication.translate("sample_ui", u"<html><head/><body><p>The amount of time between samples. I personally suggest you have it generate a sample every epoch, however, again, personal preference.</p></body></html>", None))
+#endif // QT_CONFIG(tooltip)
+#if QT_CONFIG(tooltip)
+        self.steps_epoch_input.setToolTip(QCoreApplication.translate("sample_ui", u"<html><head/><body><p>The amount of time between samples. I personally suggest you have it generate a sample every epoch, however, again, personal preference.</p></body></html>", None))
+#endif // QT_CONFIG(tooltip)
         self.text_file_label.setText(QCoreApplication.translate("sample_ui", u"Prompt Text File", None))
 #if QT_CONFIG(tooltip)
         self.sample_prompt_txt_file_input.setToolTip(QCoreApplication.translate("sample_ui", u"<html><head/><body><p>The input file that contains all of your prompts. This file must be a txt file and have one prompt per line. you can specify a bunch of args within each line for things like negative prompts, width and height, and more. For documentation on this please visit the sd-scripts github repo.</p></body></html>", None))
 #endif // QT_CONFIG(tooltip)
         self.sample_prompt_txt_file_input.setPlaceholderText(QCoreApplication.translate("sample_ui", u"Text File", None))
         self.sample_prompt_selector.setText("")
-        self.no_half_vae_enable.setText(QCoreApplication.translate("sample_ui", u"No Half Vae", None))
     # retranslateUi
 
