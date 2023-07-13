@@ -112,7 +112,7 @@ def main():
         f.write("main_process_port: null\n")
         f.write("main_training_function: main\n")
         f.write("megatron_lm_config: {}\n")
-        f.write("mixed_precision: fp16\n")
+        f.write("mixed_precision: bf16\n")
         f.write("num_machines: 1\n")
         f.write("num_processes: 1\n")
         f.write("rdzv_backend: static\n")

@@ -58,7 +58,7 @@ accelerate config will ask you a bunch of questions, answer them like so,
 - NO
 - NO
 - all
-- fp16
+- bf16
 ```
 
 ## Usage
