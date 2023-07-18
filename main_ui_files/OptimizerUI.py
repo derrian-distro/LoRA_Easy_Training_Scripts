@@ -1,3 +1,5 @@
+import subprocess
+import sys
 from typing import Union
 
 from PySide6 import QtCore, QtWidgets
@@ -5,6 +7,11 @@ from ui_files.OptimizerUI import Ui_optimizer_ui
 from modules.CollapsibleWidget import CollapsibleWidget
 from modules.LineEditHighlight import LineEditWithHighlight
 from modules.OptimizerItem import OptimizerItem
+try:
+    import prodigyopt
+except ImportError:
+    python = sys.executable
+    subprocess.check_call(' '.join([python, '-m', 'pip', 'install', 'prodigyopt']))
 
 
 class OptimizerWidget(QtWidgets.QWidget):
