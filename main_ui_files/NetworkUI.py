@@ -105,7 +105,6 @@ class NetworkWidget(QtWidgets.QWidget):
         else:
             self.edit_network_args('dropout', value)
 
-
     @QtCore.Slot(str, bool)
     def enable_disable_dropout(self, mode: str, checked: bool):
         if mode == 'network':
@@ -148,6 +147,16 @@ class NetworkWidget(QtWidgets.QWidget):
             if name.lower() == 'dylora':
                 self.ui.dylora_unit_input.setEnabled(True)
                 self.edit_network_args('unit', self.ui.dylora_unit_input.value())
+        elif name.lower() == 'lokr':
+            self.disable_dropouts()
+            self.ui.conv_dim_input.setEnabled(True)
+            self.edit_network_args('conv_dim', self.ui.conv_dim_input.value())
+            self.ui.conv_alpha_input.setEnabled(True)
+            self.edit_network_args('conv_alpha', self.ui.conv_alpha_input.value())
+            self.ui.cp_enable.setEnabled(True)
+            if self.ui.cp_enable.isChecked():
+                self.edit_network_args('use_conv_cp', True)
+            self.edit_network_args('algo', name.lower().split(" (lycoris)")[0])
         else:
             self.enable_dropouts(lyco=True)
             self.ui.conv_dim_input.setEnabled(True)
@@ -164,6 +173,12 @@ class NetworkWidget(QtWidgets.QWidget):
         self.change_block_weight_enable(name)
 
     def enable_dropouts(self, lyco: bool):
+        self.ui.network_dropout_enable.setEnabled(True)
+        self.ui.network_dropout_input.setEnabled(True)
+        self.ui.rank_dropout_enable.setEnabled(True)
+        self.ui.rank_dropout_input.setEnabled(True)
+        self.ui.module_dropout_enable.setEnabled(True)
+        self.ui.module_dropout_input.setEnabled(True)
         if self.ui.network_dropout_enable.isChecked():
             if lyco:
                 self.edit_network_args('dropout', self.ui.network_dropout_input.value())
@@ -173,6 +188,20 @@ class NetworkWidget(QtWidgets.QWidget):
             self.edit_network_args('rank_dropout', self.ui.rank_dropout_input.value())
         if self.ui.module_dropout_enable.isChecked():
             self.edit_network_args('module_dropout', self.ui.module_dropout_input.value())
+
+    def disable_dropouts(self):
+        if 'network_args' in self.args:
+            for arg in ['dropout', 'rank_dropout', 'module_dropout']:
+                if arg in self.args['network_args']:
+                    del self.args['network_args'][arg]
+        if 'network_dropout' in self.args:
+            del self.args['network_dropout']
+        self.ui.network_dropout_enable.setEnabled(False)
+        self.ui.network_dropout_input.setEnabled(False)
+        self.ui.rank_dropout_enable.setEnabled(False)
+        self.ui.rank_dropout_input.setEnabled(False)
+        self.ui.module_dropout_enable.setEnabled(False)
+        self.ui.module_dropout_input.setEnabled(False)
 
     def change_block_weight_enable(self, algo: str):
         if algo.lower() == 'lora':

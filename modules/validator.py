@@ -55,6 +55,8 @@ def validate_args(args: dict) -> Union[dict, None]:
             if arg == "optimizer_args":
                 vals = []
                 for k, v in val.items():
+                    if v in ['true', 'false']:
+                        v = v.capitalize()
                     vals.append(f"{k}={v}")
                 val = vals
             if arg == 'lr_scheduler_args':
