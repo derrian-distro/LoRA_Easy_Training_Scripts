@@ -47,7 +47,7 @@ class BaseArgsWidget(QtWidgets.QWidget):
         # Base Model connections
         self.widget.base_model_input.textChanged.connect(lambda x: self.edit_args("pretrained_model_name_or_path", x,
                                                                                   elem=self.widget.base_model_input))
-        self.widget.base_model_selector.clicked.connect(self.set_from_dialog)
+        self.widget.base_model_selector.clicked.connect(lambda: self.set_from_dialog(True))
         self.widget.vae_input.textChanged.connect(lambda x: self.edit_args('vae', x, elem=self.widget.vae_input))
         self.widget.vae_selector.clicked.connect(lambda: self.set_from_dialog(False))
         self.widget.sdxl_enable.clicked.connect(self.enable_disable_sdxl)
