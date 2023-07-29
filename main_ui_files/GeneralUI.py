@@ -180,7 +180,7 @@ class BaseArgsWidget(QtWidgets.QWidget):
             self.widget.BF16_enable.setEnabled(False)
             self.edit_args('full_bf16', False, False)
             self.widget.mixed_precision_selector.setEnabled(False)
-            self.edit_args('mixed_precision', None, False)
+            self.edit_args('mixed_precision', 'fp16', False)
             self.edit_args('full_fp16', True)
         else:
             if self.bf16_valid:
@@ -204,7 +204,7 @@ class BaseArgsWidget(QtWidgets.QWidget):
             self.edit_args('full_bf16', False, True)
         else:
             self.edit_args('full_fp16', False, True)
-            self.edit_args('mixed_precision', None, True)
+            self.edit_args('mixed_precision', 'bf16', True)
             self.edit_args('full_bf16', True)
 
     @QtCore.Slot(bool)
