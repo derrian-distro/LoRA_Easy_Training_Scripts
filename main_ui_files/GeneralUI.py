@@ -1,4 +1,6 @@
 import os.path
+import subprocess
+import sys
 from typing import Union
 
 from PySide6 import QtWidgets, QtCore, QtGui
@@ -14,6 +16,13 @@ class BaseArgsWidget(QtWidgets.QWidget):
 
     def __init__(self, parent: QtWidgets.QWidget = None) -> None:
         super(BaseArgsWidget, self).__init__(parent)
+        realBits = subprocess.Popen(['pip', 'show', "bitsandbytes"], stdout=subprocess.PIPE)
+        self.bf16_valid = str(realBits.communicate()[0]).split(r"\n")[1].split(r"\r")[0].split(': ')[1]
+        if sys.platform == "win32" or self.bf16_valid == '0.35.0':
+            self.bf16_valid = False
+        else:
+            self.bf16_valid = True
+
         self.args = {"pretrained_model_name_or_path": "", "mixed_precision": "fp16", "seed": 23, "clip_skip": 2,
                      "xformers": True, "max_train_epochs": 1, "max_data_loader_n_workers": 1,
                      "persistent_data_loader_workers": True, "max_token_length": 225, "prior_loss_weight": 1.0}
@@ -31,11 +40,16 @@ class BaseArgsWidget(QtWidgets.QWidget):
         self.widget.base_model_input.highlight = True
         self.widget.base_model_input.setMode("file", ['.ckpt', '.pt', '.safetensors'])
         self.widget.base_model_selector.setIcon(QtGui.QIcon(os.path.join("icons", "more-horizontal.svg")))
+        self.widget.vae_input.highlight = True
+        self.widget.vae_input.setMode("file", ['.pt', '.ckpt', '.safetensors'])
+        self.widget.vae_selector.setIcon(QtGui.QIcon(os.path.join('icons', 'more-horizontal.svg')))
 
         # Base Model connections
         self.widget.base_model_input.textChanged.connect(lambda x: self.edit_args("pretrained_model_name_or_path", x,
                                                                                   elem=self.widget.base_model_input))
         self.widget.base_model_selector.clicked.connect(self.set_from_dialog)
+        self.widget.vae_input.textChanged.connect(lambda x: self.edit_args('vae', x, elem=self.widget.vae_input))
+        self.widget.vae_selector.clicked.connect(lambda: self.set_from_dialog(False))
         self.widget.sdxl_enable.clicked.connect(self.enable_disable_sdxl)
         self.widget.v2_enable.clicked.connect(self.enable_disable_sd2)
         self.widget.v_param_enable.clicked.connect(lambda x: self.enable_disable_sd2(self.widget.v2_enable.isChecked()))
@@ -78,6 +92,11 @@ class BaseArgsWidget(QtWidgets.QWidget):
             "mixed_precision", x if x != "float" else "no"))
         self.widget.no_half_vae_enable.clicked.connect(lambda x: self.edit_args('no_half_vae', x, True))
 
+        # full_bf16 and full_fp16 connections and setup
+        self.widget.BF16_enable.setEnabled(self.bf16_valid)
+        self.widget.BF16_enable.clicked.connect(self.enable_disable_full_bf16)
+        self.widget.FP16_enable.clicked.connect(self.enable_disable_full_fp16)
+
     @QtCore.Slot(str, object, bool, QtWidgets.QWidget)
     def edit_args(self, name: str, value: object, optional: bool = False, elem: QtWidgets.QWidget = None) -> None:
         if elem and isinstance(elem, modules.DragDropLineEdit.DragDropLineEdit):
@@ -102,15 +121,18 @@ class BaseArgsWidget(QtWidgets.QWidget):
             return
         self.dataset_args[name] = value
 
-    @QtCore.Slot()
-    def set_from_dialog(self) -> None:
+    @QtCore.Slot(bool)
+    def set_from_dialog(self, is_base: bool = True) -> None:
         extensions = " ".join(["*" + s for s in self.widget.base_model_input.extensions])
         default_folder = os.path.split(self.widget.base_model_input.text())[0] if \
             os.path.exists(self.widget.base_model_input.text()) else ""
         file_name, _ = QtWidgets.QFileDialog.getOpenFileName(
             self, "Open Model File", dir=default_folder,
             filter=f"Stable Diffusion Models ({extensions})")
-        self.widget.base_model_input.setText(file_name or self.widget.base_model_input.text())
+        if is_base:
+            self.widget.base_model_input.setText(file_name or self.widget.base_model_input.text())
+            return
+        self.widget.vae_input.setText(file_name or self.widget.vae_input.text())
 
     @QtCore.Slot(bool)
     def enable_disable_sd2(self, checked: bool) -> None:
@@ -138,15 +160,52 @@ class BaseArgsWidget(QtWidgets.QWidget):
         if checked:
             self.args['sdxl'] = True
             self.widget.v2_enable.setEnabled(False)
+            self.widget.clip_skip_input.setEnabled(False)
+            self.edit_args('clip_skip', None, True)
             self.enable_disable_sd2(False)
             self.SdxlChecked.emit(True)
         else:
             if 'sdxl' in self.args:
                 del self.args['sdxl']
+            self.widget.clip_skip_input.setEnabled(True)
+            self.edit_args('clip_skip', self.widget.clip_skip_input.value())
             self.widget.v2_enable.setEnabled(True)
             if self.widget.v2_enable.isChecked():
                 self.enable_disable_sd2(True)
             self.SdxlChecked.emit(False)
+
+    @QtCore.Slot(bool)
+    def enable_disable_full_fp16(self, checked: bool) -> None:
+        if checked:
+            self.widget.BF16_enable.setEnabled(False)
+            self.edit_args('full_bf16', False, False)
+            self.widget.mixed_precision_selector.setEnabled(False)
+            self.edit_args('mixed_precision', None, False)
+            self.edit_args('full_fp16', True)
+        else:
+            if self.bf16_valid:
+                self.widget.BF16_enable.setEnabled(True)
+                self.edit_args('full_bf16', self.widget.BF16_enable.isChecked(), True)
+            self.widget.mixed_precision_selector.setEnabled(True)
+            text = self.widget.mixed_precision_selector.currentText()
+            self.edit_args('mixed_precision', text if text != 'float' else 'no')
+            self.edit_args('full_fp16', False, True)
+
+    @QtCore.Slot(bool)
+    def enable_disable_full_bf16(self, checked: bool) -> None:
+        if not self.bf16_valid:
+            return
+        self.widget.FP16_enable.setEnabled(not checked)
+        self.widget.mixed_precision_selector.setEnabled(not checked)
+        if not checked:
+            self.edit_args('full_fp16', self.widget.FP16_enable.isChecked(), True)
+            text = self.widget.mixed_precision_selector.currentText()
+            self.edit_args('mixed_precision', text if text != 'float' else 'no')
+            self.edit_args('full_bf16', False, True)
+        else:
+            self.edit_args('full_fp16', False, True)
+            self.edit_args('mixed_precision', None, True)
+            self.edit_args('full_bf16', True)
 
     @QtCore.Slot(bool)
     def enable_disable_height(self, checked: bool) -> None:
@@ -273,7 +332,7 @@ class BaseArgsWidget(QtWidgets.QWidget):
             self.enable_disable_gradient(False)
 
         self.widget.seed_input.setValue(args['seed'])
-        self.widget.clip_skip_input.setValue(args['clip_skip'])
+        self.widget.clip_skip_input.setValue(args.get('clip_skip', 2))
         self.widget.loss_weight_input.setValue(args['prior_loss_weight'])
         self.widget.xformers_enable.setChecked(args.get("xformers", False))
         self.widget.cache_latents_to_disk_enable.setChecked(args.get("cache_latents_to_disk", False))
@@ -283,7 +342,7 @@ class BaseArgsWidget(QtWidgets.QWidget):
         token_len = args['max_token_length']
         index = 0 if token_len == 225 else 1 if token_len == 150 else 2
         self.widget.max_token_selector.setCurrentIndex(index)
-        train_prec = args['mixed_precision']
+        train_prec = args.get('mixed_precision', 'fp16')
         index = 0 if train_prec == 'fp16' else 1 if train_prec == 'bf16' else 2
         self.widget.mixed_precision_selector.setCurrentIndex(index)
         index = 0 if args.get("max_train_epochs") else 1
@@ -294,6 +353,15 @@ class BaseArgsWidget(QtWidgets.QWidget):
         self.widget.comment_enable.setChecked(checked)
         self.enable_disable_comment(checked)
         self.widget.no_half_vae_enable.setChecked(args.get('no_half_vae', False))
+        self.edit_args('no_half_vae', args.get('no_half_vae', False), True)
+        if self.bf16_valid:
+            self.widget.BF16_enable.setChecked(args.get('full_bf16', False))
+            if self.widget.BF16_enable.isChecked():
+                self.enable_disable_full_bf16(True)
+        self.widget.FP16_enable.setChecked(args.get('full_fp16', False))
+        if self.widget.FP16_enable.isChecked() and self.widget.FP16_enable.isEnabled():
+            self.enable_disable_full_fp16(True)
+        self.widget.vae_input.setText(args.get('vae', ""))
 
     def save_args(self) -> Union[dict, None]:
         return self.args

@@ -176,7 +176,7 @@ class MainWidget(QtWidgets.QWidget):
             if os.path.exists('config.json'):
                 with open('config.json', 'r') as f:
                     config = json.load(f)
-                    if "toml_default" in config:
+                    if "toml_default" in config and os.path.exists(config['toml_default']):
                         default_toml = config['toml_default']
                     else:
                         default_toml = ""

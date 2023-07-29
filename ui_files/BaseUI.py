@@ -26,7 +26,7 @@ class Ui_base_args_ui(object):
     def setupUi(self, base_args_ui):
         if not base_args_ui.objectName():
             base_args_ui.setObjectName(u"base_args_ui")
-        base_args_ui.resize(553, 456)
+        base_args_ui.resize(553, 488)
         self.gridLayout_3 = QGridLayout(base_args_ui)
         self.gridLayout_3.setObjectName(u"gridLayout_3")
         self.formLayout_5 = QFormLayout()
@@ -143,8 +143,18 @@ class Ui_base_args_ui(object):
 
         self.horizontalLayout_6.addWidget(self.v_pred_enable)
 
+        self.FP16_enable = QCheckBox(self.base_model_box)
+        self.FP16_enable.setObjectName(u"FP16_enable")
 
-        self.formLayout_3.setLayout(2, QFormLayout.SpanningRole, self.horizontalLayout_6)
+        self.horizontalLayout_6.addWidget(self.FP16_enable)
+
+        self.BF16_enable = QCheckBox(self.base_model_box)
+        self.BF16_enable.setObjectName(u"BF16_enable")
+
+        self.horizontalLayout_6.addWidget(self.BF16_enable)
+
+
+        self.formLayout_3.setLayout(3, QFormLayout.SpanningRole, self.horizontalLayout_6)
 
         self.horizontalLayout_2 = QHBoxLayout()
         self.horizontalLayout_2.setObjectName(u"horizontalLayout_2")
@@ -164,7 +174,27 @@ class Ui_base_args_ui(object):
         self.horizontalLayout_2.addWidget(self.no_half_vae_enable)
 
 
-        self.formLayout_3.setLayout(1, QFormLayout.SpanningRole, self.horizontalLayout_2)
+        self.formLayout_3.setLayout(2, QFormLayout.SpanningRole, self.horizontalLayout_2)
+
+        self.label_11 = QLabel(self.base_model_box)
+        self.label_11.setObjectName(u"label_11")
+
+        self.formLayout_3.setWidget(1, QFormLayout.LabelRole, self.label_11)
+
+        self.horizontalLayout_4 = QHBoxLayout()
+        self.horizontalLayout_4.setObjectName(u"horizontalLayout_4")
+        self.vae_input = DragDropLineEdit(self.base_model_box)
+        self.vae_input.setObjectName(u"vae_input")
+
+        self.horizontalLayout_4.addWidget(self.vae_input)
+
+        self.vae_selector = QPushButton(self.base_model_box)
+        self.vae_selector.setObjectName(u"vae_selector")
+
+        self.horizontalLayout_4.addWidget(self.vae_selector)
+
+
+        self.formLayout_3.setLayout(1, QFormLayout.FieldRole, self.horizontalLayout_4)
 
 
         self.gridLayout_3.addWidget(self.base_model_box, 3, 1, 1, 2)
@@ -364,7 +394,7 @@ class Ui_base_args_ui(object):
         self.base_model_box.setTitle(QCoreApplication.translate("base_args_ui", u"Model", None))
         self.label_4.setText(QCoreApplication.translate("base_args_ui", u"Base Model", None))
 #if QT_CONFIG(tooltip)
-        self.base_model_input.setToolTip(QCoreApplication.translate("base_args_ui", u"<html><head/><body><p>The full model to train with, if you are training anime, I personally suggest NAI.</p></body></html>", None))
+        self.base_model_input.setToolTip(QCoreApplication.translate("base_args_ui", u"<html><head/><body><p>The full model to train with, if you are training anime for SD 1.5, I personally suggest NAI.</p></body></html>", None))
 #endif // QT_CONFIG(tooltip)
         self.base_model_input.setPlaceholderText(QCoreApplication.translate("base_args_ui", u"Base Model To Train With", None))
         self.base_model_selector.setText("")
@@ -374,11 +404,25 @@ class Ui_base_args_ui(object):
         self.v_param_enable.setText(QCoreApplication.translate("base_args_ui", u"V Param", None))
         self.v_pred_enable.setText(QCoreApplication.translate("base_args_ui", u"Scale V pred loss", None))
 #if QT_CONFIG(tooltip)
+        self.FP16_enable.setToolTip(QCoreApplication.translate("base_args_ui", u"<html><head/><body><p>Allows training on full fp16, not compatable with full bf16 or training precision</p></body></html>", None))
+#endif // QT_CONFIG(tooltip)
+        self.FP16_enable.setText(QCoreApplication.translate("base_args_ui", u"Full FP16", None))
+#if QT_CONFIG(tooltip)
+        self.BF16_enable.setToolTip(QCoreApplication.translate("base_args_ui", u"<html><head/><body><p>Train in full BF16. Requires a higher bitsandbytes than 0.35.0 which is seemingly the best we have on windows, so this is disabled on windows regardless. not compatable with full fp16 or training precision</p></body></html>", None))
+#endif // QT_CONFIG(tooltip)
+        self.BF16_enable.setText(QCoreApplication.translate("base_args_ui", u"Full BF16", None))
+#if QT_CONFIG(tooltip)
         self.v2_enable.setToolTip(QCoreApplication.translate("base_args_ui", u"<html><head/><body><p>Select this if you are using an SD2.x based model, such as WD1.5.</p></body></html>", None))
 #endif // QT_CONFIG(tooltip)
         self.v2_enable.setText(QCoreApplication.translate("base_args_ui", u"SD2.X Based", None))
         self.sdxl_enable.setText(QCoreApplication.translate("base_args_ui", u"SDXL Based", None))
         self.no_half_vae_enable.setText(QCoreApplication.translate("base_args_ui", u"No Half Vae", None))
+        self.label_11.setText(QCoreApplication.translate("base_args_ui", u"External VAE", None))
+#if QT_CONFIG(tooltip)
+        self.vae_input.setToolTip(QCoreApplication.translate("base_args_ui", u"<html><head/><body><p>Allows you to load a vae seperately from the base model.</p></body></html>", None))
+#endif // QT_CONFIG(tooltip)
+        self.vae_input.setPlaceholderText(QCoreApplication.translate("base_args_ui", u"Vae to train with", None))
+        self.vae_selector.setText("")
         self.resolution_box.setTitle(QCoreApplication.translate("base_args_ui", u"Resolution", None))
         self.label.setText(QCoreApplication.translate("base_args_ui", u"Width", None))
 #if QT_CONFIG(tooltip)
