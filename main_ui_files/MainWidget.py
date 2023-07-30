@@ -207,7 +207,7 @@ class MainWidget(QtWidgets.QWidget):
 
     @staticmethod
     def create_config_args_file(args: dict) -> None:
-        with open(os.path.join("runtime_store", "config.toml"), 'w') as f:
+        with open(os.path.join("runtime_store", "config.toml"), 'w', encoding='utf-8') as f:
             for key, value in args.items():
                 if isinstance(value, str):
                     value = f"\'{value}\'"
@@ -217,7 +217,7 @@ class MainWidget(QtWidgets.QWidget):
 
     @staticmethod
     def create_dataset_args_file(args: dict) -> None:
-        with open(os.path.join("runtime_store", "dataset.toml"), 'w') as f:
+        with open(os.path.join("runtime_store", "dataset.toml"), 'w', encoding='utf-8') as f:
             f.write("[general]\n")
             for key, value in args['general'].items():
                 if isinstance(value, str):
