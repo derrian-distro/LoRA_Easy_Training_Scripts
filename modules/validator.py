@@ -165,7 +165,7 @@ def validate_save_tags(args: dict, dataset: dict) -> None:
     file_path = args.get("tag_file_location", "")
     if not os.path.exists(file_path):
         file_path = args['output_dir']
-    with open(os.path.join(file_path, f"{args['output_name']}_tags.txt"), "w") as f:
+    with open(os.path.join(file_path, f"{args['output_name']}_tags.txt"), "w", encoding='utf-8') as f:
         f.write("Below is a list of keywords used during the training of this model:\n")
         for k, v in output_list.items():
             f.write(f"[{v}] {k}\n")

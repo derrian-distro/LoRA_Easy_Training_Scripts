@@ -90,7 +90,9 @@ class MainWidget(QtWidgets.QWidget):
             if not os.path.exists(save_toml_path):
                 save_toml_path = args['output_dir']
             TomlFunctions.save_toml(
-                self.save_args(), os.path.join(save_toml_path, f"auto_save_{args.get('output_name', 'last')}.toml")
+                self.save_args(),
+                os.path.join(save_toml_path, f"auto_save_{args.get('output_name', 'last')}.toml"),
+                is_queue=True
             )
         self.create_config_args_file(args)
         self.create_dataset_args_file(dataset_args)
@@ -143,7 +145,9 @@ class MainWidget(QtWidgets.QWidget):
                     if not os.path.exists(save_toml_path):
                         save_toml_path = args['output_dir']
                     TomlFunctions.save_toml(
-                        base_args, os.path.join(save_toml_path, f"auto_save_{args.get('output_name', 'last')}.toml")
+                        base_args,
+                        os.path.join(save_toml_path, f"auto_save_{args.get('output_name', 'last')}.toml"),
+                        is_queue=True
                     )
                 self.create_config_args_file(args)
                 self.create_dataset_args_file(dataset_args)
