@@ -38,11 +38,12 @@ class MainWidget(QtWidgets.QWidget):
         self.queue_widget = QueueWidget.QueueWidget()
         self.queue_widget.setSizePolicy(QtWidgets.QSizePolicy.Policy.Minimum,
                                         QtWidgets.QSizePolicy.Policy.Minimum)
-        self.queue_widget.saveQueue.connect(self.save_toml)
+        self.queue_widget.saveQueue.connect(lambda x: self.save_toml(file_name=x, is_queue=True))
         self.queue_widget.loadQueue.connect(self.load_toml)
         self.begin_training_button = QtWidgets.QPushButton("Start Training")
-        self.begin_training_button.setSizePolicy(QtWidgets.QSizePolicy.Policy.Minimum,
-                                                 QtWidgets.QSizePolicy.Policy.Maximum)
+        self.begin_training_button.setSizePolicy(
+            QtWidgets.QSizePolicy.Policy.Minimum, QtWidgets.QSizePolicy.Policy.Maximum
+        )
 
         self.main_layout.addWidget(self.tab_widget, 0, 0, 3, 1)
         self.main_layout.addWidget(self.queue_widget, 0, 1, 2, 1)
@@ -56,7 +57,8 @@ class MainWidget(QtWidgets.QWidget):
         self.begin_training_button.clicked.connect(self.begin_train)
         self.args_widget.general_args.CacheLatentsChecked.connect(self.subset_widget.cache_checked)
         self.args_widget.general_args.SdxlChecked.connect(
-            self.args_widget.network_args.enable_disable_cache_text_encoder_outputs)
+            self.args_widget.network_args.enable_disable_cache_text_encoder_outputs
+        )
 
     @QtCore.Slot()
     def begin_train(self) -> None:
@@ -168,10 +170,10 @@ class MainWidget(QtWidgets.QWidget):
         self.subset_widget.load_args(args)
 
     @QtCore.Slot(str)
-    def save_toml(self, file_name: str = None) -> None:
+    def save_toml(self, file_name: str = None, is_queue: bool = False) -> None:
         args = self.save_args()
         if file_name:
-            TomlFunctions.save_toml(args, os.path.join("runtime_store", f"{file_name}.toml"))
+            TomlFunctions.save_toml(args, os.path.join("runtime_store", f"{file_name}.toml"), is_queue)
         else:
             if os.path.exists('config.json'):
                 with open('config.json', 'r') as f:
@@ -182,7 +184,7 @@ class MainWidget(QtWidgets.QWidget):
                         default_toml = ""
             else:
                 default_toml = ""
-            TomlFunctions.save_toml(args, default_toml)
+            TomlFunctions.save_toml(args, default_toml, is_queue)
 
     @QtCore.Slot(str)
     def load_toml(self, file_name: str = None) -> None:

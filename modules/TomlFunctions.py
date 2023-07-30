@@ -4,13 +4,11 @@ import toml
 from PySide6 import QtWidgets
 
 
-def save_toml(args: dict, file: str = ''):
-
-    if os.path.exists(file) and os.path.isfile(file):
+def save_toml(args: dict, file: str = '', is_queue: bool = False):
+    if (os.path.exists(file) and os.path.isfile(file)) or is_queue:
         with open(file, 'w') as f:
             toml.dump(args, f)
         return
-    print(file)
     file = "" if not os.path.exists(file) else file
     file = QtWidgets.QFileDialog().getSaveFileName(caption="Select Where to save to",
                                                    filter="Config File (*.toml)", dir=file)
@@ -26,7 +24,7 @@ def save_toml(args: dict, file: str = ''):
         file = file[0]
     else:
         file = file[0] + file[1]
-    with open(file, 'w') as f:
+    with open(file, 'w', encoding="utf-8") as f:
         toml.dump(args, f)
 
 
@@ -48,5 +46,5 @@ def load_toml(file: str = ""):
             json.dump(config, f)
     if not os.path.exists(file):
         return
-    with open(file, 'r') as f:
+    with open(file, 'r', encoding='utf-8') as f:
         return toml.load(f)
