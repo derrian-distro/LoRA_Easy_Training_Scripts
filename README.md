@@ -4,6 +4,8 @@ A set of training scripts written in python for use in Kohya's [SD-Scripts](http
 
 #### Old scripts can be found [here](https://github.com/derrian-distro/LoRA_Easy_Training_Scripts/tree/old-scripts)
 
+#### If you want to train on SDXL, then go [here](https://github.com/derrian-distro/LoRA_Easy_Training_Scripts/tree/SDXL). It's more experimental than main branch, but has served as my dev branch for the time being, so it also has a number of fixes in it that haven't been pushed to main yet.
+
 ## Table of contents
 
 - [Installation](#installation)
