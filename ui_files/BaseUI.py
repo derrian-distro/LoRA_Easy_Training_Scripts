@@ -26,7 +26,7 @@ class Ui_base_args_ui(object):
     def setupUi(self, base_args_ui):
         if not base_args_ui.objectName():
             base_args_ui.setObjectName(u"base_args_ui")
-        base_args_ui.resize(553, 488)
+        base_args_ui.resize(553, 517)
         self.gridLayout_3 = QGridLayout(base_args_ui)
         self.gridLayout_3.setObjectName(u"gridLayout_3")
         self.formLayout_5 = QFormLayout()
@@ -314,13 +314,6 @@ class Ui_base_args_ui(object):
 
         self.formLayout_6.setWidget(2, QFormLayout.FieldRole, self.loss_weight_input)
 
-        self.xformers_enable = QCheckBox(base_args_ui)
-        self.xformers_enable.setObjectName(u"xformers_enable")
-        self.xformers_enable.setEnabled(True)
-        self.xformers_enable.setChecked(True)
-
-        self.formLayout_6.setWidget(3, QFormLayout.LabelRole, self.xformers_enable)
-
         self.horizontalLayout_5 = QHBoxLayout()
         self.horizontalLayout_5.setObjectName(u"horizontalLayout_5")
         self.cache_latents_enable = QCheckBox(base_args_ui)
@@ -335,7 +328,24 @@ class Ui_base_args_ui(object):
         self.horizontalLayout_5.addWidget(self.cache_latents_to_disk_enable)
 
 
-        self.formLayout_6.setLayout(3, QFormLayout.FieldRole, self.horizontalLayout_5)
+        self.formLayout_6.setLayout(4, QFormLayout.SpanningRole, self.horizontalLayout_5)
+
+        self.horizontalLayout_7 = QHBoxLayout()
+        self.horizontalLayout_7.setObjectName(u"horizontalLayout_7")
+        self.xformers_enable = QCheckBox(base_args_ui)
+        self.xformers_enable.setObjectName(u"xformers_enable")
+        self.xformers_enable.setEnabled(True)
+        self.xformers_enable.setChecked(False)
+
+        self.horizontalLayout_7.addWidget(self.xformers_enable)
+
+        self.sdpa_enable = QCheckBox(base_args_ui)
+        self.sdpa_enable.setObjectName(u"sdpa_enable")
+
+        self.horizontalLayout_7.addWidget(self.sdpa_enable)
+
+
+        self.formLayout_6.setLayout(3, QFormLayout.SpanningRole, self.horizontalLayout_7)
 
 
         self.gridLayout_3.addLayout(self.formLayout_6, 5, 1, 1, 1)
@@ -459,10 +469,6 @@ class Ui_base_args_ui(object):
         self.loss_weight_input.setToolTip(QCoreApplication.translate("base_args_ui", u"<html><head/><body><p>Prior loss weight is a parameter in machine learning that affects how well a model can reproduce images.</p></body></html>", None))
 #endif // QT_CONFIG(tooltip)
 #if QT_CONFIG(tooltip)
-        self.xformers_enable.setToolTip(QCoreApplication.translate("base_args_ui", u"<html><head/><body><p>A memory optimization, most can use this, AMD and reportedly, some linux devices can't.</p></body></html>", None))
-#endif // QT_CONFIG(tooltip)
-        self.xformers_enable.setText(QCoreApplication.translate("base_args_ui", u"Xformers", None))
-#if QT_CONFIG(tooltip)
         self.cache_latents_enable.setToolTip(QCoreApplication.translate("base_args_ui", u"<html><head/><body><p>Caching latents is a way to prevent vram spikes and slightly speed up training time, clashes with color aug, and random crop.</p></body></html>", None))
 #endif // QT_CONFIG(tooltip)
         self.cache_latents_enable.setText(QCoreApplication.translate("base_args_ui", u"Cache Latents", None))
@@ -470,6 +476,11 @@ class Ui_base_args_ui(object):
         self.cache_latents_to_disk_enable.setToolTip(QCoreApplication.translate("base_args_ui", u"<html><head/><body><p>Caches the latents to disk, slower, but saves a small bit of vram.</p></body></html>", None))
 #endif // QT_CONFIG(tooltip)
         self.cache_latents_to_disk_enable.setText(QCoreApplication.translate("base_args_ui", u"To Disk", None))
+#if QT_CONFIG(tooltip)
+        self.xformers_enable.setToolTip(QCoreApplication.translate("base_args_ui", u"<html><head/><body><p>A memory optimization, most can use this, AMD and reportedly, some linux devices can't.</p></body></html>", None))
+#endif // QT_CONFIG(tooltip)
+        self.xformers_enable.setText(QCoreApplication.translate("base_args_ui", u"Xformers", None))
+        self.sdpa_enable.setText(QCoreApplication.translate("base_args_ui", u"SDPA", None))
         self.comment_enable.setText(QCoreApplication.translate("base_args_ui", u"Comment", None))
 #if QT_CONFIG(tooltip)
         self.comment_input.setToolTip(QCoreApplication.translate("base_args_ui", u"<html><head/><body><p>Comment that gets put into the metadata</p></body></html>", None))

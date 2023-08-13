@@ -47,6 +47,7 @@ pip install xformers
 pip install -r ../requirements_ui.txt
 pip install ../LyCORIS/.
 pip install ../custom_scheduler/.
+pip install bitsandbytes
 accelerate config
 ```
 
@@ -61,10 +62,6 @@ accelerate config will ask you a bunch of questions, answer them like so,
 - all
 - bf16
 ```
-
-if you want to use full_bf16 make sure you have a bitsandbytes version higher than 0.35.0.
-
-**NOTE**: Windows is not supported, so do not try
 
 ## Usage
 

@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>417</width>
-    <height>288</height>
+    <height>290</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -388,14 +388,28 @@
           </widget>
          </item>
          <item row="1" column="0" colspan="2">
-          <widget class="QCheckBox" name="cache_te_outputs_enable">
-           <property name="enabled">
-            <bool>false</bool>
-           </property>
-           <property name="text">
-            <string>Cache Text Encoder Outputs</string>
-           </property>
-          </widget>
+          <layout class="QHBoxLayout" name="horizontalLayout">
+           <item>
+            <widget class="QCheckBox" name="cache_te_outputs_enable">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+             <property name="text">
+              <string>Cache TE Outputs</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QCheckBox" name="cache_te_to_disk_enable">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+             <property name="text">
+              <string>To Disk</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
          </item>
         </layout>
        </item>
@@ -517,7 +531,7 @@
             <x>0</x>
             <y>0</y>
             <width>411</width>
-            <height>256</height>
+            <height>258</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_3">

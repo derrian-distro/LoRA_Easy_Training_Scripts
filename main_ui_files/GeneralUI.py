@@ -18,14 +18,14 @@ class BaseArgsWidget(QtWidgets.QWidget):
         super(BaseArgsWidget, self).__init__(parent)
         realBits = subprocess.Popen(['pip', 'show', "bitsandbytes"], stdout=subprocess.PIPE)
         self.bf16_valid = str(realBits.communicate()[0]).split(r"\n")[1].split(r"\r")[0].split(': ')[1]
-        if sys.platform == "win32" or self.bf16_valid == '0.35.0':
+        if self.bf16_valid == '0.35.0':
             self.bf16_valid = False
         else:
             self.bf16_valid = True
 
         self.args = {"pretrained_model_name_or_path": "", "mixed_precision": "fp16", "seed": 23, "clip_skip": 2,
-                     "xformers": True, "max_train_epochs": 1, "max_data_loader_n_workers": 1,
-                     "persistent_data_loader_workers": True, "max_token_length": 225, "prior_loss_weight": 1.0}
+                     "max_train_epochs": 1, "max_data_loader_n_workers": 1, "persistent_data_loader_workers": True,
+                     "max_token_length": 225, "prior_loss_weight": 1.0}
         self.dataset_args = {"resolution": 512, "batch_size": 1}
         self.name = "general_args"
         self.setLayout(QtWidgets.QVBoxLayout())
@@ -86,6 +86,7 @@ class BaseArgsWidget(QtWidgets.QWidget):
         self.widget.loss_weight_input.valueChanged.connect(lambda x: self.edit_args("prior_loss_weight",
                                                                                     round(x, 2)))
         self.widget.xformers_enable.clicked.connect(self.enable_disable_xformers)
+        self.widget.sdpa_enable.clicked.connect(self.enable_disable_sdpa)
         self.widget.batch_size_input.valueChanged.connect(lambda x: self.edit_dataset_args("batch_size", x))
         self.widget.max_token_selector.currentIndexChanged.connect(self.edit_token_length)
         self.widget.mixed_precision_selector.currentTextChanged.connect(lambda x: self.edit_args(
@@ -268,8 +269,29 @@ class BaseArgsWidget(QtWidgets.QWidget):
     def enable_disable_xformers(self, checked: bool) -> None:
         if "xformers" in self.args:
             del self.args['xformers']
+        if 'sdpa' in self.args:
+            del self.args['sdpa']
         if checked:
             self.args['xformers'] = True
+            self.widget.sdpa_enable.setEnabled(False)
+        else:
+            self.widget.sdpa_enable.setEnabled(True)
+            if self.widget.sdpa_enable.isChecked():
+                self.args['sdpa'] = True
+
+    @QtCore.Slot(bool)
+    def enable_disable_sdpa(self, checked: bool) -> None:
+        if "xformers" in self.args:
+            del self.args['xformers']
+        if 'sdpa' in self.args:
+            del self.args['sdpa']
+        if checked:
+            self.args['sdpa'] = True
+            self.widget.xformers_enable.setEnabled(False)
+        else:
+            self.widget.xformers_enable.setEnabled(True)
+            if self.widget.xformers_enable.isChecked():
+                self.args['xformers'] = True
 
     @QtCore.Slot(int)
     def edit_token_length(self, index: int) -> None:
@@ -335,6 +357,9 @@ class BaseArgsWidget(QtWidgets.QWidget):
         self.widget.clip_skip_input.setValue(args.get('clip_skip', 2))
         self.widget.loss_weight_input.setValue(args['prior_loss_weight'])
         self.widget.xformers_enable.setChecked(args.get("xformers", False))
+        self.enable_disable_xformers(args.get('xformers', False))
+        self.widget.sdpa_enable.setChecked(args.get('sdpa', False))
+        self.enable_disable_sdpa(args.get('sdpa', False))
         self.widget.cache_latents_to_disk_enable.setChecked(args.get("cache_latents_to_disk", False))
         self.enable_cache_latents(args.get("cache_latents", False))
         self.widget.cache_latents_enable.setChecked(args.get("cache_latents", False))

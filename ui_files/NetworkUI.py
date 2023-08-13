@@ -16,8 +16,8 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
 from PySide6.QtWidgets import (QApplication, QCheckBox, QFormLayout, QGridLayout,
-    QLabel, QScrollArea, QSizePolicy, QTabWidget,
-    QVBoxLayout, QWidget)
+    QHBoxLayout, QLabel, QScrollArea, QSizePolicy,
+    QTabWidget, QVBoxLayout, QWidget)
 
 from modules.CollapsibleWidget import CollapsibleWidget
 from modules.ScrollOnSelect import (ComboBox, DoubleSpinBox, SpinBox, TabView)
@@ -26,7 +26,7 @@ class Ui_network_ui(object):
     def setupUi(self, network_ui):
         if not network_ui.objectName():
             network_ui.setObjectName(u"network_ui")
-        network_ui.resize(417, 288)
+        network_ui.resize(417, 290)
         sizePolicy = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -203,11 +203,22 @@ class Ui_network_ui(object):
 
         self.formLayout_3.setWidget(3, QFormLayout.SpanningRole, self.cp_enable)
 
+        self.horizontalLayout = QHBoxLayout()
+        self.horizontalLayout.setObjectName(u"horizontalLayout")
         self.cache_te_outputs_enable = QCheckBox(self.main_tab)
         self.cache_te_outputs_enable.setObjectName(u"cache_te_outputs_enable")
         self.cache_te_outputs_enable.setEnabled(False)
 
-        self.formLayout_3.setWidget(1, QFormLayout.SpanningRole, self.cache_te_outputs_enable)
+        self.horizontalLayout.addWidget(self.cache_te_outputs_enable)
+
+        self.cache_te_to_disk_enable = QCheckBox(self.main_tab)
+        self.cache_te_to_disk_enable.setObjectName(u"cache_te_to_disk_enable")
+        self.cache_te_to_disk_enable.setEnabled(False)
+
+        self.horizontalLayout.addWidget(self.cache_te_to_disk_enable)
+
+
+        self.formLayout_3.setLayout(1, QFormLayout.SpanningRole, self.horizontalLayout)
 
 
         self.gridLayout.addLayout(self.formLayout_3, 3, 0, 1, 1)
@@ -273,7 +284,7 @@ class Ui_network_ui(object):
         self.block_weight_scroll_area.setWidgetResizable(True)
         self.block_weight_scroll_widget = QWidget()
         self.block_weight_scroll_widget.setObjectName(u"block_weight_scroll_widget")
-        self.block_weight_scroll_widget.setGeometry(QRect(0, 0, 411, 256))
+        self.block_weight_scroll_widget.setGeometry(QRect(0, 0, 411, 258))
         self.verticalLayout_3 = QVBoxLayout(self.block_weight_scroll_widget)
         self.verticalLayout_3.setObjectName(u"verticalLayout_3")
         self.verticalLayout_3.setContentsMargins(0, 0, 0, 0)
@@ -374,7 +385,8 @@ class Ui_network_ui(object):
         self.cp_enable.setToolTip(QCoreApplication.translate("network_ui", u"<html><head/><body><p>Enables Conv CP, which is some form of compression algorithm that further reduces file size, I personally suggest you don't use it</p></body></html>", None))
 #endif // QT_CONFIG(tooltip)
         self.cp_enable.setText(QCoreApplication.translate("network_ui", u"Enable Conv CP", None))
-        self.cache_te_outputs_enable.setText(QCoreApplication.translate("network_ui", u"Cache Text Encoder Outputs", None))
+        self.cache_te_outputs_enable.setText(QCoreApplication.translate("network_ui", u"Cache TE Outputs", None))
+        self.cache_te_to_disk_enable.setText(QCoreApplication.translate("network_ui", u"To Disk", None))
         self.conv_dim_label.setText(QCoreApplication.translate("network_ui", u"Conv Dimension", None))
 #if QT_CONFIG(tooltip)
         self.conv_dim_input.setToolTip(QCoreApplication.translate("network_ui", u"<html><head/><body><p>The dimension size for the conv layers. These layers carry more style with them, so be careful about setting them too high. I personally suggest you never go higher than 32 with them.</p></body></html>", None))

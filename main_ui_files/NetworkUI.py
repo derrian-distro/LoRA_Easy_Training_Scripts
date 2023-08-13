@@ -67,6 +67,7 @@ class NetworkWidget(QtWidgets.QWidget):
         self.ui.min_timestep_input.editingFinished.connect(lambda: self.edit_timesteps('min_timestep'))
         self.ui.max_timestep_input.editingFinished.connect(lambda: self.edit_timesteps('max_timestep'))
         self.ui.cache_te_outputs_enable.clicked.connect(self.enable_disable_cache_tenc)
+        self.ui.cache_te_to_disk_enable.clicked.connect(self.enable_disable_cache_tenc_to_disk)
 
         self.colap.add_widget(self.widget, "main_widget")
         self.layout().addWidget(self.colap)
@@ -128,10 +129,26 @@ class NetworkWidget(QtWidgets.QWidget):
             del self.args['cache_text_encoder_outputs']
         if checked:
             self.edit_args('cache_text_encoder_outputs', True)
+            self.ui.cache_te_to_disk_enable.setEnabled(True)
+            self.enable_disable_cache_tenc_to_disk(True)
+        else:
+            self.ui.cache_te_to_disk_enable.setEnabled(False)
+            self.enable_disable_cache_tenc_to_disk(False)
+
+    @QtCore.Slot(bool)
+    def enable_disable_cache_tenc_to_disk(self, checked: bool):
+        if 'cache_text_encoder_outputs_to_disk' in self.args:
+            del self.args['cache_text_encoder_outputs_to_disk']
+        if checked:
+            self.edit_args('cache_text_encoder_outputs_to_disk', True)
 
     @QtCore.Slot(bool)
     def enable_disable_cache_text_encoder_outputs(self, checked: bool):
         self.ui.cache_te_outputs_enable.setEnabled(checked)
+        if self.ui.cache_te_outputs_enable.isChecked() and self.ui.cache_te_outputs_enable.isEnabled():
+            self.ui.cache_te_to_disk_enable.setEnabled(True)
+        else:
+            self.ui.cache_te_to_disk_enable.setEnabled(False)
         self.enable_disable_cache_tenc(self.ui.cache_te_outputs_enable.isChecked() if checked else False)
 
     @QtCore.Slot(str, bool)
@@ -367,18 +384,19 @@ class NetworkWidget(QtWidgets.QWidget):
         self.edit_timesteps('min_timestep')
         self.edit_timesteps('max_timestep')
         self.ui.cache_te_outputs_enable.setChecked(args.get('cache_text_encoder_outputs', False))
+        self.ui.cache_te_to_disk_enable.setChecked(args.get('cache_text_encoder_outputs_to_disk', False))
         self.enable_disable_cache_text_encoder_outputs(sdxl)
-
 
         if "network_args" in args:
             self.ui.conv_dim_input.setValue(args['network_args'].get("conv_dim", 32))
             self.ui.conv_alpha_input.setValue(args['network_args'].get("conv_alpha", 16))
             self.ui.dylora_unit_input.setValue(args['network_args'].get("unit", 4))
 
-            checked = True if args['network_args'].get('dropout', False) else False
-            self.ui.network_dropout_enable.setChecked(checked)
-            self.ui.network_dropout_input.setValue(args['network_args'].get('dropout', 0.1))
-            self.enable_disable_dropout('network', checked)
+            if 'network_dropout' not in args:
+                checked = True if args['network_args'].get('dropout', False) else False
+                self.ui.network_dropout_enable.setChecked(checked)
+                self.ui.network_dropout_input.setValue(args['network_args'].get('dropout', 0.1))
+                self.enable_disable_dropout('network', checked)
 
             checked = True if args['network_args'].get('rank_dropout', False) else False
             self.ui.rank_dropout_enable.setChecked(checked)

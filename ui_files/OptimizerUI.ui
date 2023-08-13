@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>428</width>
-    <height>267</height>
+    <width>387</width>
+    <height>290</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -42,61 +42,139 @@
        <string>Main Args</string>
       </attribute>
       <layout class="QGridLayout" name="gridLayout">
-       <item row="3" column="0" colspan="2">
-        <layout class="QFormLayout" name="formLayout_4">
+       <item row="1" column="0">
+        <layout class="QFormLayout" name="formLayout_2">
          <item row="0" column="0">
-          <layout class="QHBoxLayout" name="horizontalLayout_2">
-           <item>
-            <widget class="QCheckBox" name="scale_weight_enable">
-             <property name="text">
-              <string>Scale Weight Normals</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="DoubleSpinBox" name="scale_weight_input">
-             <property name="enabled">
-              <bool>false</bool>
-             </property>
-             <property name="focusPolicy">
-              <enum>Qt::StrongFocus</enum>
-             </property>
-             <property name="toolTip">
-              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;An implementation of the idea of max norm regularization. Basically, this will help stabilize network training by limiting the normal of network weights. Might work well for limiting overfitting or baking.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-             </property>
-             <property name="value">
-              <double>1.000000000000000</double>
-             </property>
-            </widget>
-           </item>
-          </layout>
+          <widget class="QLabel" name="label">
+           <property name="text">
+            <string>Learning Rate</string>
+           </property>
+          </widget>
          </item>
          <item row="0" column="1">
-          <layout class="QHBoxLayout" name="horizontalLayout">
-           <item>
-            <widget class="QCheckBox" name="min_snr_enable">
-             <property name="text">
-              <string>Minimum SNR Gamma</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="SpinBox" name="min_snr_input">
-             <property name="enabled">
-              <bool>false</bool>
-             </property>
-             <property name="focusPolicy">
-              <enum>Qt::StrongFocus</enum>
-             </property>
-             <property name="toolTip">
-              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;This is a tool that reduces learning of unwanted elements by only learning what is the most common. This can lead to it not learning small details however. The recommended value is 5. Lower values apply more.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-             </property>
-             <property name="value">
-              <number>5</number>
-             </property>
-            </widget>
-           </item>
-          </layout>
+          <widget class="LineEditWithHighlight" name="main_lr_input">
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The main lr. If you have both unet and te set though it is just completely overwritten.&lt;/p&gt;&lt;p&gt;note that if you don't put in a proper number, it will just be read as 0.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="text">
+            <string>1e-4</string>
+           </property>
+           <property name="placeholderText">
+            <string>Learning Rate</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="1">
+          <widget class="LineEditWithHighlight" name="min_lr_input">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The minimum lr for the Cosine Annealing Warmup Restarts LR scheduler. This is the final lr before a restart occurs.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="text">
+            <string>1e-6</string>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="0">
+          <widget class="QCheckBox" name="unet_lr_enable">
+           <property name="text">
+            <string>Unet Learning Rate</string>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="1">
+          <widget class="LineEditWithHighlight" name="unet_lr_input">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The Unet lr. Overrides the base lr, if you don't have a proper number set, it will be 0&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="text">
+            <string>1e-4</string>
+           </property>
+           <property name="placeholderText">
+            <string>Unet Learning Rate</string>
+           </property>
+          </widget>
+         </item>
+         <item row="3" column="0">
+          <widget class="QCheckBox" name="te_lr_enable">
+           <property name="text">
+            <string>TE Learning Rate</string>
+           </property>
+          </widget>
+         </item>
+         <item row="3" column="1">
+          <widget class="LineEditWithHighlight" name="te_lr_input">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The Text Encoder lr. Overrides the base lr, if you don't have a proper number set, it will be 0&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="text">
+            <string>1e-4</string>
+           </property>
+           <property name="placeholderText">
+            <string>TE Learning Rate</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="0">
+          <widget class="QLabel" name="min_lr_label">
+           <property name="text">
+            <string>Minimum Learning Rate</string>
+           </property>
+          </widget>
+         </item>
+         <item row="4" column="0">
+          <widget class="QCheckBox" name="scale_weight_enable">
+           <property name="text">
+            <string>Scale Weight Norms</string>
+           </property>
+          </widget>
+         </item>
+         <item row="4" column="1">
+          <widget class="DoubleSpinBox" name="scale_weight_input">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
+           <property name="focusPolicy">
+            <enum>Qt::StrongFocus</enum>
+           </property>
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;An implementation of the idea of max norm regularization. Basically, this will help stabilize network training by limiting the normal of network weights. Might work well for limiting overfitting or baking.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="value">
+            <double>1.000000000000000</double>
+           </property>
+          </widget>
+         </item>
+         <item row="5" column="0">
+          <widget class="QCheckBox" name="min_snr_enable">
+           <property name="text">
+            <string>Min SNR Gamma</string>
+           </property>
+          </widget>
+         </item>
+         <item row="5" column="1">
+          <widget class="SpinBox" name="min_snr_input">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
+           <property name="focusPolicy">
+            <enum>Qt::StrongFocus</enum>
+           </property>
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;This is a tool that reduces learning of unwanted elements by only learning what is the most common. This can lead to it not learning small details however. The recommended value is 5. Lower values apply more.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="value">
+            <number>5</number>
+           </property>
+          </widget>
          </item>
         </layout>
        </item>
@@ -339,93 +417,17 @@
            </property>
           </widget>
          </item>
-        </layout>
-       </item>
-       <item row="1" column="0">
-        <layout class="QFormLayout" name="formLayout_2">
-         <item row="0" column="0">
-          <widget class="QLabel" name="label">
+         <item row="4" column="0">
+          <widget class="QLabel" name="label_2">
            <property name="text">
-            <string>Learning Rate</string>
+            <string>Max Grad Norm</string>
            </property>
           </widget>
          </item>
-         <item row="0" column="1">
-          <widget class="LineEditWithHighlight" name="main_lr_input">
-           <property name="toolTip">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The main lr. If you have both unet and te set though it is just completely overwritten.&lt;/p&gt;&lt;p&gt;note that if you don't put in a proper number, it will just be read as 0.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-           </property>
-           <property name="text">
-            <string>1e-4</string>
-           </property>
-           <property name="placeholderText">
-            <string>Learning Rate</string>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="1">
-          <widget class="LineEditWithHighlight" name="min_lr_input">
-           <property name="enabled">
-            <bool>false</bool>
-           </property>
-           <property name="toolTip">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The minimum lr for the Cosine Annealing Warmup Restarts LR scheduler. This is the final lr before a restart occurs.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-           </property>
-           <property name="text">
-            <string>1e-6</string>
-           </property>
-          </widget>
-         </item>
-         <item row="2" column="0">
-          <widget class="QCheckBox" name="unet_lr_enable">
-           <property name="text">
-            <string>Unet Learning Rate</string>
-           </property>
-          </widget>
-         </item>
-         <item row="2" column="1">
-          <widget class="LineEditWithHighlight" name="unet_lr_input">
-           <property name="enabled">
-            <bool>false</bool>
-           </property>
-           <property name="toolTip">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The Unet lr. Overrides the base lr, if you don't have a proper number set, it will be 0&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-           </property>
-           <property name="text">
-            <string>1e-4</string>
-           </property>
-           <property name="placeholderText">
-            <string>Unet Learning Rate</string>
-           </property>
-          </widget>
-         </item>
-         <item row="3" column="0">
-          <widget class="QCheckBox" name="te_lr_enable">
-           <property name="text">
-            <string>TE Learning Rate</string>
-           </property>
-          </widget>
-         </item>
-         <item row="3" column="1">
-          <widget class="LineEditWithHighlight" name="te_lr_input">
-           <property name="enabled">
-            <bool>false</bool>
-           </property>
-           <property name="toolTip">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The Text Encoder lr. Overrides the base lr, if you don't have a proper number set, it will be 0&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-           </property>
-           <property name="text">
-            <string>1e-4</string>
-           </property>
-           <property name="placeholderText">
-            <string>TE Learning Rate</string>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="0">
-          <widget class="QLabel" name="min_lr_label">
-           <property name="text">
-            <string>Minimum Learning Rate</string>
+         <item row="4" column="1">
+          <widget class="DoubleSpinBox" name="max_grad_norm_input">
+           <property name="value">
+            <double>1.000000000000000</double>
            </property>
           </widget>
          </item>
@@ -458,8 +460,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>404</width>
-            <height>187</height>
+            <width>363</width>
+            <height>210</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_3"/>
