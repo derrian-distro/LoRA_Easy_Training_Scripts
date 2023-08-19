@@ -1,5 +1,7 @@
 import json
 import os.path
+from pathlib import Path
+
 import toml
 from PySide6 import QtWidgets
 
@@ -48,3 +50,19 @@ def load_toml(file: str = ""):
         return
     with open(file, 'r', encoding='utf-8') as f:
         return toml.load(f)
+
+
+def save_runtime_toml(default_location: Path):
+    folder_path = QtWidgets.QFileDialog().getExistingDirectory(caption="Select the folder to output the config files",
+                                                               dir=str(default_location))
+    if not folder_path:
+        return
+    if Path("config.json").exists():
+        with Path("config.json").open('r', encoding='utf-8') as f:
+            config = json.load(f)
+        config['toml_default'] = folder_path
+        with Path('config.json').open('w', encoding='utf-8') as f:
+            json.dump(config, f)
+    if not Path(folder_path).exists():
+        return
+    return folder_path

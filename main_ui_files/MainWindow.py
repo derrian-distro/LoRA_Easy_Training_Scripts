@@ -35,6 +35,7 @@ class MainWindow(QtWidgets.QMainWindow, QtStyleTools):
         # setup TOML saving and loading actions
         self.window_.save_toml.triggered.connect(self.main_widget.save_toml)
         self.window_.load_toml.triggered.connect(self.main_widget.load_toml)
+        self.window_.save_runtime_toml.triggered.connect(self.main_widget.save_runtime_toml)
 
     def process_themes(self) -> tuple[list, list]:
         themes = os.listdir(os.path.join("css", "themes"))

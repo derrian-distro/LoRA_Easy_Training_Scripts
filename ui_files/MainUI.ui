@@ -51,6 +51,7 @@
     </property>
     <addaction name="save_toml"/>
     <addaction name="load_toml"/>
+    <addaction name="save_runtime_toml"/>
    </widget>
    <widget class="QMenu" name="menuTheme">
     <property name="title">
@@ -86,6 +87,11 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+O</string>
+   </property>
+  </action>
+  <action name="save_runtime_toml">
+   <property name="text">
+    <string>Save Runtime Toml</string>
    </property>
   </action>
  </widget>
