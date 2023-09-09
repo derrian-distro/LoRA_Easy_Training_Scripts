@@ -34,6 +34,9 @@ def validate_args(args: dict, skip_file_paths: bool = False) -> Union[dict, None
         if not value:
             print(f"No data filled in for {key}")
             return None
+        if "fa" in value and value["fa"]:
+            new_args['network_module'] = "networks.lora_fa"
+            del value["fa"]
         for arg, val in value.items():
             if arg == "network_args":
                 vals = []
@@ -65,6 +68,8 @@ def validate_args(args: dict, skip_file_paths: bool = False) -> Union[dict, None
             if not val:
                 continue
             new_args[arg] = val
+        if "fa" in value:
+            del value["fa"]
     if not skip_file_paths:
         for file in file_inputs:
             if file['required'] and file['name'] not in new_args:

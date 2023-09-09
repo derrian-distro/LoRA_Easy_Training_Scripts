@@ -143,6 +143,11 @@ class Ui_network_ui(object):
 
         self.formLayout_4.setWidget(2, QFormLayout.FieldRole, self.module_dropout_input)
 
+        self.lora_fa_enable = QCheckBox(self.main_tab)
+        self.lora_fa_enable.setObjectName(u"lora_fa_enable")
+
+        self.formLayout_4.setWidget(3, QFormLayout.SpanningRole, self.lora_fa_enable)
+
 
         self.gridLayout.addLayout(self.formLayout_4, 3, 1, 1, 1)
 
@@ -358,6 +363,7 @@ class Ui_network_ui(object):
 #if QT_CONFIG(tooltip)
         self.module_dropout_input.setToolTip(QCoreApplication.translate("network_ui", u"<html><head/><body><p>Drops out each module at the specified probability. Module dropout has not be verified, use at your own risk.</p></body></html>", None))
 #endif // QT_CONFIG(tooltip)
+        self.lora_fa_enable.setText(QCoreApplication.translate("network_ui", u"LoRA FA", None))
         self.algo_select.setItemText(0, QCoreApplication.translate("network_ui", u"LoRA", None))
         self.algo_select.setItemText(1, QCoreApplication.translate("network_ui", u"LoCon", None))
         self.algo_select.setItemText(2, QCoreApplication.translate("network_ui", u"LoCon (LyCORIS)", None))

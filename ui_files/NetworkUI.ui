@@ -243,6 +243,13 @@
            </property>
           </widget>
          </item>
+         <item row="3" column="0" colspan="2">
+          <widget class="QCheckBox" name="lora_fa_enable">
+           <property name="text">
+            <string>LoRA FA</string>
+           </property>
+          </widget>
+         </item>
         </layout>
        </item>
        <item row="0" column="0" colspan="2">

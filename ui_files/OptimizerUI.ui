@@ -431,6 +431,13 @@
            </property>
           </widget>
          </item>
+         <item row="5" column="0" colspan="2">
+          <widget class="QCheckBox" name="zero_term_enable">
+           <property name="text">
+            <string>Zero Term SNR</string>
+           </property>
+          </widget>
+         </item>
         </layout>
        </item>
       </layout>

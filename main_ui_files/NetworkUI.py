@@ -63,6 +63,7 @@ class NetworkWidget(QtWidgets.QWidget):
         self.ui.module_dropout_input.valueChanged.connect(lambda x: self.edit_network_args('module_dropout', x))
 
         self.ui.cp_enable.clicked.connect(lambda x: self.edit_network_args('use_conv_cp', x))
+        self.ui.lora_fa_enable.clicked.connect(lambda x: self.edit_args("fa", x))
 
         self.ui.min_timestep_input.editingFinished.connect(lambda: self.edit_timesteps('min_timestep'))
         self.ui.max_timestep_input.editingFinished.connect(lambda: self.edit_timesteps('max_timestep'))
@@ -184,15 +185,21 @@ class NetworkWidget(QtWidgets.QWidget):
         self.ui.cp_enable.setEnabled(False)
         if name.lower() == 'lora':
             self.enable_dropouts(lyco=False)
+            self.ui.lora_fa_enable.setEnabled(True)
+            self.edit_args("fa", self.ui.lora_fa_enable.isChecked())
         elif name.lower() in {'locon', 'dylora'}:
             self.enable_dropouts(lyco=False)
             self.ui.conv_dim_input.setEnabled(True)
             self.edit_network_args('conv_dim', self.ui.conv_dim_input.value())
             self.ui.conv_alpha_input.setEnabled(True)
             self.edit_network_args('conv_alpha', self.ui.conv_alpha_input.value())
+            self.ui.lora_fa_enable.setEnabled(True)
+            self.edit_args("fa", self.ui.lora_fa_enable.isChecked())
             if name.lower() == 'dylora':
                 self.ui.dylora_unit_input.setEnabled(True)
                 self.edit_network_args('unit', self.ui.dylora_unit_input.value())
+                self.ui.lora_fa_enable.setEnabled(False)
+                self.edit_args("fa", False)
         elif name.lower() == 'lokr':
             self.disable_dropouts()
             self.ui.conv_dim_input.setEnabled(True)
@@ -203,6 +210,8 @@ class NetworkWidget(QtWidgets.QWidget):
             if self.ui.cp_enable.isChecked():
                 self.edit_network_args('use_conv_cp', True)
             self.edit_network_args('algo', name.lower().split(" (lycoris)")[0])
+            self.ui.lora_fa_enable.setEnabled(False)
+            self.edit_args("fa", False)
         else:
             self.enable_dropouts(lyco=True)
             self.ui.conv_dim_input.setEnabled(True)
@@ -216,6 +225,8 @@ class NetworkWidget(QtWidgets.QWidget):
                 self.ui.dylora_unit_input.setEnabled(True)
                 self.edit_network_args('block_size', self.ui.dylora_unit_input.value())
             self.edit_network_args('algo', name.lower().split(" (lycoris)")[0])
+            self.ui.lora_fa_enable.setEnabled(False)
+            self.edit_args("fa", False)
         self.change_block_weight_enable(name)
 
     def enable_dropouts(self, lyco: bool):
@@ -371,6 +382,7 @@ class NetworkWidget(QtWidgets.QWidget):
         args = args[self.name]['args']
         self.ui.network_dim_input.setValue(args['network_dim'])
         self.ui.network_alpha_input.setValue(args['network_alpha'])
+        self.ui.lora_fa_enable.setChecked(args.get("fa", False))
         index = 1 if "network_train_unet_only" in args else 2 if "network_train_text_encoder_only" in args else 0
         self.ui.unet_te_both_select.setCurrentIndex(index)
 

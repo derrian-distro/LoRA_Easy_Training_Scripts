@@ -227,6 +227,11 @@ class Ui_optimizer_ui(object):
 
         self.formLayout_3.setWidget(4, QFormLayout.FieldRole, self.max_grad_norm_input)
 
+        self.zero_term_enable = QCheckBox(self.optimizer_tab_main)
+        self.zero_term_enable.setObjectName(u"zero_term_enable")
+
+        self.formLayout_3.setWidget(5, QFormLayout.SpanningRole, self.zero_term_enable)
+
 
         self.gridLayout.addLayout(self.formLayout_3, 1, 1, 1, 1)
 
@@ -345,6 +350,7 @@ class Ui_optimizer_ui(object):
         self.gamma_input.setToolTip(QCoreApplication.translate("optimizer_ui", u"<html><head/><body><p>The percent that decays on restart. Unique to Cosine Annealing Warmup Restarts.</p></body></html>", None))
 #endif // QT_CONFIG(tooltip)
         self.label_2.setText(QCoreApplication.translate("optimizer_ui", u"Max Grad Norm", None))
+        self.zero_term_enable.setText(QCoreApplication.translate("optimizer_ui", u"Zero Term SNR", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.optimizer_tab_main), QCoreApplication.translate("optimizer_ui", u"Main Args", None))
         self.add_opt_button.setText(QCoreApplication.translate("optimizer_ui", u"Add Optimizer Arg", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.optimizer_tab_args), QCoreApplication.translate("optimizer_ui", u"Optional Args", None))

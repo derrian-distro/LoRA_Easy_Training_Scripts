@@ -49,6 +49,7 @@ class OptimizerWidget(QtWidgets.QWidget):
         self.widget.scale_weight_input.valueChanged.connect(lambda x: self.edit_args("scale_weight_norms", x))
         self.widget.add_opt_button.clicked.connect(self.add_optimizer_arg)
         self.widget.max_grad_norm_input.valueChanged.connect(lambda x: self.edit_args('max_grad_norm', x))
+        self.widget.zero_term_enable.clicked.connect(lambda x: self.edit_args("zero_terminal_snr", x, True))
 
         # set all of the slots for enable and disable
         self.widget.unet_lr_enable.clicked.connect(
@@ -252,6 +253,9 @@ class OptimizerWidget(QtWidgets.QWidget):
 
         self.widget.max_grad_norm_input.setValue(args.get('max_grad_norm', 1.0))
         self.edit_args('max_grad_norm', self.widget.max_grad_norm_input.value())
+
+        self.widget.zero_term_enable.setChecked(args.get('zero_terminal_snr', False))
+        self.edit_args("zero_terminal_snr", self.widget.zero_term_enable.isChecked(), True)
 
         if 'optimizer_args' in args:
             for i in range(len(self.opt_arg_list)):
