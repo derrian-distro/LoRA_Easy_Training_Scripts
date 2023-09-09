@@ -96,18 +96,18 @@ def main():
     else:
         xformers = "https://github.com/C43H66N12O12S2/stable-diffusion-webui/releases/download/f/xformers-0.0.14.dev0-cp310-cp310-win_amd64.whl"
     subprocess.check_call(f"{python} install -U -I --no-deps {xformers}".split(" "))
-    if reply in {"1", "2"}:
-        reply = None
-        while reply not in ("y", "n"):
-            reply = input(
-                "Do you want to install the triton built for torch 2? (y/n): "
-            ).casefold()
-        if reply == "y":
-            subprocess.check_call(
-                f"{python} install -U -I --no-deps {os.path.join('..', 'installables', 'triton-2.0.0-cp310-cp310-win_amd64.whl')}".split(
-                    " "
-                )
-            )
+    # if reply in {"1", "2"}:
+    #     reply = None
+    #     while reply not in ("y", "n"):
+    #         reply = input(
+    #             "Do you want to install the triton built for torch 2? (y/n): "
+    #         ).casefold()
+    #     if reply == "y":
+    #         subprocess.check_call(
+    #             f"{python} install -U -I --no-deps {os.path.join('..', 'installables', 'triton-2.0.0-cp310-cp310-win_amd64.whl')}".split(
+    #                 " "
+    #             )
+    #         )
 
     subprocess.check_call(f"{python} install -r ../requirements_ui.txt")
     subprocess.check_call(f"{python} install ../LyCORIS/.")

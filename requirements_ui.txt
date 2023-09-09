@@ -4,3 +4,4 @@ toml
 dadaptation
 lion_pytorch
 prodigyopt
+wandb
