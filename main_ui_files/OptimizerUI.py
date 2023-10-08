@@ -18,7 +18,7 @@ class OptimizerWidget(QtWidgets.QWidget):
     def __init__(self, parent: QtWidgets.QWidget = None) -> None:
         super(OptimizerWidget, self).__init__(parent)
         self.setLayout(QtWidgets.QVBoxLayout())
-        self.args = {"optimizer_type": "AdamW", "lr_scheduler": "cosine", "learning_rate": 1e-4}
+        self.args = {"optimizer_type": "AdamW", "lr_scheduler": "cosine", "learning_rate": 1e-4, "max_grad_norm": 1.0}
         self.opt_arg_list = [OptimizerItem(arg_name="weight_decay", arg_value="0.1"),
                              OptimizerItem(arg_name="betas", arg_value="0.9,0.99")]
         self.name = "optimizer_args"
@@ -48,6 +48,8 @@ class OptimizerWidget(QtWidgets.QWidget):
         self.widget.min_snr_input.valueChanged.connect(lambda x: self.edit_args("min_snr_gamma", x, True))
         self.widget.scale_weight_input.valueChanged.connect(lambda x: self.edit_args("scale_weight_norms", x))
         self.widget.add_opt_button.clicked.connect(self.add_optimizer_arg)
+        self.widget.max_grad_norm_input.valueChanged.connect(lambda x: self.edit_args('max_grad_norm', x))
+        self.widget.zero_term_enable.clicked.connect(lambda x: self.edit_args("zero_terminal_snr", x, True))
 
         # set all of the slots for enable and disable
         self.widget.unet_lr_enable.clicked.connect(
@@ -248,6 +250,12 @@ class OptimizerWidget(QtWidgets.QWidget):
         self.widget.scale_weight_enable.setChecked(checked)
         self.widget.scale_weight_input.setValue(args.get('scale_weight_norms', 1.0))
         self.enable_disable_scale_weight(checked)
+
+        self.widget.max_grad_norm_input.setValue(args.get('max_grad_norm', 1.0))
+        self.edit_args('max_grad_norm', self.widget.max_grad_norm_input.value())
+
+        self.widget.zero_term_enable.setChecked(args.get('zero_terminal_snr', False))
+        self.edit_args("zero_terminal_snr", self.widget.zero_term_enable.isChecked(), True)
 
         if 'optimizer_args' in args:
             for i in range(len(self.opt_arg_list)):

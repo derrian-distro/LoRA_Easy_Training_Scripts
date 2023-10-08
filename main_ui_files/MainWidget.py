@@ -3,6 +3,10 @@ import os.path
 import subprocess
 import sys
 import threading
+import time
+from pathlib import Path
+from typing import Union
+
 from PySide6 import QtWidgets, QtCore
 
 import modules.ScrollOnSelect
@@ -27,10 +31,6 @@ class MainWidget(QtWidgets.QWidget):
         self.dataset_args = {}
         self.training_thread = None
 
-        # self.middle_divider = QtWidgets.QFrame()
-        # self.middle_divider.setFrameShape(QtWidgets.QFrame.Shape.VLine)
-        # self.middle_divider.setFrameShadow(QtWidgets.QFrame.Shadow.Sunken)
-
         self.tab_widget = modules.ScrollOnSelect.TabView()
         self.tab_widget.addTab(self.args_widget, "Main Args")
         self.tab_widget.addTab(self.subset_widget, "Subset Args")
@@ -38,23 +38,27 @@ class MainWidget(QtWidgets.QWidget):
         self.queue_widget = QueueWidget.QueueWidget()
         self.queue_widget.setSizePolicy(QtWidgets.QSizePolicy.Policy.Minimum,
                                         QtWidgets.QSizePolicy.Policy.Minimum)
-        self.queue_widget.saveQueue.connect(self.save_toml)
+        self.queue_widget.saveQueue.connect(lambda x: self.save_toml(file_name=x, is_queue=True))
         self.queue_widget.loadQueue.connect(self.load_toml)
         self.begin_training_button = QtWidgets.QPushButton("Start Training")
-        self.begin_training_button.setSizePolicy(QtWidgets.QSizePolicy.Policy.Minimum,
-                                                 QtWidgets.QSizePolicy.Policy.Maximum)
+        self.begin_training_button.setSizePolicy(
+            QtWidgets.QSizePolicy.Policy.Minimum, QtWidgets.QSizePolicy.Policy.Maximum
+        )
+        self.runtime_only_enable = QtWidgets.QCheckBox("Save Runtime Only")
+        self.runtime_only_enable.setSizePolicy(
+            QtWidgets.QSizePolicy.Policy.Minimum, QtWidgets.QSizePolicy.Policy.Maximum
+        )
 
-        self.main_layout.addWidget(self.tab_widget, 0, 0, 3, 1)
+        self.main_layout.addWidget(self.tab_widget, 0, 0, 4, 1)
         self.main_layout.addWidget(self.queue_widget, 0, 1, 2, 1)
-        self.main_layout.addWidget(self.begin_training_button, 2, 1, 1, 1)
-        # self.main_layout.addWidget(self.args_widget, 0, 0, 1, 1)
-        # self.main_layout.addWidget(self.middle_divider, 0, 1, 1, 1)
-        # self.main_layout.addWidget(self.subset_widget, 0, 2, 1, 1)
-        # self.main_layout.setColumnStretch(0, 1)
-        # self.main_layout.setColumnStretch(2, 1)
+        self.main_layout.addWidget(self.runtime_only_enable, 2, 1, 1, 1)
+        self.main_layout.addWidget(self.begin_training_button, 3, 1, 1, 1)
 
         self.begin_training_button.clicked.connect(self.begin_train)
         self.args_widget.general_args.CacheLatentsChecked.connect(self.subset_widget.cache_checked)
+        self.args_widget.general_args.SdxlChecked.connect(
+            self.args_widget.network_args.enable_disable_cache_text_encoder_outputs
+        )
 
     @QtCore.Slot()
     def begin_train(self) -> None:
@@ -64,44 +68,57 @@ class MainWidget(QtWidgets.QWidget):
         self.training_thread.start()
         self.trainingSignal.emit(True)
 
-    def validate_args(self) -> bool:
+    def validate_args(self) -> tuple[bool, str]:
         args, dataset_args = self.args_widget.collate_args()
         dataset_args['subsets'] = self.subset_widget.get_subset_args()
         self.training_thread = threading.Thread(target=self.train_thread)
-        args = validator.validate_args(args)
-        dataset_args = validator.validate_dataset_args(dataset_args)
+        args = validator.validate_args(args, self.runtime_only_enable.isChecked())
+        dataset_args = validator.validate_dataset_args(dataset_args, self.runtime_only_enable.isChecked())
         if not args or not dataset_args:
             print("failed validation")
-            return False
+            return False, ""
+        script = validator.validate_sdxl(args)
         validator.validate_restarts(args, dataset_args)
         validator.validate_warmup_ratio(args, dataset_args)
-        validator.validate_save_tags(args, dataset_args)
-        validator.validate_existing_files(args)
-        if "save_toml" in args:
-            del args['save_toml']
-            save_toml_path = args.get('save_toml_location', "")
-            if 'save_toml_location' in args:
-                del args['save_toml_location']
-            if not os.path.exists(save_toml_path):
-                save_toml_path = args['output_dir']
-            TomlFunctions.save_toml(
-                self.save_args(), os.path.join(save_toml_path, f"auto_save_{args.get('output_name', 'last')}.toml")
-            )
+        if not self.runtime_only_enable.isChecked():
+            validator.validate_save_tags(args, dataset_args)
+            validator.validate_existing_files(args)
+            if "save_toml" in args:
+                del args['save_toml']
+                save_toml_path = args.get('save_toml_location', "")
+                if 'save_toml_location' in args:
+                    del args['save_toml_location']
+                if not os.path.exists(save_toml_path):
+                    save_toml_path = args['output_dir']
+                TomlFunctions.save_toml(
+                    self.save_args(),
+                    os.path.join(save_toml_path, f"auto_save_{args.get('output_name', 'last')}.toml"),
+                    is_queue=True
+                )
+        if self.runtime_only_enable.isChecked():
+            folder_name = Path(f"runtime_store/{time.time_ns()}")
+            if not folder_name.exists():
+                folder_name.mkdir()
+            self.create_config_args_file(args, folder_name.joinpath("config.toml"))
+            self.create_dataset_args_file(dataset_args, folder_name.joinpath("dataset.toml"))
+            print(f"Validated, outputting toml files to folder {folder_name}")
+            return False, ""
         self.create_config_args_file(args)
         self.create_dataset_args_file(dataset_args)
         print("validated, starting training...")
-        return True
+        return True, script
 
     def train_thread(self):
         self.begin_training_button.setEnabled(False)
         python = sys.executable
         if len(self.queue_widget.elements) == 0:
-            if not self.validate_args():
+            valid, py_script = self.validate_args()
+            if not valid:
                 self.begin_training_button.setEnabled(True)
                 self.trainingSignal.emit(False)
                 return
             try:
-                subprocess.check_call([python, os.path.join("sd_scripts", "train_network.py"),
+                subprocess.check_call([python, os.path.join("sd_scripts", py_script),
                                        f"--config_file={os.path.join('runtime_store', 'config.toml')}",
                                        f"--dataset_config={os.path.join('runtime_store', 'dataset.toml')}"])
             except subprocess.SubprocessError as e:
@@ -120,28 +137,40 @@ class MainWidget(QtWidgets.QWidget):
                 file = os.path.join("runtime_store", f"{self.queue_widget.elements[0].queue_file}.toml")
                 self.queue_widget.remove_first_from_queue()
                 base_args = TomlFunctions.load_toml(file)
-                args, dataset_args = validator.separate_and_validate(base_args)
+                args, dataset_args = validator.separate_and_validate(base_args, self.runtime_only_enable.isChecked())
                 if not args or not dataset_args:
                     print("some args are not valid, skipping.")
                     continue
+                py_script = validator.validate_sdxl(args)
                 validator.validate_restarts(args, dataset_args)
                 validator.validate_warmup_ratio(args, dataset_args)
-                validator.validate_save_tags(args, dataset_args)
-                validator.validate_existing_files(args)
-                if "save_toml" in args:
-                    del args['save_toml']
-                    save_toml_path = args.get('save_toml_location', "")
-                    if 'save_toml_location' in args:
-                        del args['save_toml_location']
-                    if not os.path.exists(save_toml_path):
-                        save_toml_path = args['output_dir']
-                    TomlFunctions.save_toml(
-                        base_args, os.path.join(save_toml_path, f"auto_save_{args.get('output_name', 'last')}.toml")
-                    )
+                if not self.runtime_only_enable.isChecked():
+                    validator.validate_save_tags(args, dataset_args)
+                    validator.validate_existing_files(args)
+                    if "save_toml" in args:
+                        del args['save_toml']
+                        save_toml_path = args.get('save_toml_location', "")
+                        if 'save_toml_location' in args:
+                            del args['save_toml_location']
+                        if not os.path.exists(save_toml_path):
+                            save_toml_path = args['output_dir']
+                        TomlFunctions.save_toml(
+                            base_args,
+                            os.path.join(save_toml_path, f"auto_save_{args.get('output_name', 'last')}.toml"),
+                            is_queue=True
+                        )
+                if self.runtime_only_enable.isChecked():
+                    folder_name = Path(f"runtime_store/{time.time_ns()}")
+                    if not folder_name.exists():
+                        folder_name.mkdir()
+                    self.create_config_args_file(args, folder_name.joinpath("config.toml"))
+                    self.create_dataset_args_file(dataset_args, folder_name.joinpath("dataset.toml"))
+                    print(f"Validated, outputting toml files to folder {folder_name}")
+                    continue
                 self.create_config_args_file(args)
                 self.create_dataset_args_file(dataset_args)
                 print("validated, starting training...")
-                subprocess.check_call([python, os.path.join("sd_scripts", "train_network.py"),
+                subprocess.check_call([python, os.path.join("sd_scripts", py_script),
                                        f"--config_file={os.path.join('runtime_store', 'config.toml')}",
                                        f"--dataset_config={os.path.join('runtime_store', 'dataset.toml')}"])
             except BaseException as e:
@@ -149,7 +178,10 @@ class MainWidget(QtWidgets.QWidget):
                     print(f"Failed to train because of error:\n{e}")
         for file in os.listdir("runtime_store"):
             if file != '.gitignore':
-                os.remove(os.path.join("runtime_store", file))
+                try:
+                    os.remove(os.path.join("runtime_store", file))
+                except PermissionError:
+                    pass
         self.begin_training_button.setEnabled(True)
         self.trainingSignal.emit(False)
 
@@ -163,21 +195,21 @@ class MainWidget(QtWidgets.QWidget):
         self.subset_widget.load_args(args)
 
     @QtCore.Slot(str)
-    def save_toml(self, file_name: str = None) -> None:
+    def save_toml(self, file_name: str = None, is_queue: bool = False) -> None:
         args = self.save_args()
         if file_name:
-            TomlFunctions.save_toml(args, os.path.join("runtime_store", f"{file_name}.toml"))
+            TomlFunctions.save_toml(args, os.path.join("runtime_store", f"{file_name}.toml"), is_queue)
         else:
             if os.path.exists('config.json'):
                 with open('config.json', 'r') as f:
                     config = json.load(f)
-                    if "toml_default" in config:
+                    if "toml_default" in config and os.path.exists(config['toml_default']):
                         default_toml = config['toml_default']
                     else:
                         default_toml = ""
             else:
                 default_toml = ""
-            TomlFunctions.save_toml(args, default_toml)
+            TomlFunctions.save_toml(args, default_toml, is_queue)
 
     @QtCore.Slot(str)
     def load_toml(self, file_name: str = None) -> None:
@@ -198,9 +230,31 @@ class MainWidget(QtWidgets.QWidget):
             return
         self.load_args(args)
 
+    @QtCore.Slot()
+    def save_runtime_toml(self) -> None:
+        config = Path("config.json")
+        default_toml = ""
+        if config.exists():
+            default_toml = json.loads(config.open('r', encoding='utf-8').read()).get('toml_default', "")
+        output_folder = TomlFunctions.save_runtime_toml(default_toml)
+
+        args, dataset_args = self.args_widget.collate_args()
+        dataset_args['subsets'] = self.subset_widget.get_subset_args()
+        args = validator.validate_args(args, skip_file_paths=True)
+        dataset_args = validator.validate_dataset_args(dataset_args, skip_file_paths=True)
+        validator.validate_restarts(args, dataset_args)
+        validator.validate_warmup_ratio(args, dataset_args)
+        print("validation complete, creating config files...")
+        self.create_config_args_file(args, Path(f"{output_folder}/config.toml"))
+        self.create_dataset_args_file(dataset_args, Path(f"{output_folder}/dataset.toml"))
+
     @staticmethod
-    def create_config_args_file(args: dict) -> None:
-        with open(os.path.join("runtime_store", "config.toml"), 'w') as f:
+    def create_config_args_file(args: dict, path: Union[str, Path] = None) -> None:
+        if not path:
+            path = Path("runtime_store/config.toml")
+        if isinstance(path, str):
+            path = Path(path)
+        with path.open(mode="w", encoding="utf-8") as f:
             for key, value in args.items():
                 if isinstance(value, str):
                     value = f"\'{value}\'"
@@ -209,8 +263,12 @@ class MainWidget(QtWidgets.QWidget):
                 f.write(f"{key} = {value}\n")
 
     @staticmethod
-    def create_dataset_args_file(args: dict) -> None:
-        with open(os.path.join("runtime_store", "dataset.toml"), 'w') as f:
+    def create_dataset_args_file(args: dict, path: Union[str, Path] = None) -> None:
+        if not path:
+            path = Path('runtime_store/dataset.toml')
+        if isinstance(path, str):
+            path = Path(path)
+        with path.open(mode="w", encoding="utf-8") as f:
             f.write("[general]\n")
             for key, value in args['general'].items():
                 if isinstance(value, str):

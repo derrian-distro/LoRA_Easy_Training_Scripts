@@ -24,13 +24,6 @@ def main() -> None:
     window = MainWindow(app)
     window.show()
     app.exec()
-    for file in os.listdir("runtime_store"):
-        if file in ["config.toml", "dataset.toml", r".gitignore"]:
-            continue
-        try:
-            os.remove(os.path.join("runtime_store", file))
-        except FileNotFoundError:
-            pass
 
 
 if __name__ == "__main__":

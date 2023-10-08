@@ -1,8 +1,9 @@
 import os
+from pathlib import Path
 from typing import Union
 
 
-def separate_and_validate(args: dict) -> tuple[Union[dict, None], Union[dict, None]]:
+def separate_and_validate(args: dict, skip_file_paths: bool = False) -> tuple[Union[dict, None], Union[dict, None]]:
     new_args = {}
     new_dataset_args = {}
     for section, sec_args in args.items():
@@ -14,28 +15,28 @@ def separate_and_validate(args: dict) -> tuple[Union[dict, None], Union[dict, No
             new_args[section] = sec_args['args']
         if 'dataset_args' in sec_args:
             new_dataset_args[section] = sec_args['dataset_args']
-    valid = validate_args(new_args)
-    valid_dataset = validate_dataset_args(new_dataset_args)
+    valid = validate_args(new_args, skip_file_paths)
+    valid_dataset = validate_dataset_args(new_dataset_args, skip_file_paths)
     return valid, valid_dataset
 
 
-def validate_args(args: dict) -> Union[dict, None]:
+def validate_args(args: dict, skip_file_paths: bool = False) -> Union[dict, None]:
     print("starting validation of args...")
-    file_inputs = ["pretrained_model_name_or_path", "output_dir"]
+    file_inputs = [
+        {"name": "pretrained_model_name_or_path", "required": True},
+        {"name": "output_dir", "required": True},
+        {"name": "sample_prompts", "required": False},
+        {"name": "logging_dir", "required": False}
+    ]
 
     new_args = {}
     for key, value in args.items():
         if not value:
             print(f"No data filled in for {key}")
             return None
-        if key == "sample_args":
-            if "sample_prompts" not in value or not os.path.exists(value['sample_prompts']):
-                print(f"Sample prompt path '{value['sample_prompts']}' does not exist")
-                return None
-        if key == 'logging_args':
-            if 'logging_dir' not in value or not os.path.exists(value['logging_dir']):
-                print(f"Logging directory path '{value['logging_dir']}' does not exist")
-                return None
+        if "fa" in value and value["fa"]:
+            new_args['network_module'] = "networks.lora_fa"
+            del value["fa"]
         for arg, val in value.items():
             if arg == "network_args":
                 vals = []
@@ -49,6 +50,8 @@ def validate_args(args: dict) -> Union[dict, None]:
                         for i in range(len(v)):
                             v[i] = str(v[i])
                         vals.append(f"{k}={','.join(v)}")
+                        continue
+                    if k == "preset" and v == "":
                         continue
                     vals.append(f"{k}={v}")
                 val = vals
@@ -67,16 +70,22 @@ def validate_args(args: dict) -> Union[dict, None]:
             if not val:
                 continue
             new_args[arg] = val
-    for file in file_inputs:
-        if file not in new_args or not os.path.exists(new_args[file]):
-            print(f"File input path '{new_args[file]}' does not exist")
-            return None
+        if "fa" in value:
+            del value["fa"]
+    if not skip_file_paths:
+        for file in file_inputs:
+            if file['required'] and file['name'] not in new_args:
+                print(f"File input path \'{new_args[file['name']]}\' does not exist")
+                return None
+            if file['name'] in new_args and not Path(new_args[file['name']]).exists():
+                print(f"File input path \'{new_args[file['name']]}\' does not exist")
+                return None
     if "network_module" not in new_args:
         new_args['network_module'] = "networks.lora"
     return new_args
 
 
-def validate_dataset_args(args: dict) -> Union[dict, None]:
+def validate_dataset_args(args: dict, skip_file_paths: bool = False) -> Union[dict, None]:
     print("starting validation of dataset_args...")
     new_args = {"general": {}, "subsets": []}
     for key, value in args.items():
@@ -92,7 +101,7 @@ def validate_dataset_args(args: dict) -> Union[dict, None]:
                 continue
             new_args['general'][arg] = val
     for item in args['subsets']:
-        sub = validate_subset(item)
+        sub = validate_subset(item, skip_file_paths)
         if not sub:
             print(f"Data subset failed validation")
             return None
@@ -100,16 +109,23 @@ def validate_dataset_args(args: dict) -> Union[dict, None]:
     return new_args
 
 
-def validate_subset(args: dict) -> Union[dict, None]:
+def validate_subset(args: dict, skip_file_paths: bool) -> Union[dict, None]:
     new_args = {}
     for key, value in args.items():
         if not value:
             continue
         new_args[key] = value
-    if "image_dir" not in new_args or not os.path.exists(new_args['image_dir']):
+    if not skip_file_paths and ("image_dir" not in new_args or not os.path.exists(new_args['image_dir'])):
         print(f"Image directory path '{new_args['image_dir']}' does not exist")
         return None
     return new_args
+
+
+def validate_sdxl(args: dict) -> str:
+    if 'sdxl' not in args:
+        return 'train_network.py'
+    del args['sdxl']
+    return 'sdxl_train_network.py'
 
 
 def validate_restarts(args: dict, dataset: dict) -> None:
@@ -158,7 +174,7 @@ def validate_save_tags(args: dict, dataset: dict) -> None:
     file_path = args.get("tag_file_location", "")
     if not os.path.exists(file_path):
         file_path = args['output_dir']
-    with open(os.path.join(file_path, f"{args['output_name']}_tags.txt"), "w") as f:
+    with open(os.path.join(file_path, f"{args['output_name']}_tags.txt"), "w", encoding='utf-8') as f:
         f.write("Below is a list of keywords used during the training of this model:\n")
         for k, v in output_list.items():
             f.write(f"[{v}] {k}\n")
@@ -192,11 +208,12 @@ def calculate_steps(subsets: list, epochs: int, batch_size: int) -> int:
 
 
 def validate_existing_files(args: dict) -> None:
-    file_name = os.path.join(args['output_dir'], args.get("output_name", 'last') + ".safetensors")
+    file_name = Path(f"{args['output_dir']}/{args.get('output_name', 'last')}.safetensors")
+    print(file_name)
     offset = 1
-    while os.path.exists(file_name):
-        file_name = os.path.join(args['output_dir'], args.get('output_name', 'last') + f"_{offset}" + ".safetensors")
+    while file_name.exists():
+        file_name = Path(f"{args['output_dir']}/{args.get('output_name', 'last')}_{offset}.safetensors")
         offset += 1
     if offset > 1:
-        print(f"Duplicate file found, changing file name to {os.path.split(file_name)[1]}")
-        args['output_name'] = os.path.splitext(os.path.split(file_name)[1])[0]
+        print(f"Duplicate file found, changing file name to {file_name.stem}")
+        args['output_name'] = file_name.stem

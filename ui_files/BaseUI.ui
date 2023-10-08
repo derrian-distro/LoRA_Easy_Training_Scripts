@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>553</width>
-    <height>426</height>
+    <height>517</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -170,7 +170,7 @@
         <item>
          <widget class="DragDropLineEdit" name="base_model_input">
           <property name="toolTip">
-           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The full model to train with, if you are training anime, I personally suggest NAI.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The full model to train with, if you are training anime for SD 1.5, I personally suggest NAI.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
           </property>
           <property name="placeholderText">
            <string>Base Model To Train With</string>
@@ -186,17 +186,7 @@
         </item>
        </layout>
       </item>
-      <item row="1" column="0">
-       <widget class="QCheckBox" name="v2_enable">
-        <property name="toolTip">
-         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Select this if you are using an SD2.x based model, such as WD1.5.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-        </property>
-        <property name="text">
-         <string>SD2.X Based</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="1">
+      <item row="3" column="0" colspan="2">
        <layout class="QHBoxLayout" name="horizontalLayout_6">
         <item>
          <widget class="QCheckBox" name="v_param_enable">
@@ -207,7 +197,7 @@
            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Select this if your model uses the SD2.x 768x model, such as WD1.5.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
           </property>
           <property name="text">
-           <string>Uses V Parameterization</string>
+           <string>V Param</string>
           </property>
          </widget>
         </item>
@@ -217,7 +207,83 @@
            <bool>false</bool>
           </property>
           <property name="text">
-           <string>Scale V Prediction Loss to Noise Prediction</string>
+           <string>Scale V pred loss</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QCheckBox" name="FP16_enable">
+          <property name="toolTip">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Allows training on full fp16, not compatable with full bf16 or training precision&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
+          <property name="text">
+           <string>Full FP16</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QCheckBox" name="BF16_enable">
+          <property name="toolTip">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Train in full BF16. Requires a higher bitsandbytes than 0.35.0 which is seemingly the best we have on windows, so this is disabled on windows regardless. not compatable with full fp16 or training precision&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
+          <property name="text">
+           <string>Full BF16</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item row="2" column="0" colspan="2">
+       <layout class="QHBoxLayout" name="horizontalLayout_2">
+        <item>
+         <widget class="QCheckBox" name="v2_enable">
+          <property name="toolTip">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Select this if you are using an SD2.x based model, such as WD1.5.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
+          <property name="text">
+           <string>SD2.X Based</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QCheckBox" name="sdxl_enable">
+          <property name="text">
+           <string>SDXL Based</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QCheckBox" name="no_half_vae_enable">
+          <property name="text">
+           <string>No Half Vae</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item row="1" column="0">
+       <widget class="QLabel" name="label_11">
+        <property name="text">
+         <string>External VAE</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <layout class="QHBoxLayout" name="horizontalLayout_4">
+        <item>
+         <widget class="DragDropLineEdit" name="vae_input">
+          <property name="toolTip">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Allows you to load a vae seperately from the base model.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
+          <property name="placeholderText">
+           <string>Vae to train with</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="vae_selector">
+          <property name="text">
+           <string/>
           </property>
          </widget>
         </item>
@@ -437,23 +503,7 @@
        </property>
       </widget>
      </item>
-     <item row="3" column="0">
-      <widget class="QCheckBox" name="xformers_enable">
-       <property name="enabled">
-        <bool>true</bool>
-       </property>
-       <property name="toolTip">
-        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;A memory optimization, most can use this, AMD and reportedly, some linux devices can't.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-       </property>
-       <property name="text">
-        <string>Xformers</string>
-       </property>
-       <property name="checked">
-        <bool>true</bool>
-       </property>
-      </widget>
-     </item>
-     <item row="3" column="1">
+     <item row="4" column="0" colspan="2">
       <layout class="QHBoxLayout" name="horizontalLayout_5">
        <item>
         <widget class="QCheckBox" name="cache_latents_enable">
@@ -475,6 +525,33 @@
          </property>
          <property name="text">
           <string>To Disk</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item row="3" column="0" colspan="2">
+      <layout class="QHBoxLayout" name="horizontalLayout_7">
+       <item>
+        <widget class="QCheckBox" name="xformers_enable">
+         <property name="enabled">
+          <bool>true</bool>
+         </property>
+         <property name="toolTip">
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;A memory optimization, most can use this, AMD and reportedly, some linux devices can't.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         </property>
+         <property name="text">
+          <string>Xformers</string>
+         </property>
+         <property name="checked">
+          <bool>false</bool>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QCheckBox" name="sdpa_enable">
+         <property name="text">
+          <string>SDPA</string>
          </property>
         </widget>
        </item>

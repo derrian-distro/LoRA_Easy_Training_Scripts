@@ -44,20 +44,21 @@ class SampleWidget(QtWidgets.QWidget):
 
     @QtCore.Slot(str, object, QtWidgets.QWidget)
     def edit_args(self, name: str, value: object, elem: QtWidgets.QWidget = None) -> None:
-        if elem:
-            if isinstance(elem, modules.DragDropLineEdit.DragDropLineEdit):
-                self.edited_previously = True
-                elem.update_stylesheet()
+        if elem and isinstance(elem, modules.DragDropLineEdit.DragDropLineEdit):
+            self.edited_previously = True
+            elem.update_stylesheet()
         self.args[name] = value
 
     @QtCore.Slot()
     def set_from_dialog(self) -> None:
-        extensions = " ".join(["*" + s for s in self.widget.sample_prompt_txt_file_input.extensions])
+        extensions = " ".join(
+            [f"*{s}" for s in self.widget.sample_prompt_txt_file_input.extensions]
+        )
         path = self.widget.sample_prompt_txt_file_input.text()
         default_dir = os.path.split(path)[0] if os.path.exists(path) else ""
         file_name, _ = QtWidgets.QFileDialog.getOpenFileName(
             self, "Open Text File With Prompts", dir=default_dir, filter=f"Text Files ({extensions})")
-        self.widget.sample_prompt_txt_file_input.setText(file_name if file_name else path)
+        self.widget.sample_prompt_txt_file_input.setText(file_name or path)
 
     @QtCore.Slot(int)
     def steps_epochs_changed(self, index: int) -> None:
@@ -84,16 +85,15 @@ class SampleWidget(QtWidgets.QWidget):
 
     @QtCore.Slot()
     def enable_disable(self) -> None:
-        checked = self.widget.sample_args_box.isChecked()
-        if not checked:
-            self.widget.sample_prompt_txt_file_input.setStyleSheet("")
-            self.args = {}
-        else:
+        if checked := self.widget.sample_args_box.isChecked():
             self.args['sample_prompts'] = self.widget.sample_prompt_txt_file_input.text()
             self.args['sample_sampler'] = self.widget.sampler_input.currentText().lower()
             self.steps_epochs_input_changed(self.widget.steps_epoch_input.value())
             if self.edited_previously:
                 self.widget.sample_prompt_txt_file_input.update_stylesheet()
+        else:
+            self.widget.sample_prompt_txt_file_input.setStyleSheet("")
+            self.args = {}
 
     def get_args(self, input_args: dict) -> None:
         if not self.widget.sample_args_box.isChecked():
@@ -101,12 +101,11 @@ class SampleWidget(QtWidgets.QWidget):
                 del input_args['sample_args']
             return
         valid = self.widget.sample_prompt_txt_file_input.update_stylesheet()
-        input_args['sample_args'] = None if not valid else self.args
-        if not valid:
-            if self.colap.is_collapsed:
-                self.colap.toggle_collapsed()
-                self.colap.title_frame.update_arrow(False)
-                self.colap.title_frame.setChecked(True)
+        input_args['sample_args'] = self.args if valid else None
+        if not valid and self.colap.is_collapsed:
+            self.colap.toggle_collapsed()
+            self.colap.title_frame.update_arrow(False)
+            self.colap.title_frame.setChecked(True)
 
     def get_dataset_args(self, input_args: dict) -> None:
         pass

@@ -26,7 +26,7 @@ class Ui_base_args_ui(object):
     def setupUi(self, base_args_ui):
         if not base_args_ui.objectName():
             base_args_ui.setObjectName(u"base_args_ui")
-        base_args_ui.resize(553, 426)
+        base_args_ui.resize(553, 517)
         self.gridLayout_3 = QGridLayout(base_args_ui)
         self.gridLayout_3.setObjectName(u"gridLayout_3")
         self.formLayout_5 = QFormLayout()
@@ -129,11 +129,6 @@ class Ui_base_args_ui(object):
 
         self.formLayout_3.setLayout(0, QFormLayout.FieldRole, self.horizontalLayout)
 
-        self.v2_enable = QCheckBox(self.base_model_box)
-        self.v2_enable.setObjectName(u"v2_enable")
-
-        self.formLayout_3.setWidget(1, QFormLayout.LabelRole, self.v2_enable)
-
         self.horizontalLayout_6 = QHBoxLayout()
         self.horizontalLayout_6.setObjectName(u"horizontalLayout_6")
         self.v_param_enable = QCheckBox(self.base_model_box)
@@ -148,8 +143,58 @@ class Ui_base_args_ui(object):
 
         self.horizontalLayout_6.addWidget(self.v_pred_enable)
 
+        self.FP16_enable = QCheckBox(self.base_model_box)
+        self.FP16_enable.setObjectName(u"FP16_enable")
 
-        self.formLayout_3.setLayout(1, QFormLayout.FieldRole, self.horizontalLayout_6)
+        self.horizontalLayout_6.addWidget(self.FP16_enable)
+
+        self.BF16_enable = QCheckBox(self.base_model_box)
+        self.BF16_enable.setObjectName(u"BF16_enable")
+
+        self.horizontalLayout_6.addWidget(self.BF16_enable)
+
+
+        self.formLayout_3.setLayout(3, QFormLayout.SpanningRole, self.horizontalLayout_6)
+
+        self.horizontalLayout_2 = QHBoxLayout()
+        self.horizontalLayout_2.setObjectName(u"horizontalLayout_2")
+        self.v2_enable = QCheckBox(self.base_model_box)
+        self.v2_enable.setObjectName(u"v2_enable")
+
+        self.horizontalLayout_2.addWidget(self.v2_enable)
+
+        self.sdxl_enable = QCheckBox(self.base_model_box)
+        self.sdxl_enable.setObjectName(u"sdxl_enable")
+
+        self.horizontalLayout_2.addWidget(self.sdxl_enable)
+
+        self.no_half_vae_enable = QCheckBox(self.base_model_box)
+        self.no_half_vae_enable.setObjectName(u"no_half_vae_enable")
+
+        self.horizontalLayout_2.addWidget(self.no_half_vae_enable)
+
+
+        self.formLayout_3.setLayout(2, QFormLayout.SpanningRole, self.horizontalLayout_2)
+
+        self.label_11 = QLabel(self.base_model_box)
+        self.label_11.setObjectName(u"label_11")
+
+        self.formLayout_3.setWidget(1, QFormLayout.LabelRole, self.label_11)
+
+        self.horizontalLayout_4 = QHBoxLayout()
+        self.horizontalLayout_4.setObjectName(u"horizontalLayout_4")
+        self.vae_input = DragDropLineEdit(self.base_model_box)
+        self.vae_input.setObjectName(u"vae_input")
+
+        self.horizontalLayout_4.addWidget(self.vae_input)
+
+        self.vae_selector = QPushButton(self.base_model_box)
+        self.vae_selector.setObjectName(u"vae_selector")
+
+        self.horizontalLayout_4.addWidget(self.vae_selector)
+
+
+        self.formLayout_3.setLayout(1, QFormLayout.FieldRole, self.horizontalLayout_4)
 
 
         self.gridLayout_3.addWidget(self.base_model_box, 3, 1, 1, 2)
@@ -269,13 +314,6 @@ class Ui_base_args_ui(object):
 
         self.formLayout_6.setWidget(2, QFormLayout.FieldRole, self.loss_weight_input)
 
-        self.xformers_enable = QCheckBox(base_args_ui)
-        self.xformers_enable.setObjectName(u"xformers_enable")
-        self.xformers_enable.setEnabled(True)
-        self.xformers_enable.setChecked(True)
-
-        self.formLayout_6.setWidget(3, QFormLayout.LabelRole, self.xformers_enable)
-
         self.horizontalLayout_5 = QHBoxLayout()
         self.horizontalLayout_5.setObjectName(u"horizontalLayout_5")
         self.cache_latents_enable = QCheckBox(base_args_ui)
@@ -290,7 +328,24 @@ class Ui_base_args_ui(object):
         self.horizontalLayout_5.addWidget(self.cache_latents_to_disk_enable)
 
 
-        self.formLayout_6.setLayout(3, QFormLayout.FieldRole, self.horizontalLayout_5)
+        self.formLayout_6.setLayout(4, QFormLayout.SpanningRole, self.horizontalLayout_5)
+
+        self.horizontalLayout_7 = QHBoxLayout()
+        self.horizontalLayout_7.setObjectName(u"horizontalLayout_7")
+        self.xformers_enable = QCheckBox(base_args_ui)
+        self.xformers_enable.setObjectName(u"xformers_enable")
+        self.xformers_enable.setEnabled(True)
+        self.xformers_enable.setChecked(False)
+
+        self.horizontalLayout_7.addWidget(self.xformers_enable)
+
+        self.sdpa_enable = QCheckBox(base_args_ui)
+        self.sdpa_enable.setObjectName(u"sdpa_enable")
+
+        self.horizontalLayout_7.addWidget(self.sdpa_enable)
+
+
+        self.formLayout_6.setLayout(3, QFormLayout.SpanningRole, self.horizontalLayout_7)
 
 
         self.gridLayout_3.addLayout(self.formLayout_6, 5, 1, 1, 1)
@@ -349,19 +404,35 @@ class Ui_base_args_ui(object):
         self.base_model_box.setTitle(QCoreApplication.translate("base_args_ui", u"Model", None))
         self.label_4.setText(QCoreApplication.translate("base_args_ui", u"Base Model", None))
 #if QT_CONFIG(tooltip)
-        self.base_model_input.setToolTip(QCoreApplication.translate("base_args_ui", u"<html><head/><body><p>The full model to train with, if you are training anime, I personally suggest NAI.</p></body></html>", None))
+        self.base_model_input.setToolTip(QCoreApplication.translate("base_args_ui", u"<html><head/><body><p>The full model to train with, if you are training anime for SD 1.5, I personally suggest NAI.</p></body></html>", None))
 #endif // QT_CONFIG(tooltip)
         self.base_model_input.setPlaceholderText(QCoreApplication.translate("base_args_ui", u"Base Model To Train With", None))
         self.base_model_selector.setText("")
 #if QT_CONFIG(tooltip)
+        self.v_param_enable.setToolTip(QCoreApplication.translate("base_args_ui", u"<html><head/><body><p>Select this if your model uses the SD2.x 768x model, such as WD1.5.</p></body></html>", None))
+#endif // QT_CONFIG(tooltip)
+        self.v_param_enable.setText(QCoreApplication.translate("base_args_ui", u"V Param", None))
+        self.v_pred_enable.setText(QCoreApplication.translate("base_args_ui", u"Scale V pred loss", None))
+#if QT_CONFIG(tooltip)
+        self.FP16_enable.setToolTip(QCoreApplication.translate("base_args_ui", u"<html><head/><body><p>Allows training on full fp16, not compatable with full bf16 or training precision</p></body></html>", None))
+#endif // QT_CONFIG(tooltip)
+        self.FP16_enable.setText(QCoreApplication.translate("base_args_ui", u"Full FP16", None))
+#if QT_CONFIG(tooltip)
+        self.BF16_enable.setToolTip(QCoreApplication.translate("base_args_ui", u"<html><head/><body><p>Train in full BF16. Requires a higher bitsandbytes than 0.35.0 which is seemingly the best we have on windows, so this is disabled on windows regardless. not compatable with full fp16 or training precision</p></body></html>", None))
+#endif // QT_CONFIG(tooltip)
+        self.BF16_enable.setText(QCoreApplication.translate("base_args_ui", u"Full BF16", None))
+#if QT_CONFIG(tooltip)
         self.v2_enable.setToolTip(QCoreApplication.translate("base_args_ui", u"<html><head/><body><p>Select this if you are using an SD2.x based model, such as WD1.5.</p></body></html>", None))
 #endif // QT_CONFIG(tooltip)
         self.v2_enable.setText(QCoreApplication.translate("base_args_ui", u"SD2.X Based", None))
+        self.sdxl_enable.setText(QCoreApplication.translate("base_args_ui", u"SDXL Based", None))
+        self.no_half_vae_enable.setText(QCoreApplication.translate("base_args_ui", u"No Half Vae", None))
+        self.label_11.setText(QCoreApplication.translate("base_args_ui", u"External VAE", None))
 #if QT_CONFIG(tooltip)
-        self.v_param_enable.setToolTip(QCoreApplication.translate("base_args_ui", u"<html><head/><body><p>Select this if your model uses the SD2.x 768x model, such as WD1.5.</p></body></html>", None))
+        self.vae_input.setToolTip(QCoreApplication.translate("base_args_ui", u"<html><head/><body><p>Allows you to load a vae seperately from the base model.</p></body></html>", None))
 #endif // QT_CONFIG(tooltip)
-        self.v_param_enable.setText(QCoreApplication.translate("base_args_ui", u"Uses V Parameterization", None))
-        self.v_pred_enable.setText(QCoreApplication.translate("base_args_ui", u"Scale V Prediction Loss to Noise Prediction", None))
+        self.vae_input.setPlaceholderText(QCoreApplication.translate("base_args_ui", u"Vae to train with", None))
+        self.vae_selector.setText("")
         self.resolution_box.setTitle(QCoreApplication.translate("base_args_ui", u"Resolution", None))
         self.label.setText(QCoreApplication.translate("base_args_ui", u"Width", None))
 #if QT_CONFIG(tooltip)
@@ -398,10 +469,6 @@ class Ui_base_args_ui(object):
         self.loss_weight_input.setToolTip(QCoreApplication.translate("base_args_ui", u"<html><head/><body><p>Prior loss weight is a parameter in machine learning that affects how well a model can reproduce images.</p></body></html>", None))
 #endif // QT_CONFIG(tooltip)
 #if QT_CONFIG(tooltip)
-        self.xformers_enable.setToolTip(QCoreApplication.translate("base_args_ui", u"<html><head/><body><p>A memory optimization, most can use this, AMD and reportedly, some linux devices can't.</p></body></html>", None))
-#endif // QT_CONFIG(tooltip)
-        self.xformers_enable.setText(QCoreApplication.translate("base_args_ui", u"Xformers", None))
-#if QT_CONFIG(tooltip)
         self.cache_latents_enable.setToolTip(QCoreApplication.translate("base_args_ui", u"<html><head/><body><p>Caching latents is a way to prevent vram spikes and slightly speed up training time, clashes with color aug, and random crop.</p></body></html>", None))
 #endif // QT_CONFIG(tooltip)
         self.cache_latents_enable.setText(QCoreApplication.translate("base_args_ui", u"Cache Latents", None))
@@ -409,6 +476,11 @@ class Ui_base_args_ui(object):
         self.cache_latents_to_disk_enable.setToolTip(QCoreApplication.translate("base_args_ui", u"<html><head/><body><p>Caches the latents to disk, slower, but saves a small bit of vram.</p></body></html>", None))
 #endif // QT_CONFIG(tooltip)
         self.cache_latents_to_disk_enable.setText(QCoreApplication.translate("base_args_ui", u"To Disk", None))
+#if QT_CONFIG(tooltip)
+        self.xformers_enable.setToolTip(QCoreApplication.translate("base_args_ui", u"<html><head/><body><p>A memory optimization, most can use this, AMD and reportedly, some linux devices can't.</p></body></html>", None))
+#endif // QT_CONFIG(tooltip)
+        self.xformers_enable.setText(QCoreApplication.translate("base_args_ui", u"Xformers", None))
+        self.sdpa_enable.setText(QCoreApplication.translate("base_args_ui", u"SDPA", None))
         self.comment_enable.setText(QCoreApplication.translate("base_args_ui", u"Comment", None))
 #if QT_CONFIG(tooltip)
         self.comment_input.setToolTip(QCoreApplication.translate("base_args_ui", u"<html><head/><body><p>Comment that gets put into the metadata</p></body></html>", None))

@@ -16,8 +16,8 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
 from PySide6.QtWidgets import (QApplication, QCheckBox, QFormLayout, QGridLayout,
-    QHBoxLayout, QLabel, QPushButton, QScrollArea,
-    QSizePolicy, QVBoxLayout, QWidget)
+    QLabel, QPushButton, QScrollArea, QSizePolicy,
+    QVBoxLayout, QWidget)
 
 from modules.LineEditHighlight import LineEditWithHighlight
 from modules.ScrollOnSelect import (ComboBox, DoubleSpinBox, SpinBox, TabView)
@@ -26,7 +26,7 @@ class Ui_optimizer_ui(object):
     def setupUi(self, optimizer_ui):
         if not optimizer_ui.objectName():
             optimizer_ui.setObjectName(u"optimizer_ui")
-        optimizer_ui.resize(428, 267)
+        optimizer_ui.resize(387, 290)
         self.verticalLayout = QVBoxLayout(optimizer_ui)
         self.verticalLayout.setObjectName(u"verticalLayout")
         self.verticalLayout.setContentsMargins(0, 0, 0, 0)
@@ -38,14 +38,55 @@ class Ui_optimizer_ui(object):
         self.optimizer_tab_main.setFocusPolicy(Qt.StrongFocus)
         self.gridLayout = QGridLayout(self.optimizer_tab_main)
         self.gridLayout.setObjectName(u"gridLayout")
-        self.formLayout_4 = QFormLayout()
-        self.formLayout_4.setObjectName(u"formLayout_4")
-        self.horizontalLayout_2 = QHBoxLayout()
-        self.horizontalLayout_2.setObjectName(u"horizontalLayout_2")
+        self.formLayout_2 = QFormLayout()
+        self.formLayout_2.setObjectName(u"formLayout_2")
+        self.label = QLabel(self.optimizer_tab_main)
+        self.label.setObjectName(u"label")
+
+        self.formLayout_2.setWidget(0, QFormLayout.LabelRole, self.label)
+
+        self.main_lr_input = LineEditWithHighlight(self.optimizer_tab_main)
+        self.main_lr_input.setObjectName(u"main_lr_input")
+
+        self.formLayout_2.setWidget(0, QFormLayout.FieldRole, self.main_lr_input)
+
+        self.min_lr_input = LineEditWithHighlight(self.optimizer_tab_main)
+        self.min_lr_input.setObjectName(u"min_lr_input")
+        self.min_lr_input.setEnabled(False)
+
+        self.formLayout_2.setWidget(1, QFormLayout.FieldRole, self.min_lr_input)
+
+        self.unet_lr_enable = QCheckBox(self.optimizer_tab_main)
+        self.unet_lr_enable.setObjectName(u"unet_lr_enable")
+
+        self.formLayout_2.setWidget(2, QFormLayout.LabelRole, self.unet_lr_enable)
+
+        self.unet_lr_input = LineEditWithHighlight(self.optimizer_tab_main)
+        self.unet_lr_input.setObjectName(u"unet_lr_input")
+        self.unet_lr_input.setEnabled(False)
+
+        self.formLayout_2.setWidget(2, QFormLayout.FieldRole, self.unet_lr_input)
+
+        self.te_lr_enable = QCheckBox(self.optimizer_tab_main)
+        self.te_lr_enable.setObjectName(u"te_lr_enable")
+
+        self.formLayout_2.setWidget(3, QFormLayout.LabelRole, self.te_lr_enable)
+
+        self.te_lr_input = LineEditWithHighlight(self.optimizer_tab_main)
+        self.te_lr_input.setObjectName(u"te_lr_input")
+        self.te_lr_input.setEnabled(False)
+
+        self.formLayout_2.setWidget(3, QFormLayout.FieldRole, self.te_lr_input)
+
+        self.min_lr_label = QLabel(self.optimizer_tab_main)
+        self.min_lr_label.setObjectName(u"min_lr_label")
+
+        self.formLayout_2.setWidget(1, QFormLayout.LabelRole, self.min_lr_label)
+
         self.scale_weight_enable = QCheckBox(self.optimizer_tab_main)
         self.scale_weight_enable.setObjectName(u"scale_weight_enable")
 
-        self.horizontalLayout_2.addWidget(self.scale_weight_enable)
+        self.formLayout_2.setWidget(4, QFormLayout.LabelRole, self.scale_weight_enable)
 
         self.scale_weight_input = DoubleSpinBox(self.optimizer_tab_main)
         self.scale_weight_input.setObjectName(u"scale_weight_input")
@@ -53,17 +94,12 @@ class Ui_optimizer_ui(object):
         self.scale_weight_input.setFocusPolicy(Qt.StrongFocus)
         self.scale_weight_input.setValue(1.000000000000000)
 
-        self.horizontalLayout_2.addWidget(self.scale_weight_input)
+        self.formLayout_2.setWidget(4, QFormLayout.FieldRole, self.scale_weight_input)
 
-
-        self.formLayout_4.setLayout(0, QFormLayout.LabelRole, self.horizontalLayout_2)
-
-        self.horizontalLayout = QHBoxLayout()
-        self.horizontalLayout.setObjectName(u"horizontalLayout")
         self.min_snr_enable = QCheckBox(self.optimizer_tab_main)
         self.min_snr_enable.setObjectName(u"min_snr_enable")
 
-        self.horizontalLayout.addWidget(self.min_snr_enable)
+        self.formLayout_2.setWidget(5, QFormLayout.LabelRole, self.min_snr_enable)
 
         self.min_snr_input = SpinBox(self.optimizer_tab_main)
         self.min_snr_input.setObjectName(u"min_snr_input")
@@ -71,13 +107,10 @@ class Ui_optimizer_ui(object):
         self.min_snr_input.setFocusPolicy(Qt.StrongFocus)
         self.min_snr_input.setValue(5)
 
-        self.horizontalLayout.addWidget(self.min_snr_input)
+        self.formLayout_2.setWidget(5, QFormLayout.FieldRole, self.min_snr_input)
 
 
-        self.formLayout_4.setLayout(0, QFormLayout.FieldRole, self.horizontalLayout)
-
-
-        self.gridLayout.addLayout(self.formLayout_4, 3, 0, 1, 2)
+        self.gridLayout.addLayout(self.formLayout_2, 1, 0, 1, 1)
 
         self.formLayout = QFormLayout()
         self.formLayout.setObjectName(u"formLayout")
@@ -183,56 +216,24 @@ class Ui_optimizer_ui(object):
 
         self.formLayout_3.setWidget(3, QFormLayout.FieldRole, self.gamma_input)
 
+        self.label_2 = QLabel(self.optimizer_tab_main)
+        self.label_2.setObjectName(u"label_2")
+
+        self.formLayout_3.setWidget(4, QFormLayout.LabelRole, self.label_2)
+
+        self.max_grad_norm_input = DoubleSpinBox(self.optimizer_tab_main)
+        self.max_grad_norm_input.setObjectName(u"max_grad_norm_input")
+        self.max_grad_norm_input.setValue(1.000000000000000)
+
+        self.formLayout_3.setWidget(4, QFormLayout.FieldRole, self.max_grad_norm_input)
+
+        self.zero_term_enable = QCheckBox(self.optimizer_tab_main)
+        self.zero_term_enable.setObjectName(u"zero_term_enable")
+
+        self.formLayout_3.setWidget(5, QFormLayout.SpanningRole, self.zero_term_enable)
+
 
         self.gridLayout.addLayout(self.formLayout_3, 1, 1, 1, 1)
-
-        self.formLayout_2 = QFormLayout()
-        self.formLayout_2.setObjectName(u"formLayout_2")
-        self.label = QLabel(self.optimizer_tab_main)
-        self.label.setObjectName(u"label")
-
-        self.formLayout_2.setWidget(0, QFormLayout.LabelRole, self.label)
-
-        self.main_lr_input = LineEditWithHighlight(self.optimizer_tab_main)
-        self.main_lr_input.setObjectName(u"main_lr_input")
-
-        self.formLayout_2.setWidget(0, QFormLayout.FieldRole, self.main_lr_input)
-
-        self.min_lr_input = LineEditWithHighlight(self.optimizer_tab_main)
-        self.min_lr_input.setObjectName(u"min_lr_input")
-        self.min_lr_input.setEnabled(False)
-
-        self.formLayout_2.setWidget(1, QFormLayout.FieldRole, self.min_lr_input)
-
-        self.unet_lr_enable = QCheckBox(self.optimizer_tab_main)
-        self.unet_lr_enable.setObjectName(u"unet_lr_enable")
-
-        self.formLayout_2.setWidget(2, QFormLayout.LabelRole, self.unet_lr_enable)
-
-        self.unet_lr_input = LineEditWithHighlight(self.optimizer_tab_main)
-        self.unet_lr_input.setObjectName(u"unet_lr_input")
-        self.unet_lr_input.setEnabled(False)
-
-        self.formLayout_2.setWidget(2, QFormLayout.FieldRole, self.unet_lr_input)
-
-        self.te_lr_enable = QCheckBox(self.optimizer_tab_main)
-        self.te_lr_enable.setObjectName(u"te_lr_enable")
-
-        self.formLayout_2.setWidget(3, QFormLayout.LabelRole, self.te_lr_enable)
-
-        self.te_lr_input = LineEditWithHighlight(self.optimizer_tab_main)
-        self.te_lr_input.setObjectName(u"te_lr_input")
-        self.te_lr_input.setEnabled(False)
-
-        self.formLayout_2.setWidget(3, QFormLayout.FieldRole, self.te_lr_input)
-
-        self.min_lr_label = QLabel(self.optimizer_tab_main)
-        self.min_lr_label.setObjectName(u"min_lr_label")
-
-        self.formLayout_2.setWidget(1, QFormLayout.LabelRole, self.min_lr_label)
-
-
-        self.gridLayout.addLayout(self.formLayout_2, 1, 0, 1, 1)
 
         self.tabWidget.addTab(self.optimizer_tab_main, "")
         self.optimizer_tab_args = QWidget()
@@ -250,7 +251,7 @@ class Ui_optimizer_ui(object):
         self.scrollArea.setWidgetResizable(True)
         self.optimizer_item_widget = QWidget()
         self.optimizer_item_widget.setObjectName(u"optimizer_item_widget")
-        self.optimizer_item_widget.setGeometry(QRect(0, 0, 404, 187))
+        self.optimizer_item_widget.setGeometry(QRect(0, 0, 363, 210))
         self.verticalLayout_3 = QVBoxLayout(self.optimizer_item_widget)
         self.verticalLayout_3.setObjectName(u"verticalLayout_3")
         self.scrollArea.setWidget(self.optimizer_item_widget)
@@ -272,11 +273,34 @@ class Ui_optimizer_ui(object):
 
     def retranslateUi(self, optimizer_ui):
         optimizer_ui.setWindowTitle(QCoreApplication.translate("optimizer_ui", u"Form", None))
-        self.scale_weight_enable.setText(QCoreApplication.translate("optimizer_ui", u"Scale Weight Normals", None))
+        self.label.setText(QCoreApplication.translate("optimizer_ui", u"Learning Rate", None))
+#if QT_CONFIG(tooltip)
+        self.main_lr_input.setToolTip(QCoreApplication.translate("optimizer_ui", u"<html><head/><body><p>The main lr. If you have both unet and te set though it is just completely overwritten.</p><p>note that if you don't put in a proper number, it will just be read as 0.</p></body></html>", None))
+#endif // QT_CONFIG(tooltip)
+        self.main_lr_input.setText(QCoreApplication.translate("optimizer_ui", u"1e-4", None))
+        self.main_lr_input.setPlaceholderText(QCoreApplication.translate("optimizer_ui", u"Learning Rate", None))
+#if QT_CONFIG(tooltip)
+        self.min_lr_input.setToolTip(QCoreApplication.translate("optimizer_ui", u"<html><head/><body><p>The minimum lr for the Cosine Annealing Warmup Restarts LR scheduler. This is the final lr before a restart occurs.</p></body></html>", None))
+#endif // QT_CONFIG(tooltip)
+        self.min_lr_input.setText(QCoreApplication.translate("optimizer_ui", u"1e-6", None))
+        self.unet_lr_enable.setText(QCoreApplication.translate("optimizer_ui", u"Unet Learning Rate", None))
+#if QT_CONFIG(tooltip)
+        self.unet_lr_input.setToolTip(QCoreApplication.translate("optimizer_ui", u"<html><head/><body><p>The Unet lr. Overrides the base lr, if you don't have a proper number set, it will be 0</p></body></html>", None))
+#endif // QT_CONFIG(tooltip)
+        self.unet_lr_input.setText(QCoreApplication.translate("optimizer_ui", u"1e-4", None))
+        self.unet_lr_input.setPlaceholderText(QCoreApplication.translate("optimizer_ui", u"Unet Learning Rate", None))
+        self.te_lr_enable.setText(QCoreApplication.translate("optimizer_ui", u"TE Learning Rate", None))
+#if QT_CONFIG(tooltip)
+        self.te_lr_input.setToolTip(QCoreApplication.translate("optimizer_ui", u"<html><head/><body><p>The Text Encoder lr. Overrides the base lr, if you don't have a proper number set, it will be 0</p></body></html>", None))
+#endif // QT_CONFIG(tooltip)
+        self.te_lr_input.setText(QCoreApplication.translate("optimizer_ui", u"1e-4", None))
+        self.te_lr_input.setPlaceholderText(QCoreApplication.translate("optimizer_ui", u"TE Learning Rate", None))
+        self.min_lr_label.setText(QCoreApplication.translate("optimizer_ui", u"Minimum Learning Rate", None))
+        self.scale_weight_enable.setText(QCoreApplication.translate("optimizer_ui", u"Scale Weight Norms", None))
 #if QT_CONFIG(tooltip)
         self.scale_weight_input.setToolTip(QCoreApplication.translate("optimizer_ui", u"<html><head/><body><p>An implementation of the idea of max norm regularization. Basically, this will help stabilize network training by limiting the normal of network weights. Might work well for limiting overfitting or baking.</p></body></html>", None))
 #endif // QT_CONFIG(tooltip)
-        self.min_snr_enable.setText(QCoreApplication.translate("optimizer_ui", u"Minimum SNR Gamma", None))
+        self.min_snr_enable.setText(QCoreApplication.translate("optimizer_ui", u"Min SNR Gamma", None))
 #if QT_CONFIG(tooltip)
         self.min_snr_input.setToolTip(QCoreApplication.translate("optimizer_ui", u"<html><head/><body><p>This is a tool that reduces learning of unwanted elements by only learning what is the most common. This can lead to it not learning small details however. The recommended value is 5. Lower values apply more.</p></body></html>", None))
 #endif // QT_CONFIG(tooltip)
@@ -325,29 +349,8 @@ class Ui_optimizer_ui(object):
 #if QT_CONFIG(tooltip)
         self.gamma_input.setToolTip(QCoreApplication.translate("optimizer_ui", u"<html><head/><body><p>The percent that decays on restart. Unique to Cosine Annealing Warmup Restarts.</p></body></html>", None))
 #endif // QT_CONFIG(tooltip)
-        self.label.setText(QCoreApplication.translate("optimizer_ui", u"Learning Rate", None))
-#if QT_CONFIG(tooltip)
-        self.main_lr_input.setToolTip(QCoreApplication.translate("optimizer_ui", u"<html><head/><body><p>The main lr. If you have both unet and te set though it is just completely overwritten.</p><p>note that if you don't put in a proper number, it will just be read as 0.</p></body></html>", None))
-#endif // QT_CONFIG(tooltip)
-        self.main_lr_input.setText(QCoreApplication.translate("optimizer_ui", u"1e-4", None))
-        self.main_lr_input.setPlaceholderText(QCoreApplication.translate("optimizer_ui", u"Learning Rate", None))
-#if QT_CONFIG(tooltip)
-        self.min_lr_input.setToolTip(QCoreApplication.translate("optimizer_ui", u"<html><head/><body><p>The minimum lr for the Cosine Annealing Warmup Restarts LR scheduler. This is the final lr before a restart occurs.</p></body></html>", None))
-#endif // QT_CONFIG(tooltip)
-        self.min_lr_input.setText(QCoreApplication.translate("optimizer_ui", u"1e-6", None))
-        self.unet_lr_enable.setText(QCoreApplication.translate("optimizer_ui", u"Unet Learning Rate", None))
-#if QT_CONFIG(tooltip)
-        self.unet_lr_input.setToolTip(QCoreApplication.translate("optimizer_ui", u"<html><head/><body><p>The Unet lr. Overrides the base lr, if you don't have a proper number set, it will be 0</p></body></html>", None))
-#endif // QT_CONFIG(tooltip)
-        self.unet_lr_input.setText(QCoreApplication.translate("optimizer_ui", u"1e-4", None))
-        self.unet_lr_input.setPlaceholderText(QCoreApplication.translate("optimizer_ui", u"Unet Learning Rate", None))
-        self.te_lr_enable.setText(QCoreApplication.translate("optimizer_ui", u"TE Learning Rate", None))
-#if QT_CONFIG(tooltip)
-        self.te_lr_input.setToolTip(QCoreApplication.translate("optimizer_ui", u"<html><head/><body><p>The Text Encoder lr. Overrides the base lr, if you don't have a proper number set, it will be 0</p></body></html>", None))
-#endif // QT_CONFIG(tooltip)
-        self.te_lr_input.setText(QCoreApplication.translate("optimizer_ui", u"1e-4", None))
-        self.te_lr_input.setPlaceholderText(QCoreApplication.translate("optimizer_ui", u"TE Learning Rate", None))
-        self.min_lr_label.setText(QCoreApplication.translate("optimizer_ui", u"Minimum Learning Rate", None))
+        self.label_2.setText(QCoreApplication.translate("optimizer_ui", u"Max Grad Norm", None))
+        self.zero_term_enable.setText(QCoreApplication.translate("optimizer_ui", u"Zero Term SNR", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.optimizer_tab_main), QCoreApplication.translate("optimizer_ui", u"Main Args", None))
         self.add_opt_button.setText(QCoreApplication.translate("optimizer_ui", u"Add Optimizer Arg", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.optimizer_tab_args), QCoreApplication.translate("optimizer_ui", u"Optional Args", None))

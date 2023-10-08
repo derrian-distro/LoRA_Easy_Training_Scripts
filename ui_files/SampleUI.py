@@ -35,6 +35,33 @@ class Ui_sample_ui(object):
         self.sample_args_box.setChecked(False)
         self.formLayout = QFormLayout(self.sample_args_box)
         self.formLayout.setObjectName(u"formLayout")
+        self.sampler_label = QLabel(self.sample_args_box)
+        self.sampler_label.setObjectName(u"sampler_label")
+
+        self.formLayout.setWidget(0, QFormLayout.LabelRole, self.sampler_label)
+
+        self.sampler_input = ComboBox(self.sample_args_box)
+        self.sampler_input.addItem("")
+        self.sampler_input.addItem("")
+        self.sampler_input.addItem("")
+        self.sampler_input.addItem("")
+        self.sampler_input.addItem("")
+        self.sampler_input.addItem("")
+        self.sampler_input.addItem("")
+        self.sampler_input.addItem("")
+        self.sampler_input.addItem("")
+        self.sampler_input.addItem("")
+        self.sampler_input.addItem("")
+        self.sampler_input.addItem("")
+        self.sampler_input.addItem("")
+        self.sampler_input.addItem("")
+        self.sampler_input.addItem("")
+        self.sampler_input.addItem("")
+        self.sampler_input.setObjectName(u"sampler_input")
+        self.sampler_input.setFocusPolicy(Qt.StrongFocus)
+
+        self.formLayout.setWidget(0, QFormLayout.FieldRole, self.sampler_input)
+
         self.steps_label = QLabel(self.sample_args_box)
         self.steps_label.setObjectName(u"steps_label")
 
@@ -71,33 +98,6 @@ class Ui_sample_ui(object):
 
 
         self.formLayout.setLayout(1, QFormLayout.FieldRole, self.horizontalLayout)
-
-        self.sampler_label = QLabel(self.sample_args_box)
-        self.sampler_label.setObjectName(u"sampler_label")
-
-        self.formLayout.setWidget(0, QFormLayout.LabelRole, self.sampler_label)
-
-        self.sampler_input = ComboBox(self.sample_args_box)
-        self.sampler_input.addItem("")
-        self.sampler_input.addItem("")
-        self.sampler_input.addItem("")
-        self.sampler_input.addItem("")
-        self.sampler_input.addItem("")
-        self.sampler_input.addItem("")
-        self.sampler_input.addItem("")
-        self.sampler_input.addItem("")
-        self.sampler_input.addItem("")
-        self.sampler_input.addItem("")
-        self.sampler_input.addItem("")
-        self.sampler_input.addItem("")
-        self.sampler_input.addItem("")
-        self.sampler_input.addItem("")
-        self.sampler_input.addItem("")
-        self.sampler_input.addItem("")
-        self.sampler_input.setObjectName(u"sampler_input")
-        self.sampler_input.setFocusPolicy(Qt.StrongFocus)
-
-        self.formLayout.setWidget(0, QFormLayout.FieldRole, self.sampler_input)
 
         self.text_file_label = QLabel(self.sample_args_box)
         self.text_file_label.setObjectName(u"text_file_label")
@@ -136,16 +136,6 @@ class Ui_sample_ui(object):
     def retranslateUi(self, sample_ui):
         sample_ui.setWindowTitle(QCoreApplication.translate("sample_ui", u"Form", None))
         self.sample_args_box.setTitle(QCoreApplication.translate("sample_ui", u"Enable", None))
-        self.steps_label.setText(QCoreApplication.translate("sample_ui", u"Time Between Sample", None))
-        self.steps_epochs_selector.setItemText(0, QCoreApplication.translate("sample_ui", u"Steps Per Sample", None))
-        self.steps_epochs_selector.setItemText(1, QCoreApplication.translate("sample_ui", u"Epochs Per Sample", None))
-
-#if QT_CONFIG(tooltip)
-        self.steps_epochs_selector.setToolTip(QCoreApplication.translate("sample_ui", u"<html><head/><body><p>The amount of time between samples. I personally suggest you have it generate a sample every epoch, however, again, personal preference.</p></body></html>", None))
-#endif // QT_CONFIG(tooltip)
-#if QT_CONFIG(tooltip)
-        self.steps_epoch_input.setToolTip(QCoreApplication.translate("sample_ui", u"<html><head/><body><p>The amount of time between samples. I personally suggest you have it generate a sample every epoch, however, again, personal preference.</p></body></html>", None))
-#endif // QT_CONFIG(tooltip)
         self.sampler_label.setText(QCoreApplication.translate("sample_ui", u"Sampler ", None))
         self.sampler_input.setItemText(0, QCoreApplication.translate("sample_ui", u"DDIM", None))
         self.sampler_input.setItemText(1, QCoreApplication.translate("sample_ui", u"PNDM", None))
@@ -166,6 +156,16 @@ class Ui_sample_ui(object):
 
 #if QT_CONFIG(tooltip)
         self.sampler_input.setToolTip(QCoreApplication.translate("sample_ui", u"<html><head/><body><p>The Sampler used when generating test images. I personally suggest using either DDIM or Euler A, however it's really just personal preference.</p></body></html>", None))
+#endif // QT_CONFIG(tooltip)
+        self.steps_label.setText(QCoreApplication.translate("sample_ui", u"Time Between Sample", None))
+        self.steps_epochs_selector.setItemText(0, QCoreApplication.translate("sample_ui", u"Steps Per Sample", None))
+        self.steps_epochs_selector.setItemText(1, QCoreApplication.translate("sample_ui", u"Epochs Per Sample", None))
+
+#if QT_CONFIG(tooltip)
+        self.steps_epochs_selector.setToolTip(QCoreApplication.translate("sample_ui", u"<html><head/><body><p>The amount of time between samples. I personally suggest you have it generate a sample every epoch, however, again, personal preference.</p></body></html>", None))
+#endif // QT_CONFIG(tooltip)
+#if QT_CONFIG(tooltip)
+        self.steps_epoch_input.setToolTip(QCoreApplication.translate("sample_ui", u"<html><head/><body><p>The amount of time between samples. I personally suggest you have it generate a sample every epoch, however, again, personal preference.</p></body></html>", None))
 #endif // QT_CONFIG(tooltip)
         self.text_file_label.setText(QCoreApplication.translate("sample_ui", u"Prompt Text File", None))
 #if QT_CONFIG(tooltip)
