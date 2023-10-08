@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>417</width>
-    <height>290</height>
+    <height>322</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -67,6 +67,98 @@
       </attribute>
       <layout class="QGridLayout" name="gridLayout">
        <item row="1" column="0">
+        <widget class="QLabel" name="label">
+         <property name="text">
+          <string>LyCORIS Preset</string>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="1">
+        <layout class="QFormLayout" name="formLayout_2">
+         <item row="0" column="0">
+          <widget class="QLabel" name="conv_dim_label">
+           <property name="enabled">
+            <bool>true</bool>
+           </property>
+           <property name="text">
+            <string>Conv Dimension</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="1">
+          <widget class="SpinBox" name="conv_dim_input">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
+           <property name="focusPolicy">
+            <enum>Qt::StrongFocus</enum>
+           </property>
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The dimension size for the conv layers. These layers carry more style with them, so be careful about setting them too high. I personally suggest you never go higher than 32 with them.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="maximum">
+            <number>16777215</number>
+           </property>
+           <property name="value">
+            <number>32</number>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="0">
+          <widget class="QLabel" name="conv_alpha_label">
+           <property name="enabled">
+            <bool>true</bool>
+           </property>
+           <property name="text">
+            <string>Conv Alpha</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="1">
+          <widget class="DoubleSpinBox" name="conv_alpha_input">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
+           <property name="focusPolicy">
+            <enum>Qt::StrongFocus</enum>
+           </property>
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The scalar of the conv dims. Much like the normal dim, I suggest you use half conv dim, or 1 if the dim size is 8 or lower.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="maximum">
+            <double>16777215.000000000000000</double>
+           </property>
+           <property name="value">
+            <double>16.000000000000000</double>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="0">
+          <widget class="QLabel" name="max_timestep_label">
+           <property name="text">
+            <string>Max Timestep</string>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="1">
+          <widget class="SpinBox" name="max_timestep_input">
+           <property name="enabled">
+            <bool>true</bool>
+           </property>
+           <property name="minimum">
+            <number>1</number>
+           </property>
+           <property name="maximum">
+            <number>1000</number>
+           </property>
+           <property name="value">
+            <number>1000</number>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item row="2" column="0">
         <layout class="QFormLayout" name="formLayout">
          <item row="0" column="0">
           <widget class="QLabel" name="network_dim_label">
@@ -151,7 +243,7 @@
          </item>
         </layout>
        </item>
-       <item row="3" column="1">
+       <item row="4" column="1">
         <layout class="QFormLayout" name="formLayout_4">
          <item row="0" column="0">
           <widget class="QCheckBox" name="network_dropout_enable">
@@ -297,7 +389,7 @@
          </item>
         </widget>
        </item>
-       <item row="3" column="0">
+       <item row="4" column="0">
         <layout class="QFormLayout" name="formLayout_3">
          <item row="0" column="0">
           <widget class="QLabel" name="unet_te_both_label">
@@ -349,6 +441,30 @@
            </item>
           </widget>
          </item>
+         <item row="1" column="0" colspan="2">
+          <layout class="QHBoxLayout" name="horizontalLayout">
+           <item>
+            <widget class="QCheckBox" name="cache_te_outputs_enable">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+             <property name="text">
+              <string>Cache TE Outputs</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QCheckBox" name="cache_te_to_disk_enable">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+             <property name="text">
+              <string>To Disk</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
          <item row="2" column="0">
           <widget class="QLabel" name="dylora_unit_label">
            <property name="enabled">
@@ -382,37 +498,27 @@
           </widget>
          </item>
          <item row="3" column="0" colspan="2">
-          <widget class="QCheckBox" name="cp_enable">
-           <property name="enabled">
-            <bool>false</bool>
-           </property>
-           <property name="toolTip">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Enables Conv CP, which is some form of compression algorithm that further reduces file size, I personally suggest you don't use it&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-           </property>
-           <property name="text">
-            <string>Enable Conv CP</string>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="0" colspan="2">
-          <layout class="QHBoxLayout" name="horizontalLayout">
+          <layout class="QHBoxLayout" name="horizontalLayout_3">
            <item>
-            <widget class="QCheckBox" name="cache_te_outputs_enable">
+            <widget class="QCheckBox" name="cp_enable">
              <property name="enabled">
               <bool>false</bool>
              </property>
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Enables Conv CP, which is some form of compression algorithm that further reduces file size, I personally suggest you don't use it&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
              <property name="text">
-              <string>Cache TE Outputs</string>
+              <string>Enable Conv CP</string>
              </property>
             </widget>
            </item>
            <item>
-            <widget class="QCheckBox" name="cache_te_to_disk_enable">
+            <widget class="QCheckBox" name="train_norm_enable">
              <property name="enabled">
               <bool>false</bool>
              </property>
              <property name="text">
-              <string>To Disk</string>
+              <string>Train Norm</string>
              </property>
             </widget>
            </item>
@@ -421,89 +527,14 @@
         </layout>
        </item>
        <item row="1" column="1">
-        <layout class="QFormLayout" name="formLayout_2">
-         <item row="0" column="0">
-          <widget class="QLabel" name="conv_dim_label">
-           <property name="enabled">
-            <bool>true</bool>
-           </property>
-           <property name="text">
-            <string>Conv Dimension</string>
-           </property>
-          </widget>
-         </item>
-         <item row="0" column="1">
-          <widget class="SpinBox" name="conv_dim_input">
-           <property name="enabled">
-            <bool>false</bool>
-           </property>
-           <property name="focusPolicy">
-            <enum>Qt::StrongFocus</enum>
-           </property>
-           <property name="toolTip">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The dimension size for the conv layers. These layers carry more style with them, so be careful about setting them too high. I personally suggest you never go higher than 32 with them.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-           </property>
-           <property name="maximum">
-            <number>16777215</number>
-           </property>
-           <property name="value">
-            <number>32</number>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="0">
-          <widget class="QLabel" name="conv_alpha_label">
-           <property name="enabled">
-            <bool>true</bool>
-           </property>
-           <property name="text">
-            <string>Conv Alpha</string>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="1">
-          <widget class="DoubleSpinBox" name="conv_alpha_input">
-           <property name="enabled">
-            <bool>false</bool>
-           </property>
-           <property name="focusPolicy">
-            <enum>Qt::StrongFocus</enum>
-           </property>
-           <property name="toolTip">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The scalar of the conv dims. Much like the normal dim, I suggest you use half conv dim, or 1 if the dim size is 8 or lower.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-           </property>
-           <property name="maximum">
-            <double>16777215.000000000000000</double>
-           </property>
-           <property name="value">
-            <double>16.000000000000000</double>
-           </property>
-          </widget>
-         </item>
-         <item row="2" column="0">
-          <widget class="QLabel" name="max_timestep_label">
-           <property name="text">
-            <string>Max Timestep</string>
-           </property>
-          </widget>
-         </item>
-         <item row="2" column="1">
-          <widget class="SpinBox" name="max_timestep_input">
-           <property name="enabled">
-            <bool>true</bool>
-           </property>
-           <property name="minimum">
-            <number>1</number>
-           </property>
-           <property name="maximum">
-            <number>1000</number>
-           </property>
-           <property name="value">
-            <number>1000</number>
-           </property>
-          </widget>
-         </item>
-        </layout>
+        <widget class="QLineEdit" name="lycoris_preset_input">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
+         <property name="toolTip">
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;If you are using lycoris, this is a way to input a preset, if using a default, just put the name, otherwise put the full path of file location&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         </property>
+        </widget>
        </item>
       </layout>
      </widget>
@@ -538,7 +569,7 @@
             <x>0</x>
             <y>0</y>
             <width>411</width>
-            <height>258</height>
+            <height>290</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_3">

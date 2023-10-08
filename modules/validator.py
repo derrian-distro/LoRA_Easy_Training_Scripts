@@ -51,6 +51,8 @@ def validate_args(args: dict, skip_file_paths: bool = False) -> Union[dict, None
                             v[i] = str(v[i])
                         vals.append(f"{k}={','.join(v)}")
                         continue
+                    if k == "preset" and v == "":
+                        continue
                     vals.append(f"{k}={v}")
                 val = vals
             if arg == "optimizer_args":

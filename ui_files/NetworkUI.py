@@ -16,8 +16,8 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
 from PySide6.QtWidgets import (QApplication, QCheckBox, QFormLayout, QGridLayout,
-    QHBoxLayout, QLabel, QScrollArea, QSizePolicy,
-    QTabWidget, QVBoxLayout, QWidget)
+    QHBoxLayout, QLabel, QLineEdit, QScrollArea,
+    QSizePolicy, QTabWidget, QVBoxLayout, QWidget)
 
 from modules.CollapsibleWidget import CollapsibleWidget
 from modules.ScrollOnSelect import (ComboBox, DoubleSpinBox, SpinBox, TabView)
@@ -26,7 +26,7 @@ class Ui_network_ui(object):
     def setupUi(self, network_ui):
         if not network_ui.objectName():
             network_ui.setObjectName(u"network_ui")
-        network_ui.resize(417, 290)
+        network_ui.resize(417, 322)
         sizePolicy = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -48,6 +48,60 @@ class Ui_network_ui(object):
         self.main_tab.setFocusPolicy(Qt.NoFocus)
         self.gridLayout = QGridLayout(self.main_tab)
         self.gridLayout.setObjectName(u"gridLayout")
+        self.label = QLabel(self.main_tab)
+        self.label.setObjectName(u"label")
+
+        self.gridLayout.addWidget(self.label, 1, 0, 1, 1)
+
+        self.formLayout_2 = QFormLayout()
+        self.formLayout_2.setObjectName(u"formLayout_2")
+        self.conv_dim_label = QLabel(self.main_tab)
+        self.conv_dim_label.setObjectName(u"conv_dim_label")
+        self.conv_dim_label.setEnabled(True)
+
+        self.formLayout_2.setWidget(0, QFormLayout.LabelRole, self.conv_dim_label)
+
+        self.conv_dim_input = SpinBox(self.main_tab)
+        self.conv_dim_input.setObjectName(u"conv_dim_input")
+        self.conv_dim_input.setEnabled(False)
+        self.conv_dim_input.setFocusPolicy(Qt.StrongFocus)
+        self.conv_dim_input.setMaximum(16777215)
+        self.conv_dim_input.setValue(32)
+
+        self.formLayout_2.setWidget(0, QFormLayout.FieldRole, self.conv_dim_input)
+
+        self.conv_alpha_label = QLabel(self.main_tab)
+        self.conv_alpha_label.setObjectName(u"conv_alpha_label")
+        self.conv_alpha_label.setEnabled(True)
+
+        self.formLayout_2.setWidget(1, QFormLayout.LabelRole, self.conv_alpha_label)
+
+        self.conv_alpha_input = DoubleSpinBox(self.main_tab)
+        self.conv_alpha_input.setObjectName(u"conv_alpha_input")
+        self.conv_alpha_input.setEnabled(False)
+        self.conv_alpha_input.setFocusPolicy(Qt.StrongFocus)
+        self.conv_alpha_input.setMaximum(16777215.000000000000000)
+        self.conv_alpha_input.setValue(16.000000000000000)
+
+        self.formLayout_2.setWidget(1, QFormLayout.FieldRole, self.conv_alpha_input)
+
+        self.max_timestep_label = QLabel(self.main_tab)
+        self.max_timestep_label.setObjectName(u"max_timestep_label")
+
+        self.formLayout_2.setWidget(2, QFormLayout.LabelRole, self.max_timestep_label)
+
+        self.max_timestep_input = SpinBox(self.main_tab)
+        self.max_timestep_input.setObjectName(u"max_timestep_input")
+        self.max_timestep_input.setEnabled(True)
+        self.max_timestep_input.setMinimum(1)
+        self.max_timestep_input.setMaximum(1000)
+        self.max_timestep_input.setValue(1000)
+
+        self.formLayout_2.setWidget(2, QFormLayout.FieldRole, self.max_timestep_input)
+
+
+        self.gridLayout.addLayout(self.formLayout_2, 2, 1, 1, 1)
+
         self.formLayout = QFormLayout()
         self.formLayout.setObjectName(u"formLayout")
         self.network_dim_label = QLabel(self.main_tab)
@@ -93,7 +147,7 @@ class Ui_network_ui(object):
         self.formLayout.setWidget(2, QFormLayout.FieldRole, self.min_timestep_input)
 
 
-        self.gridLayout.addLayout(self.formLayout, 1, 0, 1, 1)
+        self.gridLayout.addLayout(self.formLayout, 2, 0, 1, 1)
 
         self.formLayout_4 = QFormLayout()
         self.formLayout_4.setObjectName(u"formLayout_4")
@@ -149,7 +203,7 @@ class Ui_network_ui(object):
         self.formLayout_4.setWidget(3, QFormLayout.SpanningRole, self.lora_fa_enable)
 
 
-        self.gridLayout.addLayout(self.formLayout_4, 3, 1, 1, 1)
+        self.gridLayout.addLayout(self.formLayout_4, 4, 1, 1, 1)
 
         self.algo_select = ComboBox(self.main_tab)
         self.algo_select.addItem("")
@@ -187,27 +241,6 @@ class Ui_network_ui(object):
 
         self.formLayout_3.setWidget(0, QFormLayout.FieldRole, self.unet_te_both_select)
 
-        self.dylora_unit_label = QLabel(self.main_tab)
-        self.dylora_unit_label.setObjectName(u"dylora_unit_label")
-        self.dylora_unit_label.setEnabled(True)
-
-        self.formLayout_3.setWidget(2, QFormLayout.LabelRole, self.dylora_unit_label)
-
-        self.dylora_unit_input = SpinBox(self.main_tab)
-        self.dylora_unit_input.setObjectName(u"dylora_unit_input")
-        self.dylora_unit_input.setEnabled(False)
-        self.dylora_unit_input.setMaximumSize(QSize(16777215, 16777215))
-        self.dylora_unit_input.setFocusPolicy(Qt.StrongFocus)
-        self.dylora_unit_input.setValue(4)
-
-        self.formLayout_3.setWidget(2, QFormLayout.FieldRole, self.dylora_unit_input)
-
-        self.cp_enable = QCheckBox(self.main_tab)
-        self.cp_enable.setObjectName(u"cp_enable")
-        self.cp_enable.setEnabled(False)
-
-        self.formLayout_3.setWidget(3, QFormLayout.SpanningRole, self.cp_enable)
-
         self.horizontalLayout = QHBoxLayout()
         self.horizontalLayout.setObjectName(u"horizontalLayout")
         self.cache_te_outputs_enable = QCheckBox(self.main_tab)
@@ -225,57 +258,46 @@ class Ui_network_ui(object):
 
         self.formLayout_3.setLayout(1, QFormLayout.SpanningRole, self.horizontalLayout)
 
+        self.dylora_unit_label = QLabel(self.main_tab)
+        self.dylora_unit_label.setObjectName(u"dylora_unit_label")
+        self.dylora_unit_label.setEnabled(True)
 
-        self.gridLayout.addLayout(self.formLayout_3, 3, 0, 1, 1)
+        self.formLayout_3.setWidget(2, QFormLayout.LabelRole, self.dylora_unit_label)
 
-        self.formLayout_2 = QFormLayout()
-        self.formLayout_2.setObjectName(u"formLayout_2")
-        self.conv_dim_label = QLabel(self.main_tab)
-        self.conv_dim_label.setObjectName(u"conv_dim_label")
-        self.conv_dim_label.setEnabled(True)
+        self.dylora_unit_input = SpinBox(self.main_tab)
+        self.dylora_unit_input.setObjectName(u"dylora_unit_input")
+        self.dylora_unit_input.setEnabled(False)
+        self.dylora_unit_input.setMaximumSize(QSize(16777215, 16777215))
+        self.dylora_unit_input.setFocusPolicy(Qt.StrongFocus)
+        self.dylora_unit_input.setValue(4)
 
-        self.formLayout_2.setWidget(0, QFormLayout.LabelRole, self.conv_dim_label)
+        self.formLayout_3.setWidget(2, QFormLayout.FieldRole, self.dylora_unit_input)
 
-        self.conv_dim_input = SpinBox(self.main_tab)
-        self.conv_dim_input.setObjectName(u"conv_dim_input")
-        self.conv_dim_input.setEnabled(False)
-        self.conv_dim_input.setFocusPolicy(Qt.StrongFocus)
-        self.conv_dim_input.setMaximum(16777215)
-        self.conv_dim_input.setValue(32)
+        self.horizontalLayout_3 = QHBoxLayout()
+        self.horizontalLayout_3.setObjectName(u"horizontalLayout_3")
+        self.cp_enable = QCheckBox(self.main_tab)
+        self.cp_enable.setObjectName(u"cp_enable")
+        self.cp_enable.setEnabled(False)
 
-        self.formLayout_2.setWidget(0, QFormLayout.FieldRole, self.conv_dim_input)
+        self.horizontalLayout_3.addWidget(self.cp_enable)
 
-        self.conv_alpha_label = QLabel(self.main_tab)
-        self.conv_alpha_label.setObjectName(u"conv_alpha_label")
-        self.conv_alpha_label.setEnabled(True)
+        self.train_norm_enable = QCheckBox(self.main_tab)
+        self.train_norm_enable.setObjectName(u"train_norm_enable")
+        self.train_norm_enable.setEnabled(False)
 
-        self.formLayout_2.setWidget(1, QFormLayout.LabelRole, self.conv_alpha_label)
-
-        self.conv_alpha_input = DoubleSpinBox(self.main_tab)
-        self.conv_alpha_input.setObjectName(u"conv_alpha_input")
-        self.conv_alpha_input.setEnabled(False)
-        self.conv_alpha_input.setFocusPolicy(Qt.StrongFocus)
-        self.conv_alpha_input.setMaximum(16777215.000000000000000)
-        self.conv_alpha_input.setValue(16.000000000000000)
-
-        self.formLayout_2.setWidget(1, QFormLayout.FieldRole, self.conv_alpha_input)
-
-        self.max_timestep_label = QLabel(self.main_tab)
-        self.max_timestep_label.setObjectName(u"max_timestep_label")
-
-        self.formLayout_2.setWidget(2, QFormLayout.LabelRole, self.max_timestep_label)
-
-        self.max_timestep_input = SpinBox(self.main_tab)
-        self.max_timestep_input.setObjectName(u"max_timestep_input")
-        self.max_timestep_input.setEnabled(True)
-        self.max_timestep_input.setMinimum(1)
-        self.max_timestep_input.setMaximum(1000)
-        self.max_timestep_input.setValue(1000)
-
-        self.formLayout_2.setWidget(2, QFormLayout.FieldRole, self.max_timestep_input)
+        self.horizontalLayout_3.addWidget(self.train_norm_enable)
 
 
-        self.gridLayout.addLayout(self.formLayout_2, 1, 1, 1, 1)
+        self.formLayout_3.setLayout(3, QFormLayout.SpanningRole, self.horizontalLayout_3)
+
+
+        self.gridLayout.addLayout(self.formLayout_3, 4, 0, 1, 1)
+
+        self.lycoris_preset_input = QLineEdit(self.main_tab)
+        self.lycoris_preset_input.setObjectName(u"lycoris_preset_input")
+        self.lycoris_preset_input.setEnabled(False)
+
+        self.gridLayout.addWidget(self.lycoris_preset_input, 1, 1, 1, 1)
 
         self.tabWidget.addTab(self.main_tab, "")
         self.block_weight_tab = QWidget()
@@ -289,7 +311,7 @@ class Ui_network_ui(object):
         self.block_weight_scroll_area.setWidgetResizable(True)
         self.block_weight_scroll_widget = QWidget()
         self.block_weight_scroll_widget.setObjectName(u"block_weight_scroll_widget")
-        self.block_weight_scroll_widget.setGeometry(QRect(0, 0, 411, 258))
+        self.block_weight_scroll_widget.setGeometry(QRect(0, 0, 411, 290))
         self.verticalLayout_3 = QVBoxLayout(self.block_weight_scroll_widget)
         self.verticalLayout_3.setObjectName(u"verticalLayout_3")
         self.verticalLayout_3.setContentsMargins(0, 0, 0, 0)
@@ -342,6 +364,16 @@ class Ui_network_ui(object):
 
     def retranslateUi(self, network_ui):
         network_ui.setWindowTitle(QCoreApplication.translate("network_ui", u"Form", None))
+        self.label.setText(QCoreApplication.translate("network_ui", u"LyCORIS Preset", None))
+        self.conv_dim_label.setText(QCoreApplication.translate("network_ui", u"Conv Dimension", None))
+#if QT_CONFIG(tooltip)
+        self.conv_dim_input.setToolTip(QCoreApplication.translate("network_ui", u"<html><head/><body><p>The dimension size for the conv layers. These layers carry more style with them, so be careful about setting them too high. I personally suggest you never go higher than 32 with them.</p></body></html>", None))
+#endif // QT_CONFIG(tooltip)
+        self.conv_alpha_label.setText(QCoreApplication.translate("network_ui", u"Conv Alpha", None))
+#if QT_CONFIG(tooltip)
+        self.conv_alpha_input.setToolTip(QCoreApplication.translate("network_ui", u"<html><head/><body><p>The scalar of the conv dims. Much like the normal dim, I suggest you use half conv dim, or 1 if the dim size is 8 or lower.</p></body></html>", None))
+#endif // QT_CONFIG(tooltip)
+        self.max_timestep_label.setText(QCoreApplication.translate("network_ui", u"Max Timestep", None))
         self.network_dim_label.setText(QCoreApplication.translate("network_ui", u"Network Dimension", None))
 #if QT_CONFIG(tooltip)
         self.network_dim_input.setToolTip(QCoreApplication.translate("network_ui", u"<html><head/><body><p>The dimension of the model, the higher the dim the larger the file size. Keep in mind that larger does not mean better. I suggest you keep the dim low.</p></body></html>", None))
@@ -383,6 +415,8 @@ class Ui_network_ui(object):
 #if QT_CONFIG(tooltip)
         self.unet_te_both_select.setToolTip(QCoreApplication.translate("network_ui", u"<html><head/><body><p>You can train on both the text encoder and unet or only one or the other, most of the time you want to train on both.</p></body></html>", None))
 #endif // QT_CONFIG(tooltip)
+        self.cache_te_outputs_enable.setText(QCoreApplication.translate("network_ui", u"Cache TE Outputs", None))
+        self.cache_te_to_disk_enable.setText(QCoreApplication.translate("network_ui", u"To Disk", None))
         self.dylora_unit_label.setText(QCoreApplication.translate("network_ui", u"DyLoRA Unit", None))
 #if QT_CONFIG(tooltip)
         self.dylora_unit_input.setToolTip(QCoreApplication.translate("network_ui", u"<html><head/><body><p>The unit is the unit for dividing rank. so if you have dim 16, unit 4, then it can learn 4 lora models of dims 4, 8, 12, and 16.</p></body></html>", None))
@@ -391,17 +425,10 @@ class Ui_network_ui(object):
         self.cp_enable.setToolTip(QCoreApplication.translate("network_ui", u"<html><head/><body><p>Enables Conv CP, which is some form of compression algorithm that further reduces file size, I personally suggest you don't use it</p></body></html>", None))
 #endif // QT_CONFIG(tooltip)
         self.cp_enable.setText(QCoreApplication.translate("network_ui", u"Enable Conv CP", None))
-        self.cache_te_outputs_enable.setText(QCoreApplication.translate("network_ui", u"Cache TE Outputs", None))
-        self.cache_te_to_disk_enable.setText(QCoreApplication.translate("network_ui", u"To Disk", None))
-        self.conv_dim_label.setText(QCoreApplication.translate("network_ui", u"Conv Dimension", None))
+        self.train_norm_enable.setText(QCoreApplication.translate("network_ui", u"Train Norm", None))
 #if QT_CONFIG(tooltip)
-        self.conv_dim_input.setToolTip(QCoreApplication.translate("network_ui", u"<html><head/><body><p>The dimension size for the conv layers. These layers carry more style with them, so be careful about setting them too high. I personally suggest you never go higher than 32 with them.</p></body></html>", None))
+        self.lycoris_preset_input.setToolTip(QCoreApplication.translate("network_ui", u"<html><head/><body><p>If you are using lycoris, this is a way to input a preset, if using a default, just put the name, otherwise put the full path of file location</p></body></html>", None))
 #endif // QT_CONFIG(tooltip)
-        self.conv_alpha_label.setText(QCoreApplication.translate("network_ui", u"Conv Alpha", None))
-#if QT_CONFIG(tooltip)
-        self.conv_alpha_input.setToolTip(QCoreApplication.translate("network_ui", u"<html><head/><body><p>The scalar of the conv dims. Much like the normal dim, I suggest you use half conv dim, or 1 if the dim size is 8 or lower.</p></body></html>", None))
-#endif // QT_CONFIG(tooltip)
-        self.max_timestep_label.setText(QCoreApplication.translate("network_ui", u"Max Timestep", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.main_tab), QCoreApplication.translate("network_ui", u"Main Args", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.block_weight_tab), QCoreApplication.translate("network_ui", u"Block Weights", None))
     # retranslateUi

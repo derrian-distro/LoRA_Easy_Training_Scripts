@@ -69,6 +69,8 @@ class NetworkWidget(QtWidgets.QWidget):
         self.ui.max_timestep_input.editingFinished.connect(lambda: self.edit_timesteps('max_timestep'))
         self.ui.cache_te_outputs_enable.clicked.connect(self.enable_disable_cache_tenc)
         self.ui.cache_te_to_disk_enable.clicked.connect(self.enable_disable_cache_tenc_to_disk)
+        self.ui.lycoris_preset_input.textChanged.connect(lambda x: self.edit_network_args("preset", x))
+        self.ui.train_norm_enable.clicked.connect(lambda x: self.edit_network_args("train_norm", x))
 
         self.colap.add_widget(self.widget, "main_widget")
         self.layout().addWidget(self.colap)
@@ -183,6 +185,8 @@ class NetworkWidget(QtWidgets.QWidget):
         self.ui.conv_alpha_input.setEnabled(False)
         self.ui.dylora_unit_input.setEnabled(False)
         self.ui.cp_enable.setEnabled(False)
+        self.ui.lycoris_preset_input.setEnabled(False)
+        self.ui.train_norm_enable.setEnabled(False)
         if name.lower() == 'lora':
             self.enable_dropouts(lyco=False)
             self.ui.lora_fa_enable.setEnabled(True)
@@ -202,25 +206,37 @@ class NetworkWidget(QtWidgets.QWidget):
                 self.edit_args("fa", False)
         elif name.lower() == 'lokr':
             self.disable_dropouts()
+            self.ui.lycoris_preset_input.setEnabled(True)
+            self.edit_network_args("preset", self.ui.lycoris_preset_input.text().lower())
+            # uncomment when fixed
+            # self.ui.train_norm_enable.setEnabled(True)
+            # self.edit_network_args("train_norm", self.ui.train_norm_enable.isChecked())
             self.ui.conv_dim_input.setEnabled(True)
             self.edit_network_args('conv_dim', self.ui.conv_dim_input.value())
             self.ui.conv_alpha_input.setEnabled(True)
             self.edit_network_args('conv_alpha', self.ui.conv_alpha_input.value())
-            self.ui.cp_enable.setEnabled(True)
-            if self.ui.cp_enable.isChecked():
-                self.edit_network_args('use_conv_cp', True)
+            # uncomment when fixed
+            # self.ui.cp_enable.setEnabled(True)
+            # if self.ui.cp_enable.isChecked():
+            #     self.edit_network_args('use_conv_cp', True)
             self.edit_network_args('algo', name.lower().split(" (lycoris)")[0])
             self.ui.lora_fa_enable.setEnabled(False)
             self.edit_args("fa", False)
         else:
             self.enable_dropouts(lyco=True)
+            self.ui.lycoris_preset_input.setEnabled(True)
+            self.edit_network_args("preset", self.ui.lycoris_preset_input.text().lower())
+            # uncomment when fixed
+            # self.ui.train_norm_enable.setEnabled(True)
+            # self.edit_network_args("train_norm", self.ui.train_norm_enable.isChecked())
             self.ui.conv_dim_input.setEnabled(True)
             self.edit_network_args('conv_dim', self.ui.conv_dim_input.value())
             self.ui.conv_alpha_input.setEnabled(True)
             self.edit_network_args('conv_alpha', self.ui.conv_alpha_input.value())
-            self.ui.cp_enable.setEnabled(True)
-            if self.ui.cp_enable.isChecked():
-                self.edit_network_args('use_conv_cp', True)
+            # uncomment when fixed
+            # self.ui.cp_enable.setEnabled(True)
+            # if self.ui.cp_enable.isChecked():
+            #     self.edit_network_args('use_conv_cp', True)
             if name.lower() == 'dylora (lycoris)':
                 self.ui.dylora_unit_input.setEnabled(True)
                 self.edit_network_args('block_size', self.ui.dylora_unit_input.value())
@@ -403,6 +419,9 @@ class NetworkWidget(QtWidgets.QWidget):
             self.ui.conv_dim_input.setValue(args['network_args'].get("conv_dim", 32))
             self.ui.conv_alpha_input.setValue(args['network_args'].get("conv_alpha", 16))
             self.ui.dylora_unit_input.setValue(args['network_args'].get("unit", 4))
+            self.ui.lycoris_preset_input.setText(args['network_args'].get("preset", ""))
+            self.ui.train_norm_enable.setChecked(False)
+            # self.ui.train_norm_enable.setChecked(args['network_args'].get("train_norm", False)) uncomment when fixed
 
             if 'network_dropout' not in args:
                 checked = True if args['network_args'].get('dropout', False) else False
@@ -426,8 +445,8 @@ class NetworkWidget(QtWidgets.QWidget):
                 algo = args['network_args']['algo']
                 index = 2 if algo == 'locon' else 3 if algo == 'loha' else 4 if algo == "ia3" else 5 if algo == 'lokr' \
                     else 7
-                self.ui.cp_enable.setChecked(args['network_args'].get("use_conv_cp", False))
-                self.ui.cp_enable.setEnabled(True)
+                self.ui.cp_enable.setChecked(False)  # remove when fixed
+                # self.ui.cp_enable.setChecked(args['network_args'].get("use_conv_cp", False))
                 self.ui.algo_select.setCurrentIndex(index)
             elif "conv_dim" in args['network_args']:
                 self.ui.algo_select.setCurrentIndex(1)
