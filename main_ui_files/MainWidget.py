@@ -257,7 +257,7 @@ class MainWidget(QtWidgets.QWidget):
         with path.open(mode="w", encoding="utf-8") as f:
             for key, value in args.items():
                 if isinstance(value, str):
-                    value = f"\'{value}\'"
+                    value = f"\"{value}\""
                 if isinstance(value, bool):
                     value = f"{value}".lower()
                 f.write(f"{key} = {value}\n")
