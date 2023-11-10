@@ -424,7 +424,7 @@ class Ui_network_ui(object):
 #if QT_CONFIG(tooltip)
         self.cp_enable.setToolTip(QCoreApplication.translate("network_ui", u"<html><head/><body><p>Enables Conv CP, which is some form of compression algorithm that further reduces file size, I personally suggest you don't use it</p></body></html>", None))
 #endif // QT_CONFIG(tooltip)
-        self.cp_enable.setText(QCoreApplication.translate("network_ui", u"Enable Conv CP", None))
+        self.cp_enable.setText(QCoreApplication.translate("network_ui", u"Enable Tucker", None))
         self.train_norm_enable.setText(QCoreApplication.translate("network_ui", u"Train Norm", None))
 #if QT_CONFIG(tooltip)
         self.lycoris_preset_input.setToolTip(QCoreApplication.translate("network_ui", u"<html><head/><body><p>If you are using lycoris, this is a way to input a preset, if using a default, just put the name, otherwise put the full path of file location</p></body></html>", None))
