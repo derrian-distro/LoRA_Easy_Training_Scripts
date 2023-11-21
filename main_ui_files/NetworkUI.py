@@ -1,5 +1,4 @@
 from typing import Union
-
 from PySide6 import QtWidgets, QtCore
 from ui_files.NetworkUI import Ui_network_ui
 from modules.CollapsibleWidget import CollapsibleWidget
@@ -12,374 +11,563 @@ class NetworkWidget(QtWidgets.QWidget):
     def __init__(self, parent: QtWidgets.QWidget = None) -> None:
         super(NetworkWidget, self).__init__(parent)
         self.args = {"network_dim": 32, "network_alpha": 16.0}
+        self.network_args = {}
         self.name = "network_args"
 
         self.setLayout(QtWidgets.QVBoxLayout())
         self.layout().setContentsMargins(9, 0, 9, 0)
         self.colap = CollapsibleWidget(self, "Network Args")
 
-        self.widget = QtWidgets.QWidget()
-        self.ui = Ui_network_ui()
-        self.ui.setupUi(self.widget)
-        self.block_widgets_state = [[self.ui.block_weight_widget, False], [self.ui.dim_block_widget, False],
-                                    [self.ui.alpha_block_widget, False], [self.ui.conv_block_widget, False],
-                                    [self.ui.conv_alpha_block_widget, False]]
-        self.block_widgets = [BlockWeightWidget(), BlockWidget(mode='int', base_value=32),
-                              BlockWidget(mode="float", base_value=16.00), BlockWidget(mode='int', base_value=32),
-                              BlockWidget(mode='float', base_value=16.00)]
+        self.content = QtWidgets.QWidget()
+        self.colap.add_widget(self.content, "main_widget")
 
-        self.ui.block_weight_scroll_widget.layout().setAlignment(QtCore.Qt.AlignmentFlag.AlignTop)
-        self.ui.block_weight_scroll_widget.layout().setSpacing(0)
-
-        for i, elem in enumerate(self.block_widgets_state):
-            elem[0].set_extra('enable')
-            elem[0].title_frame.setEnabled(False)
-            elem[0].add_widget(self.block_widgets[i], 'main_widget')
-        self.ui.block_weight_widget.title_frame.setText("Block Weights")
-        self.ui.dim_block_widget.title_frame.setText("Block Dims")
-        self.ui.alpha_block_widget.title_frame.setText("Block Alphas")
-        self.ui.conv_block_widget.title_frame.setText("Block Conv Dims")
-        self.ui.conv_alpha_block_widget.title_frame.setText("Block Conv Alphas")
-
-        self.ui.network_dim_input.valueChanged.connect(lambda x: self.edit_args("network_dim", x))
-        self.ui.network_dim_input.valueChanged.connect(self.block_widgets[1].update_base_value)
-        self.ui.network_alpha_input.valueChanged.connect(lambda x: self.edit_args("network_alpha", round(x, 2)))
-        self.ui.network_alpha_input.valueChanged.connect(self.block_widgets[2].update_base_value)
-        self.ui.conv_dim_input.valueChanged.connect(lambda x: self.edit_network_args("conv_dim", x))
-        self.ui.conv_dim_input.valueChanged.connect(self.block_widgets[3].update_base_value)
-        self.ui.conv_alpha_input.valueChanged.connect(lambda x: self.edit_network_args("conv_alpha", round(x, 2)))
-        self.ui.conv_alpha_input.valueChanged.connect(self.block_widgets[4].update_base_value)
-        self.ui.dylora_unit_input.valueChanged.connect(lambda x: self.edit_network_args("unit", x))
-        self.ui.algo_select.currentTextChanged.connect(self.algo_changed)
-        self.ui.unet_te_both_select.currentTextChanged.connect(self.change_training_parts)
-
-        self.ui.network_dropout_enable.clicked.connect(lambda x: self.enable_disable_dropout("network", x))
-        self.ui.network_dropout_input.valueChanged.connect(self.change_network_dropout)
-
-        self.ui.rank_dropout_enable.clicked.connect(lambda x: self.enable_disable_dropout('rank', x))
-        self.ui.rank_dropout_input.valueChanged.connect(lambda x: self.edit_network_args('rank_dropout', x))
-
-        self.ui.module_dropout_enable.clicked.connect(lambda x: self.enable_disable_dropout('module', x))
-        self.ui.module_dropout_input.valueChanged.connect(lambda x: self.edit_network_args('module_dropout', x))
-
-        self.ui.cp_enable.clicked.connect(lambda x: self.edit_network_args('use_conv_cp', x))
-        self.ui.lora_fa_enable.clicked.connect(lambda x: self.edit_args("fa", x))
-
-        self.ui.min_timestep_input.editingFinished.connect(lambda: self.edit_timesteps('min_timestep'))
-        self.ui.max_timestep_input.editingFinished.connect(lambda: self.edit_timesteps('max_timestep'))
-        self.ui.cache_te_outputs_enable.clicked.connect(self.enable_disable_cache_tenc)
-        self.ui.cache_te_to_disk_enable.clicked.connect(self.enable_disable_cache_tenc_to_disk)
-        self.ui.lycoris_preset_input.textChanged.connect(lambda x: self.edit_network_args("preset", x))
-        self.ui.train_norm_enable.clicked.connect(lambda x: self.edit_network_args("train_norm", x))
-
-        self.colap.add_widget(self.widget, "main_widget")
+        self.widget = Ui_network_ui()
+        self.widget.setupUi(self.content)
         self.layout().addWidget(self.colap)
 
-    @QtCore.Slot(str, object)
-    def edit_args(self, name: str, value: object) -> None:
-        self.args[name] = value
-        self.args_edited.emit(name, value)
+        self.block_widgets_state = [
+            [self.widget.block_weight_widget, False],
+            [self.widget.dim_block_widget, False],
+            [self.widget.alpha_block_widget, False],
+            [self.widget.conv_block_widget, False],
+            [self.widget.conv_alpha_block_widget, False],
+        ]
+        self.block_widgets = [
+            BlockWeightWidget(),
+            BlockWidget(mode="int", base_value=32),
+            BlockWidget(mode="float", base_value=16.0),
+            BlockWidget(mode="int", base_value=32),
+            BlockWidget(mode="float", base_value=16.0),
+        ]
 
-    @QtCore.Slot(str, object)
-    def edit_network_args(self, name: str, value: object) -> None:
-        if "network_args" not in self.args:
-            self.args['network_args'] = {}
-        self.args['network_args'][name] = value
+        for i, elem in enumerate(self.block_widgets_state):
+            elem[0].set_extra("enable")
+            elem[0].title_frame.setEnabled(False)
+            elem[0].add_widget(self.block_widgets[i], "main_widget")
+        self.widget.block_weight_widget.title_frame.setText("Block Weights")
+        self.widget.dim_block_widget.title_frame.setText("Block Dims")
+        self.widget.alpha_block_widget.title_frame.setText("Block Alphas")
+        self.widget.conv_block_widget.title_frame.setText("Block Conv Dims")
+        self.widget.conv_alpha_block_widget.title_frame.setText("Block Conv Alphas")
+
+        self.widget.block_weight_scroll_widget.layout().setAlignment(
+            QtCore.Qt.AlignmentFlag.AlignTop
+        )
+        self.widget.block_weight_scroll_widget.layout().setSpacing(0)
+
+        self.widget.algo_select.currentTextChanged.connect(self.change_algo)
+        self.widget.lycoris_preset_input.textChanged.connect(
+            lambda x: self.edit_args("preset", x, optional=True, network_args=True)
+        )
+
+        self.widget.network_dim_input.valueChanged.connect(
+            lambda x: self.edit_args("network_dim", x)
+        )
+        self.widget.network_alpha_input.valueChanged.connect(
+            lambda x: self.edit_args("network_alpha", x)
+        )
+        self.widget.conv_dim_input.valueChanged.connect(
+            lambda x: self.edit_args("conv_dim", x, optional=True, network_args=True)
+        )
+        self.widget.conv_alpha_input.valueChanged.connect(
+            lambda x: self.edit_args("conv_alpha", x, optional=True, network_args=True)
+        )
+        self.widget.min_timestep_input.editingFinished.connect(
+            lambda: self.edit_timesteps("min_timestep")
+        )
+        self.widget.max_timestep_input.editingFinished.connect(
+            lambda: self.edit_timesteps("max_timestep")
+        )
+
+        self.widget.unet_te_both_select.currentTextChanged.connect(
+            self.change_training_parts
+        )
+        self.widget.cache_te_outputs_enable.clicked.connect(self.toggle_cache_te)
+        self.widget.cache_te_to_disk_enable.clicked.connect(
+            lambda x: self.edit_args(
+                "cache_text_encoder_outputs_to_disk", x, optional=True
+            )
+        )
+        self.widget.dylora_unit_input.valueChanged.connect(
+            lambda x: self.edit_args("unit", x, optional=True, network_args=True)
+        )
+        self.widget.cp_enable.clicked.connect(
+            lambda x: self.edit_args("use_tucker", x, optional=True, network_args=True)
+        )
+        self.widget.train_norm_enable.clicked.connect(
+            lambda x: self.edit_args("train_norm", x, optional=True, network_args=True)
+        )
+
+        self.widget.network_dropout_enable.clicked.connect(
+            lambda x: self.toggle_network_dropout(x, self.is_lycoris())
+        )
+        self.widget.network_dropout_input.valueChanged.connect(
+            lambda x: self.edit_args(
+                "dropout" if self.is_lycoris() else "network_dropout",
+                x,
+                optional=True,
+                network_args=self.is_lycoris(),
+            )
+        )
+        self.widget.rank_dropout_enable.clicked.connect(self.toggle_rank_dropout)
+        self.widget.rank_dropout_input.valueChanged.connect(
+            lambda x: self.edit_args(
+                "rank_dropout", x, optional=True, network_args=True
+            )
+        )
+        self.widget.module_dropout_enable.clicked.connect(self.toggle_module_dropout)
+        self.widget.module_dropout_input.valueChanged.connect(
+            lambda x: self.edit_args(
+                "module_dropout", x, optional=True, network_args=True
+            )
+        )
+        self.widget.lora_fa_enable.clicked.connect(
+            lambda x: self.edit_args("fa", x, optional=True)
+        )
+
+    @QtCore.Slot(str, object, bool, bool)
+    def edit_args(
+        self,
+        name: str,
+        value: object,
+        optional: bool = False,
+        network_args: bool = False,
+    ) -> None:
+        if not optional:
+            if network_args:
+                self.network_args[name] = value
+                return
+            self.args[name] = value
+            return
+        if not value or value is False:
+            if network_args and name in self.network_args:
+                del self.network_args[name]
+            if not network_args and name in self.args:
+                del self.args[name]
+            return
+        if network_args:
+            self.network_args[name] = value
+            return
+        self.args[name] = value
 
     @QtCore.Slot(str)
-    def change_training_parts(self, name: str) -> None:
-        if name == "Unet Only":
-            self.args['network_train_unet_only'] = True
-            if "network_train_text_encoder_only" in self.args:
-                del self.args['network_train_text_encoder_only']
-        elif name == "Text Encoder Only":
-            self.args['network_train_text_encoder_only'] = True
-            if "network_train_unet_only" in self.args:
-                del self.args['network_train_unet_only']
-        else:
-            if "network_train_unet_only" in self.args:
-                del self.args['network_train_unet_only']
-            if "network_train_text_encoder_only" in self.args:
-                del self.args['network_train_text_encoder_only']
+    def change_algo(self, algo: str) -> None:
+        if algo.lower() == "lora":
+            self.toggle_conv(False)
+            self.toggle_lycoris(False)
+            self.toggle_dylora(False)
+            self.toggle_kohya(True)
+            self.toggle_block_weight(True, True)
+            self.toggle_dropout(True, False)
+        if algo.lower() == "locon":
+            self.toggle_conv(True)
+            self.toggle_lycoris(False)
+            self.toggle_dylora(False)
+            self.toggle_kohya(True)
+            self.toggle_block_weight(True, False)
+            self.toggle_dropout(True, False)
+        if algo.lower() == "dylora":
+            self.toggle_conv(True)
+            self.toggle_lycoris(False)
+            self.toggle_dylora(True)
+            self.toggle_kohya(True)
+            self.toggle_block_weight(True, False)
+            self.toggle_dropout(True, False)
+        if algo.lower() in {"locon (lycoris)", "lokr", "loha", "ia3"}:
+            self.toggle_conv(True)
+            self.toggle_lycoris(True)
+            self.toggle_dylora(False)
+            self.toggle_kohya(False)
+            self.toggle_block_weight(False, False)
+            self.toggle_dropout(algo.lower() != "ia3", True)
 
-    @QtCore.Slot(float)
-    def change_network_dropout(self, value: float) -> None:
-        if 'network_args' in self.args and 'dropout' in self.args['network_args']:
-            del self.args['network_args']['dropout']
-        if 'network_dropout' in self.args:
-            del self.args['network_dropout']
-        if self.ui.algo_select.currentText() in {'lora', 'locon', 'dylora'}:
-            self.edit_args('network_dropout', value)
-        else:
-            self.edit_network_args('dropout', value)
+    def toggle_conv(self, toggle: bool) -> None:
+        self.widget.conv_dim_input.setEnabled(toggle)
+        self.widget.conv_alpha_input.setEnabled(toggle)
+
+        self.edit_args(
+            "conv_dim",
+            self.widget.conv_dim_input.value() if toggle else False,
+            optional=True,
+            network_args=True,
+        )
+        self.edit_args(
+            "conv_alpha",
+            round(self.widget.conv_alpha_input.value(), 2) if toggle else False,
+            optional=True,
+            network_args=True,
+        )
+
+    def toggle_lycoris(self, toggle: bool) -> None:
+        self.widget.cp_enable.setEnabled(toggle)
+        self.widget.train_norm_enable.setEnabled(toggle)
+        self.widget.lycoris_preset_input.setEnabled(toggle)
+
+        self.edit_args(
+            "use_tucker",
+            self.widget.cp_enable.isChecked() if toggle else False,
+            optional=True,
+            network_args=True,
+        )
+        self.edit_args(
+            "train_norm",
+            self.widget.train_norm_enable.isChecked() if toggle else False,
+            optional=True,
+            network_args=True,
+        )
+        self.edit_args(
+            "preset",
+            self.widget.lycoris_preset_input.text() if toggle else False,
+            optional=True,
+            network_args=True,
+        )
+        self.edit_args(
+            "algo",
+            self.widget.algo_select.currentText().split(" ")[0].lower()
+            if toggle
+            else False,
+            optional=True,
+            network_args=True,
+        )
+
+    def toggle_dylora(self, toggle: bool) -> None:
+        self.widget.dylora_unit_input.setEnabled(toggle)
+
+        self.edit_args(
+            "unit",
+            self.widget.dylora_unit_input.value() if toggle else False,
+            optional=True,
+            network_args=True,
+        )
+
+    def toggle_kohya(self, toggle: bool) -> None:
+        self.widget.lora_fa_enable.setEnabled(toggle)
+
+        self.edit_args(
+            "fa",
+            self.widget.lora_fa_enable.isChecked() if toggle else False,
+            optional=True,
+        )
+
+    def toggle_block_weight(self, toggle: bool, lora: bool) -> None:
+        self.widget.block_weight_tab.setEnabled(toggle)
+        for elem in self.block_widgets_state:
+            elem[0].setEnabled(False)
+            elem[1] = elem[0].extra_elem.isChecked()
+            elem[0].extra_elem.setChecked(False)
+            elem[0].enable_disable(False)
+        if not toggle:
+            return
+        for i, elem in enumerate(self.block_widgets_state):
+            if i > 2 and lora:
+                return
+            elem[0].setEnabled(True)
+            if elem[1]:
+                elem[0].extra_elem.setChecked(True)
+                elem[0].enable_disable(True)
+                elem[1] = False
+
+    def toggle_dropout(self, toggle: bool, lycoris: bool) -> None:
+        self.widget.network_dropout_enable.setEnabled(toggle)
+        self.widget.rank_dropout_enable.setEnabled(toggle)
+        self.widget.module_dropout_enable.setEnabled(toggle)
+
+        if not toggle:
+            self.toggle_network_dropout(False, lycoris)
+            self.toggle_rank_dropout(False)
+            self.toggle_module_dropout(False)
+            return
+
+        self.toggle_network_dropout(
+            self.widget.network_dropout_enable.isChecked(), lycoris
+        )
+        self.toggle_rank_dropout(self.widget.rank_dropout_enable.isChecked())
+        self.toggle_module_dropout(self.widget.module_dropout_enable.isChecked())
+
+    @QtCore.Slot(bool, bool)
+    def toggle_network_dropout(self, toggle: bool, lycoris: bool) -> None:
+        if "dropout" in self.network_args:
+            del self.network_args["dropout"]
+        if "network_dropout" in self.args:
+            del self.args["network_dropout"]
+        self.widget.network_dropout_input.setEnabled(toggle)
+        if lycoris:
+            self.edit_args(
+                "dropout",
+                round(self.widget.network_dropout_input.value(), 2)
+                if toggle
+                else False,
+                optional=True,
+                network_args=True,
+            )
+            return
+        self.edit_args(
+            "network_dropout",
+            round(self.widget.network_dropout_input.value(), 2) if toggle else False,
+            optional=True,
+        )
+
+    @QtCore.Slot(bool)
+    def toggle_rank_dropout(self, toggle: bool) -> None:
+        self.widget.rank_dropout_input.setEnabled(toggle)
+        self.edit_args(
+            "rank_dropout",
+            round(self.widget.rank_dropout_input.value(), 2) if toggle else False,
+            optional=True,
+            network_args=True,
+        )
+
+    @QtCore.Slot(bool)
+    def toggle_module_dropout(self, toggle: bool) -> None:
+        self.widget.module_dropout_input.setEnabled(toggle)
+        self.edit_args(
+            "module_dropout",
+            round(self.widget.module_dropout_input.value(), 2) if toggle else False,
+            optional=True,
+            network_args=True,
+        )
 
     @QtCore.Slot(str)
     def edit_timesteps(self, name: str) -> None:
-        if name == 'min_timestep':
-            self.edit_args('min_timestep', self.ui.min_timestep_input.value())
-            if self.ui.max_timestep_input.value() <= self.ui.min_timestep_input.value():
-                self.ui.max_timestep_input.setValue(self.ui.min_timestep_input.value() + 1)
-                self.edit_args('max_timestep', self.ui.max_timestep_input.value())
+        if name == "min_timestep":
+            self.edit_args("min_timestep", self.widget.min_timestep_input.value())
+            if (
+                self.widget.max_timestep_input.value()
+                <= self.widget.min_timestep_input.value()
+            ):
+                self.widget.max_timestep_input.setValue(
+                    self.widget.min_timestep_input.value() + 1
+                )
+                self.edit_args("max_timestep", self.widget.max_timestep_input.value())
         else:
-            self.edit_args('max_timestep', self.ui.max_timestep_input.value())
-            if self.ui.max_timestep_input.value() <= self.ui.min_timestep_input.value():
-                self.ui.min_timestep_input.setValue(self.ui.max_timestep_input.value() - 1)
-                self.edit_args('min_timestep', self.ui.min_timestep_input.value())
-
-    @QtCore.Slot(bool)
-    def enable_disable_cache_tenc(self, checked: bool):
-        if 'cache_text_encoder_outputs' in self.args:
-            del self.args['cache_text_encoder_outputs']
-        if checked:
-            self.edit_args('cache_text_encoder_outputs', True)
-            self.ui.cache_te_to_disk_enable.setEnabled(True)
-            self.enable_disable_cache_tenc_to_disk(True)
-        else:
-            self.ui.cache_te_to_disk_enable.setEnabled(False)
-            self.enable_disable_cache_tenc_to_disk(False)
-
-    @QtCore.Slot(bool)
-    def enable_disable_cache_tenc_to_disk(self, checked: bool):
-        if 'cache_text_encoder_outputs_to_disk' in self.args:
-            del self.args['cache_text_encoder_outputs_to_disk']
-        if checked:
-            self.edit_args('cache_text_encoder_outputs_to_disk', True)
-
-    @QtCore.Slot(bool)
-    def enable_disable_cache_text_encoder_outputs(self, checked: bool):
-        self.ui.cache_te_outputs_enable.setEnabled(checked)
-        if self.ui.cache_te_outputs_enable.isChecked() and self.ui.cache_te_outputs_enable.isEnabled():
-            self.ui.cache_te_to_disk_enable.setEnabled(True)
-        else:
-            self.ui.cache_te_to_disk_enable.setEnabled(False)
-        self.enable_disable_cache_tenc(self.ui.cache_te_outputs_enable.isChecked() if checked else False)
-
-    @QtCore.Slot(str, bool)
-    def enable_disable_dropout(self, mode: str, checked: bool):
-        if mode == 'network':
-            if 'network_args' in self.args and 'dropout' in self.args['network_args']:
-                del self.args['network_args']['dropout']
-            if 'network_dropout' in self.args:
-                del self.args['network_dropout']
-            self.ui.network_dropout_input.setEnabled(checked)
-            if checked:
-                self.change_network_dropout(self.ui.network_dropout_input.value())
-        elif mode == 'rank':
-            if 'network_args' in self.args and 'rank_dropout' in self.args['network_args']:
-                del self.args['network_args']['rank_dropout']
-            self.ui.rank_dropout_input.setEnabled(checked)
-            if checked:
-                self.edit_network_args("rank_dropout", self.ui.rank_dropout_input.value())
-        else:
-            if 'network_args' in self.args and 'module_dropout' in self.args['network_args']:
-                del self.args['network_args']['module_dropout']
-            self.ui.module_dropout_input.setEnabled(checked)
-            if checked:
-                self.edit_network_args('module_dropout', self.ui.module_dropout_input.value())
+            self.edit_args("max_timestep", self.widget.max_timestep_input.value())
+            if (
+                self.widget.max_timestep_input.value()
+                <= self.widget.min_timestep_input.value()
+            ):
+                self.widget.min_timestep_input.setValue(
+                    self.widget.max_timestep_input.value() - 1
+                )
+                self.edit_args("min_timestep", self.widget.min_timestep_input.value())
 
     @QtCore.Slot(str)
-    def algo_changed(self, name: str) -> None:
-        if 'network_args' in self.args:
-            del self.args['network_args']
-        self.ui.conv_dim_input.setEnabled(False)
-        self.ui.conv_alpha_input.setEnabled(False)
-        self.ui.dylora_unit_input.setEnabled(False)
-        self.ui.cp_enable.setEnabled(False)
-        self.ui.lycoris_preset_input.setEnabled(False)
-        self.ui.train_norm_enable.setEnabled(False)
-        if name.lower() == 'lora':
-            self.enable_dropouts(lyco=False)
-            self.ui.lora_fa_enable.setEnabled(True)
-            self.edit_args("fa", self.ui.lora_fa_enable.isChecked())
-        elif name.lower() in {'locon', 'dylora'}:
-            self.enable_dropouts(lyco=False)
-            self.ui.conv_dim_input.setEnabled(True)
-            self.edit_network_args('conv_dim', self.ui.conv_dim_input.value())
-            self.ui.conv_alpha_input.setEnabled(True)
-            self.edit_network_args('conv_alpha', self.ui.conv_alpha_input.value())
-            self.ui.lora_fa_enable.setEnabled(True)
-            self.edit_args("fa", self.ui.lora_fa_enable.isChecked())
-            if name.lower() == 'dylora':
-                self.ui.dylora_unit_input.setEnabled(True)
-                self.edit_network_args('unit', self.ui.dylora_unit_input.value())
-                self.ui.lora_fa_enable.setEnabled(False)
-                self.edit_args("fa", False)
-        elif name.lower() == 'lokr':
-            self.disable_dropouts()
-            self.ui.lycoris_preset_input.setEnabled(True)
-            self.edit_network_args("preset", self.ui.lycoris_preset_input.text().lower())
-            # uncomment when fixed
-            # self.ui.train_norm_enable.setEnabled(True)
-            # self.edit_network_args("train_norm", self.ui.train_norm_enable.isChecked())
-            self.ui.conv_dim_input.setEnabled(True)
-            self.edit_network_args('conv_dim', self.ui.conv_dim_input.value())
-            self.ui.conv_alpha_input.setEnabled(True)
-            self.edit_network_args('conv_alpha', self.ui.conv_alpha_input.value())
-            # uncomment when fixed
-            # self.ui.cp_enable.setEnabled(True)
-            # if self.ui.cp_enable.isChecked():
-            #     self.edit_network_args('use_conv_cp', True)
-            self.edit_network_args('algo', name.lower().split(" (lycoris)")[0])
-            self.ui.lora_fa_enable.setEnabled(False)
-            self.edit_args("fa", False)
-        else:
-            self.enable_dropouts(lyco=True)
-            self.ui.lycoris_preset_input.setEnabled(True)
-            self.edit_network_args("preset", self.ui.lycoris_preset_input.text().lower())
-            # uncomment when fixed
-            # self.ui.train_norm_enable.setEnabled(True)
-            # self.edit_network_args("train_norm", self.ui.train_norm_enable.isChecked())
-            self.ui.conv_dim_input.setEnabled(True)
-            self.edit_network_args('conv_dim', self.ui.conv_dim_input.value())
-            self.ui.conv_alpha_input.setEnabled(True)
-            self.edit_network_args('conv_alpha', self.ui.conv_alpha_input.value())
-            # uncomment when fixed
-            # self.ui.cp_enable.setEnabled(True)
-            # if self.ui.cp_enable.isChecked():
-            #     self.edit_network_args('use_conv_cp', True)
-            if name.lower() == 'dylora (lycoris)':
-                self.ui.dylora_unit_input.setEnabled(True)
-                self.edit_network_args('block_size', self.ui.dylora_unit_input.value())
-            self.edit_network_args('algo', name.lower().split(" (lycoris)")[0])
-            self.ui.lora_fa_enable.setEnabled(False)
-            self.edit_args("fa", False)
-        self.change_block_weight_enable(name)
+    def change_training_parts(self, name: str) -> None:
+        if "network_train_unet_only" in self.args:
+            del self.args["network_train_unet_only"]
+        if "network_train_text_encoder_only" in self.args:
+            del self.args["network_train_text_encoder_only"]
+        if name.lower() == "unet only":
+            self.edit_args("network_train_unet_only", True)
+        elif name.lower() == "te only":
+            self.edit_args("network_train_text_encoder_only", True)
 
-    def enable_dropouts(self, lyco: bool):
-        self.ui.network_dropout_enable.setEnabled(True)
-        self.ui.network_dropout_input.setEnabled(True)
-        self.ui.rank_dropout_enable.setEnabled(True)
-        self.ui.rank_dropout_input.setEnabled(True)
-        self.ui.module_dropout_enable.setEnabled(True)
-        self.ui.module_dropout_input.setEnabled(True)
-        if self.ui.network_dropout_enable.isChecked():
-            if lyco:
-                self.edit_network_args('dropout', self.ui.network_dropout_input.value())
-            else:
-                self.edit_args('network_dropout', self.ui.network_dropout_input.value())
-        if self.ui.rank_dropout_enable.isChecked():
-            self.edit_network_args('rank_dropout', self.ui.rank_dropout_input.value())
-        if self.ui.module_dropout_enable.isChecked():
-            self.edit_network_args('module_dropout', self.ui.module_dropout_input.value())
+    @QtCore.Slot(bool)
+    def toggle_sdxl(self, toggle: bool) -> None:
+        for arg in ["cache_text_encoder_outputs", "cache_text_encoder_outputs_to_disk"]:
+            if arg in self.args:
+                del self.args[arg]
+        self.widget.cache_te_outputs_enable.setEnabled(toggle)
+        self.widget.cache_te_to_disk_enable.setEnabled(
+            self.widget.cache_te_outputs_enable.isChecked()
+        )
+        if not toggle:
+            return
+        self.toggle_cache_te(self.widget.cache_te_outputs_enable.isChecked())
 
-    def disable_dropouts(self):
-        if 'network_args' in self.args:
-            for arg in ['dropout', 'rank_dropout', 'module_dropout']:
-                if arg in self.args['network_args']:
-                    del self.args['network_args'][arg]
-        if 'network_dropout' in self.args:
-            del self.args['network_dropout']
-        self.ui.network_dropout_enable.setEnabled(False)
-        self.ui.network_dropout_input.setEnabled(False)
-        self.ui.rank_dropout_enable.setEnabled(False)
-        self.ui.rank_dropout_input.setEnabled(False)
-        self.ui.module_dropout_enable.setEnabled(False)
-        self.ui.module_dropout_input.setEnabled(False)
+    @QtCore.Slot(bool)
+    def toggle_cache_te(self, toggle: bool) -> None:
+        for arg in ["cache_text_encoder_outputs", "cache_text_encoder_outputs_to_disk"]:
+            if arg in self.args:
+                del self.args[arg]
+        self.edit_args("cache_text_encoder_outputs", toggle, optional=True)
+        self.widget.cache_te_to_disk_enable.setEnabled(toggle)
+        if not toggle:
+            return
+        self.edit_args(
+            "cache_text_encoder_outputs_to_disk",
+            self.widget.cache_te_to_disk_enable.isChecked(),
+            optional=True,
+        )
 
-    def change_block_weight_enable(self, algo: str):
-        if algo.lower() == 'lora':
-            for i, elem in enumerate(self.block_widgets_state):
-                if i < 3:
-                    elem[0].setEnabled(True)
-                    if elem[1]:
-                        elem[0].extra_elem.setChecked(True)
-                        elem[0].enable_disable(True)
-                    elem[1] = False
-                else:
-                    elem[0].setEnabled(False)
-                    if elem[0].extra_elem.isChecked():
-                        print(elem[0].title_frame.text())
-                        elem[1] = True
-                        elem[0].extra_elem.setChecked(False)
-                        elem[0].enable_disable(False)
-        elif algo.lower() == 'locon':
-            for elem in self.block_widgets_state:
-                elem[0].setEnabled(True)
-                if elem[1]:
-                    elem[0].extra_elem.setChecked(True)
-                    elem[0].enable_disable(True)
-                elem[1] = False
-        else:
-            for elem in self.block_widgets_state:
-                elem[0].setEnabled(False)
-                if elem[0].extra_elem.isChecked():
-                    elem[1] = True
-                    elem[0].extra_elem.setChecked(False)
-                    elem[0].enable_disable(False)
+    def is_lycoris(self) -> bool:
+        return self.widget.algo_select.currentText().lower() not in [
+            "lora",
+            "locon",
+            "dylora",
+        ]
+
+    def deep_dict_copy(self, original):
+        if not isinstance(original, dict):
+            return original
+        return {key: self.deep_dict_copy(value) for key, value in original.items()}
 
     def get_args(self, input_args: dict) -> None:
-        input_args['network_args'] = self.args
-        self.get_block_args(input_args['network_args'])
+        args = self.save_args()
+        input_args["network_args"] = args
 
     def get_dataset_args(self, input_args: dict) -> None:
         pass
 
-    def get_block_args(self, input_args: dict) -> None:
-        names = [['down_lr_weight', 'mid_lr_weight', 'up_lr_weight'], 'block_dims',
-                 'block_alphas', 'conv_block_dims', 'conv_block_alphas']
+    def save_args(self) -> Union[dict, None]:
+        args = {}
+        args |= self.deep_dict_copy(self.args)
+        if self.network_args:
+            args["network_args"] = self.deep_dict_copy(self.network_args)
+        if block_args := self.get_block_args():
+            if "network_args" not in args:
+                args["network_args"] = block_args
+            else:
+                args["network_args"].update(block_args)
+        return args
+
+    def save_dataset_args(self) -> Union[dict, None]:
+        pass
+
+    def get_block_args(self) -> dict:
+        args = {}
+        names = [
+            ["down_lr_weight", "mid_lr_weight", "up_lr_weight"],
+            "block_dims",
+            "block_alphas",
+            "conv_block_dims",
+            "conv_block_alphas",
+        ]
         for i, elem in enumerate(self.block_widgets_state):
-            if not elem[0].extra_elem.isChecked():
-                if "network_args" in input_args:
-                    if i == 0:
-                        for n in names[i]:
-                            if n in input_args['network_args']:
-                                del input_args['network_args'][n]
-                    else:
-                        if names[i] in input_args['network_args']:
-                            del input_args['network_args'][names[i]]
+            if not elem[0].isEnabled() or not elem[0].extra_elem.isChecked():
                 continue
-            if "network_args" not in input_args:
-                input_args['network_args'] = {}
             vals = self.block_widgets[i].vals
             name = names[i]
-            if isinstance(name, list):
+            if i == 0:
                 for n in name:
-                    input_args['network_args'][n] = vals[n]
+                    args[n] = vals[n]
             else:
-                input_args['network_args'][name] = vals
-        if 'network_args' in input_args and len(input_args['network_args'].keys()) == 0:
-            del input_args['network_args']
+                args[name] = vals
+        return args
 
-    def load_block_args(self, input_args: dict) -> None:
-        net_args = input_args['network_args']
-        inputs = ['block_dims', 'block_alphas', 'conv_block_dims', 'conv_block_alphas']
-        if "down_lr_weight" in net_args:
-            self.block_widgets_state[0][0].extra_elem.setChecked(True)
-            self.block_widgets_state[0][0].enable_disable(True)
-            self.block_widgets_state[0][1] = False
-            for i, val in enumerate(net_args['down_lr_weight']):
-                self.block_widgets[0].vals['down_lr_weight'][i] = val
-                self.block_widgets[0].down_widgets[i][1].setValue(val)
-            self.block_widgets[0].vals['mid_lr_weight'] = net_args['mid_lr_weight']
-            self.block_widgets[0].mid_widget[1].setValue(net_args['mid_lr_weight'])
-            for i, val in enumerate(net_args['up_lr_weight']):
-                self.block_widgets[0].vals['up_lr_weight'][i] = val
-                self.block_widgets[0].up_widgets[i][1].setValue(val)
+    def load_args(self, args: dict) -> None:
+        if self.name not in args:
+            return
+        sdxl = args["general_args"]["args"].get("sdxl", False)
+        args = args[self.name]["args"]
+        network_args = args["network_args"] if "network_args" in args else {}
+
+        # handle non network args
+        self.widget.network_dim_input.setValue(args["network_dim"])
+        self.widget.network_alpha_input.setValue(args["network_alpha"])
+        self.widget.lora_fa_enable.setChecked(args.get("fa", False))
+        # self.edit_args("fa", self.widget.lora_fa_enable.isChecked(), optional=True)
+
+        self.widget.min_timestep_input.setValue(args.get("min_timestep", 0))
+        self.widget.max_timestep_input.setValue(args.get("max_timestep", 1000))
+        self.edit_timesteps("min_timestep")
+        self.edit_timesteps("max_timestep")
+
+        self.widget.unet_te_both_select.setCurrentIndex(
+            1
+            if "network_train_unet_only" in args
+            else 2
+            if "network_train_text_encoder_only" in args
+            else 0
+        )
+
+        self.widget.cache_te_to_disk_enable.setChecked(
+            args.get("cache_text_encoder_outputs_to_disk", False)
+        )
+        self.widget.cache_te_outputs_enable.setChecked(
+            args.get("cache_text_encoder_outputs", False)
+        )
+        self.toggle_sdxl(sdxl)
+        # self.toggle_cache_te(self.widget.cache_te_outputs_enable.isChecked())
+
+        self.widget.network_dropout_input.setValue(args.get("network_dropout", 0.1))
+        self.widget.network_dropout_enable.setChecked(
+            bool(args.get("network_dropout", False))
+        )
+        self.toggle_network_dropout(
+            self.widget.network_dropout_enable.isChecked(), False
+        )
+
+        # handle network args
+        self.widget.conv_dim_input.setValue(network_args.get("conv_dim", 32))
+        self.widget.conv_alpha_input.setValue(network_args.get("conv_alpha", 16.0))
+        self.widget.dylora_unit_input.setValue(network_args.get("unit", 4))
+        self.widget.cp_enable.setChecked(network_args.get("use_tucker", False))
+        self.widget.train_norm_enable.setChecked(network_args.get("train_norm", False))
+        self.widget.lycoris_preset_input.setText(network_args.get("preset", ""))
+
+        if "network_dropout" not in args:
+            self.widget.network_dropout_input.setValue(network_args.get("dropout", 0.1))
+            self.widget.network_dropout_enable.setChecked(
+                bool(network_args.get("dropout", False))
+            )
+            self.toggle_network_dropout(
+                self.widget.network_dropout_enable.isChecked(), True
+            )
+
+        self.widget.rank_dropout_input.setValue(network_args.get("rank_dropout", 0.1))
+        self.widget.rank_dropout_enable.setChecked(
+            bool(network_args.get("rank_dropout", False))
+        )
+        self.toggle_rank_dropout(self.widget.rank_dropout_enable.isChecked())
+
+        self.widget.module_dropout_input.setValue(
+            network_args.get("module_dropout", 0.1)
+        )
+        self.widget.module_dropout_enable.setChecked(
+            bool(network_args.get("module_dropout", False))
+        )
+        self.toggle_module_dropout(self.widget.module_dropout_enable.isChecked())
+
+        if "algo" in network_args:
+            if network_args["algo"] == "locon":
+                self.widget.algo_select.setCurrentText("LoCon (LyCORIS)")
+            elif network_args["algo"] == "loha":
+                self.widget.algo_select.setCurrentText("LoHa")
+            elif network_args["algo"] == "ia3":
+                self.widget.algo_select.setCurrentText("IA3")
+            else:
+                self.widget.algo_select.setCurrentText("Lokr")
+        if "unit" in network_args:
+            self.widget.algo_select.setCurrentText("DyLoRA")
+        elif "conv_dim" in network_args:
+            self.widget.algo_select.setCurrentText("LoCon")
         else:
-            self.block_widgets_state[0][0].extra_elem.setChecked(False)
-            self.block_widgets_state[0][0].enable_disable(False)
-            self.block_widgets_state[0][1] = False
+            self.widget.algo_select.setCurrentText("LoRA")
+        self.change_algo(self.widget.algo_select.currentText())
+        self.load_block_args(network_args)
+
+    def load_block_args(self, network_args: dict) -> None:
+        inputs = ["block_dims", "block_alphas", "conv_block_dims", "conv_block_alphas"]
+        if "down_lr_weight" in network_args:
+            self.load_block_weight(
+                network_args["down_lr_weight"],
+                network_args["mid_lr_weight"],
+                network_args["up_lr_weight"],
+            )
+        else:
+            self.set_block_widget_enable(0, False)
         for i, name in enumerate(inputs):
-            vals = net_args.get(name, None)
-            if vals:
-                self.block_widgets_state[i + 1][0].extra_elem.setChecked(True)
-                self.block_widgets_state[i + 1][0].enable_disable(True)
-                self.block_widgets_state[i + 1][1] = False
+            if vals := network_args.get(name):
+                self.set_block_widget_enable(i + 1, True)
                 for j, val in enumerate(vals):
                     self.block_widgets[i + 1].vals[j] = val
                     if j < 12:
                         if isinstance(val, str):
-                            if name in ['block_alphas', 'conv_block_alphas']:
+                            if name in ["block_alphas", "conv_block_alphas"]:
                                 try:
                                     val = float(val)
-                                except:
-                                    print("failed to load some or all of the block weights")
+                                except Exception:
+                                    print(
+                                        "failed to load some or all of the block weights"
+                                    )
                                     return
                             else:
                                 try:
                                     val = int(val)
-                                except:
-                                    print("failed to load some of all of the block weights")
+                                except Exception:
+                                    print(
+                                        "failed to load some of all of the block weights"
+                                    )
                                     return
                         self.block_widgets[i + 1].down_widgets[j][1].setValue(val)
                     elif j == 12:
@@ -387,78 +575,23 @@ class NetworkWidget(QtWidgets.QWidget):
                     else:
                         self.block_widgets[i + 1].up_widgets[j % 12][1].setValue(val)
             else:
-                self.block_widgets_state[i + 1][0].extra_elem.setChecked(False)
-                self.block_widgets_state[i + 1][0].enable_disable(False)
-                self.block_widgets_state[i + 1][1] = False
+                self.set_block_widget_enable(i + 1, False)
 
-    def load_args(self, args: dict) -> None:
-        if self.name not in args:
-            return
-        sdxl = args['general_args']['args'].get('sdxl', False)
-        args = args[self.name]['args']
-        self.ui.network_dim_input.setValue(args['network_dim'])
-        self.ui.network_alpha_input.setValue(args['network_alpha'])
-        self.ui.lora_fa_enable.setChecked(args.get("fa", False))
-        index = 1 if "network_train_unet_only" in args else 2 if "network_train_text_encoder_only" in args else 0
-        self.ui.unet_te_both_select.setCurrentIndex(index)
+    def load_block_weight(
+        self, down_lr_rate: list[float], mid_lr_weight: float, up_lr_weight: list[float]
+    ) -> None:
+        self.set_block_widget_enable(0, True)
 
-        checked = True if args.get('network_dropout', False) else False
-        self.ui.network_dropout_enable.setChecked(checked)
-        self.ui.network_dropout_input.setValue(args.get('network_dropout', 0.1))
-        self.enable_disable_dropout('network', checked)
+        for i, val in enumerate(down_lr_rate):
+            self.block_widgets[0].vals["down_lr_weight"][i] = val
+            self.block_widgets[0].down_widgets[i][1].setValue(val)
+        self.block_widgets[0].vals["mid_lr_weight"] = mid_lr_weight
+        self.block_widgets[0].mid_widget[1].setValue(mid_lr_weight)
+        for i, val in enumerate(up_lr_weight):
+            self.block_widgets[0].vals["up_lr_weight"][i] = val
+            self.block_widgets[0].up_widgets[i][1].setValue(val)
 
-        self.ui.min_timestep_input.setValue(args.get('min_timestep', 0))
-        self.ui.max_timestep_input.setValue(args.get('max_timestep', 1000))
-        self.edit_timesteps('min_timestep')
-        self.edit_timesteps('max_timestep')
-        self.ui.cache_te_outputs_enable.setChecked(args.get('cache_text_encoder_outputs', False))
-        self.ui.cache_te_to_disk_enable.setChecked(args.get('cache_text_encoder_outputs_to_disk', False))
-        self.enable_disable_cache_text_encoder_outputs(sdxl)
-
-        if "network_args" in args:
-            self.ui.conv_dim_input.setValue(args['network_args'].get("conv_dim", 32))
-            self.ui.conv_alpha_input.setValue(args['network_args'].get("conv_alpha", 16))
-            self.ui.dylora_unit_input.setValue(args['network_args'].get("unit", 4))
-            self.ui.lycoris_preset_input.setText(args['network_args'].get("preset", ""))
-            self.ui.train_norm_enable.setChecked(False)
-            # self.ui.train_norm_enable.setChecked(args['network_args'].get("train_norm", False)) uncomment when fixed
-
-            if 'network_dropout' not in args:
-                checked = True if args['network_args'].get('dropout', False) else False
-                self.ui.network_dropout_enable.setChecked(checked)
-                self.ui.network_dropout_input.setValue(args['network_args'].get('dropout', 0.1))
-                self.enable_disable_dropout('network', checked)
-
-            checked = True if args['network_args'].get('rank_dropout', False) else False
-            self.ui.rank_dropout_enable.setChecked(checked)
-            self.ui.rank_dropout_input.setValue(args['network_args'].get('rank_dropout', 0.1))
-            self.enable_disable_dropout('rank', checked)
-
-            checked = True if args['network_args'].get('module_dropout', False) else False
-            self.ui.module_dropout_enable.setChecked(checked)
-            self.ui.module_dropout_input.setValue(args['network_args'].get('module_dropout', 0.1))
-            self.enable_disable_dropout('module', checked)
-
-            if "unit" in args['network_args']:
-                self.ui.algo_select.setCurrentIndex(6)
-            elif "algo" in args['network_args']:
-                algo = args['network_args']['algo']
-                index = 2 if algo == 'locon' else 3 if algo == 'loha' else 4 if algo == "ia3" else 5 if algo == 'lokr' \
-                    else 7
-                self.ui.cp_enable.setChecked(False)  # remove when fixed
-                # self.ui.cp_enable.setChecked(args['network_args'].get("use_conv_cp", False))
-                self.ui.algo_select.setCurrentIndex(index)
-            elif "conv_dim" in args['network_args']:
-                self.ui.algo_select.setCurrentIndex(1)
-            else:
-                self.ui.algo_select.setCurrentIndex(0)
-            self.load_block_args(args)
-        else:
-            self.ui.algo_select.setCurrentIndex(0)
-
-    def save_args(self) -> Union[dict, None]:
-        self.get_block_args(self.args)
-        return self.args
-
-    def save_dataset_args(self) -> Union[dict, None]:
-        pass
+    def set_block_widget_enable(self, index, enabled):
+        self.block_widgets_state[index][0].extra_elem.setChecked(enabled)
+        self.block_widgets_state[index][0].enable_disable(enabled)
+        self.block_widgets_state[index][1] = False

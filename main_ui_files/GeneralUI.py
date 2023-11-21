@@ -51,8 +51,8 @@ class BaseArgsWidget(QtWidgets.QWidget):
         self.widget.vae_input.textChanged.connect(lambda x: self.edit_args('vae', x, elem=self.widget.vae_input))
         self.widget.vae_selector.clicked.connect(lambda: self.set_from_dialog(False))
         self.widget.sdxl_enable.clicked.connect(self.enable_disable_sdxl)
-        self.widget.v2_enable.clicked.connect(self.enable_disable_sd2)
-        self.widget.v_param_enable.clicked.connect(lambda x: self.enable_disable_sd2(self.widget.v2_enable.isChecked()))
+        self.widget.v2_enable.clicked.connect(self.enable_disable_v2)
+        self.widget.v_param_enable.clicked.connect(self.enable_disable_vparam)
         self.widget.v_pred_enable.clicked.connect(lambda x: self.edit_args("scale_v_pred_loss_like_noise_pred", x, True))
 
         # resolution connections
@@ -136,43 +136,44 @@ class BaseArgsWidget(QtWidgets.QWidget):
         self.widget.vae_input.setText(file_name or self.widget.vae_input.text())
 
     @QtCore.Slot(bool)
-    def enable_disable_sd2(self, checked: bool) -> None:
+    def enable_disable_v2(self, checked: bool) -> None:
         if checked:
             self.args['v2'] = True
-            self.widget.v_param_enable.setEnabled(True)
-            self.edit_args("v_parameterization", self.widget.v_param_enable.isChecked(), True)
-            self.widget.sdxl_enable.setEnabled(False)
-            if self.widget.v_param_enable.isChecked():
-                self.widget.v_pred_enable.setEnabled(True)
-                self.edit_args("scale_v_pred_loss_like_noise_pred", self.widget.v_pred_enable.isChecked(), True)
-            else:
-                self.widget.v_pred_enable.setEnabled(False)
-                self.edit_args("scale_v_pred_loss_like_noise_pred", False, True)
+            self.enable_disable_sdxl(False)
         else:
-            self.widget.v_param_enable.setEnabled(False)
+            self.enable_disable_sdxl(True)
+            if "v2" in self.args:
+                del self.args["v2"]
+
+    @QtCore.Slot(bool)
+    def enable_disable_vparam(self, checked: bool) -> None:
+        self.widget.v_pred_enable.setEnabled(False)
+        if checked:
+            self.args['v_parameterization'] = True
+            self.widget.v_pred_enable.setEnabled(True)
+            self.edit_args("scale_v_pred_loss_like_noise_pred", self.widget.v_pred_enable.isChecked(), True)
+        else:
             self.widget.v_pred_enable.setEnabled(False)
-            self.widget.sdxl_enable.setEnabled(True)
-            for name in ['v2', 'v_parameterization', 'scale_v_pred_loss_like_noise_pred']:
-                if name in self.args:
-                    del self.args[name]
+            for arg in ["v_parameterization", "scale_v_pred_loss_like_noise_pred"]:
+                if arg in self.args:
+                    del self.args[arg]
 
     @QtCore.Slot(bool)
     def enable_disable_sdxl(self, checked: bool) -> None:
+        for arg in ["sdxl", "v2", "clip_skip"]:
+            if arg in self.args:
+                del self.args[arg]
         if checked:
             self.args['sdxl'] = True
             self.widget.v2_enable.setEnabled(False)
             self.widget.clip_skip_input.setEnabled(False)
-            self.edit_args('clip_skip', None, True)
-            self.enable_disable_sd2(False)
             self.SdxlChecked.emit(True)
         else:
-            if 'sdxl' in self.args:
-                del self.args['sdxl']
-            self.widget.clip_skip_input.setEnabled(True)
-            self.edit_args('clip_skip', self.widget.clip_skip_input.value())
             self.widget.v2_enable.setEnabled(True)
             if self.widget.v2_enable.isChecked():
-                self.enable_disable_sd2(True)
+                self.args['v2'] = True
+            self.widget.clip_skip_input.setEnabled(True)
+            self.edit_args('clip_skip', self.widget.clip_skip_input.value())
             self.SdxlChecked.emit(False)
 
     @QtCore.Slot(bool)
@@ -324,13 +325,12 @@ class BaseArgsWidget(QtWidgets.QWidget):
         self.widget.v2_enable.setChecked(args.get('v2', False))
         self.widget.v_param_enable.setChecked(args.get("v_parameterization", False))
         self.widget.v_pred_enable.setChecked(args.get('scale_v_pred_loss_like_noise_pred', False))
-        self.enable_disable_sd2(self.widget.v2_enable.isChecked())
+        self.enable_disable_v2(self.widget.v2_enable.isChecked())
+        self.enable_disable_vparam(self.widget.v_param_enable.isChecked())
 
+        # SDXL args
         self.widget.sdxl_enable.setChecked(args.get('sdxl', False))
-        if self.widget.sdxl_enable.isChecked():
-            self.enable_disable_sdxl(True)
-        else:
-            self.enable_disable_sdxl(False)
+        self.enable_disable_sdxl(self.widget.sdxl_enable.isChecked())
 
         # resolution args
         if isinstance(dataset_args['resolution'], list):

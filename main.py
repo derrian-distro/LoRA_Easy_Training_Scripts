@@ -7,21 +7,30 @@ from qt_material import apply_stylesheet
 from main_ui_files.MainWindow import MainWindow
 
 
+def CreateConfig():
+    config = {"theme": {
+        "location": os.path.join("css", "themes", "dark_teal.xml"),
+        "is_light": False
+    }}
+    fp = open("config.json", 'w')
+    json.dump(config, fp=fp, indent=4)
+    fp.close()
+    
 def main() -> None:
     if os.path.exists("config.json"):
-        with open("config.json", 'r') as f:
-            config = json.load(f)
+        try:
+            with open("config.json", 'r') as f:
+                config = json.load(f)
+        except json.decoder.JSONDecodeError as Error:
+                print("Could not load config. Recreating...")
+                CreateConfig()
     else:
-        config = {"theme": {
-            "location": os.path.join("css", "themes", "dark_teal.xml"),
-            "is_light": False
-        }}
-        fp = open("config.json", 'w')
-        json.dump(config, fp=fp, indent=4)
-        fp.close()
+        CreateConfig()
+        
     app = QtWidgets.QApplication(sys.argv)
     apply_stylesheet(app, theme=config['theme']['location'], invert_secondary=config['theme']['is_light'])
     window = MainWindow(app)
+    window.setWindowTitle('LoRA Trainer')
     window.show()
     app.exec()
 

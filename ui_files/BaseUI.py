@@ -133,7 +133,7 @@ class Ui_base_args_ui(object):
         self.horizontalLayout_6.setObjectName(u"horizontalLayout_6")
         self.v_param_enable = QCheckBox(self.base_model_box)
         self.v_param_enable.setObjectName(u"v_param_enable")
-        self.v_param_enable.setEnabled(False)
+        self.v_param_enable.setEnabled(True)
 
         self.horizontalLayout_6.addWidget(self.v_param_enable)
 

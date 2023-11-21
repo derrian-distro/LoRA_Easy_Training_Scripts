@@ -508,7 +508,7 @@
               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Enables Conv CP, which is some form of compression algorithm that further reduces file size, I personally suggest you don't use it&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
              </property>
              <property name="text">
-              <string>Enable Conv CP</string>
+              <string>Enable Tucker</string>
              </property>
             </widget>
            </item>

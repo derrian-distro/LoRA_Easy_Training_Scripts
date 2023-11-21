@@ -182,6 +182,16 @@ As you can see everything is sectioned off into their own sections. Generally th
 
 changelog of the old scripts are all in that branch [here](https://github.com/derrian-distro/LoRA_Easy_Training_Scripts/tree/old-scripts#changelog)
 
+- November 11, 2023
+  - Updated LyCORIS and sd_scripts
+  - completely re-wrote the code behind the network args, should be far less buggy now
+    - this should have also fixed a long standing visual bug and fixes a newer bug that prevented network_dropout from applying correctly
+  - Added support for SDXL
+  - Changed some of the args to allow for use of vpred without the v2 arg
+  - updated the installer to (hopefully) fix the failure to install correctly on 10X0 cards
+  - Added an installer for linux systems from issue #155. This assumes that you have python 3.10, python venv, and git installed
+  - other smaller bug fixes
+  - In all honesty, I was waiting for SDXL to be merged to main for so long that I forgot all of the changes I made over time, which is why I kept putting off updating the readme, apologies. I'll try to keep up with it again now that I've written this version.
 - July 6, 2023
   - Updated LyCORIS
   - Overhauled the UI, to fit on smaller screens
