@@ -22,6 +22,7 @@ def main() -> None:
     app = QtWidgets.QApplication(sys.argv)
     apply_stylesheet(app, theme=config['theme']['location'], invert_secondary=config['theme']['is_light'])
     window = MainWindow(app)
+    window.setWindowTitle('LoRA Trainer')
     window.show()
     app.exec()
 
