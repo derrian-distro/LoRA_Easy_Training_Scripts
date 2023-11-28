@@ -15,6 +15,7 @@ def CreateConfig():
     fp = open("config.json", 'w')
     json.dump(config, fp=fp, indent=4)
     fp.close()
+    return config
     
 def main() -> None:
     if os.path.exists("config.json"):
@@ -23,9 +24,9 @@ def main() -> None:
                 config = json.load(f)
         except json.decoder.JSONDecodeError as Error:
                 print("Could not load config. Recreating...")
-                CreateConfig()
+                config = CreateConfig()
     else:
-        CreateConfig()
+        config = CreateConfig()
         
     app = QtWidgets.QApplication(sys.argv)
     apply_stylesheet(app, theme=config['theme']['location'], invert_secondary=config['theme']['is_light'])
