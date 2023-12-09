@@ -33,8 +33,12 @@ after that, it will begin installing, asking a few questions along the way. Just
 
 ### Linux
 
-If you are on linux then I can't create a specific installer for you unfortunately, but I can give you a general outline of what to do to install my scripts. starting at the folder you want to install to,
+If you are on linux all you need to do to install the scripts is open up a shell within the folder that you want to install to then type the following line,
 
+```
+sh -c "$(wget https://raw.githubusercontent.com/derrian-distro/LoRA_Easy_Training_Scripts/main/install.sh -O -)"
+```
+Manual method below for those that want it.
 ```
 git clone https://github.com/derrian-distro/LoRA_Easy_Training_Scripts
 cd LoRA_Easy_Training_Scripts
