@@ -20,7 +20,7 @@ pip install xformers
 pip install -r ../requirements_ui.txt
 pip install ../LyCORIS/.
 pip install ../custom_scheduler/.
-pip install bitsandbytes
+pip install bitsandbytes scipy
 
 ## Configure accelerate
 accelerate config
