@@ -2,113 +2,106 @@ import shutil
 import sys
 import subprocess
 import os
-import pkg_resources
+from pathlib import Path
 from zipfile import ZipFile
 
 try:
     import requests
-except ModuleNotFoundError as error:
-    required = {"requests"}
-    installed = {p.key for p in pkg_resources.working_set}
-    missing = required - installed
-    if missing:
-        print("installing requests...")
-        python = sys.executable
-        subprocess.check_call(
-            [python, "-m", "pip", "install", *missing], stdout=subprocess.DEVNULL
-        )
-        import requests
+except ModuleNotFoundError:
+    print("installing requests...")
+    python = sys.executable
+    subprocess.check_call(
+        [python, "-m", "pip", "install", "requests"], stdout=subprocess.DEVNULL
+    )
 
 
-def main():
+def check_version_and_platform():
     if sys.platform != "win32":
-        print("ERROR: This installer only works on Windows")
-        quit()
-    else:
-        print("Running on windows...")
+        print("ERROR: This installer only works on windows")
+        return False
 
     version = sys.version_info
     if version.major != 3 or version.minor != 10:
         print(
             "ERROR: You don't have python 3.10 installed, please install python 3.10, preferably 3.10.6, and add it to path"
         )
-        quit()
-    else:
-        print("Python version 3.10 detected...")
+        return False
+    return True
 
+
+def check_git_install():
     try:
         subprocess.check_call(
-            ["git", "--version"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL
+            "git --version", stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL
         )
     except FileNotFoundError:
         print("ERROR: Git is not installed, please install git")
-        quit()
-    print("Git is installed... installing")
+        return False
+    return True
 
-    python_real = sys.executable
-    python = r"venv\Scripts\pip.exe"
 
-    subprocess.check_call(["git", "submodule", "init"])
-    subprocess.check_call(["git", "submodule", "update"])
-
-    print("setting execution policy to unrestricted")
+def set_execution_policy():
     try:
-        subprocess.check_call(
-            f"{os.path.join('installables', 'change_execution_policy.bat')}"
-        )
+        subprocess.check_call(str(Path("installables/change_execution_policy.bat")))
     except subprocess.SubprocessError:
         try:
             subprocess.check_call(
-                f"{os.path.join('installables', 'change_execution_policy_backup.bat')}"
+                str(Path("installables/change_execution_policy_backup.bat"))
             )
         except subprocess.SubprocessError as e:
             print(f"Failed to change the execution policy with error:\n {e}")
+            return False
+    return True
 
-    os.chdir("sd_scripts")
 
-    print("creating venv and installing requirements")
-    subprocess.check_call([python_real, "-m", "venv", "venv"])
-
+def ask_10_series(venv_pip):
     reply = None
-    while reply not in ("0", "1", "2"):
-        reply = input(
-            "which version of torch do you want to install?\n"
-            "0 = 1.12.1\n"
-            "1 = 2.0.0\n"
-            "2 = 2.0.1: "
-        ).casefold()
+    while reply not in ("y", "n"):
+        reply = input("Are you using a 10X0 series card? (y/n): ")
+    if reply == "n":
+        return False
 
-    if reply == "2":
-        torch_version = "torch==2.0.1+cu118 torchvision==0.15.2+cu118 --index-url https://download.pytorch.org/whl/cu118"
-    elif reply == "1":
-        torch_version = "torch==2.0.0+cu118 torchvision==0.15.0+cu118 --extra-index-url https://download.pytorch.org/whl/cu118"
-    else:
-        torch_version = "torch==1.12.1+cu116 torchvision==0.13.1+cu116 --extra-index-url https://download.pytorch.org/whl/cu116"
-    print("installing torch")
-    subprocess.check_call(f"{python} install {torch_version}".split(" "))
+    torch_version = "torch==1.12.1+cu116 torchvision==0.13.1+cu116 --extra-index-url https://download.pytorch.org/whl/cu116"
+    subprocess.check_call(f"{venv_pip} install {torch_version}")
+    subprocess.check_call(f"{venv_pip} install -r requirements.txt")
+    subprocess.check_call(
+        f"{venv_pip} install -U -I --no-deps https://github.com/C43H66N12O12S2/stable-diffusion-webui/releases/download/f/xformers-0.0.14.dev0-cp310-cp310-win_amd64.whl"
+    )
+    subprocess.check_call(f"{venv_pip} install -r ../requirements_ui.txt")
+    subprocess.check_call(f"{venv_pip} install ../LyCORIS/.")
+    subprocess.check_call(f"{venv_pip} install ../custom_scheduler/.")
+    subprocess.check_call(f"{venv_pip} install bitsandbytes==0.35.0")
 
-    print("installing other requirements")
-    subprocess.check_call(f"{python} install -r requirements.txt".split(" "))
+    shutil.copy(
+        Path("../installables/libbitsandbytes_cudaall.dll"),
+        Path("venv/Lib/site-packages/bitsandbytes"),
+    )
+    os.remove(Path("venv/Lib/site-packages/bitsandbytes/cuda_setup/main.py"))
+    shutil.copy(
+        Path("../installables/main.py"),
+        Path("venv/Lib/site-packages/bitsandbytes/cuda_setup"),
+    )
+    return True
 
-    print("installing xformers")
-    if reply in {"2", "1"}:
-        xformers = "xformers==0.0.20"
-    else:
-        xformers = "https://github.com/C43H66N12O12S2/stable-diffusion-webui/releases/download/f/xformers-0.0.14.dev0-cp310-cp310-win_amd64.whl"
-    subprocess.check_call(f"{python} install -U -I --no-deps {xformers}".split(" "))
 
-    subprocess.check_call(f"{python} install -r ../requirements_ui.txt")
-    subprocess.check_call(f"{python} install ../LyCORIS/.")
-    subprocess.check_call(f"{python} install ../custom_scheduler/.")
-    
-    if reply in {"2", "1"}:
-        subprocess.check_call(
-            f"{python} install bitsandbytes==0.41.1 --prefer-binary --extra-index-url=https://jllllll.github.io/bitsandbytes-windows-webui"
-        )
-    else:
-        subprocess.check_call(f"{python} install bitsandbytes==0.35.0")
+def setup_normal(venv_pip):
+    torch_version = (
+        "torch torchvision --index-url https://download.pytorch.org/whl/cu118"
+    )
+    subprocess.check_call(f"{venv_pip} install {torch_version}")
+    subprocess.check_call(f"{venv_pip} install -r requirements.txt")
+    subprocess.check_call(
+        f"{venv_pip} install xformers --index-url https://download.pytorch.org/whl/cu118"
+    )
+    subprocess.check_call(f"{venv_pip} install -r ../requirements_ui.txt")
+    subprocess.check_call(f"{venv_pip} install ../LyCORIS/.")
+    subprocess.check_call(f"{venv_pip} install ../custom_scheduler/.")
+    subprocess.check_call(
+        f"{venv_pip} install https://github.com/jllllll/bitsandbytes-windows-webui/releases/download/wheels/bitsandbytes-0.41.1-py3-none-win_amd64.whl"
+    )
 
-    print("Setting up default config of accelerate")
+
+def setup_accelerate():  # sourcery skip: extract-method
     with open("default_config.yaml", "w") as f:
         f.write("command_file: null\n")
         f.write("commands: null\n")
@@ -155,66 +148,73 @@ def main():
         os.path.join(os.environ["USERPROFILE"], ".cache", "huggingface", "accelerate"),
     )
 
+
+def setup_cudnn():
     reply = None
     while reply not in ("y", "n"):
         reply = input(
             "Do you want to install the optional cudnn patch for faster "
             "training on high end 30X0 and 40X0 cards? (y/n): "
         ).casefold()
+    if reply == "n":
+        return
 
-    if reply == "y":
-        r = requests.get(
-            "https://developer.download.nvidia.com/compute/redist/cudnn/v8.6.0/local_installers/11.8/cudnn-windows-x86_64-8.6.0.163_cuda11-archive.zip"
+    r = requests.get(
+        "https://developer.download.nvidia.com/compute/redist/cudnn/v8.6.0/local_installers/11.8/cudnn-windows-x86_64-8.6.0.163_cuda11-archive.zip"
+    )
+    with open("cudnn.zip", "wb") as f:
+        f.write(r.content)
+    with ZipFile("cudnn.zip", "r") as f:
+        f.extractall(path="cudnn_patch")
+    shutil.move(
+        "cudnn_patch\\cudnn-windows-x86_64-8.6.0.163_cuda11-archive\\bin",
+        "cudnn_windows",
+    )
+    os.mkdir("temp")
+    r = requests.get(
+        "https://raw.githubusercontent.com/bmaltais/kohya_ss/9c5bdd17499e3f677a5d7fa081ee0b4fccf5fd4a/tools/cudann_1.8_install.py"
+    )
+    with open(os.path.join("temp", "cudnn.py"), "wb") as f:
+        f.write(r.content)
+    subprocess.check_call(
+        f"{os.path.join('venv', 'Scripts', 'python.exe')} {os.path.join('temp', 'cudnn.py')}".split(
+            " "
         )
-        with open("cudnn.zip", "wb") as f:
-            f.write(r.content)
-        with ZipFile("cudnn.zip", "r") as f:
-            f.extractall(path="cudnn_patch")
-        shutil.move(
-            "cudnn_patch\\cudnn-windows-x86_64-8.6.0.163_cuda11-archive\\bin",
-            "cudnn_windows",
-        )
-        os.mkdir("temp")
-        r = requests.get(
-            "https://raw.githubusercontent.com/bmaltais/kohya_ss/9c5bdd17499e3f677a5d7fa081ee0b4fccf5fd4a/tools/cudann_1.8_install.py"
-        )
-        with open(os.path.join("temp", "cudnn.py"), "wb") as f:
-            f.write(r.content)
-        subprocess.check_call(
-            f"{os.path.join('venv', 'Scripts', 'python.exe')} {os.path.join('temp', 'cudnn.py')}".split(
-                " "
-            )
-        )
-        shutil.rmtree("temp")
-        shutil.rmtree("cudnn_windows")
-        shutil.rmtree("cudnn_patch")
-        os.remove("cudnn.zip")
-    else:
-        reply = None
-        while reply not in ("y", "n"):
-            reply = input("Are you using a 10X0 series card? (y/n): ")
-        if reply:
-            shutil.copy(
-                os.path.join("..", "installables", "libbitsandbytes_cudaall.dll"),
-                os.path.join("venv", "Lib", "site-packages", "bitsandbytes"),
-            )
-            os.remove(
-                os.path.join(
-                    "venv",
-                    "Lib",
-                    "site-packages",
-                    "bitsandbytes",
-                    "cuda_setup",
-                    "main.py",
-                )
-            )
-            shutil.copy(
-                os.path.join("..", "installables", "main.py"),
-                os.path.join(
-                    "venv", "Lib", "site-packages", "bitsandbytes", "cuda_setup"
-                ),
-            )
-    print("Completed installing, you can launch the ui by launching run.bat")
+    )
+    shutil.rmtree("temp")
+    shutil.rmtree("cudnn_windows")
+    shutil.rmtree("cudnn_patch")
+    os.remove("cudnn.zip")
+
+
+def main():
+    if not check_version_and_platform() or not check_git_install():
+        quit()
+
+    python_real = sys.executable
+    venv_pip = r"venv\Scripts\pip.exe"
+
+    subprocess.check_call("git submodule init")
+    subprocess.check_call("git submodule update")
+
+    print("setting execution policy to unrestricted")
+    if not set_execution_policy():
+        quit()
+
+    os.chdir("sd_scripts")
+
+    print("creating venv and installing requirements")
+    subprocess.check_call([python_real, "-m", "venv", "venv"])
+
+    if ask_10_series(venv_pip):
+        setup_accelerate()
+        print("Completed installing, you can launch the ui by launching run.bat")
+        quit()
+    setup_normal(venv_pip)
+    setup_accelerate()
+    setup_cudnn()
+
+    print("Completed installing, you can launch the ui bu launching run.bat")
 
 
 if __name__ == "__main__":

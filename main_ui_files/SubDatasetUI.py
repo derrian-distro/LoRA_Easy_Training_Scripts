@@ -16,8 +16,15 @@ class SubsetItem(QtWidgets.QWidget):
     def __init__(self, parent: QtWidgets.QWidget = None) -> None:
         super(SubsetItem, self).__init__(parent)
         self.args = {
-            'num_repeats': 1, 'keep_tokens': 0, 'caption_extension': '.txt', 'shuffle_caption': False,
-            'flip_aug': False, 'color_aug': False, 'random_crop': False, 'is_reg': False, "image_dir": ""
+            "num_repeats": 1,
+            "keep_tokens": 0,
+            "caption_extension": ".txt",
+            "shuffle_caption": False,
+            "flip_aug": False,
+            "color_aug": False,
+            "random_crop": False,
+            "is_reg": False,
+            "image_dir": "",
         }
         self.widget = Ui_sub_dataset_input()
         self.sub_widget = QtWidgets.QWidget()
@@ -27,51 +34,91 @@ class SubsetItem(QtWidgets.QWidget):
         self.layout().setAlignment(QtCore.Qt.AlignmentFlag.AlignTop)
         self.widget.extra_args.add_widget(self.sub_widget, "sub_args")
         self.widget.extra_args.title_frame.setText("Optional Args")
-        self.widget.file_dialog_button.setIcon(QtGui.QIcon(os.path.join("icons", "more-horizontal.svg")))
+        self.widget.file_dialog_button.setIcon(
+            QtGui.QIcon(os.path.join("icons", "more-horizontal.svg"))
+        )
 
         # handle logic for image dir
         self.widget.lineEdit.setMode("folder")
         self.widget.lineEdit.highlight = True
-        self.widget.lineEdit.textChanged.connect(lambda x: self.edit_args("image_dir", x, self.widget.lineEdit))
+        self.widget.lineEdit.textChanged.connect(
+            lambda x: self.edit_args("image_dir", x, self.widget.lineEdit)
+        )
         self.widget.file_dialog_button.clicked.connect(self.set_from_dialog)
 
         # handle logic for the spin boxes and combobox
-        self.widget.repeats_spinbox.valueChanged.connect(lambda x: self.edit_args("num_repeats", x))
-        self.widget.keep_tokens_spinbox.valueChanged.connect(lambda x: self.edit_args("keep_tokens", x))
-        self.widget.caption_extension.currentTextChanged.connect(lambda x: self.edit_args("caption_extension", x))
+        self.widget.repeats_spinbox.valueChanged.connect(
+            lambda x: self.edit_args("num_repeats", x)
+        )
+        self.widget.keep_tokens_spinbox.valueChanged.connect(
+            lambda x: self.edit_args("keep_tokens", x)
+        )
+        self.widget.caption_extension.currentTextChanged.connect(
+            lambda x: self.edit_args("caption_extension", x)
+        )
 
         # handle logic for the checkboxes
-        self.widget.shuffle_captions.stateChanged.connect(lambda x: self.edit_args("shuffle_caption", x == 2))
-        self.widget.flip_aug.stateChanged.connect(lambda x: self.edit_args("flip_aug", x == 2))
-        self.widget.color_aug.stateChanged.connect(lambda x: self.edit_args("color_aug", x == 2))
-        self.widget.random_crop.stateChanged.connect(lambda x: self.edit_args("random_crop", x == 2))
-        self.widget.reg_images.stateChanged.connect(lambda x: self.edit_args("is_reg", x == 2))
+        self.widget.shuffle_captions.stateChanged.connect(
+            lambda x: self.edit_args("shuffle_caption", x == 2)
+        )
+        self.widget.flip_aug.stateChanged.connect(
+            lambda x: self.edit_args("flip_aug", x == 2)
+        )
+        self.widget.color_aug.stateChanged.connect(
+            lambda x: self.edit_args("color_aug", x == 2)
+        )
+        self.widget.random_crop.stateChanged.connect(
+            lambda x: self.edit_args("random_crop", x == 2)
+        )
+        self.widget.reg_images.stateChanged.connect(
+            lambda x: self.edit_args("is_reg", x == 2)
+        )
 
         # handle logic for face crop
-        self.sub_widget_args.face_crop_layout.clicked.connect(self.enable_disable_crop_aug)
-        self.sub_widget_args.face_crop_width.valueChanged.connect(lambda x: self.edit_args("face_crop_aug_range", [
-            x, self.sub_widget_args.face_crop_height.value()]))
-        self.sub_widget_args.face_crop_height.valueChanged.connect(lambda x: self.edit_args("face_crop_aug_range", [
-            self.sub_widget_args.face_crop_width.value(), x]))
+        self.sub_widget_args.face_crop_layout.clicked.connect(
+            self.enable_disable_crop_aug
+        )
+        self.sub_widget_args.face_crop_width.valueChanged.connect(
+            lambda x: self.edit_args(
+                "face_crop_aug_range",
+                [x, self.sub_widget_args.face_crop_height.value()],
+            )
+        )
+        self.sub_widget_args.face_crop_height.valueChanged.connect(
+            lambda x: self.edit_args(
+                "face_crop_aug_range", [self.sub_widget_args.face_crop_width.value(), x]
+            )
+        )
 
         # handle logic for caption dropout
-        self.sub_widget_args.caption_dropout_layout.clicked.connect(self.enable_disable_caption_dropout)
-        self.sub_widget_args.caption_dropout_rate_input.valueChanged.connect(lambda x: self.edit_args(
-            "caption_dropout_rate", round(x, 2)))
-        self.sub_widget_args.caption_epoch_dropout_input.valueChanged.connect(lambda x: self.edit_args(
-            "caption_dropout_every_n_epochs", x))
-        self.sub_widget_args.caption_tag_dropout_input.valueChanged.connect(lambda x: self.edit_args(
-            "caption_tag_dropout_rate", round(x, 2)))
+        self.sub_widget_args.caption_dropout_layout.clicked.connect(
+            self.enable_disable_caption_dropout
+        )
+        self.sub_widget_args.caption_dropout_rate_input.valueChanged.connect(
+            lambda x: self.edit_args("caption_dropout_rate", round(x, 2))
+        )
+        self.sub_widget_args.caption_epoch_dropout_input.valueChanged.connect(
+            lambda x: self.edit_args("caption_dropout_every_n_epochs", x)
+        )
+        self.sub_widget_args.caption_tag_dropout_input.valueChanged.connect(
+            lambda x: self.edit_args("caption_tag_dropout_rate", round(x, 2))
+        )
 
         # handle tag warmup
-        self.sub_widget_args.token_warmup_layout.clicked.connect(self.enable_disable_tag_warmup)
-        self.sub_widget_args.token_warmup_step_input.valueChanged.connect(lambda x: self.edit_args(
-            "token_warmup_step", round(x, 2)))
-        self.sub_widget_args.token_minimum_warmup_input.valueChanged.connect(lambda x: self.edit_args(
-            "token_warmup_min", x))
+        self.sub_widget_args.token_warmup_layout.clicked.connect(
+            self.enable_disable_tag_warmup
+        )
+        self.sub_widget_args.token_warmup_step_input.valueChanged.connect(
+            lambda x: self.edit_args("token_warmup_step", round(x, 2))
+        )
+        self.sub_widget_args.token_minimum_warmup_input.valueChanged.connect(
+            lambda x: self.edit_args("token_warmup_min", x)
+        )
 
     @QtCore.Slot(str, object, QtWidgets.QWidget)
-    def edit_args(self, name: str, value: object, widget: QtWidgets.QWidget = None) -> None:
+    def edit_args(
+        self, name: str, value: object, widget: QtWidgets.QWidget = None
+    ) -> None:
         if widget:
             if isinstance(widget, DragDropLineEdit):
                 widget.update_stylesheet()
@@ -83,8 +130,9 @@ class SubsetItem(QtWidgets.QWidget):
         folder = self.widget.lineEdit.text()
         default_dir = folder if os.path.exists(folder) else ""
         if not path:
-            file_name = QtWidgets.QFileDialog.getExistingDirectory(self, "open directory containing images",
-                                                                   dir=default_dir)
+            file_name = QtWidgets.QFileDialog.getExistingDirectory(
+                self, "open directory containing images", dir=default_dir
+            )
             if not file_name:
                 return
         else:
@@ -99,37 +147,47 @@ class SubsetItem(QtWidgets.QWidget):
     @QtCore.Slot(bool)
     def enable_disable_crop_aug(self, checked: bool) -> None:
         if checked:
-            self.args['face_crop_aug_range'] = [
+            self.args["face_crop_aug_range"] = [
                 self.sub_widget_args.face_crop_width.value(),
-                self.sub_widget_args.face_crop_height.value()
+                self.sub_widget_args.face_crop_height.value(),
             ]
         else:
-            if 'face_crop_aug_range' in self.args:
-                del self.args['face_crop_aug_range']
+            if "face_crop_aug_range" in self.args:
+                del self.args["face_crop_aug_range"]
 
     @QtCore.Slot(bool)
     def enable_disable_caption_dropout(self, checked: bool) -> None:
         if checked:
-            self.args['caption_dropout_rate'] = self.sub_widget_args.caption_dropout_rate_input.value()
-            self.args['caption_dropout_every_n_epochs'] = self.sub_widget_args.caption_epoch_dropout_input.value()
-            self.args['caption_tag_dropout_rate'] = self.sub_widget_args.caption_tag_dropout_input.value()
+            self.args[
+                "caption_dropout_rate"
+            ] = self.sub_widget_args.caption_dropout_rate_input.value()
+            self.args[
+                "caption_dropout_every_n_epochs"
+            ] = self.sub_widget_args.caption_epoch_dropout_input.value()
+            self.args[
+                "caption_tag_dropout_rate"
+            ] = self.sub_widget_args.caption_tag_dropout_input.value()
         else:
             if "caption_dropout_rate" in self.args:
-                del self.args['caption_dropout_rate']
+                del self.args["caption_dropout_rate"]
             if "caption_dropout_every_n_epochs" in self.args:
-                del self.args['caption_dropout_every_n_epochs']
+                del self.args["caption_dropout_every_n_epochs"]
             if "caption_tag_dropout_rate" in self.args:
-                del self.args['caption_tag_dropout_rate']
+                del self.args["caption_tag_dropout_rate"]
 
     @QtCore.Slot(bool)
     def enable_disable_tag_warmup(self, checked: bool) -> None:
         if checked:
-            self.args['token_warmup_min'] = self.sub_widget_args.token_minimum_warmup_input.value()
-            self.args['token_warmup_step'] = self.sub_widget_args.token_warmup_step_input.value()
+            self.args[
+                "token_warmup_min"
+            ] = self.sub_widget_args.token_minimum_warmup_input.value()
+            self.args[
+                "token_warmup_step"
+            ] = self.sub_widget_args.token_warmup_step_input.value()
         else:
             if "token_warmup_min" in self.args:
-                del self.args['token_warmup_min']
-                del self.args['token_warmup_step']
+                del self.args["token_warmup_min"]
+                del self.args["token_warmup_step"]
 
     @QtCore.Slot(bool)
     def enable_disable_cache_dependants(self, checked: bool) -> None:
@@ -139,19 +197,27 @@ class SubsetItem(QtWidgets.QWidget):
             self.edit_args("color_aug", self.widget.color_aug.isChecked())
             self.edit_args("random_crop", self.widget.random_crop.isChecked())
         else:
-            for name in ['color_aug', "random_crop"]:
+            for name in ["color_aug", "random_crop"]:
                 if name in self.args:
                     del self.args[name]
 
+    @QtCore.Slot(bool)
+    def enable_disable_keep_tokens(self, checked: bool) -> None:
+        self.widget.keep_tokens_spinbox.setEnabled(not checked)
+        if "keep_tokens" in self.args:
+            del self.args["keep_tokens"]
+        if not checked:
+            self.edit_args("keep_tokens", self.widget.keep_tokens_spinbox.value())
+
     def load_args(self, args: dict) -> None:
-        self.widget.lineEdit.setText(args['image_dir'])
-        self.widget.repeats_spinbox.setValue(args['num_repeats'])
-        self.edit_args("num_repeats", args['num_repeats'])
+        self.widget.lineEdit.setText(args["image_dir"])
+        self.widget.repeats_spinbox.setValue(args["num_repeats"])
+        self.edit_args("num_repeats", args["num_repeats"])
 
-        self.widget.keep_tokens_spinbox.setValue(args['keep_tokens'])
-        self.edit_args("keep_tokens", args['keep_tokens'])
+        self.widget.keep_tokens_spinbox.setValue(args["keep_tokens"])
+        self.edit_args("keep_tokens", args["keep_tokens"])
 
-        self.widget.caption_extension.setCurrentText(args['caption_extension'])
+        self.widget.caption_extension.setCurrentText(args["caption_extension"])
 
         self.widget.shuffle_captions.setChecked(args.get("shuffle_caption", False))
         self.edit_args("shuffle_caption", args.get("shuffle_caption", False))
@@ -175,15 +241,25 @@ class SubsetItem(QtWidgets.QWidget):
         self.enable_disable_crop_aug(True if face_crop else False)
 
         checked = True if "caption_dropout_rate" in args else False
-        self.sub_widget_args.caption_dropout_rate_input.setValue(args.get("caption_dropout_rate", 0.01))
-        self.sub_widget_args.caption_epoch_dropout_input.setValue(args.get("caption_dropout_every_n_epochs", 1))
-        self.sub_widget_args.caption_tag_dropout_input.setValue(args.get("caption_tag_dropout_rate", 0.01))
+        self.sub_widget_args.caption_dropout_rate_input.setValue(
+            args.get("caption_dropout_rate", 0.01)
+        )
+        self.sub_widget_args.caption_epoch_dropout_input.setValue(
+            args.get("caption_dropout_every_n_epochs", 1)
+        )
+        self.sub_widget_args.caption_tag_dropout_input.setValue(
+            args.get("caption_tag_dropout_rate", 0.01)
+        )
         self.sub_widget_args.caption_dropout_layout.setChecked(checked)
         self.enable_disable_caption_dropout(checked)
 
         checked = True if "token_warmup_min" in args else False
-        self.sub_widget_args.token_minimum_warmup_input.setValue(args.get("token_warmup_min", 1))
-        self.sub_widget_args.token_warmup_step_input.setValue(args.get("token_warmup_step", 1))
+        self.sub_widget_args.token_minimum_warmup_input.setValue(
+            args.get("token_warmup_min", 1)
+        )
+        self.sub_widget_args.token_warmup_step_input.setValue(
+            args.get("token_warmup_step", 1)
+        )
         self.sub_widget_args.token_warmup_layout.setChecked(checked)
         self.enable_disable_tag_warmup(checked)
 
@@ -194,7 +270,10 @@ class SubDatasetWidget(QtWidgets.QWidget):
         self.setMinimumSize(600, 300)
 
         self.cache_latents_checked = False
-        self.elements: list[tuple[QtWidgets.QWidget, CollapsibleWidget, SubsetItem]] = []
+        self.var_keep_tokens_checked = False
+        self.elements: list[
+            tuple[QtWidgets.QWidget, CollapsibleWidget, SubsetItem]
+        ] = []
 
         self.main_layout = QtWidgets.QGridLayout()
         self.setLayout(self.main_layout)
@@ -203,18 +282,24 @@ class SubDatasetWidget(QtWidgets.QWidget):
         self.add_bulk_button = QtWidgets.QPushButton()
         self.add_bulk_button.setText("Add all subfolders from folder")
         self.add_bulk_button.clicked.connect(self.add_from_root_folder)
-        self.add_bulk_button.setSizePolicy(QtWidgets.QSizePolicy.Policy.Minimum, QtWidgets.QSizePolicy.Policy.Fixed)
+        self.add_bulk_button.setSizePolicy(
+            QtWidgets.QSizePolicy.Policy.Minimum, QtWidgets.QSizePolicy.Policy.Fixed
+        )
         self.main_layout.addWidget(self.add_bulk_button, 0, 0, 1, 2)
 
         self.add_button = QtWidgets.QPushButton()
         self.add_button.setText("Add Data Subset")
         self.add_button.clicked.connect(self.add_empty_subset)
-        self.add_button.setSizePolicy(QtWidgets.QSizePolicy.Policy.Minimum, QtWidgets.QSizePolicy.Policy.Fixed)
+        self.add_button.setSizePolicy(
+            QtWidgets.QSizePolicy.Policy.Minimum, QtWidgets.QSizePolicy.Policy.Fixed
+        )
         self.main_layout.addWidget(self.add_button, 1, 1, 1, 1)
 
         self.add_label = LineEditWithHighlight()
         self.add_label.setPlaceholderText("Name of subset")
-        self.add_label.setSizePolicy(QtWidgets.QSizePolicy.Policy.Maximum, QtWidgets.QSizePolicy.Policy.Fixed)
+        self.add_label.setSizePolicy(
+            QtWidgets.QSizePolicy.Policy.Maximum, QtWidgets.QSizePolicy.Policy.Fixed
+        )
         self.main_layout.addWidget(self.add_label, 1, 0, 1, 1)
 
         self.scrollArea = QtWidgets.QScrollArea(self)
@@ -233,9 +318,15 @@ class SubDatasetWidget(QtWidgets.QWidget):
         scroll_widget.setLayout(QtWidgets.QHBoxLayout())
         self.scrollWidget.layout().addWidget(scroll_widget)
 
-        colap = CollapsibleWidget(scroll_widget, title=self.add_label.text() if not name else name, remove_elem=True)
+        colap = CollapsibleWidget(
+            scroll_widget,
+            title=self.add_label.text() if not name else name,
+            remove_elem=True,
+        )
         colap.layout().setContentsMargins(9, 9, 9, 0)
-        colap.extra_elem.clicked.connect(lambda: self.delete_subset((scroll_widget, colap, subset)))
+        colap.extra_elem.clicked.connect(
+            lambda: self.delete_subset((scroll_widget, colap, subset))
+        )
         scroll_widget.layout().addWidget(colap)
         if len(self.elements) == 0:
             colap.toggle_collapsed()
@@ -244,7 +335,8 @@ class SubDatasetWidget(QtWidgets.QWidget):
         subset = SubsetItem()
         subset.sub_widget.layout().setContentsMargins(9, 9, 9, 0)
         subset.enable_disable_cache_dependants(self.cache_latents_checked)
-        colap.add_widget(subset, 'main_widget')
+        subset.enable_disable_keep_tokens(self.var_keep_tokens_checked)
+        colap.add_widget(subset, "main_widget")
         self.elements.append((scroll_widget, colap, subset))
         return subset
 
@@ -262,9 +354,16 @@ class SubDatasetWidget(QtWidgets.QWidget):
         for elem in self.elements:
             elem[2].enable_disable_cache_dependants(checked)
 
+    def variable_keep_tokens_checked(self, checked: bool) -> None:
+        self.var_keep_tokens_checked = checked
+        for elem in self.elements:
+            elem[2].enable_disable_keep_tokens(checked)
+
     @QtCore.Slot()
     def add_from_root_folder(self):
-        file_path = QtWidgets.QFileDialog.getExistingDirectory(self, "Root folder that all image folders are in")
+        file_path = QtWidgets.QFileDialog.getExistingDirectory(
+            self, "Root folder that all image folders are in"
+        )
         if not file_path or not os.path.isdir(file_path):
             return
         while len(self.elements) > 0:
@@ -283,8 +382,8 @@ class SubDatasetWidget(QtWidgets.QWidget):
                 args_list.append(arg[2].args)
             return args_list
         for arg in self.elements:
-            exists = os.path.exists(arg[2].args['image_dir'])
-            if (not exists) or (not os.path.isdir(arg[2].args['image_dir'])):
+            exists = os.path.exists(arg[2].args["image_dir"])
+            if (not exists) or (not os.path.isdir(arg[2].args["image_dir"])):
                 failed_args.append(arg)
                 arg[2].widget.lineEdit.update_stylesheet()
                 if arg[1].is_collapsed:
@@ -304,8 +403,8 @@ class SubDatasetWidget(QtWidgets.QWidget):
         while len(self.elements) > 0:
             self.delete_subset(self.elements[0])
 
-        subsets = args['subsets']
+        subsets = args["subsets"]
         for subset in subsets:
-            elem = self.add_empty_subset(os.path.split(subset['image_dir'])[-1])
+            elem = self.add_empty_subset(os.path.split(subset["image_dir"])[-1])
             elem.load_args(subset)
         self.cache_checked(self.cache_latents_checked)

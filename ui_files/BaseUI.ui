@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>553</width>
-    <height>517</height>
+    <height>518</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -143,6 +143,20 @@
         </widget>
        </item>
       </layout>
+     </item>
+     <item row="4" column="0">
+      <widget class="QCheckBox" name="keep_tokens_seperator_enable">
+       <property name="text">
+        <string>Keep Tokens Seperator</string>
+       </property>
+      </widget>
+     </item>
+     <item row="4" column="1">
+      <widget class="LineEditWithHighlightMin" name="keep_tokens_seperator_input">
+       <property name="enabled">
+        <bool>false</bool>
+       </property>
+      </widget>
      </item>
     </layout>
    </item>
@@ -605,6 +619,11 @@
    <class>DragDropLineEdit</class>
    <extends>QLineEdit</extends>
    <header>modules.DragDropLineEdit.h</header>
+  </customwidget>
+  <customwidget>
+   <class>LineEditWithHighlightMin</class>
+   <extends>QLineEdit</extends>
+   <header>modules.LineEditHighlightMin.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

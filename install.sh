@@ -16,7 +16,7 @@ source venv/bin/activate
 ## Install additional packages with pip
 pip install torch torchvision --index-url https://download.pytorch.org/whl/cu118
 pip install -r requirements.txt
-pip install xformers
+pip install xformers --index-url https://download.pytorch.org/whl/cu118
 pip install -r ../requirements_ui.txt
 pip install ../LyCORIS/.
 pip install ../custom_scheduler/.
