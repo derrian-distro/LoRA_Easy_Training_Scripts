@@ -124,6 +124,10 @@ class NetworkWidget(QtWidgets.QWidget):
         self.widget.lora_fa_enable.clicked.connect(
             lambda x: self.edit_args("fa", x, optional=True)
         )
+        self.widget.ip_gamma_enable.clicked.connect(self.toggle_ip_gamma)
+        self.widget.ip_gamma_input.valueChanged.connect(
+            lambda x: self.edit_args("ip_noise_gamma", x, optional=True)
+        )
 
     @QtCore.Slot(str, object, bool, bool)
     def edit_args(
@@ -242,6 +246,10 @@ class NetworkWidget(QtWidgets.QWidget):
 
     def toggle_kohya(self, toggle: bool) -> None:
         self.widget.lora_fa_enable.setEnabled(toggle)
+        self.widget.ip_gamma_enable.setEnabled(toggle)
+        self.toggle_ip_gamma(
+            self.widget.ip_gamma_enable.isChecked() if toggle else False
+        )
 
         self.edit_args(
             "fa",
@@ -389,6 +397,17 @@ class NetworkWidget(QtWidgets.QWidget):
             optional=True,
         )
 
+    @QtCore.Slot(bool)
+    def toggle_ip_gamma(self, toggle: bool) -> None:
+        self.widget.ip_gamma_input.setEnabled(toggle)
+        self.edit_args(
+            "ip_noise_gamma",
+            self.widget.ip_gamma_input.value()
+            if self.widget.ip_gamma_enable.isChecked()
+            else False,
+            optional=True,
+        )
+
     def is_lycoris(self) -> bool:
         return self.widget.algo_select.currentText().lower() not in [
             "lora",
@@ -455,6 +474,9 @@ class NetworkWidget(QtWidgets.QWidget):
         self.widget.network_dim_input.setValue(args["network_dim"])
         self.widget.network_alpha_input.setValue(args["network_alpha"])
         self.widget.lora_fa_enable.setChecked(args.get("fa", False))
+        self.widget.ip_gamma_enable.setChecked(bool(args.get("ip_noise_gamma", False)))
+        self.widget.ip_gamma_input.setValue(args.get("ip_noise_gamma", 0.1))
+        self.toggle_ip_gamma(self.widget.ip_gamma_enable.isChecked())
         # self.edit_args("fa", self.widget.lora_fa_enable.isChecked(), optional=True)
 
         self.widget.min_timestep_input.setValue(args.get("min_timestep", 0))
