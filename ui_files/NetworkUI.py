@@ -15,9 +15,10 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QFont, QFontDatabase, QGradient, QIcon,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
-from PySide6.QtWidgets import (QApplication, QCheckBox, QFormLayout, QGridLayout,
-    QHBoxLayout, QLabel, QLineEdit, QScrollArea,
-    QSizePolicy, QTabWidget, QVBoxLayout, QWidget)
+from PySide6.QtWidgets import (QApplication, QCheckBox, QDoubleSpinBox, QFormLayout,
+    QGridLayout, QHBoxLayout, QLabel, QLineEdit,
+    QScrollArea, QSizePolicy, QTabWidget, QVBoxLayout,
+    QWidget)
 
 from modules.CollapsibleWidget import CollapsibleWidget
 from modules.ScrollOnSelect import (ComboBox, DoubleSpinBox, SpinBox, TabView)
@@ -26,7 +27,7 @@ class Ui_network_ui(object):
     def setupUi(self, network_ui):
         if not network_ui.objectName():
             network_ui.setObjectName(u"network_ui")
-        network_ui.resize(418, 350)
+        network_ui.resize(427, 355)
         sizePolicy = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -245,10 +246,34 @@ class Ui_network_ui(object):
 
         self.formLayout_3.setLayout(3, QFormLayout.SpanningRole, self.horizontalLayout_3)
 
+        self.rescale_enable = QCheckBox(self.main_tab)
+        self.rescale_enable.setObjectName(u"rescale_enable")
+        self.rescale_enable.setEnabled(False)
+
+        self.formLayout_3.setWidget(4, QFormLayout.LabelRole, self.rescale_enable)
+
+        self.horizontalLayout_4 = QHBoxLayout()
+        self.horizontalLayout_4.setObjectName(u"horizontalLayout_4")
+        self.constrain_enable = QCheckBox(self.main_tab)
+        self.constrain_enable.setObjectName(u"constrain_enable")
+        self.constrain_enable.setEnabled(False)
+
+        self.horizontalLayout_4.addWidget(self.constrain_enable)
+
+        self.constrain_input = QDoubleSpinBox(self.main_tab)
+        self.constrain_input.setObjectName(u"constrain_input")
+        self.constrain_input.setEnabled(False)
+
+        self.horizontalLayout_4.addWidget(self.constrain_input)
+
+
+        self.formLayout_3.setLayout(4, QFormLayout.FieldRole, self.horizontalLayout_4)
+
 
         self.gridLayout.addLayout(self.formLayout_3, 4, 0, 1, 1)
 
         self.algo_select = ComboBox(self.main_tab)
+        self.algo_select.addItem("")
         self.algo_select.addItem("")
         self.algo_select.addItem("")
         self.algo_select.addItem("")
@@ -325,7 +350,7 @@ class Ui_network_ui(object):
         self.block_weight_scroll_area.setWidgetResizable(True)
         self.block_weight_scroll_widget = QWidget()
         self.block_weight_scroll_widget.setObjectName(u"block_weight_scroll_widget")
-        self.block_weight_scroll_widget.setGeometry(QRect(0, 0, 412, 318))
+        self.block_weight_scroll_widget.setGeometry(QRect(0, 0, 421, 323))
         self.verticalLayout_3 = QVBoxLayout(self.block_weight_scroll_widget)
         self.verticalLayout_3.setObjectName(u"verticalLayout_3")
         self.verticalLayout_3.setContentsMargins(0, 0, 0, 0)
@@ -429,6 +454,8 @@ class Ui_network_ui(object):
 #endif // QT_CONFIG(tooltip)
         self.cp_enable.setText(QCoreApplication.translate("network_ui", u"Enable Tucker", None))
         self.train_norm_enable.setText(QCoreApplication.translate("network_ui", u"Train Norm", None))
+        self.rescale_enable.setText(QCoreApplication.translate("network_ui", u"Rescale", None))
+        self.constrain_enable.setText(QCoreApplication.translate("network_ui", u"Constrain", None))
         self.algo_select.setItemText(0, QCoreApplication.translate("network_ui", u"LoRA", None))
         self.algo_select.setItemText(1, QCoreApplication.translate("network_ui", u"LoCon", None))
         self.algo_select.setItemText(2, QCoreApplication.translate("network_ui", u"LoCon (LyCORIS)", None))
@@ -436,6 +463,7 @@ class Ui_network_ui(object):
         self.algo_select.setItemText(4, QCoreApplication.translate("network_ui", u"IA3", None))
         self.algo_select.setItemText(5, QCoreApplication.translate("network_ui", u"Lokr", None))
         self.algo_select.setItemText(6, QCoreApplication.translate("network_ui", u"DyLoRA", None))
+        self.algo_select.setItemText(7, QCoreApplication.translate("network_ui", u"Diag-OFT", None))
 
 #if QT_CONFIG(tooltip)
         self.algo_select.setToolTip(QCoreApplication.translate("network_ui", u"<html><head/><body><p>The algorithm that is used for training, LoRA is the only one that doesn't train on all layers. LoCon is just LoRA that train on all layers LoHa has a ton of compression, and that is basically true for ia3 and Lokr as well. DyLora is a type of LoRA (or LoCon) that basically allows you to train multiple dim sized models in one, it does take a lot longer to train.</p></body></html>", None))

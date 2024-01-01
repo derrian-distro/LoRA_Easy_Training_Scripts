@@ -98,7 +98,6 @@ class MainWidget(QtWidgets.QWidget):
                 args["keep_tokens_separator"] = sep_token
             else:
                 args = None
-        print(args)
         dataset_args = validator.validate_dataset_args(
             dataset_args, self.runtime_only_enable.isChecked()
         )
