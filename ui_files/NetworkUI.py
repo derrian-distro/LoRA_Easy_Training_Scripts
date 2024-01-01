@@ -263,6 +263,8 @@ class Ui_network_ui(object):
         self.constrain_input = QDoubleSpinBox(self.main_tab)
         self.constrain_input.setObjectName(u"constrain_input")
         self.constrain_input.setEnabled(False)
+        self.constrain_input.setFocusPolicy(Qt.StrongFocus)
+        self.constrain_input.setSingleStep(0.010000000000000)
 
         self.horizontalLayout_4.addWidget(self.constrain_input)
 
