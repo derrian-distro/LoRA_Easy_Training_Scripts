@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>427</width>
+    <width>417</width>
     <height>355</height>
    </rect>
   </property>
@@ -449,15 +449,9 @@
             </widget>
            </item>
            <item>
-            <widget class="QDoubleSpinBox" name="constrain_input">
+            <widget class="LineEditWithHighlight" name="constrain_input">
              <property name="enabled">
               <bool>false</bool>
-             </property>
-             <property name="focusPolicy">
-              <enum>Qt::StrongFocus</enum>
-             </property>
-             <property name="singleStep">
-              <double>0.010000000000000</double>
              </property>
             </widget>
            </item>
@@ -639,7 +633,7 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>421</width>
+            <width>411</width>
             <height>323</height>
            </rect>
           </property>
@@ -728,6 +722,11 @@
    <extends>QWidget</extends>
    <header>modules.CollapsibleWidget.h</header>
    <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>LineEditWithHighlight</class>
+   <extends>QLineEdit</extends>
+   <header>modules.LineEditHighlight.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

@@ -15,19 +15,19 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QFont, QFontDatabase, QGradient, QIcon,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
-from PySide6.QtWidgets import (QApplication, QCheckBox, QDoubleSpinBox, QFormLayout,
-    QGridLayout, QHBoxLayout, QLabel, QLineEdit,
-    QScrollArea, QSizePolicy, QTabWidget, QVBoxLayout,
-    QWidget)
+from PySide6.QtWidgets import (QApplication, QCheckBox, QFormLayout, QGridLayout,
+    QHBoxLayout, QLabel, QLineEdit, QScrollArea,
+    QSizePolicy, QTabWidget, QVBoxLayout, QWidget)
 
 from modules.CollapsibleWidget import CollapsibleWidget
+from modules.LineEditHighlight import LineEditWithHighlight
 from modules.ScrollOnSelect import (ComboBox, DoubleSpinBox, SpinBox, TabView)
 
 class Ui_network_ui(object):
     def setupUi(self, network_ui):
         if not network_ui.objectName():
             network_ui.setObjectName(u"network_ui")
-        network_ui.resize(427, 355)
+        network_ui.resize(417, 355)
         sizePolicy = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -260,11 +260,9 @@ class Ui_network_ui(object):
 
         self.horizontalLayout_4.addWidget(self.constrain_enable)
 
-        self.constrain_input = QDoubleSpinBox(self.main_tab)
+        self.constrain_input = LineEditWithHighlight(self.main_tab)
         self.constrain_input.setObjectName(u"constrain_input")
         self.constrain_input.setEnabled(False)
-        self.constrain_input.setFocusPolicy(Qt.StrongFocus)
-        self.constrain_input.setSingleStep(0.010000000000000)
 
         self.horizontalLayout_4.addWidget(self.constrain_input)
 
@@ -352,7 +350,7 @@ class Ui_network_ui(object):
         self.block_weight_scroll_area.setWidgetResizable(True)
         self.block_weight_scroll_widget = QWidget()
         self.block_weight_scroll_widget.setObjectName(u"block_weight_scroll_widget")
-        self.block_weight_scroll_widget.setGeometry(QRect(0, 0, 421, 323))
+        self.block_weight_scroll_widget.setGeometry(QRect(0, 0, 411, 323))
         self.verticalLayout_3 = QVBoxLayout(self.block_weight_scroll_widget)
         self.verticalLayout_3.setObjectName(u"verticalLayout_3")
         self.verticalLayout_3.setContentsMargins(0, 0, 0, 0)

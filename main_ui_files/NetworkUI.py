@@ -132,9 +132,7 @@ class NetworkWidget(QtWidgets.QWidget):
             lambda x: self.edit_args("rescaled", x, optional=True, network_args=True)
         )
         self.widget.constrain_enable.clicked.connect(self.toggle_constrain)
-        self.widget.constrain_input.valueChanged.connect(
-            lambda x: self.edit_args("constrain", x, optional=True, network_args=True)
-        )
+        self.widget.constrain_input.textChanged.connect(self.edit_constrain)
 
     @QtCore.Slot(str, object, bool, bool)
     def edit_args(
@@ -160,6 +158,14 @@ class NetworkWidget(QtWidgets.QWidget):
             self.network_args[name] = value
             return
         self.args[name] = value
+
+    @QtCore.Slot(str, object, bool)
+    def edit_constrain(self, value: object):
+        try:
+            value = float(value)
+            self.edit_args("constrain", value, optional=True, network_args=True)
+        except ValueError:
+            self.edit_args("constrain", False, optional=True, network_args=True)
 
     @QtCore.Slot(str)
     def change_algo(self, algo: str) -> None:
@@ -429,12 +435,7 @@ class NetworkWidget(QtWidgets.QWidget):
     @QtCore.Slot(bool)
     def toggle_constrain(self, toggle: bool) -> None:
         self.widget.constrain_input.setEnabled(toggle)
-        self.edit_args(
-            "constrain",
-            self.widget.constrain_input.value() if toggle else False,
-            optional=True,
-            network_args=True,
-        )
+        self.edit_constrain(self.widget.constrain_input.text() if toggle else False)
 
     def is_lycoris(self) -> bool:
         return self.widget.algo_select.currentText().lower() not in [
@@ -545,8 +546,10 @@ class NetworkWidget(QtWidgets.QWidget):
         self.widget.train_norm_enable.setChecked(network_args.get("train_norm", False))
         self.widget.lycoris_preset_input.setText(network_args.get("preset", ""))
         self.widget.rescale_enable.setChecked(network_args.get("rescaled", False))
-        self.widget.constrain_enable.setChecked(bool(network_args.get("constrain", False)))
-        self.widget.constrain_input.setValue(network_args.get("constrain", 0.0))
+        self.widget.constrain_enable.setChecked(
+            bool(network_args.get("constrain", False))
+        )
+        self.widget.constrain_input.setText(str(network_args.get("constrain", 0.0)))
         self.toggle_constrain(self.widget.constrain_enable.isChecked())
 
         if "network_dropout" not in args:
