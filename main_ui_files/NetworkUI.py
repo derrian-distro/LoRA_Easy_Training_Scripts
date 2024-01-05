@@ -124,6 +124,15 @@ class NetworkWidget(QtWidgets.QWidget):
         self.widget.lora_fa_enable.clicked.connect(
             lambda x: self.edit_args("fa", x, optional=True)
         )
+        self.widget.ip_gamma_enable.clicked.connect(self.toggle_ip_gamma)
+        self.widget.ip_gamma_input.valueChanged.connect(
+            lambda x: self.edit_args("ip_noise_gamma", x, optional=True)
+        )
+        self.widget.rescale_enable.clicked.connect(
+            lambda x: self.edit_args("rescaled", x, optional=True, network_args=True)
+        )
+        self.widget.constrain_enable.clicked.connect(self.toggle_constrain)
+        self.widget.constrain_input.textChanged.connect(self.edit_constrain)
 
     @QtCore.Slot(str, object, bool, bool)
     def edit_args(
@@ -150,6 +159,14 @@ class NetworkWidget(QtWidgets.QWidget):
             return
         self.args[name] = value
 
+    @QtCore.Slot(str, object, bool)
+    def edit_constrain(self, value: object):
+        try:
+            value = float(value)
+            self.edit_args("constrain", value, optional=True, network_args=True)
+        except ValueError:
+            self.edit_args("constrain", False, optional=True, network_args=True)
+
     @QtCore.Slot(str)
     def change_algo(self, algo: str) -> None:
         if algo.lower() == "lora":
@@ -173,7 +190,7 @@ class NetworkWidget(QtWidgets.QWidget):
             self.toggle_kohya(True)
             self.toggle_block_weight(True, False)
             self.toggle_dropout(True, False)
-        if algo.lower() in {"locon (lycoris)", "lokr", "loha", "ia3"}:
+        if algo.lower() in {"locon (lycoris)", "lokr", "loha", "ia3", "diag-oft"}:
             self.toggle_conv(True)
             self.toggle_lycoris(True)
             self.toggle_dylora(False)
@@ -202,6 +219,8 @@ class NetworkWidget(QtWidgets.QWidget):
         self.widget.cp_enable.setEnabled(toggle)
         self.widget.train_norm_enable.setEnabled(toggle)
         self.widget.lycoris_preset_input.setEnabled(toggle)
+        self.widget.rescale_enable.setEnabled(toggle)
+        self.widget.constrain_enable.setEnabled(toggle)
 
         self.edit_args(
             "use_tucker",
@@ -220,6 +239,15 @@ class NetworkWidget(QtWidgets.QWidget):
             self.widget.lycoris_preset_input.text() if toggle else False,
             optional=True,
             network_args=True,
+        )
+        self.edit_args(
+            "rescaled",
+            self.widget.rescale_enable.isChecked() if toggle else False,
+            optional=True,
+            network_args=True,
+        )
+        self.toggle_constrain(
+            self.widget.constrain_enable.isChecked() if toggle else False
         )
         self.edit_args(
             "algo",
@@ -242,6 +270,10 @@ class NetworkWidget(QtWidgets.QWidget):
 
     def toggle_kohya(self, toggle: bool) -> None:
         self.widget.lora_fa_enable.setEnabled(toggle)
+        self.widget.ip_gamma_enable.setEnabled(toggle)
+        self.toggle_ip_gamma(
+            self.widget.ip_gamma_enable.isChecked() if toggle else False
+        )
 
         self.edit_args(
             "fa",
@@ -389,6 +421,22 @@ class NetworkWidget(QtWidgets.QWidget):
             optional=True,
         )
 
+    @QtCore.Slot(bool)
+    def toggle_ip_gamma(self, toggle: bool) -> None:
+        self.widget.ip_gamma_input.setEnabled(toggle)
+        self.edit_args(
+            "ip_noise_gamma",
+            self.widget.ip_gamma_input.value()
+            if self.widget.ip_gamma_enable.isChecked()
+            else False,
+            optional=True,
+        )
+
+    @QtCore.Slot(bool)
+    def toggle_constrain(self, toggle: bool) -> None:
+        self.widget.constrain_input.setEnabled(toggle)
+        self.edit_constrain(self.widget.constrain_input.text() if toggle else False)
+
     def is_lycoris(self) -> bool:
         return self.widget.algo_select.currentText().lower() not in [
             "lora",
@@ -455,6 +503,9 @@ class NetworkWidget(QtWidgets.QWidget):
         self.widget.network_dim_input.setValue(args["network_dim"])
         self.widget.network_alpha_input.setValue(args["network_alpha"])
         self.widget.lora_fa_enable.setChecked(args.get("fa", False))
+        self.widget.ip_gamma_enable.setChecked(bool(args.get("ip_noise_gamma", False)))
+        self.widget.ip_gamma_input.setValue(args.get("ip_noise_gamma", 0.1))
+        self.toggle_ip_gamma(self.widget.ip_gamma_enable.isChecked())
         # self.edit_args("fa", self.widget.lora_fa_enable.isChecked(), optional=True)
 
         self.widget.min_timestep_input.setValue(args.get("min_timestep", 0))
@@ -494,6 +545,12 @@ class NetworkWidget(QtWidgets.QWidget):
         self.widget.cp_enable.setChecked(network_args.get("use_tucker", False))
         self.widget.train_norm_enable.setChecked(network_args.get("train_norm", False))
         self.widget.lycoris_preset_input.setText(network_args.get("preset", ""))
+        self.widget.rescale_enable.setChecked(network_args.get("rescaled", False))
+        self.widget.constrain_enable.setChecked(
+            bool(network_args.get("constrain", False))
+        )
+        self.widget.constrain_input.setText(str(network_args.get("constrain", 0.0)))
+        self.toggle_constrain(self.widget.constrain_enable.isChecked())
 
         if "network_dropout" not in args:
             self.widget.network_dropout_input.setValue(network_args.get("dropout", 0.1))
@@ -525,9 +582,11 @@ class NetworkWidget(QtWidgets.QWidget):
                 self.widget.algo_select.setCurrentText("LoHa")
             elif network_args["algo"] == "ia3":
                 self.widget.algo_select.setCurrentText("IA3")
+            elif network_args["algo"] == "diag-oft":
+                self.widget.algo_select.setCurrentText("Diag-OFT")
             else:
                 self.widget.algo_select.setCurrentText("Lokr")
-        if "unit" in network_args:
+        elif "unit" in network_args:
             self.widget.algo_select.setCurrentText("DyLoRA")
         elif "conv_dim" in network_args:
             self.widget.algo_select.setCurrentText("LoCon")

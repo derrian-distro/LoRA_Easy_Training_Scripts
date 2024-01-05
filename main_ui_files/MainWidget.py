@@ -71,6 +71,9 @@ class MainWidget(QtWidgets.QWidget):
         self.args_widget.general_args.CacheLatentsChecked.connect(
             self.subset_widget.cache_checked
         )
+        self.args_widget.general_args.keepTokensSepChecked.connect(
+            self.subset_widget.variable_keep_tokens_checked
+        )
         self.args_widget.general_args.SdxlChecked.connect(
             self.args_widget.network_args.toggle_sdxl
         )
@@ -88,6 +91,13 @@ class MainWidget(QtWidgets.QWidget):
         dataset_args["subsets"] = self.subset_widget.get_subset_args()
         self.training_thread = threading.Thread(target=self.train_thread)
         args = validator.validate_args(args, self.runtime_only_enable.isChecked())
+        if self.args_widget.general_args.widget.keep_tokens_seperator_input.isEnabled():
+            if sep_token := validator.validate_sep_token(
+                self.args_widget.general_args.widget.keep_tokens_seperator_input
+            ):
+                args["keep_tokens_separator"] = sep_token
+            else:
+                args = None
         dataset_args = validator.validate_dataset_args(
             dataset_args, self.runtime_only_enable.isChecked()
         )
@@ -97,6 +107,7 @@ class MainWidget(QtWidgets.QWidget):
         script = validator.validate_sdxl(args)
         validator.validate_restarts(args, dataset_args)
         validator.validate_warmup_ratio(args, dataset_args)
+
         if not self.runtime_only_enable.isChecked():
             validator.validate_save_tags(args, dataset_args)
             validator.validate_existing_files(args)
