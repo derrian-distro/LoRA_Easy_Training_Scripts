@@ -97,7 +97,7 @@ class BaseArgsWidget(QtWidgets.QWidget):
         # gradient connections
         self.widget.gradient_box.clicked.connect(self.enable_disable_gradient)
         self.widget.gradient_selector.currentIndexChanged.connect(
-            lambda x: self.enable_disable_gradient(True)
+            lambda _: self.enable_disable_gradient(True)
         )
         self.widget.gradient_steps_input.valueChanged.connect(
             lambda x: self.edit_args("gradient_accumulation_steps", x)
@@ -390,15 +390,24 @@ class BaseArgsWidget(QtWidgets.QWidget):
         for name in ["gradient_checkpointing", "gradient_accumulation_steps"]:
             if name in self.args:
                 del self.args[name]
-        if checked:
-            checkpointing = self.widget.gradient_selector.currentIndex() == 0
-            if checkpointing:
-                self.args["gradient_checkpointing"] = True
+        if not checked:
+            return
+        match self.widget.gradient_selector.currentIndex():
+            case 0:
+                self.edit_args("gradient_checkpointing", True)
                 self.widget.gradient_steps_input.setEnabled(False)
-            else:
-                self.args[
-                    "gradient_accumulation_steps"
-                ] = self.widget.gradient_steps_input.value()
+            case 1:
+                self.edit_args(
+                    "gradient_accumulation_steps",
+                    self.widget.gradient_steps_input.value(),
+                )
+                self.widget.gradient_steps_input.setEnabled(True)
+            case _:
+                self.edit_args("gradient_checkpointing", True)
+                self.edit_args(
+                    "gradient_accumulation_steps",
+                    self.widget.gradient_steps_input.value(),
+                )
                 self.widget.gradient_steps_input.setEnabled(True)
 
     @QtCore.Slot(bool)
@@ -535,7 +544,12 @@ class BaseArgsWidget(QtWidgets.QWidget):
         if "gradient_checkpointing" in args or "gradient_accumulation_steps" in args:
             self.widget.gradient_box.setChecked(True)
             self.widget.gradient_selector.setCurrentIndex(
-                0 if "gradient_checkpointing" in args else 1
+                2
+                if "gradient_checkpointing" in args
+                and "gradient_accumulation_steps" in args
+                else 0
+                if "gradient_checkpointing" in args
+                else 1
             )
             self.widget.gradient_steps_input.setValue(
                 args.get("gradient_accumulation_steps", 1)

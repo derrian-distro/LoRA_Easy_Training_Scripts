@@ -67,28 +67,6 @@
         </property>
        </widget>
       </item>
-      <item row="1" column="1">
-       <widget class="DoubleSpinBox" name="noise_offset_input">
-        <property name="focusPolicy">
-         <enum>Qt::StrongFocus</enum>
-        </property>
-        <property name="toolTip">
-         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The value for the normal noise offset, the original paper reccomends 0.1, so that is why it's default.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-        </property>
-        <property name="minimum">
-         <double>0.010000000000000</double>
-        </property>
-        <property name="maximum">
-         <double>99.000000000000000</double>
-        </property>
-        <property name="singleStep">
-         <double>0.010000000000000</double>
-        </property>
-        <property name="value">
-         <double>0.100000000000000</double>
-        </property>
-       </widget>
-      </item>
       <item row="2" column="1">
        <widget class="SpinBox" name="pyramid_iteration_input">
         <property name="focusPolicy">
@@ -124,6 +102,13 @@
         </property>
        </widget>
       </item>
+      <item row="1" column="1">
+       <widget class="LineEditWithHighlight" name="noise_offset_input">
+        <property name="text">
+         <string>0.1</string>
+        </property>
+       </widget>
+      </item>
      </layout>
     </widget>
    </item>
@@ -136,14 +121,19 @@
    <header>modules.ScrollOnSelect.h</header>
   </customwidget>
   <customwidget>
+   <class>ComboBox</class>
+   <extends>QComboBox</extends>
+   <header>modules.ScrollOnSelect.h</header>
+  </customwidget>
+  <customwidget>
    <class>DoubleSpinBox</class>
    <extends>QDoubleSpinBox</extends>
    <header>modules.ScrollOnSelect.h</header>
   </customwidget>
   <customwidget>
-   <class>ComboBox</class>
-   <extends>QComboBox</extends>
-   <header>modules.ScrollOnSelect.h</header>
+   <class>LineEditWithHighlight</class>
+   <extends>QLineEdit</extends>
+   <header>modules.LineEditHighlight.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

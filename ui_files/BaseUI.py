@@ -261,6 +261,7 @@ class Ui_base_args_ui(object):
         self.gradient_selector = ComboBox(self.gradient_box)
         self.gradient_selector.addItem("")
         self.gradient_selector.addItem("")
+        self.gradient_selector.addItem("")
         self.gradient_selector.setObjectName(u"gradient_selector")
         sizePolicy1.setHeightForWidth(self.gradient_selector.sizePolicy().hasHeightForWidth())
         self.gradient_selector.setSizePolicy(sizePolicy1)
@@ -461,6 +462,7 @@ class Ui_base_args_ui(object):
         self.gradient_box.setTitle(QCoreApplication.translate("base_args_ui", u"Gradient", None))
         self.gradient_selector.setItemText(0, QCoreApplication.translate("base_args_ui", u"Checkpointing", None))
         self.gradient_selector.setItemText(1, QCoreApplication.translate("base_args_ui", u"Accumulation", None))
+        self.gradient_selector.setItemText(2, QCoreApplication.translate("base_args_ui", u"Both", None))
 
 #if QT_CONFIG(tooltip)
         self.gradient_selector.setToolTip(QCoreApplication.translate("base_args_ui", u"<html><head/><body><p>Checkpointing effictively doubles batch size, can't be used with accumulation steps.</p></body></html>", None))
