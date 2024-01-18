@@ -190,7 +190,7 @@ class NetworkWidget(QtWidgets.QWidget):
             self.toggle_kohya(True)
             self.toggle_block_weight(True, False)
             self.toggle_dropout(True, False)
-        if algo.lower() in {"locon (lycoris)", "lokr", "loha", "ia3", "diag-oft"}:
+        if algo.lower() in {"locon (lycoris)", "lokr", "loha", "ia3", "diag-oft", "full"}:
             self.toggle_conv(True)
             self.toggle_lycoris(True)
             self.toggle_dylora(False)
@@ -442,6 +442,7 @@ class NetworkWidget(QtWidgets.QWidget):
             "lora",
             "locon",
             "dylora",
+            "full"
         ]
 
     def deep_dict_copy(self, original):
@@ -584,6 +585,8 @@ class NetworkWidget(QtWidgets.QWidget):
                 self.widget.algo_select.setCurrentText("IA3")
             elif network_args["algo"] == "diag-oft":
                 self.widget.algo_select.setCurrentText("Diag-OFT")
+            elif network_args["algo"] == "full":
+                self.widget.algo_select.setCurrentText("Full")
             else:
                 self.widget.algo_select.setCurrentText("Lokr")
         elif "unit" in network_args:

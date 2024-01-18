@@ -281,6 +281,7 @@ class Ui_network_ui(object):
         self.algo_select.addItem("")
         self.algo_select.addItem("")
         self.algo_select.addItem("")
+        self.algo_select.addItem("")
         self.algo_select.setObjectName(u"algo_select")
         self.algo_select.setFocusPolicy(Qt.StrongFocus)
 
@@ -464,6 +465,7 @@ class Ui_network_ui(object):
         self.algo_select.setItemText(5, QCoreApplication.translate("network_ui", u"Lokr", None))
         self.algo_select.setItemText(6, QCoreApplication.translate("network_ui", u"DyLoRA", None))
         self.algo_select.setItemText(7, QCoreApplication.translate("network_ui", u"Diag-OFT", None))
+        self.algo_select.setItemText(8, QCoreApplication.translate("network_ui", u"Full", None))
 
 #if QT_CONFIG(tooltip)
         self.algo_select.setToolTip(QCoreApplication.translate("network_ui", u"<html><head/><body><p>The algorithm that is used for training, LoRA is the only one that doesn't train on all layers. LoCon is just LoRA that train on all layers LoHa has a ton of compression, and that is basically true for ia3 and Lokr as well. DyLora is a type of LoRA (or LoCon) that basically allows you to train multiple dim sized models in one, it does take a lot longer to train.</p></body></html>", None))
