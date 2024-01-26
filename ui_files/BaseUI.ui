@@ -14,152 +14,6 @@
    <string>Form</string>
   </property>
   <layout class="QGridLayout" name="gridLayout_3">
-   <item row="3" column="1" colspan="2">
-    <widget class="QGroupBox" name="base_model_box">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-     <property name="title">
-      <string>Model</string>
-     </property>
-     <layout class="QFormLayout" name="formLayout_3">
-      <item row="0" column="0">
-       <widget class="QLabel" name="label_4">
-        <property name="text">
-         <string>Base Model</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="1">
-       <layout class="QHBoxLayout" name="horizontalLayout">
-        <item>
-         <widget class="DragDropLineEdit" name="base_model_input">
-          <property name="toolTip">
-           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The full model to train with, if you are training anime for SD 1.5, I personally suggest NAI.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-          </property>
-          <property name="placeholderText">
-           <string>Base Model To Train With</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QPushButton" name="base_model_selector">
-          <property name="text">
-           <string/>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </item>
-      <item row="3" column="0" colspan="2">
-       <layout class="QHBoxLayout" name="horizontalLayout_6">
-        <item>
-         <widget class="QCheckBox" name="v_param_enable">
-          <property name="enabled">
-           <bool>true</bool>
-          </property>
-          <property name="toolTip">
-           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Select this if your model uses the SD2.x 768x model, such as WD1.5.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-          </property>
-          <property name="text">
-           <string>V Param</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QCheckBox" name="v_pred_enable">
-          <property name="enabled">
-           <bool>false</bool>
-          </property>
-          <property name="text">
-           <string>Scale V pred loss</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QCheckBox" name="FP16_enable">
-          <property name="toolTip">
-           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Allows training on full fp16, not compatable with full bf16 or training precision&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-          </property>
-          <property name="text">
-           <string>Full FP16</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QCheckBox" name="BF16_enable">
-          <property name="toolTip">
-           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Train in full BF16. Requires a higher bitsandbytes than 0.35.0 which is seemingly the best we have on windows, so this is disabled on windows regardless. not compatable with full fp16 or training precision&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-          </property>
-          <property name="text">
-           <string>Full BF16</string>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </item>
-      <item row="2" column="0" colspan="2">
-       <layout class="QHBoxLayout" name="horizontalLayout_2">
-        <item>
-         <widget class="QCheckBox" name="v2_enable">
-          <property name="toolTip">
-           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Select this if you are using an SD2.x based model, such as WD1.5.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-          </property>
-          <property name="text">
-           <string>SD2.X Based</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QCheckBox" name="sdxl_enable">
-          <property name="text">
-           <string>SDXL Based</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QCheckBox" name="no_half_vae_enable">
-          <property name="text">
-           <string>No Half Vae</string>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </item>
-      <item row="1" column="0">
-       <widget class="QLabel" name="label_11">
-        <property name="text">
-         <string>External VAE</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="1">
-       <layout class="QHBoxLayout" name="horizontalLayout_4">
-        <item>
-         <widget class="DragDropLineEdit" name="vae_input">
-          <property name="toolTip">
-           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Allows you to load a vae seperately from the base model.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-          </property>
-          <property name="placeholderText">
-           <string>Vae to train with</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QPushButton" name="vae_selector">
-          <property name="text">
-           <string/>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </item>
-     </layout>
-    </widget>
-   </item>
    <item row="5" column="1">
     <layout class="QFormLayout" name="formLayout_6">
      <item row="0" column="0">
@@ -292,6 +146,70 @@
       </layout>
      </item>
     </layout>
+   </item>
+   <item row="4" column="1">
+    <widget class="QGroupBox" name="resolution_box">
+     <property name="title">
+      <string>Resolution</string>
+     </property>
+     <layout class="QFormLayout" name="formLayout">
+      <item row="0" column="0">
+       <widget class="QLabel" name="label">
+        <property name="text">
+         <string>Width</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="SpinBox" name="width_input">
+        <property name="focusPolicy">
+         <enum>Qt::StrongFocus</enum>
+        </property>
+        <property name="toolTip">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Defines the resolution width, or if height isn't selected, both width and height.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
+        <property name="minimum">
+         <number>1</number>
+        </property>
+        <property name="maximum">
+         <number>16777215</number>
+        </property>
+        <property name="value">
+         <number>512</number>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="SpinBox" name="height_input">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
+        <property name="focusPolicy">
+         <enum>Qt::StrongFocus</enum>
+        </property>
+        <property name="toolTip">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Defines the height of the training resolution, so that you can have non square resolutions.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
+        <property name="minimum">
+         <number>1</number>
+        </property>
+        <property name="maximum">
+         <number>16777215</number>
+        </property>
+        <property name="value">
+         <number>512</number>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QCheckBox" name="height_enable">
+        <property name="text">
+         <string>Height</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
    </item>
    <item row="5" column="2">
     <layout class="QFormLayout" name="formLayout_5">
@@ -439,6 +357,198 @@
      </item>
     </layout>
    </item>
+   <item row="4" column="2">
+    <widget class="QGroupBox" name="groupBox">
+     <property name="title">
+      <string>Gradient</string>
+     </property>
+     <layout class="QHBoxLayout" name="horizontalLayout_8">
+      <item>
+       <layout class="QGridLayout" name="gridLayout">
+        <item row="1" column="0">
+         <widget class="QCheckBox" name="grad_accumulation_enable">
+          <property name="toolTip">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Gradient Accumulation effectively takes your batch size, and then multiplies it by the number listed here. This allows you to simulate having a larger batch size then you have vram, however it is slower.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
+          <property name="text">
+           <string>Gradient Accumuation</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="1">
+         <widget class="SpinBox" name="grad_accumulation_input">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
+          <property name="focusPolicy">
+           <enum>Qt::StrongFocus</enum>
+          </property>
+          <property name="toolTip">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Gradient Accumulation effectively takes your batch size, and then multiplies it by the number listed here. This allows you to simulate having a larger batch size then you have vram, however it is slower.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="0" colspan="2">
+         <widget class="QCheckBox" name="grad_checkpointing_enable">
+          <property name="toolTip">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Gradient checkpointing is a trick to reduce vram usage. Do note that this also cuts your performance by about 30% on average&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
+          <property name="text">
+           <string>Gradient Checkpointing</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item row="3" column="1" colspan="2">
+    <widget class="QGroupBox" name="base_model_box">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="title">
+      <string>Model</string>
+     </property>
+     <layout class="QFormLayout" name="formLayout_3">
+      <item row="0" column="0">
+       <widget class="QLabel" name="label_4">
+        <property name="text">
+         <string>Base Model</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <layout class="QHBoxLayout" name="horizontalLayout">
+        <item>
+         <widget class="DragDropLineEdit" name="base_model_input">
+          <property name="toolTip">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The full model to train with, if you are training anime for SD 1.5, I personally suggest NAI.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
+          <property name="placeholderText">
+           <string>Base Model To Train With</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="base_model_selector">
+          <property name="text">
+           <string/>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item row="3" column="0" colspan="2">
+       <layout class="QHBoxLayout" name="horizontalLayout_6">
+        <item>
+         <widget class="QCheckBox" name="v_param_enable">
+          <property name="enabled">
+           <bool>true</bool>
+          </property>
+          <property name="toolTip">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Select this if your model uses the SD2.x 768x model, such as WD1.5.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
+          <property name="text">
+           <string>V Param</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QCheckBox" name="v_pred_enable">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
+          <property name="text">
+           <string>Scale V pred loss</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QCheckBox" name="FP16_enable">
+          <property name="toolTip">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Allows training on full fp16, not compatable with full bf16 or training precision&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
+          <property name="text">
+           <string>Full FP16</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QCheckBox" name="BF16_enable">
+          <property name="toolTip">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Train in full BF16. Requires a higher bitsandbytes than 0.35.0 which is seemingly the best we have on windows, so this is disabled on windows regardless. not compatable with full fp16 or training precision&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
+          <property name="text">
+           <string>Full BF16</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item row="2" column="0" colspan="2">
+       <layout class="QHBoxLayout" name="horizontalLayout_2">
+        <item>
+         <widget class="QCheckBox" name="v2_enable">
+          <property name="toolTip">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Select this if you are using an SD2.x based model, such as WD1.5.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
+          <property name="text">
+           <string>SD2.X Based</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QCheckBox" name="sdxl_enable">
+          <property name="text">
+           <string>SDXL Based</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QCheckBox" name="no_half_vae_enable">
+          <property name="text">
+           <string>No Half Vae</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item row="1" column="0">
+       <widget class="QLabel" name="label_11">
+        <property name="text">
+         <string>External VAE</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <layout class="QHBoxLayout" name="horizontalLayout_4">
+        <item>
+         <widget class="DragDropLineEdit" name="vae_input">
+          <property name="toolTip">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Allows you to load a vae seperately from the base model.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
+          <property name="placeholderText">
+           <string>Vae to train with</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="vae_selector">
+          <property name="text">
+           <string/>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+     </layout>
+    </widget>
+   </item>
    <item row="6" column="1" colspan="2">
     <layout class="QFormLayout" name="formLayout_2">
      <item row="0" column="0">
@@ -458,107 +568,6 @@
        </property>
        <property name="placeholderText">
         <string>Enter in a comment you want in the metadata</string>
-       </property>
-      </widget>
-     </item>
-    </layout>
-   </item>
-   <item row="4" column="1">
-    <widget class="QGroupBox" name="resolution_box">
-     <property name="title">
-      <string>Resolution</string>
-     </property>
-     <layout class="QFormLayout" name="formLayout">
-      <item row="0" column="0">
-       <widget class="QLabel" name="label">
-        <property name="text">
-         <string>Width</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="1">
-       <widget class="SpinBox" name="width_input">
-        <property name="focusPolicy">
-         <enum>Qt::StrongFocus</enum>
-        </property>
-        <property name="toolTip">
-         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Defines the resolution width, or if height isn't selected, both width and height.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-        </property>
-        <property name="minimum">
-         <number>1</number>
-        </property>
-        <property name="maximum">
-         <number>16777215</number>
-        </property>
-        <property name="value">
-         <number>512</number>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="1">
-       <widget class="SpinBox" name="height_input">
-        <property name="enabled">
-         <bool>false</bool>
-        </property>
-        <property name="focusPolicy">
-         <enum>Qt::StrongFocus</enum>
-        </property>
-        <property name="toolTip">
-         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Defines the height of the training resolution, so that you can have non square resolutions.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-        </property>
-        <property name="minimum">
-         <number>1</number>
-        </property>
-        <property name="maximum">
-         <number>16777215</number>
-        </property>
-        <property name="value">
-         <number>512</number>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="0">
-       <widget class="QCheckBox" name="height_enable">
-        <property name="text">
-         <string>Height</string>
-        </property>
-       </widget>
-      </item>
-     </layout>
-    </widget>
-   </item>
-   <item row="4" column="2">
-    <layout class="QGridLayout" name="gridLayout">
-     <item row="1" column="0">
-      <widget class="QCheckBox" name="grad_accumulation_enable">
-       <property name="toolTip">
-        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Gradient Accumulation effectively takes your batch size, and then multiplies it by the number listed here. This allows you to simulate having a larger batch size then you have vram, however it is slower.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-       </property>
-       <property name="text">
-        <string>Gradient Accumuation</string>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="1">
-      <widget class="SpinBox" name="grad_accumulation_input">
-       <property name="enabled">
-        <bool>false</bool>
-       </property>
-       <property name="focusPolicy">
-        <enum>Qt::StrongFocus</enum>
-       </property>
-       <property name="toolTip">
-        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Gradient Accumulation effectively takes your batch size, and then multiplies it by the number listed here. This allows you to simulate having a larger batch size then you have vram, however it is slower.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="0" colspan="2">
-      <widget class="QCheckBox" name="grad_checkpointing_enable">
-       <property name="toolTip">
-        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Gradient checkpointing is a trick to reduce vram usage. Do note that this also cuts your performance by about 30% on average&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-       </property>
-       <property name="text">
-        <string>Gradient Checkpointing</string>
        </property>
       </widget>
      </item>
