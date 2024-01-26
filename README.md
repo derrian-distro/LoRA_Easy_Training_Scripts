@@ -4,8 +4,6 @@ A set of training scripts written in python for use in Kohya's [SD-Scripts](http
 
 #### Old scripts can be found [here](https://github.com/derrian-distro/LoRA_Easy_Training_Scripts/tree/old-scripts)
 
-#### If you want to train on SDXL, then go [here](https://github.com/derrian-distro/LoRA_Easy_Training_Scripts/tree/SDXL). It's more experimental than main branch, but has served as my dev branch for the time being, so it also has a number of fixes in it that haven't been pushed to main yet.
-
 ## Table of contents
 
 - [Installation](#installation)
@@ -38,7 +36,9 @@ If you are on linux all you need to do to install the scripts is open up a shell
 ```
 sh -c "$(wget https://raw.githubusercontent.com/derrian-distro/LoRA_Easy_Training_Scripts/main/install.sh -O -)"
 ```
+
 Manual method below for those that want it.
+
 ```
 git clone https://github.com/derrian-distro/LoRA_Easy_Training_Scripts
 cd LoRA_Easy_Training_Scripts
@@ -186,6 +186,16 @@ As you can see everything is sectioned off into their own sections. Generally th
 
 changelog of the old scripts are all in that branch [here](https://github.com/derrian-distro/LoRA_Easy_Training_Scripts/tree/old-scripts#changelog)
 
+- January 26, 2024
+  - merged pr's [#150](https://github.com/derrian-distro/LoRA_Easy_Training_Scripts/pull/150), [#156](https://github.com/derrian-distro/LoRA_Easy_Training_Scripts/pull/156), [#157](https://github.com/derrian-distro/LoRA_Easy_Training_Scripts/pull/157), [#159](https://github.com/derrian-distro/LoRA_Easy_Training_Scripts/pull/159), [#164](https://github.com/derrian-distro/LoRA_Easy_Training_Scripts/pull/164), and [#171](https://github.com/derrian-distro/LoRA_Easy_Training_Scripts/pull/171)
+  - decoupled vpred to allow use for non SD2 based models
+  - rewrote the install script for windows to be a bit better, and fail less
+  - Added support for diag-oft and the two lycoris args constrain and rescaled
+  - updated the noise offset input to allow for an arbitrary number of decimals
+  - changed the behavior of the gradient section to allow for both gradient checkpointing and gradient accumulation steps to be enabled
+  - Added a "no-theme" mode for those who have disappearing checkboxes (finally, sorry it took so long)
+  - Added the arg `ip Noise gamma` to the UI, as it looked like it was useful.
+  - updated sd-scripts and lycoris, as of three weeks ago, I will be updating these again fairly soon
 - November 11, 2023
   - Updated LyCORIS and sd_scripts
   - completely re-wrote the code behind the network args, should be far less buggy now
