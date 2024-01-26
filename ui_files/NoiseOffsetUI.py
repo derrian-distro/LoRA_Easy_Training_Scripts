@@ -18,6 +18,7 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
 from PySide6.QtWidgets import (QApplication, QFormLayout, QGroupBox, QLabel,
     QSizePolicy, QVBoxLayout, QWidget)
 
+from modules.LineEditHighlight import LineEditWithHighlight
 from modules.ScrollOnSelect import (ComboBox, DoubleSpinBox, SpinBox)
 
 class Ui_noise_offset_UI(object):
@@ -56,16 +57,6 @@ class Ui_noise_offset_UI(object):
 
         self.formLayout.setWidget(3, QFormLayout.LabelRole, self.label_3)
 
-        self.noise_offset_input = DoubleSpinBox(self.noise_offset_group)
-        self.noise_offset_input.setObjectName(u"noise_offset_input")
-        self.noise_offset_input.setFocusPolicy(Qt.StrongFocus)
-        self.noise_offset_input.setMinimum(0.010000000000000)
-        self.noise_offset_input.setMaximum(99.000000000000000)
-        self.noise_offset_input.setSingleStep(0.010000000000000)
-        self.noise_offset_input.setValue(0.100000000000000)
-
-        self.formLayout.setWidget(1, QFormLayout.FieldRole, self.noise_offset_input)
-
         self.pyramid_iteration_input = SpinBox(self.noise_offset_group)
         self.pyramid_iteration_input.setObjectName(u"pyramid_iteration_input")
         self.pyramid_iteration_input.setFocusPolicy(Qt.StrongFocus)
@@ -82,6 +73,11 @@ class Ui_noise_offset_UI(object):
         self.pyramid_discount_input.setValue(0.300000000000000)
 
         self.formLayout.setWidget(3, QFormLayout.FieldRole, self.pyramid_discount_input)
+
+        self.noise_offset_input = LineEditWithHighlight(self.noise_offset_group)
+        self.noise_offset_input.setObjectName(u"noise_offset_input")
+
+        self.formLayout.setWidget(1, QFormLayout.FieldRole, self.noise_offset_input)
 
 
         self.verticalLayout.addWidget(self.noise_offset_group)
@@ -105,13 +101,11 @@ class Ui_noise_offset_UI(object):
         self.label_2.setText(QCoreApplication.translate("noise_offset_UI", u"Pyramid Iterations", None))
         self.label_3.setText(QCoreApplication.translate("noise_offset_UI", u"Pyramid Discount", None))
 #if QT_CONFIG(tooltip)
-        self.noise_offset_input.setToolTip(QCoreApplication.translate("noise_offset_UI", u"<html><head/><body><p>The value for the normal noise offset, the original paper reccomends 0.1, so that is why it's default.</p></body></html>", None))
-#endif // QT_CONFIG(tooltip)
-#if QT_CONFIG(tooltip)
         self.pyramid_iteration_input.setToolTip(QCoreApplication.translate("noise_offset_UI", u"<html><head/><body><p>The number of iterations. It is said that the values in 6-10 work best.</p></body></html>", None))
 #endif // QT_CONFIG(tooltip)
 #if QT_CONFIG(tooltip)
         self.pyramid_discount_input.setToolTip(QCoreApplication.translate("noise_offset_UI", u"<html><head/><body><p>Not entirely sure what this is, but the recommended value is 0.1-0.3.</p></body></html>", None))
 #endif // QT_CONFIG(tooltip)
+        self.noise_offset_input.setText(QCoreApplication.translate("noise_offset_UI", u"0.1", None))
     # retranslateUi
 
