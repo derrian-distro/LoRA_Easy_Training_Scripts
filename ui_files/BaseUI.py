@@ -30,88 +30,6 @@ class Ui_base_args_ui(object):
         base_args_ui.resize(553, 518)
         self.gridLayout_3 = QGridLayout(base_args_ui)
         self.gridLayout_3.setObjectName(u"gridLayout_3")
-        self.formLayout_5 = QFormLayout()
-        self.formLayout_5.setObjectName(u"formLayout_5")
-        self.label_3 = QLabel(base_args_ui)
-        self.label_3.setObjectName(u"label_3")
-
-        self.formLayout_5.setWidget(0, QFormLayout.LabelRole, self.label_3)
-
-        self.batch_size_input = SpinBox(base_args_ui)
-        self.batch_size_input.setObjectName(u"batch_size_input")
-        self.batch_size_input.setFocusPolicy(Qt.StrongFocus)
-        self.batch_size_input.setMinimum(1)
-
-        self.formLayout_5.setWidget(0, QFormLayout.FieldRole, self.batch_size_input)
-
-        self.label_2 = QLabel(base_args_ui)
-        self.label_2.setObjectName(u"label_2")
-
-        self.formLayout_5.setWidget(1, QFormLayout.LabelRole, self.label_2)
-
-        self.max_token_selector = ComboBox(base_args_ui)
-        self.max_token_selector.addItem("")
-        self.max_token_selector.addItem("")
-        self.max_token_selector.addItem("")
-        self.max_token_selector.setObjectName(u"max_token_selector")
-        self.max_token_selector.setFocusPolicy(Qt.StrongFocus)
-
-        self.formLayout_5.setWidget(1, QFormLayout.FieldRole, self.max_token_selector)
-
-        self.label_5 = QLabel(base_args_ui)
-        self.label_5.setObjectName(u"label_5")
-
-        self.formLayout_5.setWidget(2, QFormLayout.LabelRole, self.label_5)
-
-        self.mixed_precision_selector = ComboBox(base_args_ui)
-        self.mixed_precision_selector.addItem("")
-        self.mixed_precision_selector.addItem("")
-        self.mixed_precision_selector.addItem("")
-        self.mixed_precision_selector.setObjectName(u"mixed_precision_selector")
-        self.mixed_precision_selector.setFocusPolicy(Qt.StrongFocus)
-
-        self.formLayout_5.setWidget(2, QFormLayout.FieldRole, self.mixed_precision_selector)
-
-        self.label_6 = QLabel(base_args_ui)
-        self.label_6.setObjectName(u"label_6")
-
-        self.formLayout_5.setWidget(3, QFormLayout.LabelRole, self.label_6)
-
-        self.horizontalLayout_3 = QHBoxLayout()
-        self.horizontalLayout_3.setObjectName(u"horizontalLayout_3")
-        self.max_train_selector = ComboBox(base_args_ui)
-        self.max_train_selector.addItem("")
-        self.max_train_selector.addItem("")
-        self.max_train_selector.setObjectName(u"max_train_selector")
-        self.max_train_selector.setFocusPolicy(Qt.StrongFocus)
-
-        self.horizontalLayout_3.addWidget(self.max_train_selector)
-
-        self.max_train_input = SpinBox(base_args_ui)
-        self.max_train_input.setObjectName(u"max_train_input")
-        self.max_train_input.setFocusPolicy(Qt.StrongFocus)
-        self.max_train_input.setMinimum(1)
-        self.max_train_input.setMaximum(16777215)
-
-        self.horizontalLayout_3.addWidget(self.max_train_input)
-
-
-        self.formLayout_5.setLayout(3, QFormLayout.FieldRole, self.horizontalLayout_3)
-
-        self.keep_tokens_seperator_enable = QCheckBox(base_args_ui)
-        self.keep_tokens_seperator_enable.setObjectName(u"keep_tokens_seperator_enable")
-
-        self.formLayout_5.setWidget(4, QFormLayout.LabelRole, self.keep_tokens_seperator_enable)
-
-        self.keep_tokens_seperator_input = LineEditWithHighlightMin(base_args_ui)
-        self.keep_tokens_seperator_input.setObjectName(u"keep_tokens_seperator_input")
-        self.keep_tokens_seperator_input.setEnabled(False)
-
-        self.formLayout_5.setWidget(4, QFormLayout.FieldRole, self.keep_tokens_seperator_input)
-
-
-        self.gridLayout_3.addLayout(self.formLayout_5, 5, 2, 1, 1)
-
         self.base_model_box = QGroupBox(base_args_ui)
         self.base_model_box.setObjectName(u"base_model_box")
         sizePolicy = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Fixed)
@@ -211,79 +129,6 @@ class Ui_base_args_ui(object):
 
         self.gridLayout_3.addWidget(self.base_model_box, 3, 1, 1, 2)
 
-        self.resolution_box = QGroupBox(base_args_ui)
-        self.resolution_box.setObjectName(u"resolution_box")
-        self.formLayout = QFormLayout(self.resolution_box)
-        self.formLayout.setObjectName(u"formLayout")
-        self.label = QLabel(self.resolution_box)
-        self.label.setObjectName(u"label")
-
-        self.formLayout.setWidget(0, QFormLayout.LabelRole, self.label)
-
-        self.width_input = SpinBox(self.resolution_box)
-        self.width_input.setObjectName(u"width_input")
-        self.width_input.setFocusPolicy(Qt.StrongFocus)
-        self.width_input.setMinimum(1)
-        self.width_input.setMaximum(16777215)
-        self.width_input.setValue(512)
-
-        self.formLayout.setWidget(0, QFormLayout.FieldRole, self.width_input)
-
-        self.height_input = SpinBox(self.resolution_box)
-        self.height_input.setObjectName(u"height_input")
-        self.height_input.setEnabled(False)
-        self.height_input.setFocusPolicy(Qt.StrongFocus)
-        self.height_input.setMinimum(1)
-        self.height_input.setMaximum(16777215)
-        self.height_input.setValue(512)
-
-        self.formLayout.setWidget(1, QFormLayout.FieldRole, self.height_input)
-
-        self.height_enable = QCheckBox(self.resolution_box)
-        self.height_enable.setObjectName(u"height_enable")
-
-        self.formLayout.setWidget(1, QFormLayout.LabelRole, self.height_enable)
-
-
-        self.gridLayout_3.addWidget(self.resolution_box, 4, 1, 1, 1)
-
-        self.gradient_box = QGroupBox(base_args_ui)
-        self.gradient_box.setObjectName(u"gradient_box")
-        sizePolicy1 = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Maximum)
-        sizePolicy1.setHorizontalStretch(0)
-        sizePolicy1.setVerticalStretch(0)
-        sizePolicy1.setHeightForWidth(self.gradient_box.sizePolicy().hasHeightForWidth())
-        self.gradient_box.setSizePolicy(sizePolicy1)
-        self.gradient_box.setCheckable(True)
-        self.gradient_box.setChecked(False)
-        self.formLayout_4 = QFormLayout(self.gradient_box)
-        self.formLayout_4.setObjectName(u"formLayout_4")
-        self.gradient_selector = ComboBox(self.gradient_box)
-        self.gradient_selector.addItem("")
-        self.gradient_selector.addItem("")
-        self.gradient_selector.addItem("")
-        self.gradient_selector.setObjectName(u"gradient_selector")
-        sizePolicy1.setHeightForWidth(self.gradient_selector.sizePolicy().hasHeightForWidth())
-        self.gradient_selector.setSizePolicy(sizePolicy1)
-        self.gradient_selector.setFocusPolicy(Qt.StrongFocus)
-
-        self.formLayout_4.setWidget(0, QFormLayout.SpanningRole, self.gradient_selector)
-
-        self.label_8 = QLabel(self.gradient_box)
-        self.label_8.setObjectName(u"label_8")
-
-        self.formLayout_4.setWidget(1, QFormLayout.LabelRole, self.label_8)
-
-        self.gradient_steps_input = SpinBox(self.gradient_box)
-        self.gradient_steps_input.setObjectName(u"gradient_steps_input")
-        self.gradient_steps_input.setFocusPolicy(Qt.StrongFocus)
-        self.gradient_steps_input.setMinimum(1)
-
-        self.formLayout_4.setWidget(1, QFormLayout.FieldRole, self.gradient_steps_input)
-
-
-        self.gridLayout_3.addWidget(self.gradient_box, 4, 2, 1, 1)
-
         self.formLayout_6 = QFormLayout()
         self.formLayout_6.setObjectName(u"formLayout_6")
         self.label_7 = QLabel(base_args_ui)
@@ -363,6 +208,88 @@ class Ui_base_args_ui(object):
 
         self.gridLayout_3.addLayout(self.formLayout_6, 5, 1, 1, 1)
 
+        self.formLayout_5 = QFormLayout()
+        self.formLayout_5.setObjectName(u"formLayout_5")
+        self.label_3 = QLabel(base_args_ui)
+        self.label_3.setObjectName(u"label_3")
+
+        self.formLayout_5.setWidget(0, QFormLayout.LabelRole, self.label_3)
+
+        self.batch_size_input = SpinBox(base_args_ui)
+        self.batch_size_input.setObjectName(u"batch_size_input")
+        self.batch_size_input.setFocusPolicy(Qt.StrongFocus)
+        self.batch_size_input.setMinimum(1)
+
+        self.formLayout_5.setWidget(0, QFormLayout.FieldRole, self.batch_size_input)
+
+        self.label_2 = QLabel(base_args_ui)
+        self.label_2.setObjectName(u"label_2")
+
+        self.formLayout_5.setWidget(1, QFormLayout.LabelRole, self.label_2)
+
+        self.max_token_selector = ComboBox(base_args_ui)
+        self.max_token_selector.addItem("")
+        self.max_token_selector.addItem("")
+        self.max_token_selector.addItem("")
+        self.max_token_selector.setObjectName(u"max_token_selector")
+        self.max_token_selector.setFocusPolicy(Qt.StrongFocus)
+
+        self.formLayout_5.setWidget(1, QFormLayout.FieldRole, self.max_token_selector)
+
+        self.label_5 = QLabel(base_args_ui)
+        self.label_5.setObjectName(u"label_5")
+
+        self.formLayout_5.setWidget(2, QFormLayout.LabelRole, self.label_5)
+
+        self.mixed_precision_selector = ComboBox(base_args_ui)
+        self.mixed_precision_selector.addItem("")
+        self.mixed_precision_selector.addItem("")
+        self.mixed_precision_selector.addItem("")
+        self.mixed_precision_selector.setObjectName(u"mixed_precision_selector")
+        self.mixed_precision_selector.setFocusPolicy(Qt.StrongFocus)
+
+        self.formLayout_5.setWidget(2, QFormLayout.FieldRole, self.mixed_precision_selector)
+
+        self.label_6 = QLabel(base_args_ui)
+        self.label_6.setObjectName(u"label_6")
+
+        self.formLayout_5.setWidget(3, QFormLayout.LabelRole, self.label_6)
+
+        self.horizontalLayout_3 = QHBoxLayout()
+        self.horizontalLayout_3.setObjectName(u"horizontalLayout_3")
+        self.max_train_selector = ComboBox(base_args_ui)
+        self.max_train_selector.addItem("")
+        self.max_train_selector.addItem("")
+        self.max_train_selector.setObjectName(u"max_train_selector")
+        self.max_train_selector.setFocusPolicy(Qt.StrongFocus)
+
+        self.horizontalLayout_3.addWidget(self.max_train_selector)
+
+        self.max_train_input = SpinBox(base_args_ui)
+        self.max_train_input.setObjectName(u"max_train_input")
+        self.max_train_input.setFocusPolicy(Qt.StrongFocus)
+        self.max_train_input.setMinimum(1)
+        self.max_train_input.setMaximum(16777215)
+
+        self.horizontalLayout_3.addWidget(self.max_train_input)
+
+
+        self.formLayout_5.setLayout(3, QFormLayout.FieldRole, self.horizontalLayout_3)
+
+        self.keep_tokens_seperator_enable = QCheckBox(base_args_ui)
+        self.keep_tokens_seperator_enable.setObjectName(u"keep_tokens_seperator_enable")
+
+        self.formLayout_5.setWidget(4, QFormLayout.LabelRole, self.keep_tokens_seperator_enable)
+
+        self.keep_tokens_seperator_input = LineEditWithHighlightMin(base_args_ui)
+        self.keep_tokens_seperator_input.setObjectName(u"keep_tokens_seperator_input")
+        self.keep_tokens_seperator_input.setEnabled(False)
+
+        self.formLayout_5.setWidget(4, QFormLayout.FieldRole, self.keep_tokens_seperator_input)
+
+
+        self.gridLayout_3.addLayout(self.formLayout_5, 5, 2, 1, 1)
+
         self.formLayout_2 = QFormLayout()
         self.formLayout_2.setObjectName(u"formLayout_2")
         self.comment_enable = QCheckBox(base_args_ui)
@@ -379,6 +306,64 @@ class Ui_base_args_ui(object):
 
         self.gridLayout_3.addLayout(self.formLayout_2, 6, 1, 1, 2)
 
+        self.resolution_box = QGroupBox(base_args_ui)
+        self.resolution_box.setObjectName(u"resolution_box")
+        self.formLayout = QFormLayout(self.resolution_box)
+        self.formLayout.setObjectName(u"formLayout")
+        self.label = QLabel(self.resolution_box)
+        self.label.setObjectName(u"label")
+
+        self.formLayout.setWidget(0, QFormLayout.LabelRole, self.label)
+
+        self.width_input = SpinBox(self.resolution_box)
+        self.width_input.setObjectName(u"width_input")
+        self.width_input.setFocusPolicy(Qt.StrongFocus)
+        self.width_input.setMinimum(1)
+        self.width_input.setMaximum(16777215)
+        self.width_input.setValue(512)
+
+        self.formLayout.setWidget(0, QFormLayout.FieldRole, self.width_input)
+
+        self.height_input = SpinBox(self.resolution_box)
+        self.height_input.setObjectName(u"height_input")
+        self.height_input.setEnabled(False)
+        self.height_input.setFocusPolicy(Qt.StrongFocus)
+        self.height_input.setMinimum(1)
+        self.height_input.setMaximum(16777215)
+        self.height_input.setValue(512)
+
+        self.formLayout.setWidget(1, QFormLayout.FieldRole, self.height_input)
+
+        self.height_enable = QCheckBox(self.resolution_box)
+        self.height_enable.setObjectName(u"height_enable")
+
+        self.formLayout.setWidget(1, QFormLayout.LabelRole, self.height_enable)
+
+
+        self.gridLayout_3.addWidget(self.resolution_box, 4, 1, 1, 1)
+
+        self.gridLayout = QGridLayout()
+        self.gridLayout.setObjectName(u"gridLayout")
+        self.grad_accumulation_enable = QCheckBox(base_args_ui)
+        self.grad_accumulation_enable.setObjectName(u"grad_accumulation_enable")
+
+        self.gridLayout.addWidget(self.grad_accumulation_enable, 1, 0, 1, 1)
+
+        self.grad_accumulation_input = SpinBox(base_args_ui)
+        self.grad_accumulation_input.setObjectName(u"grad_accumulation_input")
+        self.grad_accumulation_input.setEnabled(False)
+        self.grad_accumulation_input.setFocusPolicy(Qt.StrongFocus)
+
+        self.gridLayout.addWidget(self.grad_accumulation_input, 1, 1, 1, 1)
+
+        self.grad_checkpointing_enable = QCheckBox(base_args_ui)
+        self.grad_checkpointing_enable.setObjectName(u"grad_checkpointing_enable")
+
+        self.gridLayout.addWidget(self.grad_checkpointing_enable, 0, 0, 1, 2)
+
+
+        self.gridLayout_3.addLayout(self.gridLayout, 4, 2, 1, 1)
+
 
         self.retranslateUi(base_args_ui)
 
@@ -387,34 +372,6 @@ class Ui_base_args_ui(object):
 
     def retranslateUi(self, base_args_ui):
         base_args_ui.setWindowTitle(QCoreApplication.translate("base_args_ui", u"Form", None))
-        self.label_3.setText(QCoreApplication.translate("base_args_ui", u"Batch Size", None))
-#if QT_CONFIG(tooltip)
-        self.batch_size_input.setToolTip(QCoreApplication.translate("base_args_ui", u"<html><head/><body><p>How many images that get processed per step, I usually set this to 2.</p></body></html>", None))
-#endif // QT_CONFIG(tooltip)
-        self.label_2.setText(QCoreApplication.translate("base_args_ui", u"Max Token Length", None))
-        self.max_token_selector.setItemText(0, QCoreApplication.translate("base_args_ui", u"225", None))
-        self.max_token_selector.setItemText(1, QCoreApplication.translate("base_args_ui", u"150", None))
-        self.max_token_selector.setItemText(2, QCoreApplication.translate("base_args_ui", u"75", None))
-
-#if QT_CONFIG(tooltip)
-        self.max_token_selector.setToolTip(QCoreApplication.translate("base_args_ui", u"<html><head/><body><p>The max token length for captions, or the txt files included in the image folders.</p></body></html>", None))
-#endif // QT_CONFIG(tooltip)
-        self.label_5.setText(QCoreApplication.translate("base_args_ui", u"Training Precision", None))
-        self.mixed_precision_selector.setItemText(0, QCoreApplication.translate("base_args_ui", u"fp16", None))
-        self.mixed_precision_selector.setItemText(1, QCoreApplication.translate("base_args_ui", u"bf16", None))
-        self.mixed_precision_selector.setItemText(2, QCoreApplication.translate("base_args_ui", u"float", None))
-
-#if QT_CONFIG(tooltip)
-        self.mixed_precision_selector.setToolTip(QCoreApplication.translate("base_args_ui", u"<html><head/><body><p>I suggest bf16 if you have a 30x0 or higher graphics card, but fp16 works as well, float hasn't proven to have a sizable improvement, especially with the extra vram requirement.</p></body></html>", None))
-#endif // QT_CONFIG(tooltip)
-        self.label_6.setText(QCoreApplication.translate("base_args_ui", u"Max Training Time", None))
-        self.max_train_selector.setItemText(0, QCoreApplication.translate("base_args_ui", u"Epochs", None))
-        self.max_train_selector.setItemText(1, QCoreApplication.translate("base_args_ui", u"Steps", None))
-
-#if QT_CONFIG(tooltip)
-        self.max_train_input.setToolTip(QCoreApplication.translate("base_args_ui", u"<html><head/><body><p>This is the maximum amount of steps or epochs, use whichever you find more comfortable using, I personally use steps.</p></body></html>", None))
-#endif // QT_CONFIG(tooltip)
-        self.keep_tokens_seperator_enable.setText(QCoreApplication.translate("base_args_ui", u"Keep Tokens Seperator", None))
         self.base_model_box.setTitle(QCoreApplication.translate("base_args_ui", u"Model", None))
         self.label_4.setText(QCoreApplication.translate("base_args_ui", u"Base Model", None))
 #if QT_CONFIG(tooltip)
@@ -447,30 +404,6 @@ class Ui_base_args_ui(object):
 #endif // QT_CONFIG(tooltip)
         self.vae_input.setPlaceholderText(QCoreApplication.translate("base_args_ui", u"Vae to train with", None))
         self.vae_selector.setText("")
-        self.resolution_box.setTitle(QCoreApplication.translate("base_args_ui", u"Resolution", None))
-        self.label.setText(QCoreApplication.translate("base_args_ui", u"Width", None))
-#if QT_CONFIG(tooltip)
-        self.width_input.setToolTip(QCoreApplication.translate("base_args_ui", u"<html><head/><body><p>Defines the resolution width, or if height isn't selected, both width and height.</p></body></html>", None))
-#endif // QT_CONFIG(tooltip)
-#if QT_CONFIG(tooltip)
-        self.height_input.setToolTip(QCoreApplication.translate("base_args_ui", u"<html><head/><body><p>Defines the height of the training resolution, so that you can have non square resolutions.</p></body></html>", None))
-#endif // QT_CONFIG(tooltip)
-        self.height_enable.setText(QCoreApplication.translate("base_args_ui", u"Height", None))
-#if QT_CONFIG(tooltip)
-        self.gradient_box.setToolTip(QCoreApplication.translate("base_args_ui", u"<html><head/><body><p>Gradient checkpointing and accumulation are ways to have higher batch sizes with less vram.</p></body></html>", None))
-#endif // QT_CONFIG(tooltip)
-        self.gradient_box.setTitle(QCoreApplication.translate("base_args_ui", u"Gradient", None))
-        self.gradient_selector.setItemText(0, QCoreApplication.translate("base_args_ui", u"Checkpointing", None))
-        self.gradient_selector.setItemText(1, QCoreApplication.translate("base_args_ui", u"Accumulation", None))
-        self.gradient_selector.setItemText(2, QCoreApplication.translate("base_args_ui", u"Both", None))
-
-#if QT_CONFIG(tooltip)
-        self.gradient_selector.setToolTip(QCoreApplication.translate("base_args_ui", u"<html><head/><body><p>Checkpointing effictively doubles batch size, can't be used with accumulation steps.</p></body></html>", None))
-#endif // QT_CONFIG(tooltip)
-        self.label_8.setText(QCoreApplication.translate("base_args_ui", u"Accumulation Steps", None))
-#if QT_CONFIG(tooltip)
-        self.gradient_steps_input.setToolTip(QCoreApplication.translate("base_args_ui", u"<html><head/><body><p>Accumulation steps are a multiplier on the batch size, so if batch size is 2 and acc steps is 2, then batch size is in total 4/</p></body></html>", None))
-#endif // QT_CONFIG(tooltip)
         self.label_7.setText(QCoreApplication.translate("base_args_ui", u"Seed", None))
 #if QT_CONFIG(tooltip)
         self.seed_input.setToolTip(QCoreApplication.translate("base_args_ui", u"<html><head/><body><p>The seed that is used for the randomization, it also serves as the &quot;reproducable seed&quot; which you can use to see how close it is to the original.</p></body></html>", None))
@@ -496,10 +429,58 @@ class Ui_base_args_ui(object):
 #endif // QT_CONFIG(tooltip)
         self.xformers_enable.setText(QCoreApplication.translate("base_args_ui", u"Xformers", None))
         self.sdpa_enable.setText(QCoreApplication.translate("base_args_ui", u"SDPA", None))
+        self.label_3.setText(QCoreApplication.translate("base_args_ui", u"Batch Size", None))
+#if QT_CONFIG(tooltip)
+        self.batch_size_input.setToolTip(QCoreApplication.translate("base_args_ui", u"<html><head/><body><p>How many images that get processed per step, I usually set this to 2.</p></body></html>", None))
+#endif // QT_CONFIG(tooltip)
+        self.label_2.setText(QCoreApplication.translate("base_args_ui", u"Max Token Length", None))
+        self.max_token_selector.setItemText(0, QCoreApplication.translate("base_args_ui", u"225", None))
+        self.max_token_selector.setItemText(1, QCoreApplication.translate("base_args_ui", u"150", None))
+        self.max_token_selector.setItemText(2, QCoreApplication.translate("base_args_ui", u"75", None))
+
+#if QT_CONFIG(tooltip)
+        self.max_token_selector.setToolTip(QCoreApplication.translate("base_args_ui", u"<html><head/><body><p>The max token length for captions, or the txt files included in the image folders.</p></body></html>", None))
+#endif // QT_CONFIG(tooltip)
+        self.label_5.setText(QCoreApplication.translate("base_args_ui", u"Training Precision", None))
+        self.mixed_precision_selector.setItemText(0, QCoreApplication.translate("base_args_ui", u"fp16", None))
+        self.mixed_precision_selector.setItemText(1, QCoreApplication.translate("base_args_ui", u"bf16", None))
+        self.mixed_precision_selector.setItemText(2, QCoreApplication.translate("base_args_ui", u"float", None))
+
+#if QT_CONFIG(tooltip)
+        self.mixed_precision_selector.setToolTip(QCoreApplication.translate("base_args_ui", u"<html><head/><body><p>I suggest bf16 if you have a 30x0 or higher graphics card, but fp16 works as well, float hasn't proven to have a sizable improvement, especially with the extra vram requirement.</p></body></html>", None))
+#endif // QT_CONFIG(tooltip)
+        self.label_6.setText(QCoreApplication.translate("base_args_ui", u"Max Training Time", None))
+        self.max_train_selector.setItemText(0, QCoreApplication.translate("base_args_ui", u"Epochs", None))
+        self.max_train_selector.setItemText(1, QCoreApplication.translate("base_args_ui", u"Steps", None))
+
+#if QT_CONFIG(tooltip)
+        self.max_train_input.setToolTip(QCoreApplication.translate("base_args_ui", u"<html><head/><body><p>This is the maximum amount of steps or epochs, use whichever you find more comfortable using, I personally use steps.</p></body></html>", None))
+#endif // QT_CONFIG(tooltip)
+        self.keep_tokens_seperator_enable.setText(QCoreApplication.translate("base_args_ui", u"Keep Tokens Seperator", None))
         self.comment_enable.setText(QCoreApplication.translate("base_args_ui", u"Comment", None))
 #if QT_CONFIG(tooltip)
         self.comment_input.setToolTip(QCoreApplication.translate("base_args_ui", u"<html><head/><body><p>Comment that gets put into the metadata</p></body></html>", None))
 #endif // QT_CONFIG(tooltip)
         self.comment_input.setPlaceholderText(QCoreApplication.translate("base_args_ui", u"Enter in a comment you want in the metadata", None))
+        self.resolution_box.setTitle(QCoreApplication.translate("base_args_ui", u"Resolution", None))
+        self.label.setText(QCoreApplication.translate("base_args_ui", u"Width", None))
+#if QT_CONFIG(tooltip)
+        self.width_input.setToolTip(QCoreApplication.translate("base_args_ui", u"<html><head/><body><p>Defines the resolution width, or if height isn't selected, both width and height.</p></body></html>", None))
+#endif // QT_CONFIG(tooltip)
+#if QT_CONFIG(tooltip)
+        self.height_input.setToolTip(QCoreApplication.translate("base_args_ui", u"<html><head/><body><p>Defines the height of the training resolution, so that you can have non square resolutions.</p></body></html>", None))
+#endif // QT_CONFIG(tooltip)
+        self.height_enable.setText(QCoreApplication.translate("base_args_ui", u"Height", None))
+#if QT_CONFIG(tooltip)
+        self.grad_accumulation_enable.setToolTip(QCoreApplication.translate("base_args_ui", u"<html><head/><body><p>Gradient Accumulation effectively takes your batch size, and then multiplies it by the number listed here. This allows you to simulate having a larger batch size then you have vram, however it is slower.</p></body></html>", None))
+#endif // QT_CONFIG(tooltip)
+        self.grad_accumulation_enable.setText(QCoreApplication.translate("base_args_ui", u"Gradient Accumuation", None))
+#if QT_CONFIG(tooltip)
+        self.grad_accumulation_input.setToolTip(QCoreApplication.translate("base_args_ui", u"<html><head/><body><p>Gradient Accumulation effectively takes your batch size, and then multiplies it by the number listed here. This allows you to simulate having a larger batch size then you have vram, however it is slower.</p></body></html>", None))
+#endif // QT_CONFIG(tooltip)
+#if QT_CONFIG(tooltip)
+        self.grad_checkpointing_enable.setToolTip(QCoreApplication.translate("base_args_ui", u"<html><head/><body><p>Gradient checkpointing is a trick to reduce vram usage. Do note that this also cuts your performance by about 30% on average</p></body></html>", None))
+#endif // QT_CONFIG(tooltip)
+        self.grad_checkpointing_enable.setText(QCoreApplication.translate("base_args_ui", u"Gradient Checkpointing", None))
     # retranslateUi
 

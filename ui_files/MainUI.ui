@@ -69,6 +69,7 @@
     </widget>
     <addaction name="dark_theme_menu"/>
     <addaction name="light_theme_menu"/>
+    <addaction name="no_theme_action"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuTheme"/>
@@ -92,6 +93,11 @@
   <action name="save_runtime_toml">
    <property name="text">
     <string>Save Runtime Toml</string>
+   </property>
+  </action>
+  <action name="no_theme_action">
+   <property name="text">
+    <string>No Theme</string>
    </property>
   </action>
  </widget>

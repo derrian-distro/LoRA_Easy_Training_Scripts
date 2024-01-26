@@ -30,6 +30,8 @@ class Ui_MainWindow(object):
         self.load_toml.setObjectName(u"load_toml")
         self.save_runtime_toml = QAction(MainWindow)
         self.save_runtime_toml.setObjectName(u"save_runtime_toml")
+        self.no_theme_action = QAction(MainWindow)
+        self.no_theme_action.setObjectName(u"no_theme_action")
         self.centralwidget = QWidget(MainWindow)
         self.centralwidget.setObjectName(u"centralwidget")
         self.verticalLayout = QVBoxLayout(self.centralwidget)
@@ -63,6 +65,7 @@ class Ui_MainWindow(object):
         self.menuFile.addAction(self.save_runtime_toml)
         self.menuTheme.addAction(self.dark_theme_menu.menuAction())
         self.menuTheme.addAction(self.light_theme_menu.menuAction())
+        self.menuTheme.addAction(self.no_theme_action)
 
         self.retranslateUi(MainWindow)
 
@@ -80,6 +83,7 @@ class Ui_MainWindow(object):
         self.load_toml.setShortcut(QCoreApplication.translate("MainWindow", u"Ctrl+O", None))
 #endif // QT_CONFIG(shortcut)
         self.save_runtime_toml.setText(QCoreApplication.translate("MainWindow", u"Save Runtime Toml", None))
+        self.no_theme_action.setText(QCoreApplication.translate("MainWindow", u"No Theme", None))
         self.menuFile.setTitle(QCoreApplication.translate("MainWindow", u"File", None))
         self.menuTheme.setTitle(QCoreApplication.translate("MainWindow", u"Theme", None))
         self.dark_theme_menu.setTitle(QCoreApplication.translate("MainWindow", u"Dark", None))

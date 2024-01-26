@@ -95,11 +95,13 @@ class BaseArgsWidget(QtWidgets.QWidget):
         self.widget.height_enable.clicked.connect(self.enable_disable_height)
 
         # gradient connections
-        self.widget.gradient_box.clicked.connect(self.enable_disable_gradient)
-        self.widget.gradient_selector.currentIndexChanged.connect(
-            lambda _: self.enable_disable_gradient(True)
+        self.widget.grad_checkpointing_enable.clicked.connect(
+            lambda x: self.edit_args("gradient_checkpointing", x)
         )
-        self.widget.gradient_steps_input.valueChanged.connect(
+        self.widget.grad_accumulation_enable.clicked.connect(
+            self.enable_disable_grad_acc
+        )
+        self.widget.grad_accumulation_input.valueChanged.connect(
             lambda x: self.edit_args("gradient_accumulation_steps", x)
         )
 
@@ -154,9 +156,6 @@ class BaseArgsWidget(QtWidgets.QWidget):
         self.widget.BF16_enable.setEnabled(self.bf16_valid)
         self.widget.BF16_enable.clicked.connect(self.enable_disable_full_bf16)
         self.widget.FP16_enable.clicked.connect(self.enable_disable_full_fp16)
-        self.widget.gradient_steps_input.valueChanged.connect(
-            lambda x: self.edit_args("gradient_accumulation_steps", x)
-        )
 
         # max training time connections
         self.widget.max_train_selector.currentIndexChanged.connect(
@@ -386,31 +385,6 @@ class BaseArgsWidget(QtWidgets.QWidget):
             self.dataset_args["resolution"] = [self.widget.width_input.value(), value]
 
     @QtCore.Slot(bool)
-    def enable_disable_gradient(self, checked: bool) -> None:
-        for name in ["gradient_checkpointing", "gradient_accumulation_steps"]:
-            if name in self.args:
-                del self.args[name]
-        if not checked:
-            return
-        match self.widget.gradient_selector.currentIndex():
-            case 0:
-                self.edit_args("gradient_checkpointing", True)
-                self.widget.gradient_steps_input.setEnabled(False)
-            case 1:
-                self.edit_args(
-                    "gradient_accumulation_steps",
-                    self.widget.gradient_steps_input.value(),
-                )
-                self.widget.gradient_steps_input.setEnabled(True)
-            case _:
-                self.edit_args("gradient_checkpointing", True)
-                self.edit_args(
-                    "gradient_accumulation_steps",
-                    self.widget.gradient_steps_input.value(),
-                )
-                self.widget.gradient_steps_input.setEnabled(True)
-
-    @QtCore.Slot(bool)
     def enable_disable_comment(self, checked: bool) -> None:
         self.widget.comment_input.setEnabled(checked)
         self.edit_args(
@@ -469,6 +443,15 @@ class BaseArgsWidget(QtWidgets.QWidget):
             self.widget.xformers_enable.setEnabled(True)
             if self.widget.xformers_enable.isChecked():
                 self.args["xformers"] = True
+
+    @QtCore.Slot(bool)
+    def enable_disable_grad_acc(self, checked: bool) -> None:
+        self.widget.grad_accumulation_input.setEnabled(checked)
+        self.edit_args(
+            "gradient_accumulation_steps",
+            self.widget.grad_accumulation_input.value() if checked else None,
+            optional=True,
+        )
 
     @QtCore.Slot(bool)
     def enable_disable_keep_tokens(self, checked: bool) -> None:
@@ -540,25 +523,6 @@ class BaseArgsWidget(QtWidgets.QWidget):
             self.widget.height_enable.setChecked(False)
             self.widget.width_input.setValue(dataset_args["resolution"])
 
-        # gradient args
-        if "gradient_checkpointing" in args or "gradient_accumulation_steps" in args:
-            self.widget.gradient_box.setChecked(True)
-            self.widget.gradient_selector.setCurrentIndex(
-                2
-                if "gradient_checkpointing" in args
-                and "gradient_accumulation_steps" in args
-                else 0
-                if "gradient_checkpointing" in args
-                else 1
-            )
-            self.widget.gradient_steps_input.setValue(
-                args.get("gradient_accumulation_steps", 1)
-            )
-            self.enable_disable_gradient(True)
-        else:
-            self.widget.gradient_box.setChecked(False)
-            self.enable_disable_gradient(False)
-
         self.widget.seed_input.setValue(args["seed"])
         self.widget.clip_skip_input.setValue(args.get("clip_skip", 2))
         self.widget.loss_weight_input.setValue(args["prior_loss_weight"])
@@ -605,6 +569,18 @@ class BaseArgsWidget(QtWidgets.QWidget):
         )
         self.enable_disable_keep_tokens(
             self.widget.keep_tokens_seperator_enable.isChecked()
+        )
+        self.widget.grad_checkpointing_enable.setChecked(
+            args.get("gradient_checkpointing", False)
+        )
+        self.widget.grad_accumulation_input.setValue(
+            args.get("gradient_accumulation_steps", 1)
+        )
+        self.widget.grad_accumulation_enable.setChecked(
+            bool(args.get("gradient_accumulation_steps", False))
+        )
+        self.enable_disable_grad_acc(
+            bool(args.get("gradient_accumulation_steps", False))
         )
 
     def save_args(self) -> Union[dict, None]:
