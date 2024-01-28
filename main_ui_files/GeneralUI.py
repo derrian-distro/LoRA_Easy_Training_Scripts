@@ -573,6 +573,11 @@ class BaseArgsWidget(QtWidgets.QWidget):
         self.widget.grad_checkpointing_enable.setChecked(
             args.get("gradient_checkpointing", False)
         )
+        self.edit_args(
+            "gradient_checkpointing",
+            args.get("gradient_checkpointing", False),
+            optional=True,
+        )
         self.widget.grad_accumulation_input.setValue(
             args.get("gradient_accumulation_steps", 1)
         )
