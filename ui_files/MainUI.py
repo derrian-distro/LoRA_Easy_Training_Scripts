@@ -3,7 +3,7 @@
 ################################################################################
 ## Form generated from reading UI file 'MainUI.ui'
 ##
-## Created by: Qt User Interface Compiler version 6.5.0
+## Created by: Qt User Interface Compiler version 6.6.1
 ##
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
@@ -62,7 +62,6 @@ class Ui_MainWindow(object):
         self.menubar.addAction(self.menuTheme.menuAction())
         self.menuFile.addAction(self.save_toml)
         self.menuFile.addAction(self.load_toml)
-        self.menuFile.addAction(self.save_runtime_toml)
         self.menuTheme.addAction(self.dark_theme_menu.menuAction())
         self.menuTheme.addAction(self.light_theme_menu.menuAction())
         self.menuTheme.addAction(self.no_theme_action)

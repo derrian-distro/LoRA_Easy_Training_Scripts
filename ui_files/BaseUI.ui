@@ -386,6 +386,9 @@
           <property name="toolTip">
            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Gradient Accumulation effectively takes your batch size, and then multiplies it by the number listed here. This allows you to simulate having a larger batch size then you have vram, however it is slower.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
           </property>
+          <property name="minimum">
+           <number>1</number>
+          </property>
          </widget>
         </item>
         <item row="0" column="0" colspan="2">

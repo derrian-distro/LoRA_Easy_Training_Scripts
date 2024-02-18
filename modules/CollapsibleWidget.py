@@ -1,12 +1,19 @@
-import os.path
+from pathlib import Path
 
 from PySide6 import QtWidgets, QtGui
 from PySide6 import QtCore
 
 
 class CollapsibleWidget(QtWidgets.QWidget):
-    def __init__(self, parent: QtWidgets.QWidget = None, title: str = "", remove_elem: bool = False,
-                 enable: bool = False) -> None:
+    toggled = QtCore.Signal(bool)
+
+    def __init__(
+        self,
+        parent: QtWidgets.QWidget = None,
+        title: str = "",
+        remove_elem: bool = False,
+        enable: bool = False,
+    ) -> None:
         super(CollapsibleWidget, self).__init__(parent)
         self.is_collapsed = True
         self.has_remove = remove_elem
@@ -49,17 +56,21 @@ class CollapsibleWidget(QtWidgets.QWidget):
     def set_extra(self, mode: str = "remove"):
         if mode == "enable":
             self.extra_elem = QtWidgets.QPushButton()
-            self.extra_elem.setSizePolicy(QtWidgets.QSizePolicy.Policy.Maximum, QtWidgets.QSizePolicy.Policy.Fixed)
+            self.extra_elem.setSizePolicy(
+                QtWidgets.QSizePolicy.Policy.Maximum, QtWidgets.QSizePolicy.Policy.Fixed
+            )
             self.extra_elem.setCheckable(True)
             self.extra_elem.setChecked(False)
-            self.extra_elem.setIcon(QtGui.QIcon(os.path.join("icons", "check.svg")))
+            self.extra_elem.setIcon(QtGui.QIcon(str(Path("icons/check.svg"))))
             self.extra_elem.clicked.connect(self.enable_disable)
             self.layout().addWidget(self.extra_elem, 0, 1, 1, 1)
             self.layout().addWidget(self.content, 1, 0, 1, 2)
         elif mode == "remove":
             self.extra_elem = QtWidgets.QPushButton()
-            self.extra_elem.setSizePolicy(QtWidgets.QSizePolicy.Policy.Maximum, QtWidgets.QSizePolicy.Policy.Fixed)
-            self.extra_elem.setIcon(QtGui.QIcon(os.path.join("icons", "trash-2.svg")))
+            self.extra_elem.setSizePolicy(
+                QtWidgets.QSizePolicy.Policy.Maximum, QtWidgets.QSizePolicy.Policy.Fixed
+            )
+            self.extra_elem.setIcon(QtGui.QIcon(str(Path("icons/trash-2.svg"))))
             self.layout().addWidget(self.extra_elem, 0, 1, 1, 1)
             self.layout().addWidget(self.content, 1, 0, 1, 2)
 
@@ -77,6 +88,10 @@ class CollapsibleWidget(QtWidgets.QWidget):
             self.title_frame.setEnabled(False)
         else:
             self.title_frame.setEnabled(True)
+        self.toggled.emit(checked)
+
+    def set_title(self, title: str) -> None:
+        self.title_frame.set_title(title)
 
 
 class CollapsibleButton(QtWidgets.QPushButton):
@@ -85,16 +100,21 @@ class CollapsibleButton(QtWidgets.QPushButton):
         self.setCheckable(True)
         self.setChecked(False)
         self.setText(title)
-        self.setStyleSheet('''
+        self.setStyleSheet(
+            """
             QPushButton {
                 text-align: left
             }
-        ''')
+        """
+        )
         self.update_arrow()
         self.setMinimumHeight(40)
 
     def update_arrow(self, is_collapsed: bool = True) -> None:
         if is_collapsed:
-            self.setIcon(QtGui.QIcon(os.path.join("icons", "chevron-right.svg")))
+            self.setIcon(QtGui.QIcon(str(Path("icons/chevron-right.svg"))))
         else:
-            self.setIcon(QtGui.QIcon(os.path.join("icons", "chevron-down.svg")))
+            self.setIcon(QtGui.QIcon(str(Path("icons/chevron-down.svg"))))
+
+    def set_title(self, title: str) -> None:
+        self.setText(title)

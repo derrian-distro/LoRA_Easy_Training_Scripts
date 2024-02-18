@@ -309,6 +309,40 @@
    </item>
    <item row="1" column="1">
     <layout class="QFormLayout" name="formLayout">
+     <item row="0" column="0">
+      <widget class="QCheckBox" name="resume_enable">
+       <property name="text">
+        <string>Resume State</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="1">
+      <layout class="QHBoxLayout" name="horizontalLayout_5">
+       <item>
+        <widget class="DragDropLineEdit" name="resume_input">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
+         <property name="toolTip">
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The folder path to a previous state so that you can resume training.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         </property>
+         <property name="placeholderText">
+          <string>Folder To Resume From</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="resume_selector">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
      <item row="1" column="0">
       <widget class="QCheckBox" name="save_only_last_enable">
        <property name="text">
@@ -365,16 +399,6 @@
        </item>
       </layout>
      </item>
-     <item row="2" column="0">
-      <widget class="QCheckBox" name="save_tags_enable">
-       <property name="toolTip">
-        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Saves a txt file that is a formatted list of all of the tags within all subsets provided when training is started&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-       </property>
-       <property name="text">
-        <string>Save Tag File</string>
-       </property>
-      </widget>
-     </item>
      <item row="2" column="1">
       <layout class="QHBoxLayout" name="horizontalLayout_6">
        <item>
@@ -403,7 +427,7 @@
       </layout>
      </item>
      <item row="3" column="0">
-      <widget class="QCheckBox" name="save_toml_on_train_enable">
+      <widget class="QCheckBox" name="save_toml_enable">
        <property name="toolTip">
         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Saves a toml file when training begins, as a way to prevent accidentally losing args&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
        </property>
@@ -439,50 +463,21 @@
        </item>
       </layout>
      </item>
-     <item row="0" column="0">
-      <widget class="QCheckBox" name="resume_enable">
+     <item row="2" column="0">
+      <widget class="QCheckBox" name="save_tag_enable">
+       <property name="toolTip">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Saves a txt file that is a formatted list of all of the tags within all subsets provided when training is started&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
        <property name="text">
-        <string>Resume State</string>
+        <string>Save Tag File</string>
        </property>
       </widget>
-     </item>
-     <item row="0" column="1">
-      <layout class="QHBoxLayout" name="horizontalLayout_5">
-       <item>
-        <widget class="DragDropLineEdit" name="resume_input">
-         <property name="enabled">
-          <bool>false</bool>
-         </property>
-         <property name="toolTip">
-          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The folder path to a previous state so that you can resume training.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-         </property>
-         <property name="placeholderText">
-          <string>Folder To Resume From</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QPushButton" name="resume_selector">
-         <property name="enabled">
-          <bool>false</bool>
-         </property>
-         <property name="text">
-          <string/>
-         </property>
-        </widget>
-       </item>
-      </layout>
      </item>
     </layout>
    </item>
   </layout>
  </widget>
  <customwidgets>
-  <customwidget>
-   <class>DragDropLineEdit</class>
-   <extends>QLineEdit</extends>
-   <header>modules.DragDropLineEdit.h</header>
-  </customwidget>
   <customwidget>
    <class>SpinBox</class>
    <extends>QSpinBox</extends>
@@ -497,6 +492,11 @@
    <class>LineEditWithHighlight</class>
    <extends>QLineEdit</extends>
    <header>modules.LineEditHighlight.h</header>
+  </customwidget>
+  <customwidget>
+   <class>DragDropLineEdit</class>
+   <extends>QLineEdit</extends>
+   <header>modules.DragDropLineEdit.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

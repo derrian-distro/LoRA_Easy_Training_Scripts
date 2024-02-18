@@ -3,7 +3,7 @@
 ################################################################################
 ## Form generated from reading UI file 'BaseUI.ui'
 ##
-## Created by: Qt User Interface Compiler version 6.5.0
+## Created by: Qt User Interface Compiler version 6.6.1
 ##
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
@@ -242,6 +242,7 @@ class Ui_base_args_ui(object):
         self.grad_accumulation_input.setObjectName(u"grad_accumulation_input")
         self.grad_accumulation_input.setEnabled(False)
         self.grad_accumulation_input.setFocusPolicy(Qt.StrongFocus)
+        self.grad_accumulation_input.setMinimum(1)
 
         self.gridLayout.addWidget(self.grad_accumulation_input, 1, 1, 1, 1)
 

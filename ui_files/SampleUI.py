@@ -3,7 +3,7 @@
 ################################################################################
 ## Form generated from reading UI file 'SampleUI.ui'
 ##
-## Created by: Qt User Interface Compiler version 6.5.0
+## Created by: Qt User Interface Compiler version 6.6.1
 ##
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
@@ -29,18 +29,18 @@ class Ui_sample_ui(object):
         sample_ui.resize(400, 150)
         self.verticalLayout = QVBoxLayout(sample_ui)
         self.verticalLayout.setObjectName(u"verticalLayout")
-        self.sample_args_box = QGroupBox(sample_ui)
-        self.sample_args_box.setObjectName(u"sample_args_box")
-        self.sample_args_box.setCheckable(True)
-        self.sample_args_box.setChecked(False)
-        self.formLayout = QFormLayout(self.sample_args_box)
+        self.sample_group = QGroupBox(sample_ui)
+        self.sample_group.setObjectName(u"sample_group")
+        self.sample_group.setCheckable(True)
+        self.sample_group.setChecked(False)
+        self.formLayout = QFormLayout(self.sample_group)
         self.formLayout.setObjectName(u"formLayout")
-        self.sampler_label = QLabel(self.sample_args_box)
+        self.sampler_label = QLabel(self.sample_group)
         self.sampler_label.setObjectName(u"sampler_label")
 
         self.formLayout.setWidget(0, QFormLayout.LabelRole, self.sampler_label)
 
-        self.sampler_input = ComboBox(self.sample_args_box)
+        self.sampler_input = ComboBox(self.sample_group)
         self.sampler_input.addItem("")
         self.sampler_input.addItem("")
         self.sampler_input.addItem("")
@@ -62,14 +62,14 @@ class Ui_sample_ui(object):
 
         self.formLayout.setWidget(0, QFormLayout.FieldRole, self.sampler_input)
 
-        self.steps_label = QLabel(self.sample_args_box)
+        self.steps_label = QLabel(self.sample_group)
         self.steps_label.setObjectName(u"steps_label")
 
         self.formLayout.setWidget(1, QFormLayout.LabelRole, self.steps_label)
 
         self.horizontalLayout = QHBoxLayout()
         self.horizontalLayout.setObjectName(u"horizontalLayout")
-        self.steps_epochs_selector = ComboBox(self.sample_args_box)
+        self.steps_epochs_selector = ComboBox(self.sample_group)
         self.steps_epochs_selector.addItem("")
         self.steps_epochs_selector.addItem("")
         self.steps_epochs_selector.setObjectName(u"steps_epochs_selector")
@@ -82,7 +82,7 @@ class Ui_sample_ui(object):
 
         self.horizontalLayout.addWidget(self.steps_epochs_selector)
 
-        self.steps_epoch_input = SpinBox(self.sample_args_box)
+        self.steps_epoch_input = SpinBox(self.sample_group)
         self.steps_epoch_input.setObjectName(u"steps_epoch_input")
         sizePolicy1 = QSizePolicy(QSizePolicy.Minimum, QSizePolicy.Fixed)
         sizePolicy1.setHorizontalStretch(0)
@@ -99,19 +99,19 @@ class Ui_sample_ui(object):
 
         self.formLayout.setLayout(1, QFormLayout.FieldRole, self.horizontalLayout)
 
-        self.text_file_label = QLabel(self.sample_args_box)
+        self.text_file_label = QLabel(self.sample_group)
         self.text_file_label.setObjectName(u"text_file_label")
 
         self.formLayout.setWidget(2, QFormLayout.LabelRole, self.text_file_label)
 
         self.horizontalLayout_2 = QHBoxLayout()
         self.horizontalLayout_2.setObjectName(u"horizontalLayout_2")
-        self.sample_prompt_txt_file_input = DragDropLineEdit(self.sample_args_box)
+        self.sample_prompt_txt_file_input = DragDropLineEdit(self.sample_group)
         self.sample_prompt_txt_file_input.setObjectName(u"sample_prompt_txt_file_input")
 
         self.horizontalLayout_2.addWidget(self.sample_prompt_txt_file_input)
 
-        self.sample_prompt_selector = QPushButton(self.sample_args_box)
+        self.sample_prompt_selector = QPushButton(self.sample_group)
         self.sample_prompt_selector.setObjectName(u"sample_prompt_selector")
         sizePolicy2 = QSizePolicy(QSizePolicy.Maximum, QSizePolicy.Fixed)
         sizePolicy2.setHorizontalStretch(0)
@@ -125,7 +125,7 @@ class Ui_sample_ui(object):
         self.formLayout.setLayout(2, QFormLayout.FieldRole, self.horizontalLayout_2)
 
 
-        self.verticalLayout.addWidget(self.sample_args_box)
+        self.verticalLayout.addWidget(self.sample_group)
 
 
         self.retranslateUi(sample_ui)
@@ -135,7 +135,7 @@ class Ui_sample_ui(object):
 
     def retranslateUi(self, sample_ui):
         sample_ui.setWindowTitle(QCoreApplication.translate("sample_ui", u"Form", None))
-        self.sample_args_box.setTitle(QCoreApplication.translate("sample_ui", u"Enable", None))
+        self.sample_group.setTitle(QCoreApplication.translate("sample_ui", u"Enable", None))
         self.sampler_label.setText(QCoreApplication.translate("sample_ui", u"Sampler ", None))
         self.sampler_input.setItemText(0, QCoreApplication.translate("sample_ui", u"DDIM", None))
         self.sampler_input.setItemText(1, QCoreApplication.translate("sample_ui", u"PNDM", None))

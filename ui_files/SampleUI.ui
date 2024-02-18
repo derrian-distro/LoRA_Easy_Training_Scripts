@@ -15,7 +15,7 @@
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
-    <widget class="QGroupBox" name="sample_args_box">
+    <widget class="QGroupBox" name="sample_group">
      <property name="title">
       <string>Enable</string>
      </property>

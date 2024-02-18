@@ -3,7 +3,7 @@
 ################################################################################
 ## Form generated from reading UI file 'OptimizerUI.ui'
 ##
-## Created by: Qt User Interface Compiler version 6.5.0
+## Created by: Qt User Interface Compiler version 6.6.1
 ##
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
@@ -26,7 +26,7 @@ class Ui_optimizer_ui(object):
     def setupUi(self, optimizer_ui):
         if not optimizer_ui.objectName():
             optimizer_ui.setObjectName(u"optimizer_ui")
-        optimizer_ui.resize(387, 290)
+        optimizer_ui.resize(387, 291)
         self.verticalLayout = QVBoxLayout(optimizer_ui)
         self.verticalLayout.setObjectName(u"verticalLayout")
         self.verticalLayout.setContentsMargins(0, 0, 0, 0)
@@ -165,14 +165,14 @@ class Ui_optimizer_ui(object):
 
         self.formLayout_3.setWidget(0, QFormLayout.LabelRole, self.warmup_enable)
 
-        self.warmup_ratio_input = DoubleSpinBox(self.optimizer_tab_main)
-        self.warmup_ratio_input.setObjectName(u"warmup_ratio_input")
-        self.warmup_ratio_input.setEnabled(False)
-        self.warmup_ratio_input.setFocusPolicy(Qt.StrongFocus)
-        self.warmup_ratio_input.setMaximum(1.000000000000000)
-        self.warmup_ratio_input.setSingleStep(0.010000000000000)
+        self.warmup_input = DoubleSpinBox(self.optimizer_tab_main)
+        self.warmup_input.setObjectName(u"warmup_input")
+        self.warmup_input.setEnabled(False)
+        self.warmup_input.setFocusPolicy(Qt.StrongFocus)
+        self.warmup_input.setMaximum(1.000000000000000)
+        self.warmup_input.setSingleStep(0.010000000000000)
 
-        self.formLayout_3.setWidget(0, QFormLayout.FieldRole, self.warmup_ratio_input)
+        self.formLayout_3.setWidget(0, QFormLayout.FieldRole, self.warmup_input)
 
         self.label_4 = QLabel(self.optimizer_tab_main)
         self.label_4.setObjectName(u"label_4")
@@ -251,7 +251,7 @@ class Ui_optimizer_ui(object):
         self.scrollArea.setWidgetResizable(True)
         self.optimizer_item_widget = QWidget()
         self.optimizer_item_widget.setObjectName(u"optimizer_item_widget")
-        self.optimizer_item_widget.setGeometry(QRect(0, 0, 363, 210))
+        self.optimizer_item_widget.setGeometry(QRect(0, 0, 363, 211))
         self.verticalLayout_3 = QVBoxLayout(self.optimizer_item_widget)
         self.verticalLayout_3.setObjectName(u"verticalLayout_3")
         self.scrollArea.setWidget(self.optimizer_item_widget)
@@ -335,7 +335,7 @@ class Ui_optimizer_ui(object):
 #endif // QT_CONFIG(tooltip)
         self.warmup_enable.setText(QCoreApplication.translate("optimizer_ui", u"Warmup Ratio", None))
 #if QT_CONFIG(tooltip)
-        self.warmup_ratio_input.setToolTip(QCoreApplication.translate("optimizer_ui", u"<html><head/><body><p>This is ratio of steps you want to be a warmup to your chosen lr. I personally use 0.05 (5%). Keep in mind this is spread out over the course of all restarts when using the Cosine Annealing Warmup Restarts LR scheduler.</p></body></html>", None))
+        self.warmup_input.setToolTip(QCoreApplication.translate("optimizer_ui", u"<html><head/><body><p>This is ratio of steps you want to be a warmup to your chosen lr. I personally use 0.05 (5%). Keep in mind this is spread out over the course of all restarts when using the Cosine Annealing Warmup Restarts LR scheduler.</p></body></html>", None))
 #endif // QT_CONFIG(tooltip)
         self.label_4.setText(QCoreApplication.translate("optimizer_ui", u"Num Restarts", None))
 #if QT_CONFIG(tooltip)

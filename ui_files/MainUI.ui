@@ -51,7 +51,6 @@
     </property>
     <addaction name="save_toml"/>
     <addaction name="load_toml"/>
-    <addaction name="save_runtime_toml"/>
    </widget>
    <widget class="QMenu" name="menuTheme">
     <property name="title">

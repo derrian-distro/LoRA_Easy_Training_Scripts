@@ -1,133 +1,118 @@
-import os.path
-from typing import Union
-
-from PySide6 import QtWidgets, QtCore, QtGui
-
-import modules.DragDropLineEdit
+from PySide6.QtCore import Slot
+from PySide6.QtWidgets import QWidget
+from modules.DragDropLineEdit import DragDropLineEdit
 from ui_files.SampleUI import Ui_sample_ui
-from modules.CollapsibleWidget import CollapsibleWidget
+from modules.BaseWidget import BaseWidget
+from PySide6.QtGui import QIcon
+from pathlib import Path
 
 
-class SampleWidget(QtWidgets.QWidget):
-    def __init__(self, parent: QtWidgets.QWidget = None) -> None:
-        super(SampleWidget, self).__init__(parent)
-
-        self.args = {}
-        self.name = "sample_args"
-        self.edited_previously = False
-
-        self.setLayout(QtWidgets.QVBoxLayout())
-        self.colap = CollapsibleWidget(self, "Sample Args")
-        self.layout().addWidget(self.colap)
-        self.layout().setContentsMargins(9, 0, 9, 0)
-        self.content = QtWidgets.QWidget()
-        self.colap.add_widget(self.content, "main_widget")
-
+class SampleWidget(BaseWidget):
+    def __init__(self, parent: QWidget = None) -> None:
+        super().__init__(parent)
+        self.colap.set_title("Sample Args")
         self.widget = Ui_sample_ui()
-        self.widget.setupUi(self.content)
-        self.widget.sample_prompt_selector.setIcon(QtGui.QIcon(os.path.join("icons", "more-horizontal.svg")))
 
-        # handle logic
-        self.widget.sampler_input.currentTextChanged.connect(self.change_sampler)
+        self.name = "sample_args"
+
+        self.setup_widget()
+        self.setup_connections()
+
+    def setup_widget(self) -> None:
+        super().setup_widget()
+        self.widget.setupUi(self.content)
+        self.widget.sample_prompt_selector.setIcon(
+            QIcon(str(Path("icons/more-horizontal.svg")))
+        )
         self.widget.sample_prompt_txt_file_input.setMode("file", [".txt"])
         self.widget.sample_prompt_txt_file_input.highlight = True
-        self.widget.sample_prompt_txt_file_input.textChanged.connect(lambda x: self.edit_args(
-            "sample_prompts", x, elem=self.widget.sample_prompt_txt_file_input))
-        self.widget.sample_prompt_selector.clicked.connect(self.set_from_dialog)
-        self.widget.steps_epochs_selector.currentIndexChanged.connect(self.steps_epochs_changed)
-        self.widget.steps_epoch_input.valueChanged.connect(self.steps_epochs_input_changed)
-        self.widget.sample_args_box.clicked.connect(self.enable_disable)
 
-    @QtCore.Slot(str)
-    def change_sampler(self, elem: str) -> None:
-        self.args['sample_sampler'] = elem.lower()
-
-    @QtCore.Slot(str, object, QtWidgets.QWidget)
-    def edit_args(self, name: str, value: object, elem: QtWidgets.QWidget = None) -> None:
-        if elem and isinstance(elem, modules.DragDropLineEdit.DragDropLineEdit):
-            self.edited_previously = True
-            elem.update_stylesheet()
-        self.args[name] = value
-
-    @QtCore.Slot()
-    def set_from_dialog(self) -> None:
-        extensions = " ".join(
-            [f"*{s}" for s in self.widget.sample_prompt_txt_file_input.extensions]
+    def setup_connections(self) -> None:
+        self.widget.sample_group.clicked.connect(self.enable_disable)
+        self.widget.sampler_input.currentTextChanged.connect(
+            lambda x: self.edit_args("sample_sampler", x.lower())
         )
-        path = self.widget.sample_prompt_txt_file_input.text()
-        default_dir = os.path.split(path)[0] if os.path.exists(path) else ""
-        file_name, _ = QtWidgets.QFileDialog.getOpenFileName(
-            self, "Open Text File With Prompts", dir=default_dir, filter=f"Text Files ({extensions})")
-        self.widget.sample_prompt_txt_file_input.setText(file_name or path)
+        self.widget.steps_epochs_selector.currentIndexChanged.connect(
+            self.change_steps_epochs
+        )
+        self.widget.steps_epoch_input.valueChanged.connect(
+            lambda: self.change_steps_epochs(
+                self.widget.steps_epochs_selector.currentIndex()
+            )
+        )
+        self.widget.sample_prompt_txt_file_input.textChanged.connect(
+            lambda x: self.edit_args(
+                "sample_prompts",
+                x,
+                optional=True,
+                elem=self.widget.sample_prompt_txt_file_input,
+            )
+        )
+        self.widget.sample_prompt_selector.clicked.connect(
+            lambda: self.set_file_from_dialog(
+                self.widget.sample_prompt_txt_file_input,
+                "Prompt Text File",
+                "txt files",
+            )
+        )
 
-    @QtCore.Slot(int)
-    def steps_epochs_changed(self, index: int) -> None:
-        if index == 0:
-            if "sample_every_n_epochs" in self.args:
-                del self.args['sample_every_n_epochs']
-            self.args['sample_every_n_steps'] = self.widget.steps_epoch_input.value()
-        else:
-            if "sample_every_n_steps" in self.args:
-                del self.args['sample_every_n_steps']
-            self.args['sample_every_n_epochs'] = self.widget.steps_epoch_input.value()
+    def edit_args(
+        self,
+        name: str,
+        value: object,
+        optional: bool = False,
+        elem: DragDropLineEdit = None,
+    ) -> None:
+        if elem and elem.dirty:
+            elem.update_stylesheet()
+        return super().edit_args(name, value, optional)
 
-    @QtCore.Slot(int)
-    def steps_epochs_input_changed(self, value: int) -> None:
-        index = self.widget.steps_epochs_selector.currentIndex()
-        if index == 0:
-            if "sample_every_n_epochs" in self.args:
-                del self.args['sample_every_n_epochs']
-            self.args['sample_every_n_steps'] = value
-        else:
-            if "sample_every_n_steps" in self.args:
-                del self.args['sample_every_n_steps']
-            self.args['sample_every_n_epochs'] = value
-
-    @QtCore.Slot()
-    def enable_disable(self) -> None:
-        if checked := self.widget.sample_args_box.isChecked():
-            self.args['sample_prompts'] = self.widget.sample_prompt_txt_file_input.text()
-            self.args['sample_sampler'] = self.widget.sampler_input.currentText().lower()
-            self.steps_epochs_input_changed(self.widget.steps_epoch_input.value())
-            if self.edited_previously:
-                self.widget.sample_prompt_txt_file_input.update_stylesheet()
-        else:
+    @Slot(bool)
+    def enable_disable(self, checked: bool) -> None:
+        self.args = {}
+        if not checked:
             self.widget.sample_prompt_txt_file_input.setStyleSheet("")
-            self.args = {}
-
-    def get_args(self, input_args: dict) -> None:
-        if not self.widget.sample_args_box.isChecked():
-            if "sample_args" in input_args:
-                del input_args['sample_args']
             return
-        valid = self.widget.sample_prompt_txt_file_input.update_stylesheet()
-        input_args['sample_args'] = self.args if valid else None
-        if not valid and self.colap.is_collapsed:
-            self.colap.toggle_collapsed()
-            self.colap.title_frame.update_arrow(False)
-            self.colap.title_frame.setChecked(True)
+        self.edit_args(
+            "sample_sampler", self.widget.sampler_input.currentText().lower()
+        )
+        self.change_steps_epochs(self.widget.steps_epochs_selector.currentIndex())
+        self.edit_args(
+            "sample_prompts",
+            self.widget.sample_prompt_txt_file_input.text(),
+            optional=True,
+            elem=self.widget.sample_prompt_txt_file_input,
+        )
 
-    def get_dataset_args(self, input_args: dict) -> None:
-        pass
+    @Slot(int)
+    def change_steps_epochs(self, index: int) -> None:
+        args = ["sample_every_n_steps", "sample_every_n_epochs"]
+        for arg in args:
+            if arg in self.args:
+                del self.args[arg]
+        self.edit_args(args[index], self.widget.steps_epoch_input.value(), True)
 
-    def load_args(self, args: dict) -> None:
-        if self.name not in args:
-            return
-        args = args[self.name].get("args", None)
-        if not args:
-            self.widget.sample_args_box.setChecked(False)
-            self.enable_disable()
-            return
-        self.widget.sampler_input.setCurrentText(args['sample_sampler'].upper())
-        value = 'sample_every_n_epochs' if "sample_every_n_epochs" in args else "sample_every_n_steps"
-        self.widget.steps_epoch_input.setValue(args[value])
-        self.widget.steps_epochs_selector.setCurrentIndex(0 if value == "sample_every_n_steps" else 1)
-        self.widget.sample_prompt_txt_file_input.setText(args['sample_prompts'])
-        self.widget.sample_args_box.setChecked(True)
-        self.enable_disable()
+    def load_args(self, args: dict) -> bool:
+        if not super().load_args(args):
+            self.widget.sample_group.setChecked(False)
+            self.enable_disable(False)
+            return False
 
-    def save_args(self) -> Union[dict, None]:
-        return self.args
+        args: dict = args[self.name]
 
-    def save_dataset_args(self) -> Union[dict, None]:
-        pass
+        # update element inputs
+        self.widget.sample_group.setChecked(True)
+        self.widget.sampler_input.setCurrentText(
+            args.get("sample_sampler", "DDIM").upper()
+        )
+        self.widget.steps_epochs_selector.setCurrentIndex(
+            0 if "sample_every_n_steps" in args else 1
+        )
+        self.widget.steps_epoch_input.setValue(
+            args.get("sample_every_n_steps", args.get("sample_every_n_epochs", 1))
+        )
+        self.widget.sample_prompt_txt_file_input.setText(args.get("sample_prompts", ""))
+
+        # edit args to match
+        self.enable_disable(True)
+        return True

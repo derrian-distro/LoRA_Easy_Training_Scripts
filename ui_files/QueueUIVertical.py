@@ -3,7 +3,7 @@
 ################################################################################
 ## Form generated from reading UI file 'QueueUIVertical.ui'
 ##
-## Created by: Qt User Interface Compiler version 6.5.0
+## Created by: Qt User Interface Compiler version 6.6.1
 ##
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
@@ -25,7 +25,7 @@ class Ui_queue_ui(object):
         if not queue_ui.objectName():
             queue_ui.setObjectName(u"queue_ui")
         queue_ui.resize(150, 527)
-        sizePolicy = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Fixed)
+        sizePolicy = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(queue_ui.sizePolicy().hasHeightForWidth())
@@ -34,6 +34,7 @@ class Ui_queue_ui(object):
         queue_ui.setMaximumSize(QSize(150, 16777215))
         self.gridLayout = QGridLayout(queue_ui)
         self.gridLayout.setObjectName(u"gridLayout")
+        self.gridLayout.setContentsMargins(0, 0, 0, 0)
         self.top_arrow = QPushButton(queue_ui)
         self.top_arrow.setObjectName(u"top_arrow")
         sizePolicy1 = QSizePolicy(QSizePolicy.Minimum, QSizePolicy.Fixed)
@@ -62,7 +63,7 @@ class Ui_queue_ui(object):
         self.queue_scroll_area.setWidgetResizable(True)
         self.queue_scroll_widget = QWidget()
         self.queue_scroll_widget.setObjectName(u"queue_scroll_widget")
-        self.queue_scroll_widget.setGeometry(QRect(0, 0, 128, 355))
+        self.queue_scroll_widget.setGeometry(QRect(0, 0, 146, 373))
         self.verticalLayout_2 = QVBoxLayout(self.queue_scroll_widget)
         self.verticalLayout_2.setObjectName(u"verticalLayout_2")
         self.queue_scroll_area.setWidget(self.queue_scroll_widget)

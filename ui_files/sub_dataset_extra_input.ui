@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>488</width>
-    <height>340</height>
+    <height>358</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -21,7 +21,7 @@
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
-    <widget class="QGroupBox" name="face_crop_layout">
+    <widget class="QGroupBox" name="face_crop_group">
      <property name="enabled">
       <bool>true</bool>
      </property>
@@ -35,7 +35,7 @@
       <bool>true</bool>
      </property>
      <property name="checked">
-      <bool>false</bool>
+      <bool>true</bool>
      </property>
      <layout class="QFormLayout" name="formLayout_4">
       <item row="0" column="0">
@@ -49,7 +49,7 @@
        </widget>
       </item>
       <item row="0" column="1">
-       <widget class="DoubleSpinBox" name="face_crop_width">
+       <widget class="DoubleSpinBox" name="face_crop_width_input">
         <property name="enabled">
          <bool>true</bool>
         </property>
@@ -90,7 +90,7 @@
        </widget>
       </item>
       <item row="1" column="1">
-       <widget class="DoubleSpinBox" name="face_crop_height">
+       <widget class="DoubleSpinBox" name="face_crop_height_input">
         <property name="enabled">
          <bool>true</bool>
         </property>
@@ -112,7 +112,7 @@
     </widget>
    </item>
    <item>
-    <widget class="QGroupBox" name="caption_dropout_layout">
+    <widget class="QGroupBox" name="caption_dropout_group">
      <property name="enabled">
       <bool>true</bool>
      </property>
@@ -129,20 +129,20 @@
       <bool>true</bool>
      </property>
      <property name="checked">
-      <bool>false</bool>
+      <bool>true</bool>
      </property>
      <layout class="QFormLayout" name="formLayout">
       <property name="leftMargin">
-       <number>0</number>
+       <number>9</number>
       </property>
       <property name="topMargin">
-       <number>0</number>
+       <number>9</number>
       </property>
       <property name="rightMargin">
-       <number>0</number>
+       <number>9</number>
       </property>
       <property name="bottomMargin">
-       <number>0</number>
+       <number>9</number>
       </property>
       <item row="0" column="0">
        <widget class="QLabel" name="caption_dropout_rate_label">
@@ -216,7 +216,7 @@
          <number>0</number>
         </property>
         <property name="value">
-         <number>1</number>
+         <number>0</number>
         </property>
        </widget>
       </item>
@@ -268,7 +268,7 @@
     </widget>
    </item>
    <item>
-    <widget class="QGroupBox" name="token_warmup_layout">
+    <widget class="QGroupBox" name="token_warmup_group">
      <property name="enabled">
       <bool>true</bool>
      </property>
@@ -285,7 +285,7 @@
       <bool>true</bool>
      </property>
      <property name="checked">
-      <bool>false</bool>
+      <bool>true</bool>
      </property>
      <layout class="QFormLayout" name="formLayout_3">
       <item row="0" column="0">

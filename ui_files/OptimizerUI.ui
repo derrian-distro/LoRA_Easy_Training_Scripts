@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>387</width>
-    <height>290</height>
+    <height>291</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -321,7 +321,7 @@
           </widget>
          </item>
          <item row="0" column="1">
-          <widget class="DoubleSpinBox" name="warmup_ratio_input">
+          <widget class="DoubleSpinBox" name="warmup_input">
            <property name="enabled">
             <bool>false</bool>
            </property>
@@ -468,7 +468,7 @@
             <x>0</x>
             <y>0</y>
             <width>363</width>
-            <height>210</height>
+            <height>211</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_3"/>
@@ -498,15 +498,15 @@
    <header>modules.ScrollOnSelect.h</header>
   </customwidget>
   <customwidget>
+   <class>LineEditWithHighlight</class>
+   <extends>QLineEdit</extends>
+   <header>modules.LineEditHighlight.h</header>
+  </customwidget>
+  <customwidget>
    <class>TabView</class>
    <extends>QTabWidget</extends>
    <header>modules.ScrollOnSelect.h</header>
    <container>1</container>
-  </customwidget>
-  <customwidget>
-   <class>LineEditWithHighlight</class>
-   <extends>QLineEdit</extends>
-   <header>modules.LineEditHighlight.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

@@ -1,4 +1,4 @@
-import os.path
+from pathlib import Path
 import sys
 import json
 
@@ -8,35 +8,29 @@ from main_ui_files.MainWindow import MainWindow
 
 
 def CreateConfig():
-    config = {
+    new_config = {
         "theme": {
-            "location": os.path.join("css", "themes", "dark_teal.xml"),
+            "location": Path("css/themes/dark_teal.xml").as_posix(),
             "is_light": False,
         }
     }
-    fp = open("config.json", "w")
-    json.dump(config, fp=fp, indent=4)
-    fp.close()
-    return config
+    Path("config.json").write_text(json.dumps(new_config, indent=2))
+    return new_config
 
 
 def main() -> None:
-    if os.path.exists("config.json"):
-        try:
-            with open("config.json", "r") as f:
-                config = json.load(f)
-        except json.decoder.JSONDecodeError:
-            print("Could not load config. Recreating...")
-            config = CreateConfig()
-    else:
-        config = CreateConfig()
+    queue_store = Path("queue_store")
+    if not queue_store.exists():
+        queue_store.mkdir()
+    config = Path("config.json")
+    config_dict = json.loads(config.read_text()) if config.exists() else CreateConfig()
 
     app = QtWidgets.QApplication(sys.argv)
-    if config["theme"]["location"]:
+    if config_dict["theme"]["location"]:
         apply_stylesheet(
             app,
-            theme=config["theme"]["location"],
-            invert_secondary=config["theme"]["is_light"],
+            theme=config_dict["theme"]["location"],
+            invert_secondary=config_dict["theme"]["is_light"],
         )
     window = MainWindow(app)
     window.setWindowTitle("LoRA Trainer")
