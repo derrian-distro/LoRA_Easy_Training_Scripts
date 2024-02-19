@@ -157,7 +157,7 @@ class MainWidget(QWidget):
                 self.begin_training_button.setEnabled(True)
                 return
             if response.status_code != 200:
-                print(f"Item failed: {response.json()}")
+                print(f"Item failed: {response.content}")
                 self.begin_training_button.setEnabled(True)
                 return
             response = requests.get(f"{url}/train")
