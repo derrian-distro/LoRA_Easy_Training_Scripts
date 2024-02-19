@@ -1,0 +1,4 @@
+pyside6
+qt-material
+toml
+requests

@@ -1,10 +1,22 @@
 from pathlib import Path
 import sys
 import json
+from threading import Thread
 
 from PySide6 import QtWidgets
 from qt_material import apply_stylesheet
 from main_ui_files.MainWindow import MainWindow
+import subprocess
+
+
+def run_backend():
+    if sys.platform == "linux":
+        python = Path("backend/sd_scripts/venv/bin/python.exe")
+    else:
+        python = Path("backend/sd_scripts/venv/Scripts/python.exe")
+    subprocess.check_call(
+        f"{python} backend/main.py backend", shell=sys.platform == "linux"
+    )
 
 
 def CreateConfig():
@@ -24,7 +36,10 @@ def main() -> None:
         queue_store.mkdir()
     config = Path("config.json")
     config_dict = json.loads(config.read_text()) if config.exists() else CreateConfig()
-
+    backend_thread = None
+    if "run_local" in config_dict and config_dict["run_local"]:
+        backend_thread = Thread(target=run_backend, daemon=True)
+        backend_thread.start()
     app = QtWidgets.QApplication(sys.argv)
     if config_dict["theme"]["location"]:
         apply_stylesheet(

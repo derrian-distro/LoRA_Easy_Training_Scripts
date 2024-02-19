@@ -1,5 +1,4 @@
 @echo off
 
-cd %~dp0
-call python "installer\installer.py"
+python install.py
 pause

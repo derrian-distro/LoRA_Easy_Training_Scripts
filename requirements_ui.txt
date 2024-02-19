@@ -1,7 +1,0 @@
-pyside6==6.5.0
-qt-material
-toml
-dadaptation
-lion_pytorch
-prodigyopt
-wandb
