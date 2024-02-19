@@ -81,13 +81,15 @@ class MainWidget(QWidget):
 
     def load_toml(self, file_name: Path | None = None) -> None:
         args, dataset_args = self.process_toml(file_name)
+        if not args and not dataset_args:
+            return
         self.args_widget.load_args(args, dataset_args)
         self.subset_widget.load_dataset_args(dataset_args)
 
     def process_toml(self, file_name: Path | None = None) -> tuple[dict, dict]:
         loaded_args = TomlFunctions.load_toml(file_name)
         if not loaded_args:
-            return
+            return {}, {}
         args = {}
         dataset_args = {}
         if "subsets" in loaded_args:

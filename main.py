@@ -1,3 +1,4 @@
+import contextlib
 from pathlib import Path
 import sys
 import json
@@ -7,6 +8,8 @@ from PySide6 import QtWidgets
 from qt_material import apply_stylesheet
 from main_ui_files.MainWindow import MainWindow
 import subprocess
+import time
+import requests
 
 
 def run_backend():
@@ -14,9 +17,10 @@ def run_backend():
         python = Path("backend/sd_scripts/venv/bin/python")
     else:
         python = Path("backend/sd_scripts/venv/Scripts/python.exe")
-    subprocess.check_call(
-        f"{python} backend/main.py backend", shell=sys.platform == "linux"
-    )
+    with contextlib.suppress(Exception):
+        subprocess.check_call(
+            f"{python} backend/main.py backend", shell=sys.platform == "linux"
+        )
 
 
 def CreateConfig():
@@ -52,6 +56,10 @@ def main() -> None:
     window.setWindowTitle("LoRA Trainer")
     window.show()
     app.exec()
+    if window.main_widget.training_thread:
+        while window.main_widget.training_thread.is_alive():
+            time.sleep(5.0)
+    requests.get(f"{window.main_widget.backend_url_input.text()}/stop_server")
 
 
 if __name__ == "__main__":
