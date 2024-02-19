@@ -37,7 +37,7 @@ def main():
     if not check_git_install():
         return
     python = sys.executable
-    subprocess.check_call(f"{python} -m venv venv")
+    subprocess.check_call(f"{python} -m venv venv", shell=sys.platform == "linux")
     venv_path = Path(
         "venv/Scripts/pip.exe" if sys.platform == "win32" else "venv/bin/pip"
     )
