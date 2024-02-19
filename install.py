@@ -48,10 +48,12 @@ def main():
     install_backend = None
     while install_backend not in ("y", "n"):
         install_backend = input("Are you using this locally? (y/n): ").lower()
-    if not install_backend:
-        return
     config = Path("config.json")
     config_dict = json.loads(config.read_text()) if config.exists() else {}
+    if install_backend == "n":
+        config_dict["run_local"] = False
+        config.write_text(json.dumps(config_dict, indent=2))
+        return
     config_dict["run_local"] = True
     config.write_text(json.dumps(config_dict, indent=2))
 
