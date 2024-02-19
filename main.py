@@ -20,14 +20,12 @@ def run_backend():
 
 
 def CreateConfig():
-    new_config = {
+    return {
         "theme": {
             "location": Path("css/themes/dark_teal.xml").as_posix(),
             "is_light": False,
         }
     }
-    Path("config.json").write_text(json.dumps(new_config, indent=2))
-    return new_config
 
 
 def main() -> None:
@@ -36,6 +34,9 @@ def main() -> None:
         queue_store.mkdir()
     config = Path("config.json")
     config_dict = json.loads(config.read_text()) if config.exists() else CreateConfig()
+    if "theme" not in config_dict:
+        config_dict.update(CreateConfig())
+    config.write_text(json.dumps(config_dict, indent=2))
     backend_thread = None
     if "run_local" in config_dict and config_dict["run_local"]:
         backend_thread = Thread(target=run_backend, daemon=True)
