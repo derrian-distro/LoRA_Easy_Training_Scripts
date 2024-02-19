@@ -11,7 +11,7 @@ import subprocess
 
 def run_backend():
     if sys.platform == "linux":
-        python = Path("backend/sd_scripts/venv/bin/python.exe")
+        python = Path("backend/sd_scripts/venv/bin/python")
     else:
         python = Path("backend/sd_scripts/venv/Scripts/python.exe")
     subprocess.check_call(
