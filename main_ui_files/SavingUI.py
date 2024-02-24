@@ -40,9 +40,10 @@ class SavingWidget(BaseWidget):
 
     def setup_connections(self) -> None:
         self.widget.output_folder_input.textChanged.connect(
-            lambda x: self.edit_args(
-                "output_dir", x, optional=True, elem=self.widget.output_folder_input
-            )
+            lambda x: self.edit_args("output_dir", x, optional=True)
+        )
+        self.widget.output_folder_input.editingFinished.connect(
+            lambda: self.check_validity(self.widget.output_folder_input)
         )
         self.widget.output_folder_selector.clicked.connect(
             lambda: self.set_folder_from_dialog(
@@ -58,9 +59,10 @@ class SavingWidget(BaseWidget):
         )
         self.widget.resume_enable.clicked.connect(self.enable_disable_resume)
         self.widget.resume_input.textChanged.connect(
-            lambda x: self.edit_args(
-                "resume", x, optional=True, elem=self.widget.resume_input
-            )
+            lambda x: self.edit_args("resume", x, optional=True)
+        )
+        self.widget.resume_input.editingFinished.connect(
+            lambda: self.check_validity(self.widget.resume_input)
         )
         self.widget.resume_selector.clicked.connect(
             lambda: self.set_folder_from_dialog(
@@ -87,8 +89,10 @@ class SavingWidget(BaseWidget):
                 "tag_file_location",
                 x,
                 optional=True,
-                elem=self.widget.save_tag_input,
             )
+        )
+        self.widget.save_tag_input.editingFinished.connect(
+            lambda: self.check_validity(self.widget.save_tag_input)
         )
         self.widget.save_tag_selector.clicked.connect(
             lambda: self.set_folder_from_dialog(
@@ -104,9 +108,10 @@ class SavingWidget(BaseWidget):
         )
         self.widget.save_toml_enable.clicked.connect(self.enable_disable_toml)
         self.widget.save_toml_input.textChanged.connect(
-            lambda x: self.edit_args(
-                "save_toml_location", x, optional=True, elem=self.widget.save_toml_input
-            )
+            lambda x: self.edit_args("save_toml_location", x, optional=True)
+        )
+        self.widget.save_toml_input.editingFinished.connect(
+            lambda: self.check_validity(self.widget.save_toml_input)
         )
         self.widget.save_toml_selector.clicked.connect(
             lambda: self.set_folder_from_dialog(
@@ -126,16 +131,12 @@ class SavingWidget(BaseWidget):
             )
         )
 
-    def edit_args(
-        self,
-        name: str,
-        value: object,
-        optional: bool = False,
-        elem: DragDropLineEdit = None,
-    ) -> None:
-        if elem and elem.dirty and (not elem.allow_empty or elem.text() != ""):
+    def check_validity(self, elem: DragDropLineEdit) -> None:
+        elem.dirty = True
+        if not elem.allow_empty or elem.text() != "":
             elem.update_stylesheet()
-        return super().edit_args(name, value, optional)
+        else:
+            elem.setStyleSheet("")
 
     @Slot(int)
     def change_last_type(self, index: int) -> None:
@@ -184,8 +185,8 @@ class SavingWidget(BaseWidget):
             "resume",
             self.widget.resume_input.text(),
             optional=True,
-            elem=self.widget.resume_input,
         )
+        self.check_validity(self.widget.resume_input)
 
     @Slot(bool)
     def enable_disable_last(self, checked: bool) -> None:
@@ -224,8 +225,8 @@ class SavingWidget(BaseWidget):
             "tag_file_location",
             self.widget.save_tag_input.text(),
             optional=True,
-            elem=self.widget.save_tag_input,
         )
+        self.check_validity(self.widget.save_tag_input)
 
     @Slot(bool)
     def enable_disable_freq(self, checked: bool) -> None:
@@ -254,8 +255,8 @@ class SavingWidget(BaseWidget):
             "save_toml_location",
             self.widget.save_toml_input.text(),
             optional=True,
-            elem=self.widget.save_toml_input,
         )
+        self.check_validity(self.widget.save_toml_input)
 
     @Slot(bool)
     def enable_disable_save_state(self, checked: bool) -> None:
@@ -345,8 +346,8 @@ class SavingWidget(BaseWidget):
             "output_dir",
             self.widget.output_folder_input.text(),
             optional=True,
-            elem=self.widget.output_folder_input,
         )
+        self.check_validity(self.widget.output_folder_input)
         self.enable_disable_output_name(self.widget.output_name_enable.isChecked())
         self.edit_args(
             "save_precision", self.widget.save_precision_selector.currentText()

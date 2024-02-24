@@ -61,8 +61,10 @@ class GeneralWidget(BaseWidget):
                 "pretrained_model_name_or_path",
                 x,
                 optional=True,
-                elem=self.widget.base_model_input,
             )
+        )
+        self.widget.base_model_input.editingFinished.connect(
+            lambda: self.check_validity(self.widget.base_model_input)
         )
         self.widget.base_model_selector.clicked.connect(
             lambda: self.set_file_from_dialog(
@@ -70,9 +72,10 @@ class GeneralWidget(BaseWidget):
             )
         )
         self.widget.vae_input.textChanged.connect(
-            lambda x: self.edit_args(
-                "vae", x, optional=True, elem=self.widget.vae_input
-            )
+            lambda x: self.edit_args("vae", x, optional=True)
+        )
+        self.widget.vae_input.editingFinished.connect(
+            lambda: self.check_validity(self.widget.vae_input)
         )
         self.widget.vae_selector.clicked.connect(
             lambda: self.set_file_from_dialog(
@@ -88,6 +91,9 @@ class GeneralWidget(BaseWidget):
         self.widget.no_half_vae_enable.clicked.connect(
             lambda x: self.edit_args("no_half_vae", x, True)
         )
+        self.widget.low_ram_enable.clicked.connect(
+            lambda x: self.edit_args("lowram", x, True)
+        )
         self.widget.v_param_enable.clicked.connect(self.enable_disable_v_param)
         self.widget.v_pred_enable.clicked.connect(
             lambda x: self.edit_args("scale_v_pred_loss_like_noise_pred", x, True)
@@ -97,6 +103,9 @@ class GeneralWidget(BaseWidget):
         )
         self.widget.BF16_enable.clicked.connect(
             lambda x: self.change_full_type(False, x)
+        )
+        self.widget.FP8_enable.clicked.connect(
+            lambda x: self.edit_args("fp8_base", x, True)
         )
         self.widget.width_input.valueChanged.connect(self.change_resolution)
         self.widget.height_enable.clicked.connect(self.change_resolution)
@@ -160,6 +169,13 @@ class GeneralWidget(BaseWidget):
             )
         )
 
+    def check_validity(self, elem: DragDropLineEdit) -> None:
+        elem.dirty = True
+        if not elem.allow_empty or elem.text() != "":
+            elem.update_stylesheet()
+        else:
+            elem.setStyleSheet("")
+
     def edit_args(
         self,
         name: str,
@@ -167,6 +183,8 @@ class GeneralWidget(BaseWidget):
         optional: bool = False,
         elem: DragDropLineEdit | LineEditWithHighlightMin = None,
     ) -> None:
+        if elem:
+            elem.dirty = True
         if elem and elem.dirty and (not elem.allow_empty or elem.text() != ""):
             elem.update_stylesheet()
         return super().edit_args(name, value, optional)
@@ -310,12 +328,14 @@ class GeneralWidget(BaseWidget):
         self.widget.v2_enable.setChecked(args.get("v2", False))
         self.widget.sdxl_enable.setChecked(args.get("sdxl", False))
         self.widget.no_half_vae_enable.setChecked(args.get("no_half_vae", False))
+        self.widget.low_ram_enable.setChecked(args.get("lowram", False))
         self.widget.v_param_enable.setChecked(args.get("v_parameterization", False))
         self.widget.v_pred_enable.setChecked(
             args.get("scale_v_pred_loss_like_noise_pred", False)
         )
         self.widget.FP16_enable.setChecked(args.get("full_fp16", False))
         self.widget.BF16_enable.setChecked(args.get("full_bf16", False))
+        self.widget.FP8_enable.setChecked(args.get("fp8_base", False))
         self.widget.grad_checkpointing_enable.setChecked(
             args.get("gradient_checkpointing", False)
         )
@@ -373,10 +393,12 @@ class GeneralWidget(BaseWidget):
             self.widget.v2_enable.isChecked(), self.widget.sdxl_enable.isChecked()
         )
         self.edit_args("no_half_vae", self.widget.no_half_vae_enable.isChecked(), True)
+        self.edit_args("lowram", self.widget.low_ram_enable.isChecked(), True)
         self.enable_disable_v_param(self.widget.v_param_enable.isChecked())
         self.change_full_type(
             self.widget.FP16_enable.isChecked(), self.widget.BF16_enable.isChecked()
         )
+        self.edit_args("fp8_base", self.widget.FP8_enable.isChecked(), True)
         self.edit_args(
             "gradient_checkpointing",
             self.widget.grad_checkpointing_enable.isChecked(),

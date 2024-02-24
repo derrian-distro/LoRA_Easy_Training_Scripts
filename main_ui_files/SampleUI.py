@@ -45,8 +45,10 @@ class SampleWidget(BaseWidget):
                 "sample_prompts",
                 x,
                 optional=True,
-                elem=self.widget.sample_prompt_txt_file_input,
             )
+        )
+        self.widget.sample_prompt_txt_file_input.editingFinished.connect(
+            lambda: self.check_validity(self.widget.sample_prompt_txt_file_input)
         )
         self.widget.sample_prompt_selector.clicked.connect(
             lambda: self.set_file_from_dialog(
@@ -56,16 +58,12 @@ class SampleWidget(BaseWidget):
             )
         )
 
-    def edit_args(
-        self,
-        name: str,
-        value: object,
-        optional: bool = False,
-        elem: DragDropLineEdit = None,
-    ) -> None:
-        if elem and elem.dirty:
+    def check_validity(self, elem: DragDropLineEdit) -> None:
+        elem.dirty = True
+        if not elem.allow_empty or elem.text() != "":
             elem.update_stylesheet()
-        return super().edit_args(name, value, optional)
+        else:
+            elem.setStyleSheet("")
 
     @Slot(bool)
     def enable_disable(self, checked: bool) -> None:
@@ -81,8 +79,8 @@ class SampleWidget(BaseWidget):
             "sample_prompts",
             self.widget.sample_prompt_txt_file_input.text(),
             optional=True,
-            elem=self.widget.sample_prompt_txt_file_input,
         )
+        self.check_validity(self.widget.sample_prompt_txt_file_input)
 
     @Slot(int)
     def change_steps_epochs(self, index: int) -> None:

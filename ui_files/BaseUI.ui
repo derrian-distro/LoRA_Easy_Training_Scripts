@@ -491,6 +491,13 @@
           </property>
          </widget>
         </item>
+        <item>
+         <widget class="QCheckBox" name="FP8_enable">
+          <property name="text">
+           <string>FP8 Base</string>
+          </property>
+         </widget>
+        </item>
        </layout>
       </item>
       <item row="2" column="0" colspan="2">
@@ -516,6 +523,13 @@
          <widget class="QCheckBox" name="no_half_vae_enable">
           <property name="text">
            <string>No Half Vae</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QCheckBox" name="low_ram_enable">
+          <property name="text">
+           <string>Low RAM</string>
           </property>
          </widget>
         </item>

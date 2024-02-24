@@ -1,7 +1,9 @@
+import json
 from pathlib import Path
 import typing
 
 from PySide6 import QtGui, QtCore, QtWidgets
+import requests
 
 
 class DragDropLineEdit(QtWidgets.QLineEdit):
@@ -47,6 +49,7 @@ class DragDropLineEdit(QtWidgets.QLineEdit):
             if not ext or ext not in self.extensions:
                 return
         self.setText(path.as_posix())
+        self.update_stylesheet()
 
     def setName(self, name: str) -> None:
         self.name = name
@@ -56,6 +59,10 @@ class DragDropLineEdit(QtWidgets.QLineEdit):
         if extensions:
             self.extensions = extensions
 
+    def setText(self, arg__1: str) -> None:
+        self.dirty = True
+        return super().setText(arg__1)
+
     def focusInEvent(self, arg__1: QtGui.QFocusEvent) -> None:
         if not self.highlight or len(self.text()) == 0:
             super(DragDropLineEdit, self).focusInEvent(arg__1)
@@ -63,22 +70,29 @@ class DragDropLineEdit(QtWidgets.QLineEdit):
             QtCore.QTimer.singleShot(0, self.selectAll)
 
     def update_stylesheet(self) -> bool:
-        path = Path(self.text())
-        if path.exists() and self.mode == "file":
-            valid = path.suffix in self.extensions
-        elif path.is_dir():
-            valid = True
-        elif self.allow_empty and self.text() == "":
-            valid = True
-        else:
+        config = Path("config.json")
+        config = (
+            json.loads(config.read_text())
+            if config.exists()
+            else {"backend_url": "http://127.0.0.1:8000"}
+        )
+        try:
+            response = requests.post(
+                f"{config.get('backend_url', 'http://127.0.0.1:8000')}/check_path",
+                json=True,
+                data=json.dumps(
+                    {
+                        "path": self.text(),
+                        "type": self.mode,
+                        "extensions": self.extensions,
+                    }
+                ),
+            )
+            valid = bool(response.json()["valid"])
+        except Exception:
             valid = False
-
         if valid:
             self.setStyleSheet("")
             return True
         self.setStyleSheet(self.error_sheet)
         return False
-
-    def setText(self, arg__1: str) -> None:
-        self.dirty = True
-        return super().setText(arg__1)

@@ -6,10 +6,10 @@ from threading import Thread
 
 from PySide6 import QtWidgets
 from qt_material import apply_stylesheet
+import requests
 from main_ui_files.MainWindow import MainWindow
 import subprocess
 import time
-import requests
 
 
 def run_backend():

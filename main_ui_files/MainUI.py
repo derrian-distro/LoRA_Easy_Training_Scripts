@@ -62,6 +62,13 @@ class MainWidget(QWidget):
         self.queue_widget.saveQueue.connect(lambda x: self.save_toml(Path(x)))
         self.queue_widget.loadQueue.connect(lambda x: self.load_toml(Path(x)))
         self.begin_training_button.clicked.connect(self.start_training)
+        self.backend_url_input.textChanged.connect(self.update_url)
+
+    def update_url(self, url: str) -> None:
+        config = Path("config.json")
+        config_dict = json.loads(config.read_text()) if config.exists() else {}
+        config_dict["backend_url"] = url
+        config.write_text(json.dumps(config_dict, indent=2))
 
     def get_args(self) -> tuple[dict, dict]:
         base_args = self.args_widget.get_args()

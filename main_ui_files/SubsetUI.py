@@ -49,9 +49,10 @@ class SubsetWidget(BaseWidget):
 
     def setup_connections(self) -> None:
         self.widget.image_folder_input.textChanged.connect(
-            lambda x: self.edit_dataset_args(
-                "image_dir", x, optional=True, elem=self.widget.image_folder_input
-            )
+            lambda x: self.edit_dataset_args("image_dir", x, optional=True)
+        )
+        self.widget.image_folder_input.editingFinished.connect(
+            lambda: self.check_validity(self.widget.image_folder_input)
         )
         self.widget.image_folder_selector.clicked.connect(
             lambda: self.set_folder_from_dialog("Subset Image Folder")
@@ -109,15 +110,16 @@ class SubsetWidget(BaseWidget):
             lambda x: self.edit_dataset_args("token_warmup_step", x)
         )
 
-    def edit_dataset_args(
-        self,
-        name: str,
-        value: object,
-        optional: bool = False,
-        elem: DragDropLineEdit = None,
-    ) -> None:
-        if elem and elem.dirty:
+    def check_validity(self, elem: DragDropLineEdit) -> None:
+        elem.dirty = True
+        if not elem.allow_empty or elem.text() != "":
             elem.update_stylesheet()
+        else:
+            elem.setStyleSheet("")
+
+    def edit_dataset_args(
+        self, name: str, value: object, optional: bool = False
+    ) -> None:
         super().edit_dataset_args(name, value, optional)
         self.edited.emit(self.dataset_args, self.name)
 
@@ -126,19 +128,19 @@ class SubsetWidget(BaseWidget):
             file_name = path
         else:
             default_dir = Path(self.widget.image_folder_input.text())
-            file_name = Path(
-                QFileDialog.getExistingDirectory(
-                    self,
-                    title_str,
-                    dir=str(default_dir) if default_dir.exists() else "",
-                )
+            file_name = QFileDialog.getExistingDirectory(
+                self,
+                title_str,
+                dir=str(default_dir) if default_dir.exists() else "",
             )
-        if not file_name or not file_name.exists():
-            return
+            if not file_name:
+                return
+            file_name = Path(file_name)
         with contextlib.suppress(ValueError):
             repeats = int(file_name.name.split("_")[0])
             self.widget.repeats_input.setValue(repeats)
         self.widget.image_folder_input.setText(file_name.as_posix())
+        self.widget.image_folder_input.update_stylesheet()
 
     def enable_disable_face_crop(self, checked: bool) -> None:
         if "face_crop_aug_range" in self.dataset_args:

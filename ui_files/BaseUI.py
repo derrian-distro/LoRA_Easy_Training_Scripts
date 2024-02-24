@@ -3,7 +3,7 @@
 ################################################################################
 ## Form generated from reading UI file 'BaseUI.ui'
 ##
-## Created by: Qt User Interface Compiler version 6.6.1
+## Created by: Qt User Interface Compiler version 6.6.2
 ##
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
@@ -259,7 +259,7 @@ class Ui_base_args_ui(object):
 
         self.base_model_box = QGroupBox(base_args_ui)
         self.base_model_box.setObjectName(u"base_model_box")
-        sizePolicy = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Fixed)
+        sizePolicy = QSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Fixed)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.base_model_box.sizePolicy().hasHeightForWidth())
@@ -310,6 +310,11 @@ class Ui_base_args_ui(object):
 
         self.horizontalLayout_6.addWidget(self.BF16_enable)
 
+        self.FP8_enable = QCheckBox(self.base_model_box)
+        self.FP8_enable.setObjectName(u"FP8_enable")
+
+        self.horizontalLayout_6.addWidget(self.FP8_enable)
+
 
         self.formLayout_3.setLayout(3, QFormLayout.SpanningRole, self.horizontalLayout_6)
 
@@ -329,6 +334,11 @@ class Ui_base_args_ui(object):
         self.no_half_vae_enable.setObjectName(u"no_half_vae_enable")
 
         self.horizontalLayout_2.addWidget(self.no_half_vae_enable)
+
+        self.low_ram_enable = QCheckBox(self.base_model_box)
+        self.low_ram_enable.setObjectName(u"low_ram_enable")
+
+        self.horizontalLayout_2.addWidget(self.low_ram_enable)
 
 
         self.formLayout_3.setLayout(2, QFormLayout.SpanningRole, self.horizontalLayout_2)
@@ -474,12 +484,14 @@ class Ui_base_args_ui(object):
         self.BF16_enable.setToolTip(QCoreApplication.translate("base_args_ui", u"<html><head/><body><p>Train in full BF16. Requires a higher bitsandbytes than 0.35.0 which is seemingly the best we have on windows, so this is disabled on windows regardless. not compatable with full fp16 or training precision</p></body></html>", None))
 #endif // QT_CONFIG(tooltip)
         self.BF16_enable.setText(QCoreApplication.translate("base_args_ui", u"Full BF16", None))
+        self.FP8_enable.setText(QCoreApplication.translate("base_args_ui", u"FP8 Base", None))
 #if QT_CONFIG(tooltip)
         self.v2_enable.setToolTip(QCoreApplication.translate("base_args_ui", u"<html><head/><body><p>Select this if you are using an SD2.x based model, such as WD1.5.</p></body></html>", None))
 #endif // QT_CONFIG(tooltip)
         self.v2_enable.setText(QCoreApplication.translate("base_args_ui", u"SD2.X Based", None))
         self.sdxl_enable.setText(QCoreApplication.translate("base_args_ui", u"SDXL Based", None))
         self.no_half_vae_enable.setText(QCoreApplication.translate("base_args_ui", u"No Half Vae", None))
+        self.low_ram_enable.setText(QCoreApplication.translate("base_args_ui", u"Low RAM", None))
         self.label_11.setText(QCoreApplication.translate("base_args_ui", u"External VAE", None))
 #if QT_CONFIG(tooltip)
         self.vae_input.setToolTip(QCoreApplication.translate("base_args_ui", u"<html><head/><body><p>Allows you to load a vae seperately from the base model.</p></body></html>", None))

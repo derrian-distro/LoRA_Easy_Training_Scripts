@@ -50,6 +50,7 @@ class BaseWidget(QtWidgets.QWidget):
         if not file_name:
             return
         widget.setText(Path(file_name).as_posix())
+        widget.update_stylesheet()
 
     def set_file_from_dialog(
         self, widget: DragDropLineEdit, title_str: str = "", filter_string: str = ""
@@ -67,6 +68,7 @@ class BaseWidget(QtWidgets.QWidget):
         if not file_name:
             return
         widget.setText(Path(file_name).as_posix())
+        widget.update_stylesheet()
 
     def save_args(self) -> dict:
         return self.args

@@ -37,9 +37,10 @@ class LoggingWidget(BaseWidget):
             self.change_log_system
         )
         self.widget.log_output_input.textChanged.connect(
-            lambda x: self.edit_args(
-                "logging_dir", x, elem=self.widget.log_output_input
-            )
+            lambda x: self.edit_args("logging_dir", x)
+        )
+        self.widget.log_output_input.editingFinished.connect(
+            lambda: self.check_validity(self.widget.log_output_input)
         )
         self.widget.log_output_selector.clicked.connect(
             lambda: self.set_folder_from_dialog(
@@ -66,16 +67,12 @@ class LoggingWidget(BaseWidget):
             lambda x: self.edit_args("wandb_api_key", x)
         )
 
-    def edit_args(
-        self,
-        name: str,
-        value: object,
-        optional: bool = False,
-        elem: DragDropLineEdit = None,
-    ) -> None:
-        if elem and elem.dirty:
+    def check_validity(self, elem: DragDropLineEdit) -> None:
+        elem.dirty = True
+        if not elem.allow_empty or elem.text() != "":
             elem.update_stylesheet()
-        return super().edit_args(name, value, optional)
+        else:
+            elem.setStyleSheet("")
 
     @Slot(bool)
     def enable_disable(self, checked: bool) -> None:
