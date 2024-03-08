@@ -1,3 +1,4 @@
+import contextlib
 import json
 import os
 from PySide6 import QtWidgets
@@ -12,6 +13,7 @@ from threading import Thread
 import requests
 from requests.exceptions import ConnectionError
 from time import sleep
+import shutil
 
 
 class MainWidget(QWidget):
@@ -33,7 +35,11 @@ class MainWidget(QWidget):
         self.setLayout(self.main_layout)
         self.layout().setContentsMargins(0, 0, 0, 0)
         self.subset_widget.add_empty_subset("subset 1")
-        self.backend_url_input.setText("http://127.0.0.1:8000")
+        config = Path("config.json")
+        config_dict = json.loads(config.read_text()) if config.exists() else {}
+        self.backend_url_input.setText(
+            config_dict.get("backend_url", "http://127.0.0.1:8000")
+        )
         self.backend_url_input.setPlaceholderText("Backend Server URL")
         self.tab_widget.addTab(self.args_widget, "Main Args")
         self.tab_widget.addTab(self.subset_widget, "Subset Args")
@@ -62,9 +68,10 @@ class MainWidget(QWidget):
         self.queue_widget.saveQueue.connect(lambda x: self.save_toml(Path(x)))
         self.queue_widget.loadQueue.connect(lambda x: self.load_toml(Path(x)))
         self.begin_training_button.clicked.connect(self.start_training)
-        self.backend_url_input.textChanged.connect(self.update_url)
+        self.backend_url_input.editingFinished.connect(self.update_url)
 
-    def update_url(self, url: str) -> None:
+    def update_url(self) -> None:
+        url = self.backend_url_input.text()
         config = Path("config.json")
         config_dict = json.loads(config.read_text()) if config.exists() else {}
         config_dict["backend_url"] = url
@@ -112,12 +119,17 @@ class MainWidget(QWidget):
 
     def start_training(self) -> None:
         if self.training_thread and self.training_thread.is_alive():
+            with contextlib.suppress(Exception):
+                requests.get(
+                    f"{self.backend_url_input.text()}/stop_training?force=true"
+                )
+            self.begin_training_button.setText("Start Training")
             return
         self.training_thread = Thread(target=self.start_training_thread)
         self.training_thread.start()
 
     def start_training_thread(self) -> None:
-        self.begin_training_button.setEnabled(False)
+        self.begin_training_button.setText("Stop Training")
         url = self.backend_url_input.text()
         if self.queue_widget.elements:
             while self.queue_widget.elements:
@@ -126,53 +138,100 @@ class MainWidget(QWidget):
                 self.queue_widget.remove_first_from_queue()
                 if is_checked:
                     self.save_toml(queue_file)
-                args, dataset_args = self.process_toml(queue_file)
-                final_args = {"args": args, "dataset": dataset_args}
-                try:
-                    response = requests.post(
-                        f"{url}/validate",
-                        json=True,
-                        data=json.dumps(final_args),
-                    )
-                except ConnectionError as e:
-                    print(e)
-                    break
-                if response.status_code != 200:
-                    print(f"Queue item failed: {response.json()}")
-                    print(f"queue file: {queue_file.as_posix()}")
-                    continue
-                os.remove(queue_file)
-                response = requests.get(f"{url}/train")
-                training = True
-                while training:
-                    sleep(5.0)
-                    response = requests.get(f"{url}/is_training")
-                    response = response.json()
-                    if not response["training"]:
-                        training = False
+                if not self.train_helper(url, queue_file):
+                    self.begin_training_button.setText("Start Training")
+                    return
         else:
             self.save_toml(Path("queue_store/temp.toml"))
-            args, dataset_args = self.process_toml(Path("queue_store/temp.toml"))
-            final_args = {"args": args, "dataset": dataset_args}
-            os.remove(Path("queue_store/temp.toml"))
+            self.train_helper(url, Path("queue_store/temp.toml"))
+        self.begin_training_button.setText("Start Training")
+
+    def train_helper(self, url: str, train_toml: Path) -> bool:
+        args, dataset_args = self.process_toml(train_toml)
+        final_args = {"args": args, "dataset": dataset_args}
+        try:
+            response = requests.post(
+                f"{url}/validate", json=True, data=json.dumps(final_args)
+            )
+        except ConnectionError as e:
+            print(e)
+            return False
+        if response.status_code != 200:
+            print(f"Item Failed: {response.json()}")
+            return False
+        validation_data = response.json()
+        if args.get("saving_args", {}).get("tag_occurrence", None):
+            folder = args["saving_args"].get("tag_file_location", None)
+            self.create_tag_file(
+                validation_data.get("tags", {}),
+                Path(folder) if folder else None,
+                args["saving_args"].get("output_name", "output_tags"),
+            )
+        if args.get("saving_args", {}).get("save_toml", None):
+            folder = args["saving_args"].get("save_toml_location", None)
+            self.create_auto_save_toml(
+                train_toml,
+                Path(folder) if folder else None,
+                args["saving_args"].get("output_name", "output_args"),
+            )
+        os.remove(train_toml)
+        response = requests.get(f"{url}/train")
+        training = True
+        while training:
+            sleep(5.0)
             try:
-                response = requests.post(
-                    f"{url}/validate", json=True, data=json.dumps(final_args)
-                )
-            except ConnectionError as e:
-                print(e)
-                self.begin_training_button.setEnabled(True)
-                return
-            if response.status_code != 200:
-                print(f"Item failed: {response.content}")
-                self.begin_training_button.setEnabled(True)
-                return
-            response = requests.get(f"{url}/train")
-            training = True
-            while training:
-                sleep(5.0)
                 response = requests.get(f"{url}/is_training")
-                response = response.json()
-                if not response["training"]:
-                    training = False
-        self.begin_training_button.setEnabled(True)
+            except Exception:
+                print("Connection Failed, assuming training has stopped.")
+                return False
+            if response.status_code != 200:
+                print("Connection Failed, assuming training has stopped.")
+                return False
+            response = response.json()
+            if not response["training"]:
+                training = False
+            if response["errored"]:
+                return False
+        return True
+
+    def create_tag_file(
+        self,
+        tags: dict,
+        output_location: Path | None = None,
+        output_name: str = "output_tags",
+    ) -> None:
+        if not tags:
+            return
+        if not output_location:
+            output_location = Path("auto_save_store")
+        if not output_location.exists():
+            output_location.mkdir()
+        if output_location.is_file():
+            output_location = output_location.parent
+        output_location = output_location.joinpath(f"{output_name}.txt")
+        with output_location.open("w", encoding="utf-8") as f:
+            f.write(
+                "Below is a list of keywords used during the training of this model:\n"
+            )
+            for k, v in tags.items():
+                f.write(f"[{v}] {k}\n")
+
+    def create_auto_save_toml(
+        self,
+        input_toml: Path,
+        output_location: Path | None = None,
+        output_name: str = "output_toml",
+    ):
+        if not output_location:
+            output_location = Path("auto_save_store")
+        if not output_location.exists():
+            output_location.mkdir()
+        if output_location.is_file():
+            output_location = output_location.parent
+        output_location = output_location.joinpath(f"{output_name}.toml")
+        offset = 1
+        orig_name = output_location.stem
+        while output_location.exists():
+            output_location = output_location.with_stem(f"{orig_name}_{offset}")
+            offset += 1
+        shutil.copy(input_toml, output_location)

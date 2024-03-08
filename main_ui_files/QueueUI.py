@@ -20,6 +20,8 @@ class QueueWidget(QWidget):
 
         self.setup_widget()
         self.setup_connections()
+        if not Path("queue_store").exists():
+            Path("queue_store").mkdir()
 
     def setup_widget(self) -> None:
         self.setLayout(QVBoxLayout())

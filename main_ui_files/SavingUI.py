@@ -36,7 +36,9 @@ class SavingWidget(BaseWidget):
         self.widget.output_folder_input.allow_empty = False
         setup_folder(self.widget.resume_input, self.widget.resume_selector)
         setup_folder(self.widget.save_tag_input, self.widget.save_tag_selector)
+        self.widget.save_tag_input.skip_validation_check = True
         setup_folder(self.widget.save_toml_input, self.widget.save_toml_selector)
+        self.widget.save_toml_input.skip_validation_check = True
 
     def setup_connections(self) -> None:
         self.widget.output_folder_input.textChanged.connect(

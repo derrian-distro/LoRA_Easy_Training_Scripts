@@ -1,6 +1,7 @@
 import json
 from pathlib import Path
 import typing
+from threading import Thread
 
 from PySide6 import QtGui, QtCore, QtWidgets
 import requests
@@ -25,6 +26,8 @@ class DragDropLineEdit(QtWidgets.QLineEdit):
         self.setPlaceholderText(name)
         self.extensions = extensions
         self.setAcceptDrops(True)
+        self.validation_thread = None
+        self.skip_validation_check = False
         self.error_sheet = """
             border-color: #dc3545
         """
@@ -69,7 +72,17 @@ class DragDropLineEdit(QtWidgets.QLineEdit):
         else:
             QtCore.QTimer.singleShot(0, self.selectAll)
 
-    def update_stylesheet(self) -> bool:
+    def update_stylesheet(self) -> None:
+        if self.skip_validation_check:
+            return
+        if self.validation_thread and self.validation_thread.is_alive():
+            return
+        self.validation_thread = Thread(
+            target=self.update_stylesheet_thread, daemon=True
+        )
+        self.validation_thread.start()
+
+    def update_stylesheet_thread(self) -> None:
         config = Path("config.json")
         config = (
             json.loads(config.read_text())
@@ -90,9 +103,9 @@ class DragDropLineEdit(QtWidgets.QLineEdit):
             )
             valid = bool(response.json()["valid"])
         except Exception:
-            valid = False
+            valid = True
         if valid:
             self.setStyleSheet("")
-            return True
+            return
         self.setStyleSheet(self.error_sheet)
-        return False
+        return
