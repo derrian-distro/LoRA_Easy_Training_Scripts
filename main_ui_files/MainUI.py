@@ -72,6 +72,9 @@ class MainWidget(QWidget):
 
     def update_url(self) -> None:
         url = self.backend_url_input.text()
+        if url.endswith("/"):
+            self.backend_url_input.setText(url.strip("/"))
+            url = url.strip("/")
         config = Path("config.json")
         config_dict = json.loads(config.read_text()) if config.exists() else {}
         config_dict["backend_url"] = url

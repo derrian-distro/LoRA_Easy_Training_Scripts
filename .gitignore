@@ -5,3 +5,4 @@ config.json
 runtime_store
 LoraEasyCustomOptimizer.egg-info
 build
+auto_save_store

@@ -19,10 +19,7 @@ class OptimizerWidget(BaseWidget):
             "learning_rate": 1e-4,
             "max_grad_norm": 1.0,
         }
-        self.opt_args = [
-            OptimizerItem(arg_name="weight_decay", arg_value="0.1"),
-            OptimizerItem(arg_name="betas", arg_value="0.9,0.99"),
-        ]
+        self.opt_args = [OptimizerItem(arg_name="weight_decay", arg_value="0.1")]
 
         self.setup_widget()
         self.setup_connections()
@@ -41,7 +38,7 @@ class OptimizerWidget(BaseWidget):
 
     def setup_connections(self) -> None:
         self.widget.optimizer_type_selector.currentTextChanged.connect(
-            lambda x: self.edit_args("optimizer_type", x)
+            self.change_optimizer
         )
         self.widget.lr_scheduler_selector.currentTextChanged.connect(
             self.change_scheduler
@@ -188,7 +185,22 @@ class OptimizerWidget(BaseWidget):
             self.edit_args(
                 "lr_scheduler_power", self.widget.poly_power_input.value(), True
             )
+        elif value == "rex":
+            self.widget.min_lr_input.setEnabled(True)
+            self.edit_args(
+                "lr_scheduler_type",
+                "LoraEasyCustomOptimizer.CustomOptimizers.Rex",
+            )
+            self.edit_lr_args("min_lr", self.widget.min_lr_input.text(), True)
+            return
         self.edit_args("lr_scheduler", value)
+
+    @Slot(str)
+    def change_optimizer(self, value: str) -> None:
+        if value != "Came":
+            self.edit_args("optimizer_type", value)
+            return
+        self.edit_args("optimizer_type", "pytorch_optimizer.optimizer.came.CAME")
 
     @Slot(bool)
     def enable_disable_warmup(self, checked: bool) -> None:
@@ -244,12 +256,15 @@ class OptimizerWidget(BaseWidget):
         args: dict = args[self.name]
 
         # update element inputs
+        optimizer_type = args.get("optimizer_type", "AdamW")
         self.widget.optimizer_type_selector.setCurrentText(
-            args.get("optimizer_type", "AdamW")
+            "Came" if len(optimizer_type.split(".")) > 1 else optimizer_type
         )
         if "lr_scheduler_type" in args:
             self.widget.lr_scheduler_selector.setCurrentText(
                 "cosine annealing warmup restarts"
+                if args["lr_scheduler_type"].split(".")[-1] != "Rex"
+                else "rex"
             )
         else:
             self.widget.lr_scheduler_selector.setCurrentText(
@@ -290,9 +305,7 @@ class OptimizerWidget(BaseWidget):
                 self.opt_args[-1].arg_value_input.setText(str(value))
 
         # edit args to match
-        self.edit_args(
-            "optimizer_type", self.widget.optimizer_type_selector.currentText()
-        )
+        self.change_optimizer(self.widget.optimizer_type_selector.currentText())
         # also handles min_lr, num_restarts, poly_power, restart_decay
         self.change_scheduler(self.widget.lr_scheduler_selector.currentText())
         self.edit_lr("learning_rate", self.widget.main_lr_input.text())
