@@ -42,7 +42,7 @@ def main():
         "venv/Scripts/pip.exe" if sys.platform == "win32" else "venv/bin/pip"
     )
     subprocess.check_call(
-        f"{venv_path} install -r requirements.txt", shell=sys.platform == "linux"
+        f"{venv_path} install -U -r requirements.txt", shell=sys.platform == "linux"
     )
 
     install_backend = None
@@ -60,7 +60,7 @@ def main():
     subprocess.check_call("git submodule init", shell=sys.platform == "linux")
     subprocess.check_call("git submodule update", shell=sys.platform == "linux")
     os.chdir(Path("backend"))
-    subprocess.check_call(f"{python} installer.py", shell=sys.platform == "linux")
+    subprocess.check_call(f"{python} installer.py local", shell=sys.platform == "linux")
 
 
 if __name__ == "__main__":

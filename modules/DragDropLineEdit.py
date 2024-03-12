@@ -28,9 +28,6 @@ class DragDropLineEdit(QtWidgets.QLineEdit):
         self.setAcceptDrops(True)
         self.validation_thread = None
         self.skip_validation_check = False
-        self.error_sheet = """
-            border-color: #dc3545
-        """
 
     def dragEnterEvent(self, event: QtGui.QDragEnterEvent) -> None:
         if event.mimeData().hasUrls():
@@ -73,6 +70,7 @@ class DragDropLineEdit(QtWidgets.QLineEdit):
             QtCore.QTimer.singleShot(0, self.selectAll)
 
     def update_stylesheet(self) -> None:
+        return
         if self.skip_validation_check:
             return
         if self.validation_thread and self.validation_thread.is_alive():
@@ -105,7 +103,5 @@ class DragDropLineEdit(QtWidgets.QLineEdit):
         except Exception:
             valid = True
         if valid:
-            self.setStyleSheet("")
             return
-        self.setStyleSheet(self.error_sheet)
         return

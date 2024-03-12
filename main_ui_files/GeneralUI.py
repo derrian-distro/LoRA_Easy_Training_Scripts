@@ -45,7 +45,6 @@ class GeneralWidget(BaseWidget):
             selector_icon = QIcon(str(Path("icons/more-horizontal.svg")))
             elem.setMode("file", [".ckpt", ".pt", ".safetensors"])
             elem.highlight = True
-            elem.setStyleSheet("")
             selector.setIcon(selector_icon)
 
         setup_file(self.widget.base_model_input, self.widget.base_model_selector)

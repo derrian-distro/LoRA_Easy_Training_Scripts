@@ -82,5 +82,8 @@ class MainWindow(QMainWindow, QtStyleTools):
             )
         config = Path("config.json")
         config_dict = json.loads(config.read_text()) if config.exists() else {}
-        config_dict["theme"] = {"location": theme_path.as_posix(), "is_light": is_light}
+        config_dict["theme"] = {
+            "location": theme_path.as_posix() if theme_path else None,
+            "is_light": is_light,
+        }
         config.write_text(json.dumps(config_dict, indent=2))
