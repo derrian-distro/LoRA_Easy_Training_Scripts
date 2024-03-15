@@ -12,6 +12,8 @@ def main():
     config_dict = json.loads(config.read_text()) if config.exists() else {}
     if "run_local" in config_dict and config_dict["run_local"]:
         os.chdir("backend")
+        if platform != "win32":
+            Path("update.sh").chmod(711)
         check_call(
             "update.bat" if platform == "win32" else "update.sh",
             shell=platform == "linux",
