@@ -3,7 +3,7 @@
 ################################################################################
 ## Form generated from reading UI file 'NetworkUI.ui'
 ##
-## Created by: Qt User Interface Compiler version 6.5.0
+## Created by: Qt User Interface Compiler version 6.6.2
 ##
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
@@ -28,7 +28,7 @@ class Ui_network_ui(object):
         if not network_ui.objectName():
             network_ui.setObjectName(u"network_ui")
         network_ui.resize(417, 355)
-        sizePolicy = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
+        sizePolicy = QSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Preferred)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(network_ui.sizePolicy().hasHeightForWidth())
@@ -186,7 +186,7 @@ class Ui_network_ui(object):
         self.unet_te_both_select.addItem("")
         self.unet_te_both_select.addItem("")
         self.unet_te_both_select.setObjectName(u"unet_te_both_select")
-        sizePolicy1 = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Fixed)
+        sizePolicy1 = QSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Fixed)
         sizePolicy1.setHorizontalStretch(0)
         sizePolicy1.setVerticalStretch(0)
         sizePolicy1.setHeightForWidth(self.unet_te_both_select.sizePolicy().hasHeightForWidth())
@@ -242,6 +242,12 @@ class Ui_network_ui(object):
         self.train_norm_enable.setEnabled(False)
 
         self.horizontalLayout_3.addWidget(self.train_norm_enable)
+
+        self.dora_enable = QCheckBox(self.main_tab)
+        self.dora_enable.setObjectName(u"dora_enable")
+        self.dora_enable.setEnabled(False)
+
+        self.horizontalLayout_3.addWidget(self.dora_enable)
 
 
         self.formLayout_3.setLayout(3, QFormLayout.SpanningRole, self.horizontalLayout_3)
@@ -453,8 +459,9 @@ class Ui_network_ui(object):
 #if QT_CONFIG(tooltip)
         self.cp_enable.setToolTip(QCoreApplication.translate("network_ui", u"<html><head/><body><p>Enables Conv CP, which is some form of compression algorithm that further reduces file size, I personally suggest you don't use it</p></body></html>", None))
 #endif // QT_CONFIG(tooltip)
-        self.cp_enable.setText(QCoreApplication.translate("network_ui", u"Enable Tucker", None))
+        self.cp_enable.setText(QCoreApplication.translate("network_ui", u"Tucker", None))
         self.train_norm_enable.setText(QCoreApplication.translate("network_ui", u"Train Norm", None))
+        self.dora_enable.setText(QCoreApplication.translate("network_ui", u"DoRA", None))
         self.rescale_enable.setText(QCoreApplication.translate("network_ui", u"Rescale", None))
         self.constrain_enable.setText(QCoreApplication.translate("network_ui", u"Constrain", None))
         self.algo_select.setItemText(0, QCoreApplication.translate("network_ui", u"LoRA", None))

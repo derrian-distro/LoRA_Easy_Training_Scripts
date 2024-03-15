@@ -410,7 +410,7 @@
               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Enables Conv CP, which is some form of compression algorithm that further reduces file size, I personally suggest you don't use it&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
              </property>
              <property name="text">
-              <string>Enable Tucker</string>
+              <string>Tucker</string>
              </property>
             </widget>
            </item>
@@ -421,6 +421,16 @@
              </property>
              <property name="text">
               <string>Train Norm</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QCheckBox" name="dora_enable">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+             <property name="text">
+              <string>DoRA</string>
              </property>
             </widget>
            </item>
