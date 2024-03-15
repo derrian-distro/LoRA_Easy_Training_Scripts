@@ -13,7 +13,7 @@ def main():
     if "run_local" in config_dict and config_dict["run_local"]:
         os.chdir("backend")
         if platform != "win32":
-            Path("update.sh").chmod(711)
+            Path("./update.sh").chmod(711)
         check_call(
             "update.bat" if platform == "win32" else "./update.sh",
             shell=platform == "linux",
