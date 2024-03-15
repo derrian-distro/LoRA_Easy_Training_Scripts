@@ -15,7 +15,7 @@ def main():
         if platform != "win32":
             Path("update.sh").chmod(711)
         check_call(
-            "update.bat" if platform == "win32" else "update.sh",
+            "update.bat" if platform == "win32" else "./update.sh",
             shell=platform == "linux",
         )
 
