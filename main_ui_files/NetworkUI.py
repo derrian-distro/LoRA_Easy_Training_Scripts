@@ -132,9 +132,7 @@ class NetworkWidget(BaseWidget):
         self.widget.train_norm_enable.clicked.connect(
             lambda x: self.edit_network_args("train_norm", x, True)
         )
-        self.widget.dora_enable.clicked.connect(
-            lambda x: self.edit_network_args("dora_wd", x, True)
-        )
+        self.widget.dora_enable.clicked.connect(self.enable_disable_dora)
         self.widget.ip_gamma_enable.clicked.connect(self.enable_disable_ip_gamma)
         self.widget.ip_gamma_input.valueChanged.connect(
             lambda x: self.edit_args("ip_noise_gamma", x, True)
@@ -176,7 +174,11 @@ class NetworkWidget(BaseWidget):
         self.lycoris = algo not in {"lora", "locon", "dylora"}
         self.toggle_dylora(algo == "dylora")
         self.toggle_block_weight(algo in {"lora", "locon", "dylora"}, algo == "lora")
-        self.toggle_dropout(algo != "ia3")
+        self.toggle_dropout(
+            algo != "ia3",
+            algo in {"locon (lycoris)", "loha", "lokr"}
+            and self.widget.dora_enable.isChecked(),
+        )
 
     def change_min_timestep(self, value: int) -> None:
         if value >= self.widget.max_timestep_input.value():
@@ -281,13 +283,15 @@ class NetworkWidget(BaseWidget):
                 elem[0].extra_elem.setChecked(False)
                 elem[0].enable_disable(False)
 
-    def toggle_dropout(self, toggle: bool) -> None:
-        self.widget.network_dropout_enable.setEnabled(toggle)
+    def toggle_dropout(self, toggle: bool, toggle_dora: bool) -> None:
+        self.widget.network_dropout_enable.setEnabled(toggle and not toggle_dora)
         self.widget.rank_dropout_enable.setEnabled(toggle)
         self.widget.module_dropout_enable.setEnabled(toggle)
 
         self.enable_disable_network_dropout(
-            self.widget.network_dropout_enable.isChecked() if toggle else False
+            self.widget.network_dropout_enable.isChecked()
+            if toggle and not toggle_dora
+            else False
         )
         self.enable_disable_rank_dropout(
             self.widget.rank_dropout_enable.isChecked() if toggle else False
@@ -355,6 +359,12 @@ class NetworkWidget(BaseWidget):
             return
         self.edit_network_args(
             "module_dropout", self.widget.module_dropout_input.value(), True
+        )
+
+    def enable_disable_dora(self, checked: bool) -> None:
+        self.widget.network_dropout_enable.setEnabled(not checked)
+        self.enable_disable_network_dropout(
+            False if checked else self.widget.network_dropout_enable.isChecked()
         )
 
     def enable_disable_ip_gamma(self, checked: bool) -> None:
