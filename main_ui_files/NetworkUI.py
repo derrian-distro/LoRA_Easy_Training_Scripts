@@ -366,6 +366,7 @@ class NetworkWidget(BaseWidget):
         self.enable_disable_network_dropout(
             False if checked else self.widget.network_dropout_enable.isChecked()
         )
+        self.edit_network_args("dora_wd", checked, True)
 
     def enable_disable_ip_gamma(self, checked: bool) -> None:
         if "ip_noise_gamma" in self.args:
