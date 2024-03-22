@@ -20,7 +20,7 @@ from PySide6.QtWidgets import (QApplication, QCheckBox, QFormLayout, QGridLayout
     QSizePolicy, QTextEdit, QWidget)
 
 from modules.DragDropLineEdit import DragDropLineEdit
-from modules.LineEditHighlightMin import LineEditWithHighlightMin
+from modules.LineEditHighlight import LineEditWithHighlight
 from modules.ScrollOnSelect import (ComboBox, DoubleSpinBox, SpinBox)
 
 class Ui_base_args_ui(object):
@@ -218,7 +218,7 @@ class Ui_base_args_ui(object):
 
         self.formLayout_5.setWidget(4, QFormLayout.LabelRole, self.keep_tokens_seperator_enable)
 
-        self.keep_tokens_seperator_input = LineEditWithHighlightMin(base_args_ui)
+        self.keep_tokens_seperator_input = LineEditWithHighlight(base_args_ui)
         self.keep_tokens_seperator_input.setObjectName(u"keep_tokens_seperator_input")
         self.keep_tokens_seperator_input.setEnabled(False)
 

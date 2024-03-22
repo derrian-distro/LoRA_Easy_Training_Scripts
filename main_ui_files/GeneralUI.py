@@ -5,7 +5,6 @@ from PySide6.QtWidgets import QWidget, QPushButton
 from ui_files.BaseUI import Ui_base_args_ui
 from modules.BaseWidget import BaseWidget
 from modules.DragDropLineEdit import DragDropLineEdit
-from modules.LineEditHighlightMin import LineEditWithHighlightMin
 
 
 class GeneralWidget(BaseWidget):
@@ -50,10 +49,6 @@ class GeneralWidget(BaseWidget):
         setup_file(self.widget.base_model_input, self.widget.base_model_selector)
         setup_file(self.widget.vae_input, self.widget.vae_selector)
         self.widget.vae_input.allow_empty = True
-
-        self.widget.keep_tokens_seperator_input.highlight = True
-        self.widget.keep_tokens_seperator_input.isValid = True
-        self.widget.keep_tokens_seperator_input.min_allowed = 1
 
     def setup_connections(self) -> None:
         self.widget.base_model_input.textChanged.connect(
@@ -159,7 +154,6 @@ class GeneralWidget(BaseWidget):
                 "keep_tokens_separator",
                 x,
                 optional=True,
-                elem=self.widget.keep_tokens_seperator_input,
             )
         )
         self.widget.comment_enable.clicked.connect(self.enable_disable_comment)
@@ -175,19 +169,6 @@ class GeneralWidget(BaseWidget):
             elem.update_stylesheet()
         else:
             elem.setStyleSheet("")
-
-    def edit_args(
-        self,
-        name: str,
-        value: object,
-        optional: bool = False,
-        elem: DragDropLineEdit | LineEditWithHighlightMin = None,
-    ) -> None:
-        if elem:
-            elem.dirty = True
-        if elem and elem.dirty and (not elem.allow_empty or elem.text() != ""):
-            elem.update_stylesheet()
-        return super().edit_args(name, value, optional)
 
     def change_model_type(self, is_v2: bool, is_sdxl: bool) -> None:
         for arg in ["v2", "sdxl", "clip_skip"]:
@@ -294,14 +275,10 @@ class GeneralWidget(BaseWidget):
             del self.args["keep_tokens_separator"]
         self.widget.keep_tokens_seperator_input.setEnabled(checked)
         self.keepTokensSepChecked.emit(checked)
-        if not checked:
-            self.widget.keep_tokens_seperator_input.setStyleSheet("")
-            return
         self.edit_args(
             "keep_tokens_separator",
             self.widget.keep_tokens_seperator_input.text(),
             optional=True,
-            elem=self.widget.keep_tokens_seperator_input,
         )
 
     def enable_disable_comment(self, checked: bool) -> None:
@@ -381,13 +358,11 @@ class GeneralWidget(BaseWidget):
             "pretrained_model_name_or_path",
             self.widget.base_model_input.text(),
             optional=True,
-            elem=self.widget.base_model_input,
         )
         self.edit_args(
             "vae",
             self.widget.vae_input.text(),
             optional=True,
-            elem=self.widget.vae_input,
         )
         self.change_model_type(
             self.widget.v2_enable.isChecked(), self.widget.sdxl_enable.isChecked()
