@@ -53,7 +53,7 @@ def main():
         using_colab = input("Are you using colab? (y/n): ").lower()
     if using_colab == "y":
         config_dict["run_local"] = False
-        config_dict["validate_only"] = True
+        config_dict["colab"] = True
         config.write_text(json.dumps(config_dict, indent=2))
         return
 
@@ -62,11 +62,11 @@ def main():
         install_backend = input("Are you using this locally? (y/n): ").lower()
     if install_backend == "n":
         config_dict["run_local"] = False
-        config_dict["validate_only"] = False
+        config_dict["colab"] = False
         config.write_text(json.dumps(config_dict, indent=2))
         return
     config_dict["run_local"] = True
-    config_dict["validate_only"] = False
+    config_dict["colab"] = False
     config.write_text(json.dumps(config_dict, indent=2))
 
     subprocess.check_call("git submodule init", shell=sys.platform == "linux")
