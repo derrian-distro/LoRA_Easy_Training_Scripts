@@ -56,7 +56,8 @@ def main() -> None:
     window.setWindowTitle("LoRA Trainer")
     window.show()
     app.exec()
-    if window.main_widget.backend_url_input.text() != "http://127.0.0.1:8000":
+    config_dict = json.loads(config.read_text())
+    if not config_dict.get("run_local"):
         return
     if window.main_widget.training_thread:
         while window.main_widget.training_thread.is_alive():

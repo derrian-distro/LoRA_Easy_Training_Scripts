@@ -45,16 +45,28 @@ def main():
         f"{venv_path} install -U -r requirements.txt", shell=sys.platform == "linux"
     )
 
+    config = Path("config.json")
+    config_dict = json.loads(config.read_text()) if config.exists() else {}
+
+    using_colab = None
+    while using_colab not in ("y", "n"):
+        using_colab = input("Are you using colab? (y/n): ").lower()
+    if using_colab == "y":
+        config_dict["run_local"] = False
+        config_dict["validate_only"] = True
+        config.write_text(json.dumps(config_dict, indent=2))
+        return
+
     install_backend = None
     while install_backend not in ("y", "n"):
         install_backend = input("Are you using this locally? (y/n): ").lower()
-    config = Path("config.json")
-    config_dict = json.loads(config.read_text()) if config.exists() else {}
     if install_backend == "n":
         config_dict["run_local"] = False
+        config_dict["validate_only"] = False
         config.write_text(json.dumps(config_dict, indent=2))
         return
     config_dict["run_local"] = True
+    config_dict["validate_only"] = False
     config.write_text(json.dumps(config_dict, indent=2))
 
     subprocess.check_call("git submodule init", shell=sys.platform == "linux")

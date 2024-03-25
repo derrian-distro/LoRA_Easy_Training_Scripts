@@ -123,9 +123,7 @@ class MainWidget(QWidget):
     def start_training(self) -> None:
         if self.training_thread and self.training_thread.is_alive():
             with contextlib.suppress(Exception):
-                requests.get(
-                    f"{self.backend_url_input.text()}/stop_training?force=true"
-                )
+                requests.get(f"{self.backend_url_input.text()}/stop_training")
             self.begin_training_button.setText("Start Training")
             return
         self.training_thread = Thread(target=self.start_training_thread)
@@ -152,6 +150,7 @@ class MainWidget(QWidget):
     def train_helper(self, url: str, train_toml: Path) -> bool:
         args, dataset_args = self.process_toml(train_toml)
         final_args = {"args": args, "dataset": dataset_args}
+        config = json.loads(Path("config.json").read_text())
         try:
             response = requests.post(
                 f"{url}/validate", json=True, data=json.dumps(final_args)
@@ -178,6 +177,11 @@ class MainWidget(QWidget):
                 args["saving_args"].get("output_name", "output_args"),
             )
         os.remove(train_toml)
+        if config.get("validate_only"):
+            print(
+                'Args validated, but training requested to stop, if you want training to begin, change the "validate_only" argument in the config.json file to False.'
+            )
+            return False
         response = requests.get(f"{url}/train")
         training = True
         while training:
