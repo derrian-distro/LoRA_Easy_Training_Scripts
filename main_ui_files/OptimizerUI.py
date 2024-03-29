@@ -1,3 +1,5 @@
+import json
+from pathlib import Path
 from PySide6.QtCore import Slot
 from PySide6 import QtCore
 from PySide6.QtWidgets import QWidget
@@ -200,7 +202,12 @@ class OptimizerWidget(BaseWidget):
         if value != "Came":
             self.edit_args("optimizer_type", value)
             return
-        self.edit_args("optimizer_type", "pytorch_optimizer.optimizer.came.CAME")
+        config = Path("config.json")
+        config = json.loads(config.read_text()) if config.is_file() else {}
+        if config.get("colab", False):
+            self.edit_args("optimizer_type", "came_pytorch.CAME.CAME")
+        else:
+            self.edit_args("optimizer_type", "pytorch_optimizer.optimizer.came.CAME")
 
     @Slot(bool)
     def enable_disable_warmup(self, checked: bool) -> None:
