@@ -8,6 +8,7 @@ from main_ui_files.NoiseOffsetUI import NoiseOffsetWidget
 from main_ui_files.OptimizerUI import OptimizerWidget
 from main_ui_files.SampleUI import SampleWidget
 from main_ui_files.SavingUI import SavingWidget
+from main_ui_files.TextualInversionUI import TextualInversionWidget
 from modules.BaseWidget import BaseWidget
 
 
@@ -21,6 +22,9 @@ class ArgsWidget(QtWidgets.QWidget):
         self.scroll_area = QtWidgets.QScrollArea()
         self.scroll_widget = QtWidgets.QWidget()
         self.args_widget_array: list[BaseWidget] = []
+        self.network_widget = NetworkWidget()
+        self.ti_widget = TextualInversionWidget()
+        self.ti_widget.setVisible(False)
 
         self.setup_widget()
         self.setup_args_widgets()
@@ -48,9 +52,9 @@ class ArgsWidget(QtWidgets.QWidget):
             lambda x: self.keepTokensSepChecked.emit(x)
         )
         self.args_widget_array.append(general_args)
-        network_widget = NetworkWidget()
-        self.sdxlChecked.connect(network_widget.toggle_sdxl)
-        self.args_widget_array.append(network_widget)
+        self.sdxlChecked.connect(self.network_widget.toggle_sdxl)
+        self.args_widget_array.append(self.network_widget)
+        self.args_widget_array.append(self.ti_widget)
         self.args_widget_array.append(OptimizerWidget())
         self.args_widget_array.append(SavingWidget())
         self.args_widget_array.append(BucketWidget())
@@ -60,6 +64,15 @@ class ArgsWidget(QtWidgets.QWidget):
 
         for widget in self.args_widget_array:
             self.scroll_widget.layout().addWidget(widget)
+
+    def set_ti_training(self) -> None:
+        self.network_widget.setVisible(False)
+        self.ti_widget.setVisible(True)
+
+    def set_lora_training(self) -> None:
+        self.ti_widget.setVisible(False)
+        self.network_widget.setVisible(True)
+
 
     def get_args(self) -> dict:
         args = {}

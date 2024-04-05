@@ -79,6 +79,17 @@
    <addaction name="menuFile"/>
    <addaction name="menuTheme"/>
    <addaction name="menuUtils"/>
+   <widget class="QMenu" name="menuTrainMode">
+    <property name="title">
+     <string>Train Mode</string>
+    </property>
+    <addaction name="set_train_lora"/>
+    <addaction name="set_train_ti"/>
+   </widget>
+
+   <addaction name="menuFile"/>
+   <addaction name="menuTheme"/>
+   <addaction name="menuTrainMode"/>
   </widget>
   <action name="save_toml">
    <property name="text">
@@ -109,6 +120,14 @@
   <action name="lora_resize_action">
    <property name="text">
     <string>Lora Resize</string>
+  <action name="set_train_lora">
+   <property name="text">
+    <string>LoRA</string>
+   </property>
+  </action>
+  <action name="set_train_ti">
+   <property name="text">
+    <string>Textual Inversion</string>
    </property>
   </action>
  </widget>
