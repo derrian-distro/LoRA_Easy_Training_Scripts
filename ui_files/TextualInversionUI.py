@@ -35,6 +35,7 @@ class Ui_textual_inversion_ui(object):
         self.token_group.setChecked(False)
         self.formLayout = QFormLayout(self.token_group)
         self.formLayout.setObjectName(u"formLayout")
+        self.formLayout.setContentsMargins(-1, 0, -1, -1)
         self.token_label = QLabel(self.token_group)
         self.token_label.setObjectName(u"token_label")
 
@@ -96,11 +97,11 @@ class Ui_textual_inversion_ui(object):
         self.token_group.setTitle("")
         self.token_label.setText(QCoreApplication.translate("textual_inversion_ui", u"Token String", None))
 #if QT_CONFIG(tooltip)
-        self.init_word_label.setToolTip(QCoreApplication.translate("textual_inversion_ui", u"<html><head/><body><p>Initial token string.</p></body></html>", None))
+        self.init_word_label.setToolTip(QCoreApplication.translate("textual_inversion_ui", u"<html><head/><body><p>Token string used as an initialization point for the embedding.</p></body></html>", None))
 #endif // QT_CONFIG(tooltip)
         self.init_word_label.setText(QCoreApplication.translate("textual_inversion_ui", u"Initial Word", None))
 #if QT_CONFIG(tooltip)
-        self.num_vectors_per_token.setToolTip(QCoreApplication.translate("textual_inversion_ui", u"<html><head/><body><p>The amount of time between samples. I personally suggest you have it generate a sample every epoch, however, again, personal preference.</p></body></html>", None))
+        self.num_vectors_per_token.setToolTip(QCoreApplication.translate("textual_inversion_ui", u"<html><head/><body><p>The number of new vectors to train for the embedding. By default, equal to the number of tokens in the initial token string.</p></body></html>", None))
 #endif // QT_CONFIG(tooltip)
         self.vectors_per_token_enable.setText(QCoreApplication.translate("textual_inversion_ui", u"Vectors per Token", None))
     # retranslateUi
