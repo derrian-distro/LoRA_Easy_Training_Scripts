@@ -149,11 +149,11 @@ class LoraResizePopup(BaseDialog):
         config_dict = (
             json.loads(config.read_text())
             if config.exists()
-            else {"backend_url": "http://127.0.0.1:8000"}
+            else {}
         )
         try:
             response = requests.post(
-                f"{config_dict['backend_url']}/resize",
+                f"{config_dict.get("backend_url", "http://127.0.0.1:8000")}/resize",
                 data=json.dumps(args),
                 timeout=0.05,
             )
