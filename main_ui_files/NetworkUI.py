@@ -264,11 +264,6 @@ class NetworkWidget(BaseWidget):
 
     def toggle_kohya(self, toggle: bool) -> None:
         self.widget.lora_fa_enable.setEnabled(toggle)
-        self.widget.ip_gamma_enable.setEnabled(toggle)
-
-        self.enable_disable_ip_gamma(
-            self.widget.ip_gamma_enable.isChecked() if toggle else False
-        )
         self.edit_args(
             "fa", self.widget.lora_fa_enable.isChecked() if toggle else False, True
         )
