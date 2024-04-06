@@ -15,11 +15,12 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QFont, QFontDatabase, QGradient, QIcon,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
-from PySide6.QtWidgets import (QApplication, QFormLayout, QGroupBox, QHBoxLayout,
-    QLabel, QSizePolicy, QVBoxLayout, QWidget)
+from PySide6.QtWidgets import (QApplication, QCheckBox, QFormLayout, QGroupBox,
+    QHBoxLayout, QLabel, QSizePolicy, QVBoxLayout,
+    QWidget)
 
 from modules.LineEditHighlight import LineEditWithHighlight
-from modules.ScrollOnSelect import (ComboBox, SpinBox)
+from modules.ScrollOnSelect import SpinBox
 
 class Ui_textual_inversion_ui(object):
     def setupUi(self, textual_inversion_ui):
@@ -39,59 +40,47 @@ class Ui_textual_inversion_ui(object):
 
         self.formLayout.setWidget(0, QFormLayout.LabelRole, self.token_label)
 
+        self.token_string = LineEditWithHighlight(self.token_group)
+        self.token_string.setObjectName(u"token_string")
+
+        self.formLayout.setWidget(0, QFormLayout.FieldRole, self.token_string)
+
         self.init_word_label = QLabel(self.token_group)
-        self.init_word_label.setObjectName(u"init_word")
+        self.init_word_label.setObjectName(u"init_word_label")
 
         self.formLayout.setWidget(1, QFormLayout.LabelRole, self.init_word_label)
-
-        self.steps_label = QLabel(self.token_group)
-        self.steps_label.setObjectName(u"steps_label")
-        self.steps_label.setEnabled(False)
-
-        self.formLayout.setWidget(2, QFormLayout.LabelRole, self.steps_label)
-
-        self.horizontalLayout = QHBoxLayout()
-        self.horizontalLayout.setObjectName(u"horizontalLayout")
-        self.test = ComboBox(self.token_group)
-        self.test.addItem("")
-        self.test.addItem("")
-        self.test.setObjectName(u"test")
-        self.test.setEnabled(False)
-        sizePolicy = QSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Fixed)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.test.sizePolicy().hasHeightForWidth())
-        self.test.setSizePolicy(sizePolicy)
-        self.test.setFocusPolicy(Qt.StrongFocus)
-
-        self.horizontalLayout.addWidget(self.test)
-
-        self.disable = SpinBox(self.token_group)
-        self.disable.setObjectName(u"disable")
-        sizePolicy1 = QSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Fixed)
-        sizePolicy1.setHorizontalStretch(0)
-        sizePolicy1.setVerticalStretch(0)
-        sizePolicy1.setHeightForWidth(self.disable.sizePolicy().hasHeightForWidth())
-        self.disable.setSizePolicy(sizePolicy1)
-        self.disable.setFocusPolicy(Qt.StrongFocus)
-        self.disable.setMinimum(1)
-        self.disable.setMaximum(16777215)
-        self.disable.setValue(1)
-
-        self.horizontalLayout.addWidget(self.disable)
-
-
-        self.formLayout.setLayout(2, QFormLayout.FieldRole, self.horizontalLayout)
 
         self.init_word = LineEditWithHighlight(self.token_group)
         self.init_word.setObjectName(u"init_word")
 
         self.formLayout.setWidget(1, QFormLayout.FieldRole, self.init_word)
 
-        self.token_string = LineEditWithHighlight(self.token_group)
-        self.token_string.setObjectName(u"token_string")
+        self.horizontalLayout = QHBoxLayout()
+        self.horizontalLayout.setObjectName(u"horizontalLayout")
+        self.num_vectors_per_token = SpinBox(self.token_group)
+        self.num_vectors_per_token.setObjectName(u"num_vectors_per_token")
+        self.num_vectors_per_token.setEnabled(False)
+        sizePolicy = QSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Fixed)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.num_vectors_per_token.sizePolicy().hasHeightForWidth())
+        self.num_vectors_per_token.setSizePolicy(sizePolicy)
+        self.num_vectors_per_token.setFocusPolicy(Qt.StrongFocus)
+        self.num_vectors_per_token.setMinimum(0)
+        self.num_vectors_per_token.setMaximum(16777215)
+        self.num_vectors_per_token.setValue(0)
 
-        self.formLayout.setWidget(0, QFormLayout.FieldRole, self.token_string)
+        self.horizontalLayout.addWidget(self.num_vectors_per_token)
+
+
+        self.formLayout.setLayout(2, QFormLayout.FieldRole, self.horizontalLayout)
+
+        self.vectors_per_token_enable = QCheckBox(self.token_group)
+        self.vectors_per_token_enable.setObjectName(u"vectors_per_token_enable")
+        self.vectors_per_token_enable.setEnabled(True)
+        self.vectors_per_token_enable.setTristate(False)
+
+        self.formLayout.setWidget(2, QFormLayout.LabelRole, self.vectors_per_token_enable)
 
 
         self.verticalLayout.addWidget(self.token_group)
@@ -110,15 +99,9 @@ class Ui_textual_inversion_ui(object):
         self.init_word_label.setToolTip(QCoreApplication.translate("textual_inversion_ui", u"<html><head/><body><p>Initial token string.</p></body></html>", None))
 #endif // QT_CONFIG(tooltip)
         self.init_word_label.setText(QCoreApplication.translate("textual_inversion_ui", u"Initial Word", None))
-        self.steps_label.setText(QCoreApplication.translate("textual_inversion_ui", u"Time Between Sample", None))
-        self.test.setItemText(0, QCoreApplication.translate("textual_inversion_ui", u"Steps Per Sample", None))
-        self.test.setItemText(1, QCoreApplication.translate("textual_inversion_ui", u"Epochs Per Sample", None))
-
 #if QT_CONFIG(tooltip)
-        self.test.setToolTip(QCoreApplication.translate("textual_inversion_ui", u"<html><head/><body><p>The amount of time between samples. I personally suggest you have it generate a sample every epoch, however, again, personal preference.</p></body></html>", None))
+        self.num_vectors_per_token.setToolTip(QCoreApplication.translate("textual_inversion_ui", u"<html><head/><body><p>The amount of time between samples. I personally suggest you have it generate a sample every epoch, however, again, personal preference.</p></body></html>", None))
 #endif // QT_CONFIG(tooltip)
-#if QT_CONFIG(tooltip)
-        self.disable.setToolTip(QCoreApplication.translate("textual_inversion_ui", u"<html><head/><body><p>The amount of time between samples. I personally suggest you have it generate a sample every epoch, however, again, personal preference.</p></body></html>", None))
-#endif // QT_CONFIG(tooltip)
+        self.vectors_per_token_enable.setText(QCoreApplication.translate("textual_inversion_ui", u"Vectors per Token", None))
     # retranslateUi
 

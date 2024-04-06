@@ -33,6 +33,9 @@
         </property>
        </widget>
       </item>
+      <item row="0" column="1">
+       <widget class="LineEditWithHighlight" name="token_string"/>
+      </item>
       <item row="1" column="0">
        <widget class="QLabel" name="init_word_label">
         <property name="toolTip">
@@ -43,49 +46,16 @@
         </property>
        </widget>
       </item>
-      <item row="2" column="0">
-       <widget class="QLabel" name="steps_label">
-        <property name="enabled">
-         <bool>false</bool>
-        </property>
-        <property name="text">
-         <string>Time Between Sample</string>
-        </property>
-       </widget>
+      <item row="1" column="1">
+       <widget class="LineEditWithHighlight" name="init_word"/>
       </item>
       <item row="2" column="1">
        <layout class="QHBoxLayout" name="horizontalLayout">
         <item>
-         <widget class="ComboBox" name="test">
+         <widget class="SpinBox" name="num_vectors_per_token">
           <property name="enabled">
            <bool>false</bool>
           </property>
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="focusPolicy">
-           <enum>Qt::StrongFocus</enum>
-          </property>
-          <property name="toolTip">
-           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The amount of time between samples. I personally suggest you have it generate a sample every epoch, however, again, personal preference.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-          </property>
-          <item>
-           <property name="text">
-            <string>Steps Per Sample</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>Epochs Per Sample</string>
-           </property>
-          </item>
-         </widget>
-        </item>
-        <item>
-         <widget class="SpinBox" name="disable">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
             <horstretch>0</horstretch>
@@ -96,26 +66,33 @@
            <enum>Qt::StrongFocus</enum>
           </property>
           <property name="toolTip">
-           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The amount of time between samples. I personally suggest you have it generate a sample every epoch, however, again, personal preference.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The size of the embedding. By default, equal to the number of tokens in the initial word.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
           </property>
           <property name="minimum">
-           <number>1</number>
+           <number>0</number>
           </property>
           <property name="maximum">
            <number>16777215</number>
           </property>
           <property name="value">
-           <number>1</number>
+           <number>0</number>
           </property>
          </widget>
         </item>
        </layout>
       </item>
-      <item row="1" column="1">
-       <widget class="LineEditWithHighlight" name="init_word"/>
-      </item>
-      <item row="0" column="1">
-       <widget class="LineEditWithHighlight" name="token_string"/>
+      <item row="2" column="0">
+       <widget class="QCheckBox" name="vectors_per_token_enable">
+        <property name="enabled">
+         <bool>true</bool>
+        </property>
+        <property name="text">
+         <string>Vectors per Token</string>
+        </property>
+        <property name="tristate">
+         <bool>false</bool>
+        </property>
+       </widget>
       </item>
      </layout>
     </widget>
@@ -126,11 +103,6 @@
   <customwidget>
    <class>SpinBox</class>
    <extends>QSpinBox</extends>
-   <header>modules.ScrollOnSelect.h</header>
-  </customwidget>
-  <customwidget>
-   <class>ComboBox</class>
-   <extends>QComboBox</extends>
    <header>modules.ScrollOnSelect.h</header>
   </customwidget>
   <customwidget>
