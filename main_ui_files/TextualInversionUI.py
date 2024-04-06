@@ -69,8 +69,9 @@ class TextualInversionWidget(BaseWidget):
 
 
     def change_num_vectors_per_token(self, value: int) -> None:
-        self.widget.num_vectors_per_token.setValue(value)
-        self.edit_args("num_vectors_per_token", value if value > 0 else None, True)
+        if (value) and (value > 0):
+            self.widget.num_vectors_per_token.setValue(value)
+            self.edit_args("num_vectors_per_token", value if value > 0 else None, True)
 
     def load_args(self, args: dict) -> bool:
         if not super().load_args(args):
