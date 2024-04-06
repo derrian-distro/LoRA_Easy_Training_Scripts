@@ -3,7 +3,7 @@
 ################################################################################
 ## Form generated from reading UI file 'MainUI.ui'
 ##
-## Created by: Qt User Interface Compiler version 6.6.1
+## Created by: Qt User Interface Compiler version 6.6.3
 ##
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
@@ -32,6 +32,8 @@ class Ui_MainWindow(object):
         self.save_runtime_toml.setObjectName(u"save_runtime_toml")
         self.no_theme_action = QAction(MainWindow)
         self.no_theme_action.setObjectName(u"no_theme_action")
+        self.lora_resize_action = QAction(MainWindow)
+        self.lora_resize_action.setObjectName(u"lora_resize_action")
         self.centralwidget = QWidget(MainWindow)
         self.centralwidget.setObjectName(u"centralwidget")
         self.verticalLayout = QVBoxLayout(self.centralwidget)
@@ -56,15 +58,19 @@ class Ui_MainWindow(object):
         self.dark_theme_menu.setObjectName(u"dark_theme_menu")
         self.light_theme_menu = QMenu(self.menuTheme)
         self.light_theme_menu.setObjectName(u"light_theme_menu")
+        self.menuUtils = QMenu(self.menubar)
+        self.menuUtils.setObjectName(u"menuUtils")
         MainWindow.setMenuBar(self.menubar)
 
         self.menubar.addAction(self.menuFile.menuAction())
         self.menubar.addAction(self.menuTheme.menuAction())
+        self.menubar.addAction(self.menuUtils.menuAction())
         self.menuFile.addAction(self.save_toml)
         self.menuFile.addAction(self.load_toml)
         self.menuTheme.addAction(self.dark_theme_menu.menuAction())
         self.menuTheme.addAction(self.light_theme_menu.menuAction())
         self.menuTheme.addAction(self.no_theme_action)
+        self.menuUtils.addAction(self.lora_resize_action)
 
         self.retranslateUi(MainWindow)
 
@@ -83,9 +89,11 @@ class Ui_MainWindow(object):
 #endif // QT_CONFIG(shortcut)
         self.save_runtime_toml.setText(QCoreApplication.translate("MainWindow", u"Save Runtime Toml", None))
         self.no_theme_action.setText(QCoreApplication.translate("MainWindow", u"No Theme", None))
+        self.lora_resize_action.setText(QCoreApplication.translate("MainWindow", u"Lora Resize", None))
         self.menuFile.setTitle(QCoreApplication.translate("MainWindow", u"File", None))
         self.menuTheme.setTitle(QCoreApplication.translate("MainWindow", u"Theme", None))
         self.dark_theme_menu.setTitle(QCoreApplication.translate("MainWindow", u"Dark", None))
         self.light_theme_menu.setTitle(QCoreApplication.translate("MainWindow", u"Light", None))
+        self.menuUtils.setTitle(QCoreApplication.translate("MainWindow", u"Utils", None))
     # retranslateUi
 

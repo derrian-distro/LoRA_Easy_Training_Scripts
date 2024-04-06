@@ -70,8 +70,15 @@
     <addaction name="light_theme_menu"/>
     <addaction name="no_theme_action"/>
    </widget>
+   <widget class="QMenu" name="menuUtils">
+    <property name="title">
+     <string>Utils</string>
+    </property>
+    <addaction name="lora_resize_action"/>
+   </widget>
    <addaction name="menuFile"/>
    <addaction name="menuTheme"/>
+   <addaction name="menuUtils"/>
   </widget>
   <action name="save_toml">
    <property name="text">
@@ -97,6 +104,11 @@
   <action name="no_theme_action">
    <property name="text">
     <string>No Theme</string>
+   </property>
+  </action>
+  <action name="lora_resize_action">
+   <property name="text">
+    <string>Lora Resize</string>
    </property>
   </action>
  </widget>

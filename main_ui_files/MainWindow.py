@@ -5,6 +5,7 @@ from ui_files.MainUI import Ui_MainWindow
 from main_ui_files.MainUI import MainWidget
 from pathlib import Path
 import json
+from modules.LoraResizePopupUi import LoraResizePopup
 
 
 class MainWindow(QMainWindow, QtStyleTools):
@@ -61,6 +62,7 @@ class MainWindow(QMainWindow, QtStyleTools):
         self.widget.no_theme_action.triggered.connect(
             lambda _=False: self.change_theme(0, False, True)
         )
+        self.widget.lora_resize_action.triggered.connect(self.run_resize)
 
     def change_theme(
         self, index: int, is_light: bool = False, no_theme: bool = False
@@ -87,3 +89,8 @@ class MainWindow(QMainWindow, QtStyleTools):
             "is_light": is_light,
         }
         config.write_text(json.dumps(config_dict, indent=2))
+
+    def run_resize(self):
+        popup = LoraResizePopup(self)
+        popup.setModal(True)
+        popup.exec()
