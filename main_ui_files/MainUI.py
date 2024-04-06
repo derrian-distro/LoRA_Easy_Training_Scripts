@@ -100,10 +100,10 @@ class MainWidget(QWidget):
         TomlFunctions.save_toml(new_args, file_name)
 
     def load_toml(self, file_name: Path | None = None) -> None:
-        args, dataset_args, mode = self.process_toml(file_name)
+        args, dataset_args, train_mode = self.process_toml(file_name)
         if not args and not dataset_args:
             return
-        if mode == TrainingModes.LORA:
+        if train_mode == TrainingModes.LORA:
             self.set_train_lora()
         else:
             self.set_train_ti()
@@ -170,7 +170,7 @@ class MainWidget(QWidget):
         self.begin_training_button.setText("Start Training")
 
     def train_helper(self, url: str, train_toml: Path) -> bool:
-        args, dataset_args, mode = self.process_toml(train_toml)
+        args, dataset_args, train_mode = self.process_toml(train_toml)
         final_args = {"args": args, "dataset": dataset_args}
         config = json.loads(Path("config.json").read_text())
         try:
@@ -206,7 +206,8 @@ class MainWidget(QWidget):
             print("Killing the server for colab use.")
             requests.get(f"{self.backend_url_input.text()}/stop_server")
             return False
-        response = requests.get(f"{url}/train")
+        is_sdxl = str(args.get("general_args").get("sdxl", False))
+        response = requests.get(f"{url}/train", params={"train_mode": train_mode.value, "sdxl": is_sdxl})
         training = True
         while training:
             sleep(5.0)
