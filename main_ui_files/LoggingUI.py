@@ -113,15 +113,10 @@ class LoggingWidget(BaseWidget):
         self.edit_args(name, elem.text() if checked else None, True)
 
     def load_args(self, args: dict) -> bool:
-        if not super().load_args(args):
-            self.widget.logging_group.setChecked(False)
-            self.enable_disable(False)
-            return False
-
-        args: dict = args[self.name]
+        args: dict = args.get(self.name, {})
 
         # update element inputs
-        self.widget.logging_group.setChecked(True)
+        self.widget.logging_group.setChecked(bool(args.get("log_with", False)))
         self.widget.log_mode_selector.setCurrentText(
             args.get("log_with", "tensorboard").capitalize()
         )
@@ -133,5 +128,5 @@ class LoggingWidget(BaseWidget):
         self.widget.log_wandb_key_input.setText(args.get("wandb_api_key", ""))
 
         # edit args to match
-        self.enable_disable(True)
+        self.enable_disable(bool(args.get("log_with", False)))
         return True

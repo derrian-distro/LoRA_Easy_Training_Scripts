@@ -292,10 +292,7 @@ class GeneralWidget(BaseWidget):
         )
 
     def load_args(self, args: dict) -> bool:
-        if not super().load_args(args):
-            return False
-
-        args = args[self.name]
+        args = args.get(self.name, {})
 
         # update element inputs
         self.widget.base_model_input.setText(
@@ -325,7 +322,7 @@ class GeneralWidget(BaseWidget):
         self.widget.seed_input.setValue(args.get("seed", 23))
         self.widget.clip_skip_input.setValue(args.get("clip_skip", 2))
         self.widget.max_token_selector.setCurrentText(
-            str(args.get("max_token_length", 75))
+            str(args.get("max_token_length", 225))
         )
         self.widget.loss_weight_input.setValue(args.get("prior_loss_weight", 1.0))
         mixed_prec = args.get("mixed_precision", "fp16")
@@ -399,10 +396,7 @@ class GeneralWidget(BaseWidget):
         return True
 
     def load_dataset_args(self, dataset_args: dict) -> bool:
-        if not super().load_dataset_args(dataset_args):
-            return False
-
-        dataset_args = dataset_args[self.name]
+        dataset_args = dataset_args.get(self.name, {})
 
         # update element inputs
         resolution = dataset_args.get("resolution", 512)

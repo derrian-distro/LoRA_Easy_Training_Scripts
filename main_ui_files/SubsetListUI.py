@@ -89,10 +89,10 @@ class SubsetListWidget(QWidget):
         return False
 
     def load_dataset_args(self, dataset_args: dict) -> bool:
-        if "subsets" not in dataset_args:
-            return False
         while self.elements:
             self.remove_subset(self.elements[0])
+        if "subsets" not in dataset_args:
+            return False
 
         subsets = dataset_args["subsets"]
         for subset in subsets:

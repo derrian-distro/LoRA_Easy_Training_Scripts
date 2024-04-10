@@ -91,15 +91,10 @@ class SampleWidget(BaseWidget):
         self.edit_args(args[index], self.widget.steps_epoch_input.value(), True)
 
     def load_args(self, args: dict) -> bool:
-        if not super().load_args(args):
-            self.widget.sample_group.setChecked(False)
-            self.enable_disable(False)
-            return False
-
-        args: dict = args[self.name]
+        args: dict = args.get(self.name, {})
 
         # update element inputs
-        self.widget.sample_group.setChecked(True)
+        self.widget.sample_group.setChecked(bool(args.get("sample_sampler", False)))
         self.widget.sampler_input.setCurrentText(
             args.get("sample_sampler", "DDIM").upper()
         )
@@ -112,5 +107,5 @@ class SampleWidget(BaseWidget):
         self.widget.sample_prompt_txt_file_input.setText(args.get("sample_prompts", ""))
 
         # edit args to match
-        self.enable_disable(True)
+        self.enable_disable(bool(args.get("sample_sampler", False)))
         return True

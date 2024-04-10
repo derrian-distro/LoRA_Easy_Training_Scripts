@@ -257,10 +257,7 @@ class OptimizerWidget(BaseWidget):
         self.edit_args("min_snr_gamma", self.widget.min_snr_input.value(), True)
 
     def load_args(self, args: dict) -> bool:
-        if not super().load_args(args):
-            return
-
-        args: dict = args[self.name]
+        args: dict = args.get(self.name, {})
 
         # update element inputs
         optimizer_type = args.get("optimizer_type", "AdamW")
@@ -303,9 +300,10 @@ class OptimizerWidget(BaseWidget):
         self.widget.min_snr_input.setValue(args.get("min_snr_gamma", 5))
         self.widget.zero_term_enable.setChecked(args.get("zero_terminal_snr", False))
 
+        for _ in range(len(self.opt_args)):
+            self.remove_optimizer_arg(self.opt_args[0])
+
         if opt_args := args.get("optimizer_args", {}):
-            for _ in range(len(self.opt_args)):
-                self.remove_optimizer_arg(self.opt_args[0])
             for name, value in opt_args.items():
                 self.add_optimizer_arg()
                 self.opt_args[-1].arg_name_input.setText(str(name))

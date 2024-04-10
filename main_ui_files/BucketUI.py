@@ -53,12 +53,7 @@ class BucketWidget(BaseWidget):
         self.edit_dataset_args("bucket_reso_steps", self.widget.steps_input.value())
 
     def load_dataset_args(self, dataset_args: dict) -> bool:
-        if not super().load_dataset_args(dataset_args):
-            self.widget.bucket_group.setChecked(False)
-            self.edit_dataset_args("enable_bucket", False)
-            return False
-
-        dataset_args: dict = dataset_args[self.name]
+        dataset_args: dict = dataset_args.get(self.name, {})
 
         # update element inputs
         self.widget.bucket_group.setChecked(dataset_args.get("enable_bucket", False))

@@ -135,7 +135,7 @@ class NetworkWidget(BaseWidget):
         self.widget.dora_enable.clicked.connect(self.enable_disable_dora)
         self.widget.ip_gamma_enable.clicked.connect(self.enable_disable_ip_gamma)
         self.widget.ip_gamma_input.valueChanged.connect(
-            lambda x: self.edit_args("ip_noise_gamma", x, True)
+            lambda x: self.edit_args("ip_noise_gamma", round(x, 4), True)
         )
         self.widget.rescale_enable.clicked.connect(
             lambda x: self.edit_network_args("rescaled", x, True)
@@ -161,7 +161,7 @@ class NetworkWidget(BaseWidget):
         self.args["network_args"][name] = value
 
     # handles the enable and disable of the following elements according to the algorithm selected from the top:
-    # lycoris_preset, conv_dim, conv_alpha, dylora_unit, all dropouts, ip_noise_gamma, lora_fa
+    # lycoris_preset, conv_dim, conv_alpha, dylora_unit, all dropouts, lora_fa
     # enable_tucker, train_norm, rescale, constrain, all block weights
     def change_algo(self, algo: str) -> None:
         algo = algo.lower()
@@ -369,7 +369,9 @@ class NetworkWidget(BaseWidget):
         self.widget.ip_gamma_input.setEnabled(checked)
         if not checked:
             return
-        self.edit_args("ip_noise_gamma", self.widget.ip_gamma_input.value(), True)
+        self.edit_args(
+            "ip_noise_gamma", round(self.widget.ip_gamma_input.value(), 4), True
+        )
 
     def enable_disable_constrain(self, checked: bool) -> None:
         self.widget.constrain_input.setEnabled(checked)
@@ -404,10 +406,7 @@ class NetworkWidget(BaseWidget):
         self.edit_network_args(name, weights, True)
 
     def load_args(self, args: dict) -> bool:
-        if not super().load_args(args):
-            return False
-
-        args: dict = args[self.name]
+        args: dict = args.get(self.name, {})
         network_args: dict = args.get("network_args", {})
 
         # update algo
@@ -487,6 +486,7 @@ class NetworkWidget(BaseWidget):
         self.change_max_timestep(self.widget.max_timestep_input.value())
         self.change_unet_te_only(self.widget.unet_te_both_select.currentIndex())
         self.enable_disable_cache_te(self.widget.cache_te_outputs_enable.isChecked())
+        self.enable_disable_ip_gamma(self.widget.ip_gamma_enable.isChecked())
         return True
 
     def load_block_weights(self, network_args: dict) -> None:

@@ -284,10 +284,7 @@ class SavingWidget(BaseWidget):
         self.change_state_type(self.widget.save_last_state_selector.currentIndex())
 
     def load_args(self, args: dict) -> bool:
-        if not super().load_args(args):
-            return False
-
-        args: dict = args[self.name]
+        args: dict = args.get(self.name, {})
 
         # update element inputs
         self.widget.output_folder_input.setText(args.get("output_dir", ""))

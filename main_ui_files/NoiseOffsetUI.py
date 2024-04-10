@@ -72,11 +72,7 @@ class NoiseOffsetWidget(BaseWidget):
         )
 
     def load_args(self, args: dict) -> bool:
-        print(args)
-        if not super().load_args(args):
-            return False
-
-        args: dict = args[self.name]
+        args: dict = args.get(self.name, {})
 
         # update element inputs
         self.widget.noise_offset_enable.setChecked(
