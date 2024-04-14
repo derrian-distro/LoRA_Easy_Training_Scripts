@@ -20,6 +20,7 @@ class OptimizerWidget(BaseWidget):
             "lr_scheduler": "cosine",
             "learning_rate": 1e-4,
             "max_grad_norm": 1.0,
+            "loss_type": "l2",
         }
         self.opt_args = [OptimizerItem(arg_name="weight_decay", arg_value="0.1")]
 
@@ -45,6 +46,7 @@ class OptimizerWidget(BaseWidget):
         self.widget.lr_scheduler_selector.currentTextChanged.connect(
             self.change_scheduler
         )
+        self.widget.loss_type_selector.currentTextChanged.connect(self.change_loss_type)
         self.widget.main_lr_input.textChanged.connect(
             lambda x: self.edit_lr("learning_rate", x)
         )
@@ -87,6 +89,12 @@ class OptimizerWidget(BaseWidget):
         )
         self.widget.zero_term_enable.clicked.connect(
             lambda x: self.edit_args("zero_terminal_snr", x, True)
+        )
+        self.widget.huber_schedule_selector.currentTextChanged.connect(
+            lambda x: self.edit_args("huber_schedule", x.lower())
+        )
+        self.widget.huber_param_input.valueChanged.connect(
+            lambda x: self.edit_args("huber_c", round(x, 4))
         )
         self.widget.add_opt_button.clicked.connect(self.add_optimizer_arg)
 
@@ -143,6 +151,18 @@ class OptimizerWidget(BaseWidget):
             self.args["optimizer_args"][name] = value
 
     @Slot(str)
+    def change_optimizer(self, value: str) -> None:
+        if value != "Came":
+            self.edit_args("optimizer_type", value)
+            return
+        config = Path("config.json")
+        config = json.loads(config.read_text()) if config.is_file() else {}
+        if config.get("colab", False):
+            self.edit_args("optimizer_type", "came_pytorch.CAME.CAME")
+        else:
+            self.edit_args("optimizer_type", "LoraEasyCustomOptimizer.came.CAME")
+
+    @Slot(str)
     def change_scheduler(self, value: str) -> None:
         value = value.replace(" ", "_")
         args = [
@@ -197,17 +217,21 @@ class OptimizerWidget(BaseWidget):
             return
         self.edit_args("lr_scheduler", value)
 
-    @Slot(str)
-    def change_optimizer(self, value: str) -> None:
-        if value != "Came":
-            self.edit_args("optimizer_type", value)
+    def change_loss_type(self, value: str) -> None:
+        value = value.replace(" ", "_").lower()
+        args = ["loss_type", "huber_schedule", "huber_c"]
+        for arg in args:
+            if arg in self.args:
+                del self.args[arg]
+        self.widget.huber_schedule_selector.setEnabled(value == "huber")
+        self.widget.huber_param_input.setEnabled(value == "huber")
+        self.edit_args("loss_type", value)
+        if value != "huber":
             return
-        config = Path("config.json")
-        config = json.loads(config.read_text()) if config.is_file() else {}
-        if config.get("colab", False):
-            self.edit_args("optimizer_type", "came_pytorch.CAME.CAME")
-        else:
-            self.edit_args("optimizer_type", "pytorch_optimizer.optimizer.came.CAME")
+        self.edit_args(
+            "huber_schedule", self.widget.huber_schedule_selector.currentText().lower()
+        )
+        self.edit_args("huber_c", round(self.widget.huber_param_input.value(), 4))
 
     @Slot(bool)
     def enable_disable_warmup(self, checked: bool) -> None:
@@ -274,6 +298,9 @@ class OptimizerWidget(BaseWidget):
             self.widget.lr_scheduler_selector.setCurrentText(
                 args.get("lr_scheduler", "cosine").replace("_", " ")
             )
+        self.widget.loss_type_selector.setCurrentText(
+            args.get("loss_type", "L2").replace("_", " ").title()
+        )
         self.widget.main_lr_input.setText(str(args.get("learning_rate", "1e-4")))
         self.widget.warmup_enable.setChecked(bool(args.get("warmup_ratio", False)))
         self.widget.warmup_input.setValue(args.get("warmup_ratio", 0.0))
@@ -299,6 +326,12 @@ class OptimizerWidget(BaseWidget):
         self.widget.min_snr_enable.setChecked(bool(args.get("min_snr_gamma", False)))
         self.widget.min_snr_input.setValue(args.get("min_snr_gamma", 5))
         self.widget.zero_term_enable.setChecked(args.get("zero_terminal_snr", False))
+        self.widget.huber_schedule_selector.setCurrentIndex(
+            {"snr": 0, "exponential": 1, "constant": 2}.get(
+                args.get("huber_schedule", "snr").lower(), 0
+            )
+        )
+        self.widget.huber_param_input.setValue(args.get("huber_c", 0.1))
 
         for _ in range(len(self.opt_args)):
             self.remove_optimizer_arg(self.opt_args[0])
@@ -313,6 +346,7 @@ class OptimizerWidget(BaseWidget):
         self.change_optimizer(self.widget.optimizer_type_selector.currentText())
         # also handles min_lr, num_restarts, poly_power, restart_decay
         self.change_scheduler(self.widget.lr_scheduler_selector.currentText())
+        self.change_loss_type(self.widget.loss_type_selector.currentText())
         self.edit_lr("learning_rate", self.widget.main_lr_input.text())
         self.enable_disable_warmup(self.widget.warmup_enable.isChecked())
         self.enable_disable_unet(self.widget.unet_lr_enable.isChecked())

@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>387</width>
-    <height>291</height>
+    <width>421</width>
+    <height>350</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -176,6 +176,35 @@
            </property>
           </widget>
          </item>
+         <item row="6" column="1">
+          <widget class="ComboBox" name="huber_schedule_selector">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
+           <item>
+            <property name="text">
+             <string>SNR</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Exponential</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Constant</string>
+            </property>
+           </item>
+          </widget>
+         </item>
+         <item row="6" column="0">
+          <widget class="QLabel" name="label_3">
+           <property name="text">
+            <string>Huber Schedule</string>
+           </property>
+          </widget>
+         </item>
         </layout>
        </item>
        <item row="0" column="0" colspan="2">
@@ -319,6 +348,32 @@
            </item>
           </widget>
          </item>
+         <item row="2" column="0">
+          <widget class="QLabel" name="loss_type_label">
+           <property name="text">
+            <string>Loss Type</string>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="1">
+          <widget class="ComboBox" name="loss_type_selector">
+           <item>
+            <property name="text">
+             <string>L2</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Huber</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Smooth L1</string>
+            </property>
+           </item>
+          </widget>
+         </item>
         </layout>
        </item>
        <item row="1" column="1">
@@ -448,6 +503,29 @@
            </property>
           </widget>
          </item>
+         <item row="6" column="0">
+          <widget class="QLabel" name="label_6">
+           <property name="text">
+            <string>Huber Param</string>
+           </property>
+          </widget>
+         </item>
+         <item row="6" column="1">
+          <widget class="DoubleSpinBox" name="huber_param_input">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
+           <property name="decimals">
+            <number>4</number>
+           </property>
+           <property name="singleStep">
+            <double>0.010000000000000</double>
+           </property>
+           <property name="value">
+            <double>0.100000000000000</double>
+           </property>
+          </widget>
+         </item>
         </layout>
        </item>
       </layout>
@@ -478,7 +556,7 @@
             <x>0</x>
             <y>0</y>
             <width>363</width>
-            <height>211</height>
+            <height>233</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_3"/>

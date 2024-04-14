@@ -3,7 +3,7 @@
 ################################################################################
 ## Form generated from reading UI file 'OptimizerUI.ui'
 ##
-## Created by: Qt User Interface Compiler version 6.6.2
+## Created by: Qt User Interface Compiler version 6.7.0
 ##
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
@@ -26,7 +26,7 @@ class Ui_optimizer_ui(object):
     def setupUi(self, optimizer_ui):
         if not optimizer_ui.objectName():
             optimizer_ui.setObjectName(u"optimizer_ui")
-        optimizer_ui.resize(387, 291)
+        optimizer_ui.resize(421, 350)
         self.verticalLayout = QVBoxLayout(optimizer_ui)
         self.verticalLayout.setObjectName(u"verticalLayout")
         self.verticalLayout.setContentsMargins(0, 0, 0, 0)
@@ -109,6 +109,20 @@ class Ui_optimizer_ui(object):
 
         self.formLayout_2.setWidget(5, QFormLayout.FieldRole, self.min_snr_input)
 
+        self.huber_schedule_selector = ComboBox(self.optimizer_tab_main)
+        self.huber_schedule_selector.addItem("")
+        self.huber_schedule_selector.addItem("")
+        self.huber_schedule_selector.addItem("")
+        self.huber_schedule_selector.setObjectName(u"huber_schedule_selector")
+        self.huber_schedule_selector.setEnabled(False)
+
+        self.formLayout_2.setWidget(6, QFormLayout.FieldRole, self.huber_schedule_selector)
+
+        self.label_3 = QLabel(self.optimizer_tab_main)
+        self.label_3.setObjectName(u"label_3")
+
+        self.formLayout_2.setWidget(6, QFormLayout.LabelRole, self.label_3)
+
 
         self.gridLayout.addLayout(self.formLayout_2, 1, 0, 1, 1)
 
@@ -156,6 +170,19 @@ class Ui_optimizer_ui(object):
         self.lr_scheduler_selector.setFocusPolicy(Qt.StrongFocus)
 
         self.formLayout.setWidget(1, QFormLayout.FieldRole, self.lr_scheduler_selector)
+
+        self.loss_type_label = QLabel(self.optimizer_tab_main)
+        self.loss_type_label.setObjectName(u"loss_type_label")
+
+        self.formLayout.setWidget(2, QFormLayout.LabelRole, self.loss_type_label)
+
+        self.loss_type_selector = ComboBox(self.optimizer_tab_main)
+        self.loss_type_selector.addItem("")
+        self.loss_type_selector.addItem("")
+        self.loss_type_selector.addItem("")
+        self.loss_type_selector.setObjectName(u"loss_type_selector")
+
+        self.formLayout.setWidget(2, QFormLayout.FieldRole, self.loss_type_selector)
 
 
         self.gridLayout.addLayout(self.formLayout, 0, 0, 1, 2)
@@ -234,6 +261,20 @@ class Ui_optimizer_ui(object):
 
         self.formLayout_3.setWidget(5, QFormLayout.SpanningRole, self.zero_term_enable)
 
+        self.label_6 = QLabel(self.optimizer_tab_main)
+        self.label_6.setObjectName(u"label_6")
+
+        self.formLayout_3.setWidget(6, QFormLayout.LabelRole, self.label_6)
+
+        self.huber_param_input = DoubleSpinBox(self.optimizer_tab_main)
+        self.huber_param_input.setObjectName(u"huber_param_input")
+        self.huber_param_input.setEnabled(False)
+        self.huber_param_input.setDecimals(4)
+        self.huber_param_input.setSingleStep(0.010000000000000)
+        self.huber_param_input.setValue(0.100000000000000)
+
+        self.formLayout_3.setWidget(6, QFormLayout.FieldRole, self.huber_param_input)
+
 
         self.gridLayout.addLayout(self.formLayout_3, 1, 1, 1, 1)
 
@@ -253,7 +294,7 @@ class Ui_optimizer_ui(object):
         self.scrollArea.setWidgetResizable(True)
         self.optimizer_item_widget = QWidget()
         self.optimizer_item_widget.setObjectName(u"optimizer_item_widget")
-        self.optimizer_item_widget.setGeometry(QRect(0, 0, 363, 211))
+        self.optimizer_item_widget.setGeometry(QRect(0, 0, 363, 233))
         self.verticalLayout_3 = QVBoxLayout(self.optimizer_item_widget)
         self.verticalLayout_3.setObjectName(u"verticalLayout_3")
         self.scrollArea.setWidget(self.optimizer_item_widget)
@@ -306,6 +347,11 @@ class Ui_optimizer_ui(object):
 #if QT_CONFIG(tooltip)
         self.min_snr_input.setToolTip(QCoreApplication.translate("optimizer_ui", u"<html><head/><body><p>This is a tool that reduces learning of unwanted elements by only learning what is the most common. This can lead to it not learning small details however. The recommended value is 5. Lower values apply more.</p></body></html>", None))
 #endif // QT_CONFIG(tooltip)
+        self.huber_schedule_selector.setItemText(0, QCoreApplication.translate("optimizer_ui", u"SNR", None))
+        self.huber_schedule_selector.setItemText(1, QCoreApplication.translate("optimizer_ui", u"Exponential", None))
+        self.huber_schedule_selector.setItemText(2, QCoreApplication.translate("optimizer_ui", u"Constant", None))
+
+        self.label_3.setText(QCoreApplication.translate("optimizer_ui", u"Huber Schedule", None))
         self.optimizer_type_label.setText(QCoreApplication.translate("optimizer_ui", u"Optimizer Type", None))
         self.optimizer_type_selector.setItemText(0, QCoreApplication.translate("optimizer_ui", u"AdamW", None))
         self.optimizer_type_selector.setItemText(1, QCoreApplication.translate("optimizer_ui", u"AdamW8bit", None))
@@ -337,6 +383,11 @@ class Ui_optimizer_ui(object):
 #if QT_CONFIG(tooltip)
         self.lr_scheduler_selector.setToolTip(QCoreApplication.translate("optimizer_ui", u"<html><head/><body><p>The scheduler for the lr. The ones I use personally are cosine and cosine with restarts.</p></body></html>", None))
 #endif // QT_CONFIG(tooltip)
+        self.loss_type_label.setText(QCoreApplication.translate("optimizer_ui", u"Loss Type", None))
+        self.loss_type_selector.setItemText(0, QCoreApplication.translate("optimizer_ui", u"L2", None))
+        self.loss_type_selector.setItemText(1, QCoreApplication.translate("optimizer_ui", u"Huber", None))
+        self.loss_type_selector.setItemText(2, QCoreApplication.translate("optimizer_ui", u"Smooth L1", None))
+
         self.warmup_enable.setText(QCoreApplication.translate("optimizer_ui", u"Warmup Ratio", None))
 #if QT_CONFIG(tooltip)
         self.warmup_input.setToolTip(QCoreApplication.translate("optimizer_ui", u"<html><head/><body><p>This is ratio of steps you want to be a warmup to your chosen lr. I personally use 0.05 (5%). Keep in mind this is spread out over the course of all restarts when using the Cosine Annealing Warmup Restarts LR scheduler.</p></body></html>", None))
@@ -355,6 +406,7 @@ class Ui_optimizer_ui(object):
 #endif // QT_CONFIG(tooltip)
         self.label_2.setText(QCoreApplication.translate("optimizer_ui", u"Max Grad Norm", None))
         self.zero_term_enable.setText(QCoreApplication.translate("optimizer_ui", u"Zero Term SNR", None))
+        self.label_6.setText(QCoreApplication.translate("optimizer_ui", u"Huber Param", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.optimizer_tab_main), QCoreApplication.translate("optimizer_ui", u"Main Args", None))
         self.add_opt_button.setText(QCoreApplication.translate("optimizer_ui", u"Add Optimizer Arg", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.optimizer_tab_args), QCoreApplication.translate("optimizer_ui", u"Optional Args", None))
