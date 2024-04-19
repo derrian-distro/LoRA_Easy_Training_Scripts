@@ -214,7 +214,7 @@ def main():
     setup_accelerate()
     setup_cudnn()
 
-    print("Completed installing, you can launch the ui bu launching run.bat")
+    print("Completed installing, you can launch the ui by launching run.bat")
 
 
 if __name__ == "__main__":
