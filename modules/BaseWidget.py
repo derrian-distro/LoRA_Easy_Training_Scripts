@@ -1,5 +1,4 @@
 from PySide6 import QtWidgets
-from PySide6.QtCore import QUrlQuery
 from modules.CollapsibleWidget import CollapsibleWidget
 from modules.DragDropLineEdit import DragDropLineEdit
 from pathlib import Path

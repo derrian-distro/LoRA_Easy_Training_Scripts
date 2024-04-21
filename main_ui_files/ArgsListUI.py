@@ -73,11 +73,12 @@ class ArgsWidget(QtWidgets.QWidget):
         self.ti_widget.setVisible(False)
         self.network_widget.setVisible(True)
 
-
     def get_args(self) -> dict:
         args = {}
         dataset_args = {}
         for widget in self.args_widget_array:
+            if not widget.isVisible():
+                continue
             if widget.args:
                 args[widget.name] = widget.args
             if widget.dataset_args:

@@ -3,7 +3,7 @@
 ################################################################################
 ## Form generated from reading UI file 'MainUI.ui'
 ##
-## Created by: Qt User Interface Compiler version 6.6.3
+## Created by: Qt User Interface Compiler version 6.7.0
 ##
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
@@ -34,10 +34,13 @@ class Ui_MainWindow(object):
         self.no_theme_action.setObjectName(u"no_theme_action")
         self.lora_resize_action = QAction(MainWindow)
         self.lora_resize_action.setObjectName(u"lora_resize_action")
-        self.set_train_lora = QAction(MainWindow)
-        self.set_train_lora.setObjectName(u"set_train_lora")
-        self.set_train_ti = QAction(MainWindow)
-        self.set_train_ti.setObjectName(u"set_train_ti")
+        self.set_train_lora_action = QAction(MainWindow)
+        self.set_train_lora_action.setObjectName(u"set_train_lora_action")
+        self.set_train_lora_action.setCheckable(False)
+        self.set_train_lora_action.setChecked(False)
+        self.set_train_ti_action = QAction(MainWindow)
+        self.set_train_ti_action.setObjectName(u"set_train_ti_action")
+        self.set_train_ti_action.setCheckable(False)
         self.centralwidget = QWidget(MainWindow)
         self.centralwidget.setObjectName(u"centralwidget")
         self.verticalLayout = QVBoxLayout(self.centralwidget)
@@ -45,8 +48,8 @@ class Ui_MainWindow(object):
         self.verticalLayout.setContentsMargins(0, 9, 0, 0)
         self.line = QFrame(self.centralwidget)
         self.line.setObjectName(u"line")
-        self.line.setFrameShape(QFrame.HLine)
-        self.line.setFrameShadow(QFrame.Sunken)
+        self.line.setFrameShape(QFrame.Shape.HLine)
+        self.line.setFrameShadow(QFrame.Shadow.Sunken)
 
         self.verticalLayout.addWidget(self.line)
 
@@ -78,8 +81,8 @@ class Ui_MainWindow(object):
         self.menuTheme.addAction(self.light_theme_menu.menuAction())
         self.menuTheme.addAction(self.no_theme_action)
         self.menuUtils.addAction(self.lora_resize_action)
-        self.menuTrainMode.addAction(self.set_train_lora)
-        self.menuTrainMode.addAction(self.set_train_ti)
+        self.menuTrainMode.addAction(self.set_train_lora_action)
+        self.menuTrainMode.addAction(self.set_train_ti_action)
 
         self.retranslateUi(MainWindow)
 
@@ -99,8 +102,8 @@ class Ui_MainWindow(object):
         self.save_runtime_toml.setText(QCoreApplication.translate("MainWindow", u"Save Runtime Toml", None))
         self.no_theme_action.setText(QCoreApplication.translate("MainWindow", u"No Theme", None))
         self.lora_resize_action.setText(QCoreApplication.translate("MainWindow", u"Lora Resize", None))
-        self.set_train_lora.setText(QCoreApplication.translate("MainWindow", u"LoRA", None))
-        self.set_train_ti.setText(QCoreApplication.translate("MainWindow", u"Textual Inversion", None))
+        self.set_train_lora_action.setText(QCoreApplication.translate("MainWindow", u"LoRA", None))
+        self.set_train_ti_action.setText(QCoreApplication.translate("MainWindow", u"Textual Inversion", None))
         self.menuFile.setTitle(QCoreApplication.translate("MainWindow", u"File", None))
         self.menuTheme.setTitle(QCoreApplication.translate("MainWindow", u"Theme", None))
         self.dark_theme_menu.setTitle(QCoreApplication.translate("MainWindow", u"Dark", None))

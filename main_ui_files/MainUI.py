@@ -96,7 +96,7 @@ class MainWidget(QWidget):
             else:
                 new_args[arg] = {"dataset_args": val}
         new_args["subsets"] = list(subset_args.values())
-        new_args["train_mode"] = {'train_mode': self.train_mode.value}
+        new_args["train_mode"] = {"train_mode": self.train_mode.value}
         TomlFunctions.save_toml(new_args, file_name)
 
     def load_toml(self, file_name: Path | None = None) -> None:
@@ -109,7 +109,6 @@ class MainWidget(QWidget):
             self.set_train_ti()
         self.args_widget.load_args(args, dataset_args)
         self.subset_widget.load_dataset_args(dataset_args)
-
 
     def set_train_lora(self) -> None:
         if self.train_mode != TrainingModes.LORA:
@@ -124,7 +123,7 @@ class MainWidget(QWidget):
     def process_toml(self, file_name: Path | None = None) -> tuple[dict, dict]:
         loaded_args = TomlFunctions.load_toml(file_name)
         if not loaded_args:
-            return {}, {}
+            return {}, {}, self.train_mode
         args = {}
         dataset_args = {}
         if "subsets" in loaded_args:
@@ -207,7 +206,9 @@ class MainWidget(QWidget):
             requests.get(f"{self.backend_url_input.text()}/stop_server")
             return False
         is_sdxl = str(args.get("general_args").get("sdxl", False))
-        response = requests.get(f"{url}/train", params={"train_mode": train_mode.value, "sdxl": is_sdxl})
+        response = requests.get(
+            f"{url}/train", params={"train_mode": train_mode.value, "sdxl": is_sdxl}
+        )
         training = True
         while training:
             sleep(5.0)
