@@ -41,6 +41,9 @@ class TextualInversionWidget(BaseWidget):
     def tokenize_input(self):
         if not self.widget.vectors_per_token_enable.isChecked():
             input_text = self.widget.initial_word_input.text()
+            if not input_text:
+                self.change_vectors_per_token(0)
+                return
             NetworkManager().query(
                 "/tokenize",
                 {"text": input_text},
