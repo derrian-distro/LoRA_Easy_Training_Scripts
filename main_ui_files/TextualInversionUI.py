@@ -1,3 +1,4 @@
+import contextlib
 from PySide6.QtWidgets import QWidget
 from ui_files.TextualInversionUI import Ui_textual_inversion_ui
 from modules.BaseWidget import BaseWidget
@@ -44,15 +45,17 @@ class TextualInversionWidget(BaseWidget):
             if not input_text:
                 self.change_vectors_per_token(0)
                 return
-            NetworkManager().query(
-                "/tokenize",
-                {"text": input_text},
-                lambda x: self.change_vectors_per_token(x["length"]),
-            )
+            with contextlib.suppress(Exception):
+                NetworkManager().query(
+                    "/tokenize",
+                    {"text": input_text},
+                    lambda x: self.change_vectors_per_token(x["length"]),
+                )
 
     def change_initial_word(self, text: str) -> None:
         self.edit_args("init_word", text, True)
-        self.debounce_tokenize()
+        with contextlib.suppress(Exception):
+            self.debounce_tokenize()
 
     def change_vectors_per_token(self, value: int) -> None:
         if value and value > 0:
