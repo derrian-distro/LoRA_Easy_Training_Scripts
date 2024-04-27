@@ -55,11 +55,7 @@ class GeneralWidget(BaseWidget):
             lambda x: self.edit_args(
                 "pretrained_model_name_or_path",
                 x,
-                optional=True,
             )
-        )
-        self.widget.base_model_input.editingFinished.connect(
-            lambda: self.check_validity(self.widget.base_model_input)
         )
         self.widget.base_model_selector.clicked.connect(
             lambda: self.set_file_from_dialog(
@@ -68,9 +64,6 @@ class GeneralWidget(BaseWidget):
         )
         self.widget.vae_input.textChanged.connect(
             lambda x: self.edit_args("vae", x, optional=True)
-        )
-        self.widget.vae_input.editingFinished.connect(
-            lambda: self.check_validity(self.widget.vae_input)
         )
         self.widget.vae_selector.clicked.connect(
             lambda: self.set_file_from_dialog(
@@ -354,7 +347,6 @@ class GeneralWidget(BaseWidget):
         self.edit_args(
             "pretrained_model_name_or_path",
             self.widget.base_model_input.text(),
-            optional=True,
         )
         self.edit_args(
             "vae",

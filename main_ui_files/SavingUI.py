@@ -44,9 +44,6 @@ class SavingWidget(BaseWidget):
         self.widget.output_folder_input.textChanged.connect(
             lambda x: self.edit_args("output_dir", x, optional=True)
         )
-        self.widget.output_folder_input.editingFinished.connect(
-            lambda: self.check_validity(self.widget.output_folder_input)
-        )
         self.widget.output_folder_selector.clicked.connect(
             lambda: self.set_folder_from_dialog(
                 self.widget.output_folder_input, "Output Folder"
@@ -62,9 +59,6 @@ class SavingWidget(BaseWidget):
         self.widget.resume_enable.clicked.connect(self.enable_disable_resume)
         self.widget.resume_input.textChanged.connect(
             lambda x: self.edit_args("resume", x, optional=True)
-        )
-        self.widget.resume_input.editingFinished.connect(
-            lambda: self.check_validity(self.widget.resume_input)
         )
         self.widget.resume_selector.clicked.connect(
             lambda: self.set_folder_from_dialog(
@@ -93,9 +87,6 @@ class SavingWidget(BaseWidget):
                 optional=True,
             )
         )
-        self.widget.save_tag_input.editingFinished.connect(
-            lambda: self.check_validity(self.widget.save_tag_input)
-        )
         self.widget.save_tag_selector.clicked.connect(
             lambda: self.set_folder_from_dialog(
                 self.widget.save_tag_input, "Folder to save tag occurrence file to"
@@ -111,9 +102,6 @@ class SavingWidget(BaseWidget):
         self.widget.save_toml_enable.clicked.connect(self.enable_disable_toml)
         self.widget.save_toml_input.textChanged.connect(
             lambda x: self.edit_args("save_toml_location", x, optional=True)
-        )
-        self.widget.save_toml_input.editingFinished.connect(
-            lambda: self.check_validity(self.widget.save_toml_input)
         )
         self.widget.save_toml_selector.clicked.connect(
             lambda: self.set_folder_from_dialog(
@@ -188,7 +176,6 @@ class SavingWidget(BaseWidget):
             self.widget.resume_input.text(),
             optional=True,
         )
-        self.check_validity(self.widget.resume_input)
 
     @Slot(bool)
     def enable_disable_last(self, checked: bool) -> None:
@@ -228,7 +215,6 @@ class SavingWidget(BaseWidget):
             self.widget.save_tag_input.text(),
             optional=True,
         )
-        self.check_validity(self.widget.save_tag_input)
 
     @Slot(bool)
     def enable_disable_freq(self, checked: bool) -> None:
@@ -258,7 +244,6 @@ class SavingWidget(BaseWidget):
             self.widget.save_toml_input.text(),
             optional=True,
         )
-        self.check_validity(self.widget.save_toml_input)
 
     @Slot(bool)
     def enable_disable_save_state(self, checked: bool) -> None:
@@ -344,9 +329,7 @@ class SavingWidget(BaseWidget):
         self.edit_args(
             "output_dir",
             self.widget.output_folder_input.text(),
-            optional=True,
         )
-        self.check_validity(self.widget.output_folder_input)
         self.enable_disable_output_name(self.widget.output_name_enable.isChecked())
         self.edit_args(
             "save_precision", self.widget.save_precision_selector.currentText()
