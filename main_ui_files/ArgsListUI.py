@@ -81,8 +81,6 @@ class ArgsWidget(QtWidgets.QWidget):
         args = {}
         dataset_args = {}
         for widget in self.args_widget_array:
-            if not widget.isVisible():
-                continue
             if widget.args:
                 args[widget.name] = widget.args
             if widget.dataset_args:
