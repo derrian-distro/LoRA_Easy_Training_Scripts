@@ -63,6 +63,10 @@ class ArgsWidget(QtWidgets.QWidget):
         self.args_widget_array.append(LoggingWidget())
 
         for widget in self.args_widget_array:
+            if widget.name == "textual_inversion_args":
+                widget.setVisible(False)
+            else:
+                widget.setVisible(True)
             self.scroll_widget.layout().addWidget(widget)
 
     def set_ti_training(self) -> None:
