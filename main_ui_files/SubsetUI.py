@@ -3,8 +3,8 @@ from pathlib import Path
 from PySide6.QtGui import QIcon
 from PySide6.QtWidgets import QWidget, QFileDialog
 from PySide6.QtCore import Signal
-from modules.BaseWidget import BaseWidget
 from modules.DragDropLineEdit import DragDropLineEdit
+from modules.BaseWidget import BaseWidget
 from ui_files.sub_dataset_input import Ui_sub_dataset_input
 from ui_files.sub_dataset_extra_input import Ui_sub_dataset_extra_input
 
@@ -43,19 +43,31 @@ class SubsetWidget(BaseWidget):
         self.widget.image_folder_selector.setIcon(
             QIcon(str(Path("icons/more-horizontal.svg")))
         )
+        self.widget.masked_image_input.setMode("folder")
+        self.widget.masked_image_input.highlight = True
+        self.widget.masked_image_selector.setIcon(
+            QIcon(str(Path("icons/more-horizontal.svg")))
+        )
         self.extra_widget.face_crop_group.setChecked(False)
         self.extra_widget.caption_dropout_group.setChecked(False)
         self.extra_widget.token_warmup_group.setChecked(False)
 
     def setup_connections(self) -> None:
         self.widget.image_folder_input.textChanged.connect(
-            lambda x: self.edit_dataset_args("image_dir", x, optional=True)
-        )
-        self.widget.image_folder_input.editingFinished.connect(
-            lambda: self.check_validity(self.widget.image_folder_input)
+            lambda x: self.edit_dataset_args("image_dir", x, True)
         )
         self.widget.image_folder_selector.clicked.connect(
-            lambda: self.set_folder_from_dialog("Subset Image Folder")
+            lambda: self.set_folder_from_dialog(
+                "Subset Image Folder", self.widget.image_folder_input
+            )
+        )
+        self.widget.masked_image_input.textChanged.connect(
+            lambda x: self.edit_dataset_args("conditioning_data_dir", x, True)
+        )
+        self.widget.masked_image_selector.clicked.connect(
+            lambda: self.set_folder_from_dialog(
+                "Masked Image Folder", self.widget.masked_image_input, False
+            )
         )
         self.widget.repeats_input.valueChanged.connect(
             lambda x: self.edit_dataset_args("num_repeats", x)
@@ -110,24 +122,23 @@ class SubsetWidget(BaseWidget):
             lambda x: self.edit_dataset_args("token_warmup_step", x)
         )
 
-    def check_validity(self, elem: DragDropLineEdit) -> None:
-        elem.dirty = True
-        if not elem.allow_empty or elem.text() != "":
-            elem.update_stylesheet()
-        else:
-            elem.setStyleSheet("")
-
     def edit_dataset_args(
         self, name: str, value: object, optional: bool = False
     ) -> None:
         super().edit_dataset_args(name, value, optional)
         self.edited.emit(self.dataset_args, self.name)
 
-    def set_folder_from_dialog(self, title_str: str = "", path: Path = None) -> None:
+    def set_folder_from_dialog(
+        self,
+        title_str: str,
+        element: DragDropLineEdit,
+        calc_repeats: bool = True,
+        path: Path = None,
+    ) -> None:
         if path and path.exists():
             file_name = path
         else:
-            default_dir = Path(self.widget.image_folder_input.text())
+            default_dir = Path(element.text())
             file_name = QFileDialog.getExistingDirectory(
                 self,
                 title_str,
@@ -136,11 +147,24 @@ class SubsetWidget(BaseWidget):
             if not file_name:
                 return
             file_name = Path(file_name)
+        element.setText(file_name.as_posix())
+        element.update_stylesheet()
+        if not calc_repeats:
+            return
         with contextlib.suppress(ValueError):
             repeats = int(file_name.name.split("_")[0])
             self.widget.repeats_input.setValue(repeats)
-        self.widget.image_folder_input.setText(file_name.as_posix())
-        self.widget.image_folder_input.update_stylesheet()
+
+    def enable_disable_masked_loss(self, checked: bool) -> None:
+        if "conditioning_data_dir" in self.dataset_args:
+            del self.dataset_args["conditioning_data_dir"]
+        self.widget.masked_image_input.setEnabled(checked)
+        self.widget.masked_image_selector.setEnabled(checked)
+        self.edit_dataset_args(
+            "conditioning_data_dir",
+            self.widget.masked_image_input.text() if checked else False,
+            True,
+        )
 
     def enable_disable_face_crop(self, checked: bool) -> None:
         if "face_crop_aug_range" in self.dataset_args:
@@ -190,27 +214,30 @@ class SubsetWidget(BaseWidget):
             args[1], self.extra_widget.token_warmup_step_input.value()
         )
 
-    def enable_disable_cache_dependants(self, checked: bool) -> None:
-        self.widget.color_augment_enable.setEnabled(not checked)
+    def enable_disable_random_crop(self, checked: bool) -> None:
+        if "random_crop" in self.dataset_args:
+            del self.dataset_args["random_crop"]
         self.widget.random_crop_enable.setEnabled(not checked)
-        for arg in ["color_aug", "random_crop"]:
-            if arg in self.dataset_args:
-                del self.dataset_args[arg]
-        self.edit_dataset_args(
-            "color_aug",
-            False if checked else self.widget.color_augment_enable.isChecked(),
-            True,
-        )
         self.edit_dataset_args(
             "random_crop",
             False if checked else self.widget.random_crop_enable.isChecked(),
             True,
         )
 
+    def enable_disable_color_aug(self, checked: bool) -> None:
+        if "color_aug" in self.dataset_args:
+            del self.dataset_args["color_aug"]
+        self.widget.color_augment_enable.setEnabled(not checked)
+        self.edit_dataset_args(
+            "color_aug",
+            False if checked else self.widget.color_augment_enable.isChecked(),
+            True,
+        )
+
     def enable_disable_keep_tokens(self, checked: bool) -> None:
-        self.widget.keep_tokens_input.setEnabled(not checked)
         if "keep_tokens" in self.dataset_args:
             del self.dataset_args["keep_tokens"]
+        self.widget.keep_tokens_input.setEnabled(not checked)
         self.edit_dataset_args(
             "keep_tokens",
             False if checked else self.widget.keep_tokens_input.value(),
@@ -220,6 +247,9 @@ class SubsetWidget(BaseWidget):
     def load_dataset_args(self, dataset_args: dict) -> bool:
         # update element inputs
         self.widget.image_folder_input.setText(dataset_args.get("image_dir", ""))
+        self.widget.masked_image_input.setText(
+            dataset_args.get("conditioning_data_dir", "")
+        )
         self.widget.repeats_input.setValue(dataset_args.get("num_repeats", 1))
         self.widget.shuffle_captions_enable.setChecked(
             dataset_args.get("shuffle_caption", False)
@@ -280,6 +310,9 @@ class SubsetWidget(BaseWidget):
 
         # edit dataset args to match
         self.edit_dataset_args("image_dir", self.widget.image_folder_input.text(), True)
+        self.edit_dataset_args(
+            "conditioning_data_dir", self.widget.masked_image_input.text(), True
+        )
         self.edit_dataset_args("num_repeats", self.widget.repeats_input.value())
         self.edit_dataset_args(
             "shuffle_caption", self.widget.shuffle_captions_enable.isChecked(), True

@@ -16,6 +16,7 @@ class ArgsWidget(QtWidgets.QWidget):
     sdxlChecked = Signal(bool)
     cacheLatentsChecked = Signal(bool)
     keepTokensSepChecked = Signal(bool)
+    maskedLossChecked = Signal(bool)
 
     def __init__(self, parent: QtWidgets.QWidget = None) -> None:
         super().__init__(parent)
@@ -23,6 +24,7 @@ class ArgsWidget(QtWidgets.QWidget):
         self.scroll_widget = QtWidgets.QWidget()
         self.args_widget_array: list[BaseWidget] = []
         self.network_widget = NetworkWidget()
+        self.optimizer_widget = OptimizerWidget()
         self.ti_widget = TextualInversionWidget()
         self.ti_widget.setVisible(False)
 
@@ -51,11 +53,14 @@ class ArgsWidget(QtWidgets.QWidget):
         general_args.keepTokensSepChecked.connect(
             lambda x: self.keepTokensSepChecked.emit(x)
         )
+        self.optimizer_widget.maskedLossChecked.connect(
+            lambda x: self.maskedLossChecked.emit(x)
+        )
         self.args_widget_array.append(general_args)
         self.sdxlChecked.connect(self.network_widget.toggle_sdxl)
         self.args_widget_array.append(self.network_widget)
         self.args_widget_array.append(self.ti_widget)
-        self.args_widget_array.append(OptimizerWidget())
+        self.args_widget_array.append(self.optimizer_widget)
         self.args_widget_array.append(SavingWidget())
         self.args_widget_array.append(BucketWidget())
         self.args_widget_array.append(NoiseOffsetWidget())

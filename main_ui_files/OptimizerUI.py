@@ -1,6 +1,6 @@
 import json
 from pathlib import Path
-from PySide6.QtCore import Slot
+from PySide6.QtCore import Slot, Signal
 from PySide6 import QtCore
 from PySide6.QtWidgets import QWidget
 from ui_files.OptimizerUI import Ui_optimizer_ui
@@ -9,6 +9,8 @@ from modules.OptimizerItem import OptimizerItem
 
 
 class OptimizerWidget(BaseWidget):
+    maskedLossChecked = Signal(bool)
+
     def __init__(self, parent: QWidget = None) -> None:
         super().__init__(parent)
         self.colap.set_title("Optimizer Args")
@@ -90,6 +92,7 @@ class OptimizerWidget(BaseWidget):
         self.widget.zero_term_enable.clicked.connect(
             lambda x: self.edit_args("zero_terminal_snr", x, True)
         )
+        self.widget.masked_loss_enable.clicked.connect(self.enable_disable_masked_loss)
         self.widget.huber_schedule_selector.currentTextChanged.connect(
             lambda x: self.edit_args("huber_schedule", x.lower())
         )
@@ -223,10 +226,10 @@ class OptimizerWidget(BaseWidget):
         for arg in args:
             if arg in self.args:
                 del self.args[arg]
-        self.widget.huber_schedule_selector.setEnabled(value == "huber")
-        self.widget.huber_param_input.setEnabled(value == "huber")
+        self.widget.huber_schedule_selector.setEnabled(value != "l2")
+        self.widget.huber_param_input.setEnabled(value != "l2")
         self.edit_args("loss_type", value)
-        if value != "huber":
+        if value == "l2":
             return
         self.edit_args(
             "huber_schedule", self.widget.huber_schedule_selector.currentText().lower()
@@ -279,6 +282,11 @@ class OptimizerWidget(BaseWidget):
         if not checked:
             return
         self.edit_args("min_snr_gamma", self.widget.min_snr_input.value(), True)
+
+    @Slot(bool)
+    def enable_disable_masked_loss(self, checked: bool) -> None:
+        self.edit_args("masked_loss", checked, True)
+        self.maskedLossChecked.emit(checked)
 
     def load_args(self, args: dict) -> bool:
         args: dict = args.get(self.name, {})

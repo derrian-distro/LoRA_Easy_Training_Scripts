@@ -16,8 +16,8 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
 from PySide6.QtWidgets import (QApplication, QCheckBox, QFormLayout, QGridLayout,
-    QLabel, QPushButton, QScrollArea, QSizePolicy,
-    QVBoxLayout, QWidget)
+    QHBoxLayout, QLabel, QPushButton, QScrollArea,
+    QSizePolicy, QVBoxLayout, QWidget)
 
 from modules.LineEditHighlight import LineEditWithHighlight
 from modules.ScrollOnSelect import (ComboBox, DoubleSpinBox, SpinBox, TabView)
@@ -26,7 +26,7 @@ class Ui_optimizer_ui(object):
     def setupUi(self, optimizer_ui):
         if not optimizer_ui.objectName():
             optimizer_ui.setObjectName(u"optimizer_ui")
-        optimizer_ui.resize(421, 350)
+        optimizer_ui.resize(463, 354)
         self.verticalLayout = QVBoxLayout(optimizer_ui)
         self.verticalLayout.setObjectName(u"verticalLayout")
         self.verticalLayout.setContentsMargins(0, 0, 0, 0)
@@ -256,10 +256,20 @@ class Ui_optimizer_ui(object):
 
         self.formLayout_3.setWidget(4, QFormLayout.FieldRole, self.max_grad_norm_input)
 
+        self.horizontalLayout_2 = QHBoxLayout()
+        self.horizontalLayout_2.setObjectName(u"horizontalLayout_2")
         self.zero_term_enable = QCheckBox(self.optimizer_tab_main)
         self.zero_term_enable.setObjectName(u"zero_term_enable")
 
-        self.formLayout_3.setWidget(5, QFormLayout.SpanningRole, self.zero_term_enable)
+        self.horizontalLayout_2.addWidget(self.zero_term_enable)
+
+        self.masked_loss_enable = QCheckBox(self.optimizer_tab_main)
+        self.masked_loss_enable.setObjectName(u"masked_loss_enable")
+
+        self.horizontalLayout_2.addWidget(self.masked_loss_enable)
+
+
+        self.formLayout_3.setLayout(5, QFormLayout.SpanningRole, self.horizontalLayout_2)
 
         self.label_6 = QLabel(self.optimizer_tab_main)
         self.label_6.setObjectName(u"label_6")
@@ -294,7 +304,7 @@ class Ui_optimizer_ui(object):
         self.scrollArea.setWidgetResizable(True)
         self.optimizer_item_widget = QWidget()
         self.optimizer_item_widget.setObjectName(u"optimizer_item_widget")
-        self.optimizer_item_widget.setGeometry(QRect(0, 0, 363, 233))
+        self.optimizer_item_widget.setGeometry(QRect(0, 0, 98, 28))
         self.verticalLayout_3 = QVBoxLayout(self.optimizer_item_widget)
         self.verticalLayout_3.setObjectName(u"verticalLayout_3")
         self.scrollArea.setWidget(self.optimizer_item_widget)
@@ -406,6 +416,7 @@ class Ui_optimizer_ui(object):
 #endif // QT_CONFIG(tooltip)
         self.label_2.setText(QCoreApplication.translate("optimizer_ui", u"Max Grad Norm", None))
         self.zero_term_enable.setText(QCoreApplication.translate("optimizer_ui", u"Zero Term SNR", None))
+        self.masked_loss_enable.setText(QCoreApplication.translate("optimizer_ui", u"Masked Loss", None))
         self.label_6.setText(QCoreApplication.translate("optimizer_ui", u"Huber Param", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.optimizer_tab_main), QCoreApplication.translate("optimizer_ui", u"Main Args", None))
         self.add_opt_button.setText(QCoreApplication.translate("optimizer_ui", u"Add Optimizer Arg", None))

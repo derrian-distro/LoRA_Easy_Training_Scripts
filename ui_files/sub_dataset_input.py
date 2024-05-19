@@ -3,7 +3,7 @@
 ################################################################################
 ## Form generated from reading UI file 'sub_dataset_input.ui'
 ##
-## Created by: Qt User Interface Compiler version 6.6.1
+## Created by: Qt User Interface Compiler version 6.7.0
 ##
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
@@ -27,8 +27,8 @@ class Ui_sub_dataset_input(object):
     def setupUi(self, sub_dataset_input):
         if not sub_dataset_input.objectName():
             sub_dataset_input.setObjectName(u"sub_dataset_input")
-        sub_dataset_input.resize(523, 167)
-        sizePolicy = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
+        sub_dataset_input.resize(523, 221)
+        sizePolicy = QSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Preferred)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(sub_dataset_input.sizePolicy().hasHeightForWidth())
@@ -36,6 +36,27 @@ class Ui_sub_dataset_input(object):
         self.gridLayout = QGridLayout(sub_dataset_input)
         self.gridLayout.setObjectName(u"gridLayout")
         self.gridLayout.setContentsMargins(9, 9, 9, 0)
+        self.image_dir_grid = QGridLayout()
+        self.image_dir_grid.setObjectName(u"image_dir_grid")
+        self.image_dir_grid.setHorizontalSpacing(8)
+        self.image_folder_selector = QPushButton(sub_dataset_input)
+        self.image_folder_selector.setObjectName(u"image_folder_selector")
+
+        self.image_dir_grid.addWidget(self.image_folder_selector, 1, 1, 1, 1)
+
+        self.Input_image_dir_label = QLabel(sub_dataset_input)
+        self.Input_image_dir_label.setObjectName(u"Input_image_dir_label")
+
+        self.image_dir_grid.addWidget(self.Input_image_dir_label, 0, 0, 1, 2)
+
+        self.image_folder_input = DragDropLineEdit(sub_dataset_input)
+        self.image_folder_input.setObjectName(u"image_folder_input")
+
+        self.image_dir_grid.addWidget(self.image_folder_input, 1, 0, 1, 1)
+
+
+        self.gridLayout.addLayout(self.image_dir_grid, 0, 0, 1, 2)
+
         self.gridLayout_2 = QGridLayout()
         self.gridLayout_2.setObjectName(u"gridLayout_2")
         self.gridLayout_2.setSizeConstraint(QLayout.SetDefaultConstraint)
@@ -65,7 +86,7 @@ class Ui_sub_dataset_input(object):
         self.gridLayout_2.addWidget(self.regularization_images_enable, 2, 0, 1, 2, Qt.AlignLeft)
 
 
-        self.gridLayout.addLayout(self.gridLayout_2, 1, 1, 1, 1)
+        self.gridLayout.addLayout(self.gridLayout_2, 2, 1, 1, 1)
 
         self.other_form_layout = QFormLayout()
         self.other_form_layout.setObjectName(u"other_form_layout")
@@ -109,33 +130,34 @@ class Ui_sub_dataset_input(object):
         self.other_form_layout.setWidget(2, QFormLayout.FieldRole, self.caption_extension_selector)
 
 
-        self.gridLayout.addLayout(self.other_form_layout, 1, 0, 1, 1)
-
-        self.image_dir_grid = QGridLayout()
-        self.image_dir_grid.setObjectName(u"image_dir_grid")
-        self.image_dir_grid.setHorizontalSpacing(8)
-        self.image_folder_selector = QPushButton(sub_dataset_input)
-        self.image_folder_selector.setObjectName(u"image_folder_selector")
-
-        self.image_dir_grid.addWidget(self.image_folder_selector, 1, 1, 1, 1)
-
-        self.Input_image_dir_label = QLabel(sub_dataset_input)
-        self.Input_image_dir_label.setObjectName(u"Input_image_dir_label")
-
-        self.image_dir_grid.addWidget(self.Input_image_dir_label, 0, 0, 1, 2)
-
-        self.image_folder_input = DragDropLineEdit(sub_dataset_input)
-        self.image_folder_input.setObjectName(u"image_folder_input")
-
-        self.image_dir_grid.addWidget(self.image_folder_input, 1, 0, 1, 1)
-
-
-        self.gridLayout.addLayout(self.image_dir_grid, 0, 0, 1, 2)
+        self.gridLayout.addLayout(self.other_form_layout, 2, 0, 1, 1)
 
         self.extra_args = CollapsibleWidget(sub_dataset_input)
         self.extra_args.setObjectName(u"extra_args")
 
-        self.gridLayout.addWidget(self.extra_args, 3, 0, 1, 2)
+        self.gridLayout.addWidget(self.extra_args, 4, 0, 1, 2)
+
+        self.gridLayout_3 = QGridLayout()
+        self.gridLayout_3.setObjectName(u"gridLayout_3")
+        self.masked_image_input = DragDropLineEdit(sub_dataset_input)
+        self.masked_image_input.setObjectName(u"masked_image_input")
+        self.masked_image_input.setEnabled(False)
+
+        self.gridLayout_3.addWidget(self.masked_image_input, 1, 0, 1, 1)
+
+        self.masked_image_selector = QPushButton(sub_dataset_input)
+        self.masked_image_selector.setObjectName(u"masked_image_selector")
+        self.masked_image_selector.setEnabled(False)
+
+        self.gridLayout_3.addWidget(self.masked_image_selector, 1, 1, 1, 1)
+
+        self.label = QLabel(sub_dataset_input)
+        self.label.setObjectName(u"label")
+
+        self.gridLayout_3.addWidget(self.label, 0, 0, 1, 2)
+
+
+        self.gridLayout.addLayout(self.gridLayout_3, 1, 0, 1, 2)
 
 
         self.retranslateUi(sub_dataset_input)
@@ -145,6 +167,12 @@ class Ui_sub_dataset_input(object):
 
     def retranslateUi(self, sub_dataset_input):
         sub_dataset_input.setWindowTitle(QCoreApplication.translate("sub_dataset_input", u"Widget", None))
+        self.image_folder_selector.setText("")
+        self.Input_image_dir_label.setText(QCoreApplication.translate("sub_dataset_input", u"Input Image Dir", None))
+#if QT_CONFIG(tooltip)
+        self.image_folder_input.setToolTip(QCoreApplication.translate("sub_dataset_input", u"<html><head/><body><p>The folder that contains your images and caption files. If the folder is named something like 2_name, then it will automatically set the number of repeats, but only if you use the file dialog or drag and drop.</p></body></html>", None))
+#endif // QT_CONFIG(tooltip)
+        self.image_folder_input.setPlaceholderText(QCoreApplication.translate("sub_dataset_input", u"Image Folder", None))
 #if QT_CONFIG(tooltip)
         self.flip_augment_enable.setToolTip(QCoreApplication.translate("sub_dataset_input", u"<html><head/><body><p>Flips the latents of the images during training. Works well to reduce bias according to sidedness, but can cause issues if the dataset is asymetric.</p></body></html>", None))
 #endif // QT_CONFIG(tooltip)
@@ -180,11 +208,7 @@ class Ui_sub_dataset_input(object):
 #if QT_CONFIG(tooltip)
         self.caption_extension_selector.setToolTip(QCoreApplication.translate("sub_dataset_input", u"<html><head/><body><p>The file type of the captions, technically can be anything but I only included the two most common types, .caption, and .txt.</p></body></html>", None))
 #endif // QT_CONFIG(tooltip)
-        self.image_folder_selector.setText("")
-        self.Input_image_dir_label.setText(QCoreApplication.translate("sub_dataset_input", u"Input Image Dir", None))
-#if QT_CONFIG(tooltip)
-        self.image_folder_input.setToolTip(QCoreApplication.translate("sub_dataset_input", u"<html><head/><body><p>The folder that contains your images and caption files. If the folder is named something like 2_name, then it will automatically set the number of repeats, but only if you use the file dialog or drag and drop.</p></body></html>", None))
-#endif // QT_CONFIG(tooltip)
-        self.image_folder_input.setPlaceholderText(QCoreApplication.translate("sub_dataset_input", u"Image Folder", None))
+        self.masked_image_selector.setText("")
+        self.label.setText(QCoreApplication.translate("sub_dataset_input", u"Masked Image Dir", None))
     # retranslateUi
 

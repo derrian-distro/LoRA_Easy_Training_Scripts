@@ -19,6 +19,7 @@ class SubsetListWidget(QWidget):
             QtCore.Qt.AlignmentFlag.AlignTop
         )
         self.widget.subset_scroll_area.setWidgetResizable(True)
+        self.masked_loss_checked = False
         self.cache_latents_checked = False
         self.variable_keep_tokens_checked = False
         self.args = {}
@@ -38,7 +39,12 @@ class SubsetListWidget(QWidget):
         subset = SubsetWidget(display_name=display_name, name=name)
         subset.colap.extra_elem.clicked.connect(lambda: self.remove_subset(subset))
         subset.edited.connect(self.update_args)
-        subset.enable_disable_cache_dependants(self.cache_latents_checked)
+
+        subset.enable_disable_masked_loss(self.masked_loss_checked)
+        subset.enable_disable_random_crop(
+            any([self.masked_loss_checked, self.cache_latents_checked])
+        )
+        subset.enable_disable_color_aug(self.cache_latents_checked)
         subset.enable_disable_keep_tokens(self.variable_keep_tokens_checked)
         if not self.elements:
             subset.colap.toggle_collapsed()
@@ -75,10 +81,17 @@ class SubsetListWidget(QWidget):
     def update_args(self, subset_args: dict, subset_name: str) -> None:
         self.dataset_args[subset_name] = subset_args
 
+    def enable_disable_masked_loss(self, checked: bool) -> None:
+        self.masked_loss_checked = checked
+        for elem in self.elements:
+            elem.enable_disable_masked_loss(checked)
+            elem.enable_disable_random_crop(any([checked, self.cache_latents_checked]))
+
     def enable_disable_cache_latents(self, checked: bool) -> None:
         self.cache_latents_checked = checked
         for elem in self.elements:
-            elem.enable_disable_cache_dependants(checked)
+            elem.enable_disable_random_crop(any([checked, self.masked_loss_checked]))
+            elem.enable_disable_color_aug(checked)
 
     def enable_disable_variable_keep_tokens(self, checked: bool) -> None:
         self.variable_keep_tokens_checked = checked
@@ -103,6 +116,7 @@ class SubsetListWidget(QWidget):
             )
             elem = self.add_empty_subset(subset_name)
             elem.load_dataset_args(subset)
+        self.enable_disable_masked_loss(self.masked_loss_checked)
         self.enable_disable_cache_latents(self.cache_latents_checked)
         self.enable_disable_variable_keep_tokens(self.variable_keep_tokens_checked)
         return True

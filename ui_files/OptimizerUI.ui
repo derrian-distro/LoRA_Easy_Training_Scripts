@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>421</width>
-    <height>350</height>
+    <width>463</width>
+    <height>354</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -497,11 +497,22 @@
           </widget>
          </item>
          <item row="5" column="0" colspan="2">
-          <widget class="QCheckBox" name="zero_term_enable">
-           <property name="text">
-            <string>Zero Term SNR</string>
-           </property>
-          </widget>
+          <layout class="QHBoxLayout" name="horizontalLayout_2">
+           <item>
+            <widget class="QCheckBox" name="zero_term_enable">
+             <property name="text">
+              <string>Zero Term SNR</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QCheckBox" name="masked_loss_enable">
+             <property name="text">
+              <string>Masked Loss</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
          </item>
          <item row="6" column="0">
           <widget class="QLabel" name="label_6">
@@ -555,8 +566,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>363</width>
-            <height>233</height>
+            <width>98</width>
+            <height>28</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_3"/>

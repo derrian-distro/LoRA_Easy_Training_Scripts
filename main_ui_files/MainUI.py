@@ -67,6 +67,9 @@ class MainWidget(QWidget):
         self.args_widget.keepTokensSepChecked.connect(
             self.subset_widget.enable_disable_variable_keep_tokens
         )
+        self.args_widget.maskedLossChecked.connect(
+            self.subset_widget.enable_disable_masked_loss
+        )
         self.queue_widget.saveQueue.connect(lambda x: self.save_toml(Path(x)))
         self.queue_widget.loadQueue.connect(lambda x: self.load_toml(Path(x)))
         self.begin_training_button.clicked.connect(self.start_training)
