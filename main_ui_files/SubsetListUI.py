@@ -76,7 +76,7 @@ class SubsetListWidget(QWidget):
             if not elem.is_dir():
                 continue
             subset = self.add_empty_subset(elem.name)
-            subset.set_folder_from_dialog(elem.name, elem)
+            subset.set_folder_from_dialog(elem.name, subset.widget.image_folder_input, path=elem)
 
     def update_args(self, subset_args: dict, subset_name: str) -> None:
         self.dataset_args[subset_name] = subset_args
