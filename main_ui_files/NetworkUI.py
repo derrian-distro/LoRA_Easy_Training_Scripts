@@ -120,6 +120,9 @@ class NetworkWidget(BaseWidget):
         self.widget.dylora_unit_input.valueChanged.connect(
             lambda x: self.edit_network_args("unit", x, True)
         )
+        self.widget.bypass_mode_enable.clicked.connect(
+            lambda x: self.toggle_dora_bypass(self.widget.dora_enable.isChecked(), x)
+        )
         self.widget.module_dropout_enable.clicked.connect(
             self.enable_disable_module_dropout
         )
@@ -132,7 +135,11 @@ class NetworkWidget(BaseWidget):
         self.widget.train_norm_enable.clicked.connect(
             lambda x: self.edit_network_args("train_norm", x, True)
         )
-        self.widget.dora_enable.clicked.connect(self.enable_disable_dora)
+        self.widget.dora_enable.clicked.connect(
+            lambda x: self.toggle_dora_bypass(
+                x, self.widget.bypass_mode_enable.isChecked()
+            )
+        )
         self.widget.ip_gamma_enable.clicked.connect(self.enable_disable_ip_gamma)
         self.widget.ip_gamma_input.valueChanged.connect(
             lambda x: self.edit_args("ip_noise_gamma", round(x, 4), True)
@@ -167,11 +174,17 @@ class NetworkWidget(BaseWidget):
         algo = algo.lower()
         self.toggle_conv(algo != "lora")
         self.toggle_kohya(algo in {"lora", "locon", "dylora"})
-        self.toggle_lycoris(
+        dora = self.toggle_lycoris(
             algo not in {"lora", "locon", "dylora"},
             algo in {"locon (lycoris)", "loha", "lokr"},
         )
         self.lycoris = algo not in {"lora", "locon", "dylora"}
+        self.widget.bypass_mode_enable.setEnabled(self.lycoris and not dora)
+        self.edit_network_args(
+            "bypass_mode",
+            self.widget.bypass_mode_enable.isChecked() if self.lycoris else False,
+            True,
+        )
         self.toggle_dylora(algo == "dylora")
         self.toggle_block_weight(algo in {"lora", "locon", "dylora"}, algo == "lora")
         self.toggle_dropout(
@@ -216,35 +229,10 @@ class NetworkWidget(BaseWidget):
     def toggle_lycoris(self, toggle: bool, toggle_dora: bool) -> None:
         self.widget.cp_enable.setEnabled(toggle)
         self.widget.train_norm_enable.setEnabled(toggle)
-        self.widget.dora_enable.setEnabled(toggle and toggle_dora)
         self.widget.lycoris_preset_input.setEnabled(toggle)
         self.widget.rescale_enable.setEnabled(toggle)
         self.widget.constrain_enable.setEnabled(toggle)
 
-        self.edit_network_args(
-            "use_tucker", self.widget.cp_enable.isChecked() if toggle else False, True
-        )
-        self.edit_network_args(
-            "train_norm",
-            self.widget.train_norm_enable.isChecked() if toggle else False,
-            True,
-        )
-        self.edit_network_args(
-            "dora_wd",
-            self.widget.dora_enable.isChecked() if toggle and toggle_dora else False,
-            True,
-        )
-        self.edit_network_args(
-            "preset", self.widget.lycoris_preset_input.text() if toggle else False, True
-        )
-        self.edit_network_args(
-            "rescaled",
-            self.widget.rescale_enable.isChecked() if toggle else False,
-            True,
-        )
-        self.enable_disable_constrain(
-            self.widget.constrain_enable.isChecked() if toggle else False
-        )
         self.edit_network_args(
             "algo",
             (
@@ -254,6 +242,30 @@ class NetworkWidget(BaseWidget):
             ),
             True,
         )
+        self.edit_network_args(
+            "preset", self.widget.lycoris_preset_input.text() if toggle else False, True
+        )
+        self.toggle_dora_bypass(
+            self.widget.dora_enable.isChecked() if toggle_dora else False,
+            self.widget.bypass_mode_enable.isChecked(),
+        )
+        self.edit_network_args(
+            "use_tucker", self.widget.cp_enable.isChecked() if toggle else False, True
+        )
+        self.edit_network_args(
+            "train_norm",
+            self.widget.train_norm_enable.isChecked() if toggle else False,
+            True,
+        )
+        self.edit_network_args(
+            "rescaled",
+            self.widget.rescale_enable.isChecked() if toggle else False,
+            True,
+        )
+        self.enable_disable_constrain(
+            self.widget.constrain_enable.isChecked() if toggle else False
+        )
+        return self.widget.dora_enable.isChecked() and toggle_dora
 
     def toggle_dylora(self, toggle: bool) -> None:
         self.widget.dylora_unit_input.setEnabled(toggle)
@@ -343,6 +355,29 @@ class NetworkWidget(BaseWidget):
             True,
         )
 
+    def toggle_dora_bypass(self, dora: bool, bypass: bool) -> None:
+        if bypass:
+            self.widget.dora_enable.setChecked(False)
+            dora = False
+        self.widget.dora_enable.setEnabled(
+            not bypass
+            and self.widget.algo_select.currentText().lower()
+            in {"locon (lycoris)", "loha", "lokr"}
+        )
+        self.widget.bypass_mode_enable.setEnabled(not dora)
+        self.edit_network_args(
+            "dora_wd", dora if self.widget.dora_enable.isEnabled() else False, True
+        )
+        self.edit_network_args(
+            "bypass_mode",
+            bypass if self.widget.bypass_mode_enable.isEnabled() else False,
+            True,
+        )
+        self.toggle_dropout(
+            self.widget.algo_select.currentText().lower() != "ia3",
+            dora and self.widget.dora_enable.isEnabled(),
+        )
+
     def enable_disable_module_dropout(self, checked: bool) -> None:
         if (
             "network_args" in self.args
@@ -355,13 +390,6 @@ class NetworkWidget(BaseWidget):
         self.edit_network_args(
             "module_dropout", self.widget.module_dropout_input.value(), True
         )
-
-    def enable_disable_dora(self, checked: bool) -> None:
-        self.widget.network_dropout_enable.setEnabled(not checked)
-        self.enable_disable_network_dropout(
-            False if checked else self.widget.network_dropout_enable.isChecked()
-        )
-        self.edit_network_args("dora_wd", checked, True)
 
     def enable_disable_ip_gamma(self, checked: bool) -> None:
         if "ip_noise_gamma" in self.args:
@@ -462,6 +490,9 @@ class NetworkWidget(BaseWidget):
         )
         self.widget.module_dropout_input.setValue(
             network_args.get("module_dropout", 0.1)
+        )
+        self.widget.bypass_mode_enable.setChecked(
+            network_args.get("bypass_mode", False)
         )
         self.widget.cp_enable.setChecked(network_args.get("use_tucker", False))
         self.widget.train_norm_enable.setChecked(network_args.get("train_norm", False))

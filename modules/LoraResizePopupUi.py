@@ -160,7 +160,7 @@ class LoraResizePopup(BaseDialog):
         except requests.exceptions.Timeout:
             return True
         if response.status_code != 200:
-            print(f"Failed to resize: {response.json()}")
+            print(f"Failed to resize: {response.text}")
             return False
 
     def get_output_name(self) -> str:
