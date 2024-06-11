@@ -183,7 +183,7 @@ class MainWidget(QWidget):
             print(e)
             return False
         if response.status_code != 200:
-            print(f"Item Failed: {response.json()}")
+            print(f"Item Failed: {response.text}")
             return False
         validation_data = response.json()
         if args.get("saving_args", {}).get("tag_occurrence", None):
