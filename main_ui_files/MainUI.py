@@ -201,13 +201,6 @@ class MainWidget(QWidget):
                 args["saving_args"].get("output_name", "output_args"),
             )
         os.remove(train_toml)
-        if config.get("colab"):
-            print(
-                'Args validated, but training requested to stop, if you want training to begin, change the "colab" argument in the config.json file to False.'
-            )
-            print("Killing the server for colab use.")
-            requests.get(f"{self.backend_url_input.text()}/stop_server")
-            return False
         is_sdxl = str(args.get("general_args").get("sdxl", False))
         response = requests.get(
             f"{url}/train", params={"train_mode": train_mode.value, "sdxl": is_sdxl}
