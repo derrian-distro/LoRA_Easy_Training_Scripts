@@ -313,7 +313,7 @@
            </item>
            <item>
             <property name="text">
-             <string>cosine annealing warmup restarts</string>
+             <string>cosine annealing warm restarts (CAWR)</string>
             </property>
            </item>
            <item>
@@ -343,7 +343,7 @@
            </item>
            <item>
             <property name="text">
-             <string>rex</string>
+             <string>rex annealing warm restarts (RAWR)</string>
             </property>
            </item>
           </widget>

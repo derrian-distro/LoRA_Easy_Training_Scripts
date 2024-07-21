@@ -3,7 +3,7 @@
 ################################################################################
 ## Form generated from reading UI file 'OptimizerUI.ui'
 ##
-## Created by: Qt User Interface Compiler version 6.7.0
+## Created by: Qt User Interface Compiler version 6.7.1
 ##
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
@@ -382,13 +382,13 @@ class Ui_optimizer_ui(object):
         self.lr_scheduler_label.setText(QCoreApplication.translate("optimizer_ui", u"LR Scheduler", None))
         self.lr_scheduler_selector.setItemText(0, QCoreApplication.translate("optimizer_ui", u"cosine", None))
         self.lr_scheduler_selector.setItemText(1, QCoreApplication.translate("optimizer_ui", u"cosine with restarts", None))
-        self.lr_scheduler_selector.setItemText(2, QCoreApplication.translate("optimizer_ui", u"cosine annealing warmup restarts", None))
+        self.lr_scheduler_selector.setItemText(2, QCoreApplication.translate("optimizer_ui", u"cosine annealing warm restarts (CAWR)", None))
         self.lr_scheduler_selector.setItemText(3, QCoreApplication.translate("optimizer_ui", u"linear", None))
         self.lr_scheduler_selector.setItemText(4, QCoreApplication.translate("optimizer_ui", u"constant", None))
         self.lr_scheduler_selector.setItemText(5, QCoreApplication.translate("optimizer_ui", u"constant with warmup", None))
         self.lr_scheduler_selector.setItemText(6, QCoreApplication.translate("optimizer_ui", u"adafactor", None))
         self.lr_scheduler_selector.setItemText(7, QCoreApplication.translate("optimizer_ui", u"polynomial", None))
-        self.lr_scheduler_selector.setItemText(8, QCoreApplication.translate("optimizer_ui", u"rex", None))
+        self.lr_scheduler_selector.setItemText(8, QCoreApplication.translate("optimizer_ui", u"rex annealing warm restarts (RAWR)", None))
 
 #if QT_CONFIG(tooltip)
         self.lr_scheduler_selector.setToolTip(QCoreApplication.translate("optimizer_ui", u"<html><head/><body><p>The scheduler for the lr. The ones I use personally are cosine and cosine with restarts.</p></body></html>", None))
