@@ -172,6 +172,12 @@ class OptimizerWidget(BaseWidget):
                 "lr_scheduler_type",
                 "LoraEasyCustomOptimizer.RexAnnealingWarmRestarts.RexAnnealingWarmRestarts",
             )
+            self.edit_lr_args("min_lr", self.widget.min_lr_input.text(), True)
+            self.edit_args(
+                "lr_scheduler_num_cycles",
+                self.widget.cosine_restart_input.value(),
+                True,
+            )
             self.edit_lr_args("gamma", 1 - self.widget.gamma_input.value(), True)
             return
         elif value == "polynomial":

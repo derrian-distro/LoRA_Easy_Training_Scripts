@@ -402,7 +402,7 @@ class Ui_optimizer_ui(object):
 #if QT_CONFIG(tooltip)
         self.warmup_input.setToolTip(QCoreApplication.translate("optimizer_ui", u"<html><head/><body><p>This is ratio of steps you want to be a warmup to your chosen lr. I personally use 0.05 (5%). Keep in mind this is spread out over the course of all restarts when using the Cosine Annealing Warmup Restarts LR scheduler.</p></body></html>", None))
 #endif // QT_CONFIG(tooltip)
-        self.label_4.setText(QCoreApplication.translate("optimizer_ui", u"Num Restarts", None))
+        self.label_4.setText(QCoreApplication.translate("optimizer_ui", u"Num Cycles", None))
 #if QT_CONFIG(tooltip)
         self.cosine_restart_input.setToolTip(QCoreApplication.translate("optimizer_ui", u"<html><head/><body><p>The number of times cosine with restarts will restart, note that 1 means it doesn't restart, and 2 means it will restart once.</p></body></html>", None))
 #endif // QT_CONFIG(tooltip)
