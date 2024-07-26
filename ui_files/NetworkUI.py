@@ -3,7 +3,7 @@
 ################################################################################
 ## Form generated from reading UI file 'NetworkUI.ui'
 ##
-## Created by: Qt User Interface Compiler version 6.7.0
+## Created by: Qt User Interface Compiler version 6.7.1
 ##
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
@@ -27,7 +27,7 @@ class Ui_network_ui(object):
     def setupUi(self, network_ui):
         if not network_ui.objectName():
             network_ui.setObjectName(u"network_ui")
-        network_ui.resize(429, 356)
+        network_ui.resize(429, 353)
         sizePolicy = QSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Preferred)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -242,23 +242,6 @@ class Ui_network_ui(object):
 
         self.formLayout_3.setWidget(4, QFormLayout.LabelRole, self.rescale_enable)
 
-        self.horizontalLayout_4 = QHBoxLayout()
-        self.horizontalLayout_4.setObjectName(u"horizontalLayout_4")
-        self.constrain_enable = QCheckBox(self.main_tab)
-        self.constrain_enable.setObjectName(u"constrain_enable")
-        self.constrain_enable.setEnabled(False)
-
-        self.horizontalLayout_4.addWidget(self.constrain_enable)
-
-        self.constrain_input = LineEditWithHighlight(self.main_tab)
-        self.constrain_input.setObjectName(u"constrain_input")
-        self.constrain_input.setEnabled(False)
-
-        self.horizontalLayout_4.addWidget(self.constrain_input)
-
-
-        self.formLayout_3.setLayout(4, QFormLayout.FieldRole, self.horizontalLayout_4)
-
         self.horizontalLayout_2 = QHBoxLayout()
         self.horizontalLayout_2.setObjectName(u"horizontalLayout_2")
         self.dylora_unit_label = QLabel(self.main_tab)
@@ -284,6 +267,23 @@ class Ui_network_ui(object):
 
 
         self.formLayout_3.setLayout(2, QFormLayout.SpanningRole, self.horizontalLayout_2)
+
+        self.horizontalLayout_4 = QHBoxLayout()
+        self.horizontalLayout_4.setObjectName(u"horizontalLayout_4")
+        self.constrain_enable = QCheckBox(self.main_tab)
+        self.constrain_enable.setObjectName(u"constrain_enable")
+        self.constrain_enable.setEnabled(False)
+
+        self.horizontalLayout_4.addWidget(self.constrain_enable)
+
+        self.constrain_input = LineEditWithHighlight(self.main_tab)
+        self.constrain_input.setObjectName(u"constrain_input")
+        self.constrain_input.setEnabled(False)
+
+        self.horizontalLayout_4.addWidget(self.constrain_input)
+
+
+        self.formLayout_3.setLayout(4, QFormLayout.FieldRole, self.horizontalLayout_4)
 
 
         self.gridLayout.addLayout(self.formLayout_3, 4, 0, 1, 1)
@@ -351,6 +351,7 @@ class Ui_network_ui(object):
         self.algo_select.addItem("")
         self.algo_select.addItem("")
         self.algo_select.addItem("")
+        self.algo_select.addItem("")
         self.algo_select.setObjectName(u"algo_select")
         self.algo_select.setFocusPolicy(Qt.StrongFocus)
 
@@ -368,7 +369,7 @@ class Ui_network_ui(object):
         self.block_weight_scroll_area.setWidgetResizable(True)
         self.block_weight_scroll_widget = QWidget()
         self.block_weight_scroll_widget.setObjectName(u"block_weight_scroll_widget")
-        self.block_weight_scroll_widget.setGeometry(QRect(0, 0, 84, 74))
+        self.block_weight_scroll_widget.setGeometry(QRect(0, 0, 423, 321))
         self.verticalLayout_3 = QVBoxLayout(self.block_weight_scroll_widget)
         self.verticalLayout_3.setObjectName(u"verticalLayout_3")
         self.verticalLayout_3.setContentsMargins(0, 0, 0, 0)
@@ -468,12 +469,12 @@ class Ui_network_ui(object):
         self.train_norm_enable.setText(QCoreApplication.translate("network_ui", u"Train Norm", None))
         self.dora_enable.setText(QCoreApplication.translate("network_ui", u"DoRA", None))
         self.rescale_enable.setText(QCoreApplication.translate("network_ui", u"Rescale", None))
-        self.constrain_enable.setText(QCoreApplication.translate("network_ui", u"Constrain", None))
         self.dylora_unit_label.setText(QCoreApplication.translate("network_ui", u"DyLoRA Unit", None))
 #if QT_CONFIG(tooltip)
         self.dylora_unit_input.setToolTip(QCoreApplication.translate("network_ui", u"<html><head/><body><p>The unit is the unit for dividing rank. so if you have dim 16, unit 4, then it can learn 4 lora models of dims 4, 8, 12, and 16.</p></body></html>", None))
 #endif // QT_CONFIG(tooltip)
         self.bypass_mode_enable.setText(QCoreApplication.translate("network_ui", u"Bypass Mode", None))
+        self.constrain_enable.setText(QCoreApplication.translate("network_ui", u"Constraint", None))
         self.network_dim_label.setText(QCoreApplication.translate("network_ui", u"Network Dimension", None))
 #if QT_CONFIG(tooltip)
         self.network_dim_input.setToolTip(QCoreApplication.translate("network_ui", u"<html><head/><body><p>The dimension of the model, the higher the dim the larger the file size. Keep in mind that larger does not mean better. I suggest you keep the dim low.</p></body></html>", None))
@@ -493,8 +494,9 @@ class Ui_network_ui(object):
         self.algo_select.setItemText(4, QCoreApplication.translate("network_ui", u"IA3", None))
         self.algo_select.setItemText(5, QCoreApplication.translate("network_ui", u"Lokr", None))
         self.algo_select.setItemText(6, QCoreApplication.translate("network_ui", u"DyLoRA", None))
-        self.algo_select.setItemText(7, QCoreApplication.translate("network_ui", u"Diag-OFT", None))
-        self.algo_select.setItemText(8, QCoreApplication.translate("network_ui", u"Full", None))
+        self.algo_select.setItemText(7, QCoreApplication.translate("network_ui", u"BOFT", None))
+        self.algo_select.setItemText(8, QCoreApplication.translate("network_ui", u"Diag-OFT", None))
+        self.algo_select.setItemText(9, QCoreApplication.translate("network_ui", u"Full", None))
 
 #if QT_CONFIG(tooltip)
         self.algo_select.setToolTip(QCoreApplication.translate("network_ui", u"<html><head/><body><p>The algorithm that is used for training, LoRA is the only one that doesn't train on all layers. LoCon is just LoRA that train on all layers LoHa has a ton of compression, and that is basically true for ia3 and Lokr as well. DyLora is a type of LoRA (or LoCon) that basically allows you to train multiple dim sized models in one, it does take a lot longer to train.</p></body></html>", None))

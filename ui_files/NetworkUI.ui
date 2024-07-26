@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>429</width>
-    <height>356</height>
+    <height>353</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -411,27 +411,6 @@
            </property>
           </widget>
          </item>
-         <item row="4" column="1">
-          <layout class="QHBoxLayout" name="horizontalLayout_4">
-           <item>
-            <widget class="QCheckBox" name="constrain_enable">
-             <property name="enabled">
-              <bool>false</bool>
-             </property>
-             <property name="text">
-              <string>Constrain</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="LineEditWithHighlight" name="constrain_input">
-             <property name="enabled">
-              <bool>false</bool>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </item>
          <item row="2" column="0" colspan="2">
           <layout class="QHBoxLayout" name="horizontalLayout_2">
            <item>
@@ -473,6 +452,27 @@
              </property>
              <property name="text">
               <string>Bypass Mode</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item row="4" column="1">
+          <layout class="QHBoxLayout" name="horizontalLayout_4">
+           <item>
+            <widget class="QCheckBox" name="constrain_enable">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+             <property name="text">
+              <string>Constraint</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="LineEditWithHighlight" name="constrain_input">
+             <property name="enabled">
+              <bool>false</bool>
              </property>
             </widget>
            </item>
@@ -620,6 +620,11 @@
          </item>
          <item>
           <property name="text">
+           <string>BOFT</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
            <string>Diag-OFT</string>
           </property>
          </item>
@@ -662,8 +667,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>84</width>
-            <height>74</height>
+            <width>423</width>
+            <height>321</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_3">

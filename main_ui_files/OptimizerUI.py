@@ -148,7 +148,10 @@ class OptimizerWidget(BaseWidget):
                 self.widget.cosine_restart_input.value(),
                 True,
             )
-        elif value == "cosine_annealing_warmup_restarts_(CAWR)":
+        elif value in {
+            "cosine_annealing_warm_restarts_(CAWR)",
+            "cosine_annealing_warmup_restarts",
+        }:
             self.widget.cosine_restart_input.setEnabled(True)
             self.widget.min_lr_input.setEnabled(True)
             self.widget.gamma_input.setEnabled(True)
@@ -164,7 +167,7 @@ class OptimizerWidget(BaseWidget):
             )
             self.edit_lr_args("gamma", 1 - self.widget.gamma_input.value(), True)
             return
-        elif value == "rex_annealing_warm_restarts_(RAWR)":
+        elif value in {"rex_annealing_warm_restarts_(RAWR)", "rex"}:
             self.widget.cosine_restart_input.setEnabled(True)
             self.widget.min_lr_input.setEnabled(True)
             self.widget.gamma_input.setEnabled(True)
@@ -260,7 +263,7 @@ class OptimizerWidget(BaseWidget):
         if "lr_scheduler_type" in args:
             self.widget.lr_scheduler_selector.setCurrentText(
                 "cosine annealing warm restarts (CAWR)"
-                if args["lr_scheduler_type"].split(".")[-1] != "RexAnnealingWarmRestarts"
+                if args["lr_scheduler_type"].split(".")[-1] not in {"RexAnnealingWarmRestarts", "Rex"}
                 else "rex annealing warm restarts (RAWR)"
             )
         else:

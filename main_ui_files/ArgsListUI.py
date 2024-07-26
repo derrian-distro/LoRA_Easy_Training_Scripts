@@ -9,6 +9,7 @@ from main_ui_files.OptimizerUI import OptimizerWidget
 from main_ui_files.SampleUI import SampleWidget
 from main_ui_files.SavingUI import SavingWidget
 from main_ui_files.TextualInversionUI import TextualInversionWidget
+from main_ui_files.ExtraArgsUI import ExtraArgsWidget
 from modules.BaseWidget import BaseWidget
 
 
@@ -47,15 +48,9 @@ class ArgsWidget(QtWidgets.QWidget):
         general_args.colap.toggle_collapsed()
         general_args.colap.title_frame.setChecked(True)
         general_args.sdxlChecked.connect(lambda x: self.sdxlChecked.emit(x))
-        general_args.cacheLatentsChecked.connect(
-            lambda x: self.cacheLatentsChecked.emit(x)
-        )
-        general_args.keepTokensSepChecked.connect(
-            lambda x: self.keepTokensSepChecked.emit(x)
-        )
-        self.optimizer_widget.maskedLossChecked.connect(
-            lambda x: self.maskedLossChecked.emit(x)
-        )
+        general_args.cacheLatentsChecked.connect(lambda x: self.cacheLatentsChecked.emit(x))
+        general_args.keepTokensSepChecked.connect(lambda x: self.keepTokensSepChecked.emit(x))
+        self.optimizer_widget.maskedLossChecked.connect(lambda x: self.maskedLossChecked.emit(x))
         self.args_widget_array.append(general_args)
         self.sdxlChecked.connect(self.network_widget.toggle_sdxl)
         self.args_widget_array.append(self.network_widget)
@@ -66,6 +61,7 @@ class ArgsWidget(QtWidgets.QWidget):
         self.args_widget_array.append(NoiseOffsetWidget())
         self.args_widget_array.append(SampleWidget())
         self.args_widget_array.append(LoggingWidget())
+        self.args_widget_array.append(ExtraArgsWidget())
 
         for widget in self.args_widget_array:
             if widget.name == "textual_inversion_args":
