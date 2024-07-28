@@ -3,7 +3,7 @@
 ################################################################################
 ## Form generated from reading UI file 'sub_dataset_extra_input.ui'
 ##
-## Created by: Qt User Interface Compiler version 6.6.1
+## Created by: Qt User Interface Compiler version 6.7.1
 ##
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
@@ -84,7 +84,7 @@ class Ui_sub_dataset_extra_input(object):
         self.caption_dropout_rate_label = QLabel(self.caption_dropout_group)
         self.caption_dropout_rate_label.setObjectName(u"caption_dropout_rate_label")
         self.caption_dropout_rate_label.setEnabled(True)
-        sizePolicy = QSizePolicy(QSizePolicy.Maximum, QSizePolicy.Preferred)
+        sizePolicy = QSizePolicy(QSizePolicy.Policy.Maximum, QSizePolicy.Policy.Preferred)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.caption_dropout_rate_label.sizePolicy().hasHeightForWidth())
@@ -128,7 +128,7 @@ class Ui_sub_dataset_extra_input(object):
         self.caption_tag_dropout_input = DoubleSpinBox(self.caption_dropout_group)
         self.caption_tag_dropout_input.setObjectName(u"caption_tag_dropout_input")
         self.caption_tag_dropout_input.setEnabled(True)
-        sizePolicy1 = QSizePolicy(QSizePolicy.Minimum, QSizePolicy.Fixed)
+        sizePolicy1 = QSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Fixed)
         sizePolicy1.setHorizontalStretch(0)
         sizePolicy1.setVerticalStretch(0)
         sizePolicy1.setHeightForWidth(self.caption_tag_dropout_input.sizePolicy().hasHeightForWidth())
@@ -194,18 +194,18 @@ class Ui_sub_dataset_extra_input(object):
     def retranslateUi(self, sub_dataset_extra_input):
         sub_dataset_extra_input.setWindowTitle(QCoreApplication.translate("sub_dataset_extra_input", u"Form", None))
 #if QT_CONFIG(tooltip)
-        self.face_crop_group.setToolTip(QCoreApplication.translate("sub_dataset_extra_input", u"<html><head/><body><p>Suppliments the dataset before training by cropping the face of each image that has one in it. I don't believe this provides extra captions for these files, so this is fairly useless.</p></body></html>", None))
+        self.face_crop_group.setToolTip(QCoreApplication.translate("sub_dataset_extra_input", u"<html><head/><body><p>Face Crop Creates extra images in the dataset that are crops of faces within the dataset. The ranges represent the size of the crops</p></body></html>", None))
 #endif // QT_CONFIG(tooltip)
-        self.face_crop_group.setTitle(QCoreApplication.translate("sub_dataset_extra_input", u"face crop", None))
+        self.face_crop_group.setTitle(QCoreApplication.translate("sub_dataset_extra_input", u"Face Crop", None))
         self.face_crop_width_label.setText(QCoreApplication.translate("sub_dataset_extra_input", u"augment range width", None))
 #if QT_CONFIG(tooltip)
         self.face_crop_width_input.setToolTip("")
 #endif // QT_CONFIG(tooltip)
         self.face_crop_height_label.setText(QCoreApplication.translate("sub_dataset_extra_input", u"augment range height", None))
 #if QT_CONFIG(tooltip)
-        self.caption_dropout_group.setToolTip(QCoreApplication.translate("sub_dataset_extra_input", u"<html><head/><body><p>During training, captions can be excluded according to the various controls below. Personally they don't really serve much of a purpose, I suggest you don't use it.</p></body></html>", None))
+        self.caption_dropout_group.setToolTip(QCoreApplication.translate("sub_dataset_extra_input", u"<html><head/><body><p>Caption Dropout is a way to cut out captions during training. This allows for the uncond portion of the model to be trained, however you don't want to set any of the values too high</p></body></html>", None))
 #endif // QT_CONFIG(tooltip)
-        self.caption_dropout_group.setTitle(QCoreApplication.translate("sub_dataset_extra_input", u"caption dropout", None))
+        self.caption_dropout_group.setTitle(QCoreApplication.translate("sub_dataset_extra_input", u"Caption Dropout", None))
         self.caption_dropout_rate_label.setText(QCoreApplication.translate("sub_dataset_extra_input", u"rate", None))
 #if QT_CONFIG(tooltip)
         self.caption_dropout_rate_input.setToolTip(QCoreApplication.translate("sub_dataset_extra_input", u"<html><head/><body><p>The default rate that any one caption file gets dropped.</p></body></html>", None))
@@ -220,9 +220,9 @@ class Ui_sub_dataset_extra_input(object):
         self.caption_tag_dropout_input.setToolTip(QCoreApplication.translate("sub_dataset_extra_input", u"<html><head/><body><p>The default rate that any one caption tag gets dropped.</p></body></html>", None))
 #endif // QT_CONFIG(tooltip)
 #if QT_CONFIG(tooltip)
-        self.token_warmup_group.setToolTip(QCoreApplication.translate("sub_dataset_extra_input", u"<html><head/><body><p>Token warmup is a way to gradually introduce tags as the model trains. Both variables are required.</p></body></html>", None))
+        self.token_warmup_group.setToolTip(QCoreApplication.translate("sub_dataset_extra_input", u"<html><head/><body><p>Token Warmup is a way to add tokens into the training data as the training continues</p></body></html>", None))
 #endif // QT_CONFIG(tooltip)
-        self.token_warmup_group.setTitle(QCoreApplication.translate("sub_dataset_extra_input", u"token warmup", None))
+        self.token_warmup_group.setTitle(QCoreApplication.translate("sub_dataset_extra_input", u"Token Warmup", None))
         self.token_minimum_warmup_label.setText(QCoreApplication.translate("sub_dataset_extra_input", u"token minimum warmup", None))
 #if QT_CONFIG(tooltip)
         self.token_minimum_warmup_input.setToolTip(QCoreApplication.translate("sub_dataset_extra_input", u"<html><head/><body><p>This is the minimum number of tags to be learned at the beginning of the warmup period.</p></body></html>", None))

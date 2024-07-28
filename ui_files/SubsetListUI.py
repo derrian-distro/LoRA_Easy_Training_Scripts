@@ -3,7 +3,7 @@
 ################################################################################
 ## Form generated from reading UI file 'SubsetListUI.ui'
 ##
-## Created by: Qt User Interface Compiler version 6.6.1
+## Created by: Qt User Interface Compiler version 6.7.1
 ##
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
@@ -25,7 +25,7 @@ class Ui_subset_list_ui(object):
         if not subset_list_ui.objectName():
             subset_list_ui.setObjectName(u"subset_list_ui")
         subset_list_ui.resize(600, 300)
-        sizePolicy = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.MinimumExpanding)
+        sizePolicy = QSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.MinimumExpanding)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(subset_list_ui.sizePolicy().hasHeightForWidth())
@@ -57,11 +57,21 @@ class Ui_subset_list_ui(object):
 
         self.subset_scroll_area = QScrollArea(subset_list_ui)
         self.subset_scroll_area.setObjectName(u"subset_scroll_area")
+        sizePolicy1 = QSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
+        sizePolicy1.setHorizontalStretch(0)
+        sizePolicy1.setVerticalStretch(0)
+        sizePolicy1.setHeightForWidth(self.subset_scroll_area.sizePolicy().hasHeightForWidth())
+        self.subset_scroll_area.setSizePolicy(sizePolicy1)
         self.subset_scroll_area.setWidgetResizable(True)
         self.subset_scroll_area.setAlignment(Qt.AlignLeading|Qt.AlignLeft|Qt.AlignVCenter)
         self.subset_scroll_area_content = QWidget()
         self.subset_scroll_area_content.setObjectName(u"subset_scroll_area_content")
         self.subset_scroll_area_content.setGeometry(QRect(0, 0, 580, 218))
+        sizePolicy2 = QSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Preferred)
+        sizePolicy2.setHorizontalStretch(0)
+        sizePolicy2.setVerticalStretch(0)
+        sizePolicy2.setHeightForWidth(self.subset_scroll_area_content.sizePolicy().hasHeightForWidth())
+        self.subset_scroll_area_content.setSizePolicy(sizePolicy2)
         self.verticalLayout = QVBoxLayout(self.subset_scroll_area_content)
         self.verticalLayout.setObjectName(u"verticalLayout")
         self.subset_scroll_area.setWidget(self.subset_scroll_area_content)
@@ -76,6 +86,9 @@ class Ui_subset_list_ui(object):
 
     def retranslateUi(self, subset_list_ui):
         subset_list_ui.setWindowTitle(QCoreApplication.translate("subset_list_ui", u"Form", None))
+#if QT_CONFIG(tooltip)
+        self.add_bulk_button.setToolTip(QCoreApplication.translate("subset_list_ui", u"<html><head/><body><p>Provide the folder that contains all other dataset folders in them to add all subsets</p></body></html>", None))
+#endif // QT_CONFIG(tooltip)
         self.add_bulk_button.setText(QCoreApplication.translate("subset_list_ui", u"Add All Subfolders From Folder", None))
         self.add_subset_name_input.setPlaceholderText(QCoreApplication.translate("subset_list_ui", u"Subset Name", None))
         self.add_subset_button.setText(QCoreApplication.translate("subset_list_ui", u"Add Subset", None))

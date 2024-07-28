@@ -18,6 +18,9 @@
     <layout class="QFormLayout" name="formLayout">
      <item row="0" column="0">
       <widget class="QLabel" name="label_3">
+       <property name="toolTip">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Model is the base model to resize&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
        <property name="text">
         <string>Model</string>
        </property>
@@ -25,6 +28,9 @@
      </item>
      <item row="1" column="0">
       <widget class="QLabel" name="label">
+       <property name="toolTip">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Save Precision is the precision the model is saved in. Typically the resized model is saved in the same precision as the original&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
        <property name="text">
         <string>Save Precision</string>
        </property>
@@ -32,6 +38,9 @@
      </item>
      <item row="1" column="1">
       <widget class="ComboBox" name="save_precision_select">
+       <property name="toolTip">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Save Precision is the precision the model is saved in. Typically the resized model is saved in the same precision as the original&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
        <item>
         <property name="text">
          <string>fp16</string>
@@ -51,6 +60,9 @@
      </item>
      <item row="2" column="0">
       <widget class="QLabel" name="new_rank_label">
+       <property name="toolTip">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;New Rank means one of two things, either it represents the actual rank it is resized to, or it represents the max rank it can be for a dynamic resize&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
        <property name="text">
         <string>New Rank</string>
        </property>
@@ -58,6 +70,9 @@
      </item>
      <item row="2" column="1">
       <widget class="SpinBox" name="new_rank_input">
+       <property name="toolTip">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;New Rank means one of two things, either it represents the actual rank it is resized to, or it represents the max rank it can be for a dynamic resize&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
        <property name="minimum">
         <number>1</number>
        </property>
@@ -68,6 +83,9 @@
      </item>
      <item row="3" column="0">
       <widget class="QCheckBox" name="new_conv_enable">
+       <property name="toolTip">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;New Conv Rank means one of two things, either it represents the actual rank it is resized to, or it represents the max rank it can be for a dynamic resize&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
        <property name="text">
         <string>New Conv Rank</string>
        </property>
@@ -77,6 +95,9 @@
       <widget class="SpinBox" name="new_conv_rank_input">
        <property name="enabled">
         <bool>false</bool>
+       </property>
+       <property name="toolTip">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;New Conv Rank means one of two things, either it represents the actual rank it is resized to, or it represents the max rank it can be for a dynamic resize&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
        </property>
        <property name="minimum">
         <number>1</number>
@@ -93,12 +114,18 @@
          <property name="enabled">
           <bool>false</bool>
          </property>
+         <property name="toolTip">
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Output Folder is the location the new resized model is saved to&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         </property>
         </widget>
        </item>
        <item>
         <widget class="QPushButton" name="output_folder_selector">
          <property name="enabled">
           <bool>false</bool>
+         </property>
+         <property name="toolTip">
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Output Folder is the location the new resized model is saved to&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
          </property>
          <property name="text">
           <string/>
@@ -112,10 +139,16 @@
        <property name="enabled">
         <bool>false</bool>
        </property>
+       <property name="toolTip">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Output Name is the base name of the new resized model. The utility will automatically append the settings for the resize to the end of the name.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
       </widget>
      </item>
      <item row="6" column="0">
       <widget class="QCheckBox" name="dynamic_param_enable">
+       <property name="toolTip">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Dynamic Method enables resizing via one of the dynamic methods. All of the methods have a dynamic value which represent the amount to shave off during the resize, the closer to 1, the less it removes. 0.99 effectively removes all empty weights, but nothing else, making it the least lossy choice.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
        <property name="text">
         <string>Dynamic Method</string>
        </property>
@@ -127,6 +160,9 @@
         <widget class="ComboBox" name="dynamic_param_select">
          <property name="enabled">
           <bool>false</bool>
+         </property>
+         <property name="toolTip">
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Dynamic Method enables resizing via one of the dynamic methods. All of the methods have a dynamic value which represent the amount to shave off during the resize, the closer to 1, the less it removes. 0.99 effectively removes all empty weights, but nothing else, making it the least lossy choice.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
          </property>
          <item>
           <property name="text">
@@ -149,6 +185,9 @@
         <widget class="DoubleSpinBox" name="dynamic_param_input">
          <property name="enabled">
           <bool>false</bool>
+         </property>
+         <property name="toolTip">
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Dynamic Method enables resizing via one of the dynamic methods. All of the methods have a dynamic value which represent the amount to shave off during the resize, the closer to 1, the less it removes. 0.99 effectively removes all empty weights, but nothing else, making it the least lossy choice.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
          </property>
          <property name="decimals">
           <number>4</number>
@@ -173,6 +212,9 @@
       <layout class="QHBoxLayout" name="horizontalLayout_4">
        <item>
         <widget class="QCheckBox" name="use_gpu_enable">
+         <property name="toolTip">
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Use GPU toggles using the GPU or CPU for the resize&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         </property>
          <property name="text">
           <string>Use GPU</string>
          </property>
@@ -183,6 +225,9 @@
        </item>
        <item>
         <widget class="QCheckBox" name="verbose_enable">
+         <property name="toolTip">
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Verbose Printing makes the print statements more full of information. Typically this information isn't very useful.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         </property>
          <property name="text">
           <string>Verbose Printing</string>
          </property>
@@ -190,6 +235,9 @@
        </item>
        <item>
         <widget class="QCheckBox" name="remove_conv_dims_enable">
+         <property name="toolTip">
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Remove Conv Dims strips the model of conv dims while resizing&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         </property>
          <property name="text">
           <string>Remove Conv Dims</string>
          </property>
@@ -197,6 +245,9 @@
        </item>
        <item>
         <widget class="QCheckBox" name="remove_linear_dims_enable">
+         <property name="toolTip">
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Remove Linear Dims removes the Linear dims during resize&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         </property>
          <property name="text">
           <string>Remove Linear Dims</string>
          </property>
@@ -207,10 +258,17 @@
      <item row="0" column="1">
       <layout class="QHBoxLayout" name="horizontalLayout">
        <item>
-        <widget class="DragDropLineEdit" name="model_input"/>
+        <widget class="DragDropLineEdit" name="model_input">
+         <property name="toolTip">
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Model is the base model to resize&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         </property>
+        </widget>
        </item>
        <item>
         <widget class="QPushButton" name="model_input_selector">
+         <property name="toolTip">
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Model is the base model to resize&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         </property>
          <property name="text">
           <string/>
          </property>
@@ -220,6 +278,9 @@
      </item>
      <item row="4" column="0">
       <widget class="QCheckBox" name="output_folder_enable">
+       <property name="toolTip">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Output Folder is the location the new resized model is saved to&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
        <property name="text">
         <string>Output Folder</string>
        </property>
@@ -227,6 +288,9 @@
      </item>
      <item row="5" column="0">
       <widget class="QCheckBox" name="output_name_enable">
+       <property name="toolTip">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Output Name is the base name of the new resized model. The utility will automatically append the settings for the resize to the end of the name.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
        <property name="text">
         <string>Output Name</string>
        </property>
@@ -260,14 +324,14 @@
    <header>modules.ScrollOnSelect.h</header>
   </customwidget>
   <customwidget>
-   <class>LineEditWithHighlight</class>
-   <extends>QLineEdit</extends>
-   <header>modules.LineEditHighlight.h</header>
-  </customwidget>
-  <customwidget>
    <class>DragDropLineEdit</class>
    <extends>QLineEdit</extends>
    <header>modules.DragDropLineEdit.h</header>
+  </customwidget>
+  <customwidget>
+   <class>LineEditWithHighlight</class>
+   <extends>QLineEdit</extends>
+   <header>modules.LineEditHighlight.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

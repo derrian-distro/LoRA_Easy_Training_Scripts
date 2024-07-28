@@ -46,6 +46,9 @@
         <layout class="QFormLayout" name="formLayout_2">
          <item row="0" column="0">
           <widget class="QLabel" name="label">
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Learning Rate is the base learning rate for any value that is not explicitly set, for example, if you set the Unet learning rate, but not the Text Encoder learning rate, the Text Encoder will be using this learning rate&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
            <property name="text">
             <string>Learning Rate</string>
            </property>
@@ -54,7 +57,7 @@
          <item row="0" column="1">
           <widget class="LineEditWithHighlight" name="main_lr_input">
            <property name="toolTip">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The main lr. If you have both unet and te set though it is just completely overwritten.&lt;/p&gt;&lt;p&gt;note that if you don't put in a proper number, it will just be read as 0.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Learning Rate is the base learning rate for any value that is not explicitly set, for example, if you set the Unet learning rate, but not the Text Encoder learning rate, the Text Encoder will be using this learning rate&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
            </property>
            <property name="text">
             <string>1e-4</string>
@@ -70,7 +73,7 @@
             <bool>false</bool>
            </property>
            <property name="toolTip">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The minimum lr for the Cosine Annealing Warmup Restarts LR scheduler. This is the final lr before a restart occurs.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Minimum Learning Rate is the minimum value any of the learning rates can be&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
            </property>
            <property name="text">
             <string>1e-6</string>
@@ -79,6 +82,9 @@
          </item>
          <item row="2" column="0">
           <widget class="QCheckBox" name="unet_lr_enable">
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Unet Learning Rate is the base learning rate for the Unet&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
            <property name="text">
             <string>Unet Learning Rate</string>
            </property>
@@ -90,7 +96,7 @@
             <bool>false</bool>
            </property>
            <property name="toolTip">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The Unet lr. Overrides the base lr, if you don't have a proper number set, it will be 0&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Unet Learning Rate is the base learning rate for the Unet&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
            </property>
            <property name="text">
             <string>1e-4</string>
@@ -102,6 +108,9 @@
          </item>
          <item row="3" column="0">
           <widget class="QCheckBox" name="te_lr_enable">
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;TE Learning Rate is the base learning rate for the Text Encoder&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
            <property name="text">
             <string>TE Learning Rate</string>
            </property>
@@ -113,7 +122,7 @@
             <bool>false</bool>
            </property>
            <property name="toolTip">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The Text Encoder lr. Overrides the base lr, if you don't have a proper number set, it will be 0&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;TE Learning Rate is the base learning rate for the Text Encoder&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
            </property>
            <property name="text">
             <string>1e-4</string>
@@ -125,6 +134,9 @@
          </item>
          <item row="1" column="0">
           <widget class="QLabel" name="min_lr_label">
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Minimum Learning Rate is the minimum value any of the learning rates can be&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
            <property name="text">
             <string>Minimum Learning Rate</string>
            </property>
@@ -132,6 +144,9 @@
          </item>
          <item row="4" column="0">
           <widget class="QCheckBox" name="scale_weight_enable">
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Scale Weight Norms is a way to scale the weights to prevent any one weight from getting too large to the rest&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
            <property name="text">
             <string>Scale Weight Norms</string>
            </property>
@@ -146,7 +161,7 @@
             <enum>Qt::StrongFocus</enum>
            </property>
            <property name="toolTip">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;An implementation of the idea of max norm regularization. Basically, this will help stabilize network training by limiting the normal of network weights. Might work well for limiting overfitting or baking.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Scale Weight Norms is a way to scale the weights to prevent any one weight from getting too large to the rest&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
            </property>
            <property name="value">
             <double>1.000000000000000</double>
@@ -155,6 +170,9 @@
          </item>
          <item row="5" column="0">
           <widget class="QCheckBox" name="min_snr_enable">
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Min SNR Gamma is a way to remove random noise during training. A lower value is stronger&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
            <property name="text">
             <string>Min SNR Gamma</string>
            </property>
@@ -169,7 +187,7 @@
             <enum>Qt::StrongFocus</enum>
            </property>
            <property name="toolTip">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;This is a tool that reduces learning of unwanted elements by only learning what is the most common. This can lead to it not learning small details however. The recommended value is 5. Lower values apply more.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Min SNR Gamma is a way to remove random noise during training. A lower value is stronger&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
            </property>
            <property name="value">
             <number>5</number>
@@ -180,6 +198,9 @@
           <widget class="ComboBox" name="huber_schedule_selector">
            <property name="enabled">
             <bool>false</bool>
+           </property>
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Huber Schedule handles the type of Huber loss that is used.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
            </property>
            <item>
             <property name="text">
@@ -200,6 +221,9 @@
          </item>
          <item row="6" column="0">
           <widget class="QLabel" name="label_3">
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Huber Schedule handles the type of Huber loss that is used.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
            <property name="text">
             <string>Huber Schedule</string>
            </property>
@@ -211,6 +235,9 @@
         <layout class="QFormLayout" name="formLayout">
          <item row="0" column="0">
           <widget class="QLabel" name="optimizer_type_label">
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Optimizer Type is the Optimizer that will be used during training&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
            <property name="text">
             <string>Optimizer Type</string>
            </property>
@@ -222,7 +249,7 @@
             <enum>Qt::StrongFocus</enum>
            </property>
            <property name="toolTip">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The optimizer to use, The standard, and the one most people use is AdamW8bit.&lt;/p&gt;&lt;p&gt;The various Dadapt modify the lr on their own as you go, however can only take one lr.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Optimizer Type is the Optimizer that will be used during training&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
            </property>
            <item>
             <property name="text">
@@ -288,6 +315,9 @@
          </item>
          <item row="1" column="0">
           <widget class="QLabel" name="lr_scheduler_label">
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;LR Scheduler is the Scheduler for the learning rate during the training&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
            <property name="text">
             <string>LR Scheduler</string>
            </property>
@@ -299,7 +329,7 @@
             <enum>Qt::StrongFocus</enum>
            </property>
            <property name="toolTip">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The scheduler for the lr. The ones I use personally are cosine and cosine with restarts.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;LR Scheduler is the Scheduler for the learning rate during the training&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
            </property>
            <item>
             <property name="text">
@@ -350,6 +380,9 @@
          </item>
          <item row="2" column="0">
           <widget class="QLabel" name="loss_type_label">
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Loss Type is the way the loss is calculated&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
            <property name="text">
             <string>Loss Type</string>
            </property>
@@ -357,6 +390,9 @@
          </item>
          <item row="2" column="1">
           <widget class="ComboBox" name="loss_type_selector">
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Loss Type is the way the loss is calculated&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
            <item>
             <property name="text">
              <string>L2</string>
@@ -380,6 +416,9 @@
         <layout class="QFormLayout" name="formLayout_3">
          <item row="0" column="0">
           <widget class="QCheckBox" name="warmup_enable">
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Warmup Ratio is the ratio of steps that is warmup steps in comparison to the total number of steps. If you are using one of the &amp;quot;warm&amp;quot; schedulers, the warmup is spread evenly across each of the cycles&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
            <property name="text">
             <string>Warmup Ratio</string>
            </property>
@@ -394,7 +433,7 @@
             <enum>Qt::StrongFocus</enum>
            </property>
            <property name="toolTip">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;This is ratio of steps you want to be a warmup to your chosen lr. I personally use 0.05 (5%). Keep in mind this is spread out over the course of all restarts when using the Cosine Annealing Warmup Restarts LR scheduler.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Warmup Ratio is the ratio of steps that is warmup steps in comparison to the total number of steps. If you are using one of the &amp;quot;warm&amp;quot; schedulers, the warmup is spread evenly across each of the cycles&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
            </property>
            <property name="maximum">
             <double>1.000000000000000</double>
@@ -406,6 +445,9 @@
          </item>
          <item row="1" column="0">
           <widget class="QLabel" name="label_4">
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Number of Cycles. 1 means there won't be any restarts during the training&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
            <property name="text">
             <string>Num Cycles</string>
            </property>
@@ -420,7 +462,7 @@
             <enum>Qt::StrongFocus</enum>
            </property>
            <property name="toolTip">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The number of times cosine with restarts will restart, note that 1 means it doesn't restart, and 2 means it will restart once.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Number of Cycles. 1 means there won't be any restarts during the training&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
            </property>
            <property name="minimum">
             <number>1</number>
@@ -429,6 +471,9 @@
          </item>
          <item row="2" column="0">
           <widget class="QLabel" name="label_5">
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Polynomial Power is the value of the Polynomial for the Polynomial Scheduler&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
            <property name="text">
             <string>Polynomial Power</string>
            </property>
@@ -443,7 +488,7 @@
             <enum>Qt::StrongFocus</enum>
            </property>
            <property name="toolTip">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The power of the polynomial equation. The closer to 0 the more agressive (I think).&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Polynomial Power is the value of the Polynomial for the Polynomial Scheduler&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
            </property>
            <property name="singleStep">
             <double>0.010000000000000</double>
@@ -455,6 +500,9 @@
          </item>
          <item row="3" column="0">
           <widget class="QLabel" name="gamma_label">
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Restart Decay is the amount the max learning rate decays when a new cycle starts&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
            <property name="text">
             <string>Restart Decay</string>
            </property>
@@ -466,7 +514,7 @@
             <bool>false</bool>
            </property>
            <property name="toolTip">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The percent that decays on restart. Unique to Cosine Annealing Warmup Restarts.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Restart Decay is the amount the max learning rate decays when a new cycle starts&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
            </property>
            <property name="minimum">
             <double>0.000000000000000</double>
@@ -482,15 +530,11 @@
            </property>
           </widget>
          </item>
-         <item row="4" column="0">
-          <widget class="QLabel" name="label_2">
-           <property name="text">
-            <string>Max Grad Norm</string>
-           </property>
-          </widget>
-         </item>
          <item row="4" column="1">
           <widget class="DoubleSpinBox" name="max_grad_norm_input">
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Max Grad Norm is the maximum gradient after normalization&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
            <property name="value">
             <double>1.000000000000000</double>
            </property>
@@ -500,6 +544,9 @@
           <layout class="QHBoxLayout" name="horizontalLayout_2">
            <item>
             <widget class="QCheckBox" name="zero_term_enable">
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Zero Term SNR is a tweak to the noise schedule that allows for full range of color. Typically you would only use this if the base model you are training on has trained with it&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
              <property name="text">
               <string>Zero Term SNR</string>
              </property>
@@ -507,6 +554,9 @@
            </item>
            <item>
             <widget class="QCheckBox" name="masked_loss_enable">
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Masked loss activates the masking feature of sd-scripts. This type of loss will only calculate the loss according to the masked values in the training images&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
              <property name="text">
               <string>Masked Loss</string>
              </property>
@@ -516,6 +566,9 @@
          </item>
          <item row="6" column="0">
           <widget class="QLabel" name="label_6">
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Huber Param is a parameter that affects the calculation of the loss function&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
            <property name="text">
             <string>Huber Param</string>
            </property>
@@ -526,6 +579,9 @@
            <property name="enabled">
             <bool>false</bool>
            </property>
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Huber Param is a parameter that affects the calculation of the loss function&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
            <property name="decimals">
             <number>4</number>
            </property>
@@ -534,6 +590,16 @@
            </property>
            <property name="value">
             <double>0.100000000000000</double>
+           </property>
+          </widget>
+         </item>
+         <item row="4" column="0">
+          <widget class="QLabel" name="label_2">
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Max Grad Norm is the maximum gradient after normalization&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="text">
+            <string>Max Grad Norm</string>
            </property>
           </widget>
          </item>
@@ -566,8 +632,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>98</width>
-            <height>28</height>
+            <width>439</width>
+            <height>274</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_3"/>

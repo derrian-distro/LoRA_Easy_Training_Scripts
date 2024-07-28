@@ -3,7 +3,7 @@
 ################################################################################
 ## Form generated from reading UI file 'BucketUI.ui'
 ##
-## Created by: Qt User Interface Compiler version 6.5.0
+## Created by: Qt User Interface Compiler version 6.7.1
 ##
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
@@ -101,20 +101,29 @@ class Ui_bucket_ui(object):
         bucket_ui.setWindowTitle(QCoreApplication.translate("bucket_ui", u"Form", None))
         self.bucket_group.setTitle(QCoreApplication.translate("bucket_ui", u"Enable", None))
 #if QT_CONFIG(tooltip)
-        self.bucket_no_upscale.setToolTip(QCoreApplication.translate("bucket_ui", u"<html><head/><body><p>Disables upscaling of images that are below the training resolution, good if you specifically resized images to be smaller.</p></body></html>", None))
+        self.bucket_no_upscale.setToolTip(QCoreApplication.translate("bucket_ui", u"<html><head/><body><p>Don't Upscale Images doesn't upscale the images provided in the dataset, Additionally, it generates unique buckets to fit the images. This may result in a lot of buckets with only 1 image in them</p></body></html>", None))
 #endif // QT_CONFIG(tooltip)
         self.bucket_no_upscale.setText(QCoreApplication.translate("bucket_ui", u"Don't Upscale Images", None))
+#if QT_CONFIG(tooltip)
+        self.min_label.setToolTip(QCoreApplication.translate("bucket_ui", u"<html><head/><body><p>Minimum Bucket Resolution is the smallest edge of a bucket, this is paired with the Maximum Bucket Resolution to produce the bucket list.</p></body></html>", None))
+#endif // QT_CONFIG(tooltip)
         self.min_label.setText(QCoreApplication.translate("bucket_ui", u"Minimum Bucket Resolution", None))
 #if QT_CONFIG(tooltip)
-        self.min_input.setToolTip(QCoreApplication.translate("bucket_ui", u"<html><head/><body><p>The minimum size either edge can be for a bucket.</p></body></html>", None))
+        self.min_input.setToolTip(QCoreApplication.translate("bucket_ui", u"<html><head/><body><p>Minimum Bucket Resolution is the smallest edge of a bucket, this is paired with the Maximum Bucket Resolution to produce the bucket list.</p></body></html>", None))
+#endif // QT_CONFIG(tooltip)
+#if QT_CONFIG(tooltip)
+        self.max_label.setToolTip(QCoreApplication.translate("bucket_ui", u"<html><head/><body><p>Maximum Bucket Resolution is the largest edge of a bucket, this is paired with the Minimum Bucket Resolution to produce the bucket list.</p></body></html>", None))
 #endif // QT_CONFIG(tooltip)
         self.max_label.setText(QCoreApplication.translate("bucket_ui", u"Maximum Bucket Resolution", None))
 #if QT_CONFIG(tooltip)
-        self.max_input.setToolTip(QCoreApplication.translate("bucket_ui", u"<html><head/><body><p>The maximum size either edge can be for a bucket.</p></body></html>", None))
+        self.max_input.setToolTip(QCoreApplication.translate("bucket_ui", u"<html><head/><body><p>Maximum Bucket Resolution is the largest edge of a bucket, this is paired with the Minimum Bucket Resolution to produce the bucket list.</p></body></html>", None))
+#endif // QT_CONFIG(tooltip)
+#if QT_CONFIG(tooltip)
+        self.steps_label.setToolTip(QCoreApplication.translate("bucket_ui", u"<html><head/><body><p>Bucket Resolution Steps is the amount of pixels between each bucket there is. You don't want this value too large, or too small, as too large would result in images having valuable data being cut off, and too small would cause overlapping and would cause the trainer to crash.</p></body></html>", None))
 #endif // QT_CONFIG(tooltip)
         self.steps_label.setText(QCoreApplication.translate("bucket_ui", u"Bucket Resolution Steps", None))
 #if QT_CONFIG(tooltip)
-        self.steps_input.setToolTip(QCoreApplication.translate("bucket_ui", u"<html><head/><body><p>The step size per bucket made.</p></body></html>", None))
+        self.steps_input.setToolTip(QCoreApplication.translate("bucket_ui", u"<html><head/><body><p>Bucket Resolution Steps is the amount of pixels between each bucket there is. You don't want this value too large, or too small, as too large would result in images having valuable data being cut off, and too small would cause overlapping and would cause the trainer to crash.</p></body></html>", None))
 #endif // QT_CONFIG(tooltip)
     # retranslateUi
 

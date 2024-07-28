@@ -13,6 +13,9 @@
   <property name="windowTitle">
    <string>Form</string>
   </property>
+  <property name="toolTip">
+   <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Noise Offset is a tweak to the noise of models, Typically EDM based models like 1.X and SDXL, that allows for a larger range of color&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+  </property>
   <layout class="QFormLayout" name="formLayout_2">
    <item row="0" column="0">
     <widget class="QCheckBox" name="noise_offset_enable">
@@ -26,6 +29,9 @@
      <property name="enabled">
       <bool>false</bool>
      </property>
+     <property name="toolTip">
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Noise Offset is a tweak to the noise of models, Typically EDM based models like 1.X and SDXL, that allows for a larger range of color&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     </property>
      <property name="text">
       <string>0.1</string>
      </property>
@@ -33,6 +39,9 @@
    </item>
    <item row="1" column="0">
     <widget class="QCheckBox" name="pyramid_noise_enable">
+     <property name="toolTip">
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Pyramid Noise, otherwise known as Multires Noise is a tweak to the noise, much like Noise Offset, but is less destructive.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     </property>
      <property name="text">
       <string>Pyramid Noise</string>
      </property>
@@ -42,6 +51,9 @@
     <layout class="QHBoxLayout" name="horizontalLayout">
      <item>
       <widget class="QLabel" name="label_2">
+       <property name="toolTip">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Pyramid Noise, otherwise known as Multires Noise is a tweak to the noise, much like Noise Offset, but is less destructive.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
        <property name="text">
         <string>Iterations</string>
        </property>
@@ -56,7 +68,7 @@
         <enum>Qt::StrongFocus</enum>
        </property>
        <property name="toolTip">
-        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The number of iterations. It is said that the values in 6-10 work best.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Pyramid Noise, otherwise known as Multires Noise is a tweak to the noise, much like Noise Offset, but is less destructive.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
        </property>
        <property name="minimum">
         <number>1</number>
@@ -68,6 +80,9 @@
      </item>
      <item>
       <widget class="QLabel" name="label_3">
+       <property name="toolTip">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Pyramid Noise, otherwise known as Multires Noise is a tweak to the noise, much like Noise Offset, but is less destructive.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
        <property name="text">
         <string>Discount</string>
        </property>
@@ -82,7 +97,7 @@
         <enum>Qt::StrongFocus</enum>
        </property>
        <property name="toolTip">
-        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Not entirely sure what this is, but the recommended value is 0.1-0.3.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Pyramid Noise, otherwise known as Multires Noise is a tweak to the noise, much like Noise Offset, but is less destructive.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
        </property>
        <property name="minimum">
         <double>0.010000000000000</double>

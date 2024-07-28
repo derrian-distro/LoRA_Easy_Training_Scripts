@@ -18,6 +18,9 @@
     <layout class="QFormLayout" name="formLayout_6">
      <item row="0" column="0">
       <widget class="QLabel" name="label_7">
+       <property name="toolTip">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The random seed that is used to do all randomization within the training process.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
        <property name="text">
         <string>Seed</string>
        </property>
@@ -29,7 +32,7 @@
         <enum>Qt::StrongFocus</enum>
        </property>
        <property name="toolTip">
-        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The seed that is used for the randomization, it also serves as the &amp;quot;reproducable seed&amp;quot; which you can use to see how close it is to the original.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The random seed that is used to do all randomization within the training process.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
        </property>
        <property name="minimum">
         <number>0</number>
@@ -44,6 +47,9 @@
      </item>
      <item row="1" column="0">
       <widget class="QLabel" name="label_9">
+       <property name="toolTip">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The number of layers to skip while training. Generally, for SD1.X models, clip skip is either set to 1 or 2. SDXL doesn't need clip skip, however&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
        <property name="text">
         <string>Clip Skip</string>
        </property>
@@ -55,7 +61,7 @@
         <enum>Qt::StrongFocus</enum>
        </property>
        <property name="toolTip">
-        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;clip skip is how many layers get skipped in training, anime models were trained at clip skip 2 so I suggest you follow that, SD proper was trained at 1.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The number of layers to skip while training. Generally, for SD1.X models, clip skip is either set to 1 or 2. SDXL doesn't need clip skip, however&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
        </property>
        <property name="minimum">
         <number>1</number>
@@ -67,6 +73,9 @@
      </item>
      <item row="2" column="0">
       <widget class="QLabel" name="label_10">
+       <property name="toolTip">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Prior Loss Weight is the weight of the Prior Loss. Prior Loss is a loss specifically designed to help the model not erase concepts while it trains in new concepts. The weight is how much of an effect the Prior Loss has.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
        <property name="text">
         <string>Prior Loss Weight</string>
        </property>
@@ -78,7 +87,7 @@
         <enum>Qt::StrongFocus</enum>
        </property>
        <property name="toolTip">
-        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Prior loss weight is a parameter in machine learning that affects how well a model can reproduce images.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Prior Loss Weight is the weight of the Prior Loss. Prior Loss is a loss specifically designed to help the model not erase concepts while it trains in new concepts. The weight is how much of an effect the Prior Loss has.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
        </property>
        <property name="minimum">
         <double>0.010000000000000</double>
@@ -96,7 +105,7 @@
        <item>
         <widget class="QCheckBox" name="cache_latents_enable">
          <property name="toolTip">
-          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Caching latents is a way to prevent vram spikes and slightly speed up training time, clashes with color aug, and random crop.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Cache Latents Creates a cache of the latent representation of the images prior to training, this speeds up training, and slightly reduces VRAM requirements, but prevents the usage of random crop during runtime&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
          </property>
          <property name="text">
           <string>Cache Latents</string>
@@ -109,7 +118,7 @@
           <bool>false</bool>
          </property>
          <property name="toolTip">
-          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Caches the latents to disk, slower, but saves a small bit of vram.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Cache Latents, but saves the cached files to disk, this means that if you intend to train on the same dataset multiple times, you are able to skip the caching step the second time onward&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
          </property>
          <property name="text">
           <string>To Disk</string>
@@ -126,7 +135,7 @@
           <bool>true</bool>
          </property>
          <property name="toolTip">
-          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;A memory optimization, most can use this, AMD and reportedly, some linux devices can't.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;XFormers Is a memory optimization library that drastically reduces VRAM usage while not reducing speed of training very much.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
          </property>
          <property name="text">
           <string>Xformers</string>
@@ -138,6 +147,9 @@
        </item>
        <item>
         <widget class="QCheckBox" name="sdpa_enable">
+         <property name="toolTip">
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;SDPA Is a PyTorch memory optimization that drastically reduces VRAM usage while not reducing speed of training very much.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         </property>
          <property name="text">
           <string>SDPA</string>
          </property>
@@ -149,6 +161,9 @@
    </item>
    <item row="4" column="1">
     <widget class="QGroupBox" name="resolution_box">
+     <property name="toolTip">
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The base resolution that you are training at. If Height isn't checked, Width acts as both Width and Height. Typically SD1.X models are trained at 512x512, and SDXL models are trained at 1024x1024&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     </property>
      <property name="title">
       <string>Resolution</string>
      </property>
@@ -166,7 +181,7 @@
          <enum>Qt::StrongFocus</enum>
         </property>
         <property name="toolTip">
-         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Defines the resolution width, or if height isn't selected, both width and height.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         <string/>
         </property>
         <property name="minimum">
          <number>1</number>
@@ -188,7 +203,7 @@
          <enum>Qt::StrongFocus</enum>
         </property>
         <property name="toolTip">
-         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Defines the height of the training resolution, so that you can have non square resolutions.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         <string/>
         </property>
         <property name="minimum">
          <number>1</number>
@@ -215,6 +230,9 @@
     <layout class="QFormLayout" name="formLayout_5">
      <item row="0" column="0">
       <widget class="QLabel" name="label_3">
+       <property name="toolTip">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Batch Size represents the maximum number of images within any given Batch. Due to bucketing, a Batch may not always be a full batch, as it is only possible to batch from the same bucket&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
        <property name="text">
         <string>Batch Size</string>
        </property>
@@ -226,7 +244,7 @@
         <enum>Qt::StrongFocus</enum>
        </property>
        <property name="toolTip">
-        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;How many images that get processed per step, I usually set this to 2.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Batch Size represents the maximum number of images within any given Batch. Due to bucketing, a Batch may not always be a full batch, as it is only possible to batch from the same bucket&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
        </property>
        <property name="minimum">
         <number>1</number>
@@ -235,6 +253,9 @@
      </item>
      <item row="1" column="0">
       <widget class="QLabel" name="label_2">
+       <property name="toolTip">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Max Token Length represents the largest size a training prompt can be. Note that tokens are not the same as words.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
        <property name="text">
         <string>Max Token Length</string>
        </property>
@@ -246,7 +267,7 @@
         <enum>Qt::StrongFocus</enum>
        </property>
        <property name="toolTip">
-        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The max token length for captions, or the txt files included in the image folders.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Max Token Length represents the largest size a training prompt can be. Note that tokens are not the same as words.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
        </property>
        <item>
         <property name="text">
@@ -267,6 +288,9 @@
      </item>
      <item row="2" column="0">
       <widget class="QLabel" name="label_5">
+       <property name="toolTip">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Training Precision, otherwise known as Mixed Precision, is the main precision that is trained at. Generally, there are parts of the model that trains better at FP32 (full), so mixed precision allows for such parts to be in full precision while keeping the majority in a lower, more VRAM friendly precision.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
        <property name="text">
         <string>Training Precision</string>
        </property>
@@ -278,7 +302,7 @@
         <enum>Qt::StrongFocus</enum>
        </property>
        <property name="toolTip">
-        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;I suggest bf16 if you have a 30x0 or higher graphics card, but fp16 works as well, float hasn't proven to have a sizable improvement, especially with the extra vram requirement.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Training Precision, otherwise known as Mixed Precision, is the main precision that is trained at. Generally, there are parts of the model that trains better at FP32 (full), so mixed precision allows for such parts to be in full precision while keeping the majority in a lower, more VRAM friendly precision.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
        </property>
        <item>
         <property name="text">
@@ -299,6 +323,9 @@
      </item>
      <item row="3" column="0">
       <widget class="QLabel" name="label_6">
+       <property name="toolTip">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Max Training Time can be in epochs or in steps. The step calculation for epochs will match perfectly with how sd-scripts calculates their steps if used.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
        <property name="text">
         <string>Max Training Time</string>
        </property>
@@ -310,6 +337,9 @@
         <widget class="ComboBox" name="max_train_selector">
          <property name="focusPolicy">
           <enum>Qt::StrongFocus</enum>
+         </property>
+         <property name="toolTip">
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Max Training Time can be in epochs or in steps. The step calculation for epochs will match perfectly with how sd-scripts calculates their steps if used.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
          </property>
          <item>
           <property name="text">
@@ -329,7 +359,7 @@
           <enum>Qt::StrongFocus</enum>
          </property>
          <property name="toolTip">
-          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;This is the maximum amount of steps or epochs, use whichever you find more comfortable using, I personally use steps.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Max Training Time can be in epochs or in steps. The step calculation for epochs will match perfectly with how sd-scripts calculates their steps if used.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
          </property>
          <property name="minimum">
           <number>1</number>
@@ -343,6 +373,9 @@
      </item>
      <item row="4" column="0">
       <widget class="QCheckBox" name="keep_tokens_seperator_enable">
+       <property name="toolTip">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Keep Tokens Seperator is an alternative way to allow for dynamic keep tokens per file versus per folder. Typically this would be used with a string like ||| which is all but guarenteed not to show up within any caption&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
        <property name="text">
         <string>Keep Tokens Seperator</string>
        </property>
@@ -352,6 +385,9 @@
       <widget class="LineEditWithHighlight" name="keep_tokens_seperator_input">
        <property name="enabled">
         <bool>false</bool>
+       </property>
+       <property name="toolTip">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Keep Tokens Seperator is an alternative way to allow for dynamic keep tokens per file versus per folder. Typically this would be used with a string like ||| which is all but guarenteed not to show up within any caption&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
        </property>
       </widget>
      </item>
@@ -368,7 +404,7 @@
         <item row="1" column="0">
          <widget class="QCheckBox" name="grad_accumulation_enable">
           <property name="toolTip">
-           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Gradient Accumulation effectively takes your batch size, and then multiplies it by the number listed here. This allows you to simulate having a larger batch size then you have vram, however it is slower.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Gradient Accumulation is a tweak that does X gradient Accumulation steps for each batch, as such, you can treat it like an extension of your batch size. For example, Gradient Accumulation steps of 2, with a batch size of 4 would give you 2 batches of 4 per step, effectively making it a batch size of 8. One benefit to Gradient Accumulation that you do not have with straight batch size is that the batches may be from different buckets.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
           </property>
           <property name="text">
            <string>Gradient Accumuation</string>
@@ -384,7 +420,7 @@
            <enum>Qt::StrongFocus</enum>
           </property>
           <property name="toolTip">
-           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Gradient Accumulation effectively takes your batch size, and then multiplies it by the number listed here. This allows you to simulate having a larger batch size then you have vram, however it is slower.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Gradient Accumulation is a tweak that does X gradient Accumulation steps for each batch, as such, you can treat it like an extension of your batch size. For example, Gradient Accumulation steps of 2, with a batch size of 4 would give you 2 batches of 4 per step, effectively making it a batch size of 8. One benefit to Gradient Accumulation that you do not have with straight batch size is that the batches may be from different buckets.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
           </property>
           <property name="minimum">
            <number>1</number>
@@ -394,7 +430,7 @@
         <item row="0" column="0" colspan="2">
          <widget class="QCheckBox" name="grad_checkpointing_enable">
           <property name="toolTip">
-           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Gradient checkpointing is a trick to reduce vram usage. Do note that this also cuts your performance by about 30% on average&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Gradient Checkpointing sacrifices some speed for a reduction of VRAM. Particularly useful if you are using a GPU with less VRAM&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
           </property>
           <property name="text">
            <string>Gradient Checkpointing</string>
@@ -420,6 +456,9 @@
      <layout class="QFormLayout" name="formLayout_3">
       <item row="0" column="0">
        <widget class="QLabel" name="label_4">
+        <property name="toolTip">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The base model you want to train on. Typically this would be a model from the SD1.X, 2.X and SDXL families&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
         <property name="text">
          <string>Base Model</string>
         </property>
@@ -430,7 +469,7 @@
         <item>
          <widget class="DragDropLineEdit" name="base_model_input">
           <property name="toolTip">
-           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The full model to train with, if you are training anime for SD 1.5, I personally suggest NAI.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The base model you want to train on. Typically this would be a model from the SD1.X, 2.X and SDXL families&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
           </property>
           <property name="placeholderText">
            <string>Base Model To Train With</string>
@@ -439,6 +478,9 @@
         </item>
         <item>
          <widget class="QPushButton" name="base_model_selector">
+          <property name="toolTip">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The base model you want to train on. Typically this would be a model from the SD1.X, 2.X and SDXL families&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
           <property name="text">
            <string/>
           </property>
@@ -454,7 +496,7 @@
            <bool>true</bool>
           </property>
           <property name="toolTip">
-           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Select this if your model uses the SD2.x 768x model, such as WD1.5.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;V param, short for V-Paramatarization, is a noise schedule that some models use. You can set this to train with this noise schedule versus the EDM version of typical SD1.X and SDXL models&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
           </property>
           <property name="text">
            <string>V Param</string>
@@ -466,6 +508,9 @@
           <property name="enabled">
            <bool>false</bool>
           </property>
+          <property name="toolTip">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Scales the loss to be in line with EDM&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
           <property name="text">
            <string>Scale V pred loss</string>
           </property>
@@ -474,7 +519,7 @@
         <item>
          <widget class="QCheckBox" name="FP16_enable">
           <property name="toolTip">
-           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Allows training on full fp16, not compatable with full bf16 or training precision&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Allows training on full fp16. Not compatable with full bf16 or training precision&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
           </property>
           <property name="text">
            <string>Full FP16</string>
@@ -484,7 +529,7 @@
         <item>
          <widget class="QCheckBox" name="BF16_enable">
           <property name="toolTip">
-           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Train in full BF16. Requires a higher bitsandbytes than 0.35.0 which is seemingly the best we have on windows, so this is disabled on windows regardless. not compatable with full fp16 or training precision&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Train in full BF16. Not compatable with full fp16 or training precision&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
           </property>
           <property name="text">
            <string>Full BF16</string>
@@ -493,6 +538,9 @@
         </item>
         <item>
          <widget class="QCheckBox" name="FP8_enable">
+          <property name="toolTip">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Loads the base model in FP8, which should reduce VRAM usage. Training Precision must be one of FP16 or BF16&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
           <property name="text">
            <string>FP8 Base</string>
           </property>
@@ -505,7 +553,7 @@
         <item>
          <widget class="QCheckBox" name="v2_enable">
           <property name="toolTip">
-           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Select this if you are using an SD2.x based model, such as WD1.5.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Select this if you are using an SD2.X based model.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
           </property>
           <property name="text">
            <string>SD2.X Based</string>
@@ -514,6 +562,9 @@
         </item>
         <item>
          <widget class="QCheckBox" name="sdxl_enable">
+          <property name="toolTip">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Select this if you are using an SDXL based model.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
           <property name="text">
            <string>SDXL Based</string>
           </property>
@@ -521,6 +572,9 @@
         </item>
         <item>
          <widget class="QCheckBox" name="no_half_vae_enable">
+          <property name="toolTip">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;This loads the VAE in FP32 or full precision, increases VRAM usage, but is sometimes required on older graphics cards.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
           <property name="text">
            <string>No Half Vae</string>
           </property>
@@ -528,6 +582,9 @@
         </item>
         <item>
          <widget class="QCheckBox" name="low_ram_enable">
+          <property name="toolTip">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Enable this if it is crashing due to you running out of system RAM. Typically, this would only be used when interfacing with Google Colab&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
           <property name="text">
            <string>Low RAM</string>
           </property>
@@ -537,6 +594,9 @@
       </item>
       <item row="1" column="0">
        <widget class="QLabel" name="label_11">
+        <property name="toolTip">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;An external VAE. Typically used if the VAE in the base model is of poor quality&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
         <property name="text">
          <string>External VAE</string>
         </property>
@@ -547,7 +607,7 @@
         <item>
          <widget class="DragDropLineEdit" name="vae_input">
           <property name="toolTip">
-           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Allows you to load a vae seperately from the base model.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;An external VAE. Typically used if the VAE in the base model is of poor quality&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
           </property>
           <property name="placeholderText">
            <string>Vae to train with</string>
@@ -556,6 +616,9 @@
         </item>
         <item>
          <widget class="QPushButton" name="vae_selector">
+          <property name="toolTip">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;An external VAE. Typically used if the VAE in the base model is of poor quality&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
           <property name="text">
            <string/>
           </property>
@@ -570,6 +633,9 @@
     <layout class="QFormLayout" name="formLayout_2">
      <item row="0" column="0">
       <widget class="QCheckBox" name="comment_enable">
+       <property name="toolTip">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Comment is a place where you can provide a comment within the metadata of the model. Unfortunately you are fairly limited on what works within the metadata, as things such as quotes, newlines, and slashes are iffy at best, or don't work at all at worst.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
        <property name="text">
         <string>Comment</string>
        </property>
@@ -581,7 +647,7 @@
         <bool>false</bool>
        </property>
        <property name="toolTip">
-        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Comment that gets put into the metadata&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Comment is a place where you can provide a comment within the metadata of the model. Unfortunately you are fairly limited on what works within the metadata, as things such as quotes, newlines, and slashes are iffy at best, or don't work at all at worst.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
        </property>
        <property name="placeholderText">
         <string>Enter in a comment you want in the metadata</string>

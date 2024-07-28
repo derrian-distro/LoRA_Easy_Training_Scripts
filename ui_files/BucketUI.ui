@@ -41,7 +41,7 @@
       <item alignment="Qt::AlignHCenter">
        <widget class="QCheckBox" name="bucket_no_upscale">
         <property name="toolTip">
-         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Disables upscaling of images that are below the training resolution, good if you specifically resized images to be smaller.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Don't Upscale Images doesn't upscale the images provided in the dataset, Additionally, it generates unique buckets to fit the images. This may result in a lot of buckets with only 1 image in them&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
         </property>
         <property name="text">
          <string>Don't Upscale Images</string>
@@ -52,6 +52,9 @@
        <layout class="QFormLayout" name="main_form_layout">
         <item row="0" column="0">
          <widget class="QLabel" name="min_label">
+          <property name="toolTip">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Minimum Bucket Resolution is the smallest edge of a bucket, this is paired with the Maximum Bucket Resolution to produce the bucket list.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
           <property name="text">
            <string>Minimum Bucket Resolution</string>
           </property>
@@ -63,7 +66,7 @@
            <enum>Qt::StrongFocus</enum>
           </property>
           <property name="toolTip">
-           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The minimum size either edge can be for a bucket.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Minimum Bucket Resolution is the smallest edge of a bucket, this is paired with the Maximum Bucket Resolution to produce the bucket list.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
           </property>
           <property name="minimum">
            <number>0</number>
@@ -81,6 +84,9 @@
         </item>
         <item row="1" column="0">
          <widget class="QLabel" name="max_label">
+          <property name="toolTip">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Maximum Bucket Resolution is the largest edge of a bucket, this is paired with the Minimum Bucket Resolution to produce the bucket list.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
           <property name="text">
            <string>Maximum Bucket Resolution</string>
           </property>
@@ -92,7 +98,7 @@
            <enum>Qt::StrongFocus</enum>
           </property>
           <property name="toolTip">
-           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The maximum size either edge can be for a bucket.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Maximum Bucket Resolution is the largest edge of a bucket, this is paired with the Minimum Bucket Resolution to produce the bucket list.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
           </property>
           <property name="minimum">
            <number>0</number>
@@ -110,6 +116,9 @@
         </item>
         <item row="2" column="0">
          <widget class="QLabel" name="steps_label">
+          <property name="toolTip">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Bucket Resolution Steps is the amount of pixels between each bucket there is. You don't want this value too large, or too small, as too large would result in images having valuable data being cut off, and too small would cause overlapping and would cause the trainer to crash.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
           <property name="text">
            <string>Bucket Resolution Steps</string>
           </property>
@@ -121,7 +130,7 @@
            <enum>Qt::StrongFocus</enum>
           </property>
           <property name="toolTip">
-           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The step size per bucket made.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Bucket Resolution Steps is the amount of pixels between each bucket there is. You don't want this value too large, or too small, as too large would result in images having valuable data being cut off, and too small would cause overlapping and would cause the trainer to crash.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
           </property>
           <property name="maximum">
            <number>16777215</number>

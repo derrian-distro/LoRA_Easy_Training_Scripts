@@ -34,6 +34,9 @@
      <layout class="QFormLayout" name="formLayout">
       <item row="1" column="0">
        <widget class="QLabel" name="label">
+        <property name="toolTip">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Log Output Directory is the location the logging folder will be placed at. Note that this is not going to be created if you are logging with wandb&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
         <property name="text">
          <string>Log Output Directory</string>
         </property>
@@ -44,7 +47,7 @@
         <item>
          <widget class="DragDropLineEdit" name="log_output_input">
           <property name="toolTip">
-           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The folder that the log folders will be output to.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Log Output Directory is the location the logging folder will be placed at. Note that this is not going to be created if you are logging with wandb&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
           </property>
           <property name="placeholderText">
            <string>Output Directory</string>
@@ -53,6 +56,9 @@
         </item>
         <item>
          <widget class="QPushButton" name="log_output_selector">
+          <property name="toolTip">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Log Output Directory is the location the logging folder will be placed at. Note that this is not going to be created if you are logging with wandb&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
           <property name="text">
            <string/>
           </property>
@@ -62,6 +68,9 @@
       </item>
       <item row="0" column="0">
        <widget class="QLabel" name="label_2">
+        <property name="toolTip">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Logging System is the system that is used to log values such as LRs and loss&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
         <property name="text">
          <string>Logging System</string>
         </property>
@@ -73,7 +82,7 @@
          <enum>Qt::StrongFocus</enum>
         </property>
         <property name="toolTip">
-         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The system you use for logging. Tensorboard is local, Wandb is cloud based. You can also opt to log in both of them.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Logging System is the system that is used to log values such as LRs and loss&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
         </property>
         <item>
          <property name="text">
@@ -95,7 +104,7 @@
       <item row="2" column="1">
        <widget class="LineEditWithHighlight" name="log_prefix_input">
         <property name="toolTip">
-         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;This is the name that gets added to the front of the folder name so that you can tell what log is what.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Prefix For Log Folders prepends the log directory with a user provided prefix. Typically this is used to allow for an easier time differentiating different runs&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
         </property>
         <property name="placeholderText">
          <string>Prefix</string>
@@ -105,7 +114,7 @@
       <item row="3" column="1">
        <widget class="LineEditWithHighlight" name="log_tracker_name_input">
         <property name="toolTip">
-         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Is the name of the tracker in the logged data.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Name For Log Tracker is the name of the log tracker.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
         </property>
         <property name="placeholderText">
          <string>Tracker Name</string>
@@ -114,6 +123,9 @@
       </item>
       <item row="4" column="0">
        <widget class="QLabel" name="label_5">
+        <property name="toolTip">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Wandb API Key is a required field so that sd-scripts is able to interface with your Wandb account to log to it, without this key, it cannot log to Wandb&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
         <property name="text">
          <string>Wandb API Key</string>
         </property>
@@ -122,7 +134,7 @@
       <item row="4" column="1">
        <widget class="LineEditWithHighlight" name="log_wandb_key_input">
         <property name="toolTip">
-         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Required if you are using Wandb as it's how you connect to the service.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Wandb API Key is a required field so that sd-scripts is able to interface with your Wandb account to log to it, without this key, it cannot log to Wandb&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
         </property>
         <property name="placeholderText">
          <string>API Key</string>
@@ -131,6 +143,9 @@
       </item>
       <item row="2" column="0">
        <widget class="QCheckBox" name="log_prefix_enable">
+        <property name="toolTip">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Prefix For Log Folders prepends the log directory with a user provided prefix. Typically this is used to allow for an easier time differentiating different runs&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
         <property name="text">
          <string>Prefix For Log Folders</string>
         </property>
@@ -138,6 +153,9 @@
       </item>
       <item row="3" column="0">
        <widget class="QCheckBox" name="log_tracker_name_enable">
+        <property name="toolTip">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Name For Log Tracker is the name of the log tracker.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
         <property name="text">
          <string>Name For Log Tracker</string>
         </property>
@@ -150,14 +168,14 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>DragDropLineEdit</class>
-   <extends>QLineEdit</extends>
-   <header>modules.DragDropLineEdit.h</header>
-  </customwidget>
-  <customwidget>
    <class>ComboBox</class>
    <extends>QComboBox</extends>
    <header>modules.ScrollOnSelect.h</header>
+  </customwidget>
+  <customwidget>
+   <class>DragDropLineEdit</class>
+   <extends>QLineEdit</extends>
+   <header>modules.DragDropLineEdit.h</header>
   </customwidget>
   <customwidget>
    <class>LineEditWithHighlight</class>

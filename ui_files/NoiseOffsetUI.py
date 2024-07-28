@@ -3,7 +3,7 @@
 ################################################################################
 ## Form generated from reading UI file 'NoiseOffsetUI.ui'
 ##
-## Created by: Qt User Interface Compiler version 6.6.3
+## Created by: Qt User Interface Compiler version 6.7.1
 ##
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
@@ -86,16 +86,31 @@ class Ui_noise_offset_UI(object):
 
     def retranslateUi(self, noise_offset_UI):
         noise_offset_UI.setWindowTitle(QCoreApplication.translate("noise_offset_UI", u"Form", None))
+#if QT_CONFIG(tooltip)
+        noise_offset_UI.setToolTip(QCoreApplication.translate("noise_offset_UI", u"<html><head/><body><p>Noise Offset is a tweak to the noise of models, Typically EDM based models like 1.X and SDXL, that allows for a larger range of color</p></body></html>", None))
+#endif // QT_CONFIG(tooltip)
         self.noise_offset_enable.setText(QCoreApplication.translate("noise_offset_UI", u"Noise Offset", None))
+#if QT_CONFIG(tooltip)
+        self.noise_offset_input.setToolTip(QCoreApplication.translate("noise_offset_UI", u"<html><head/><body><p>Noise Offset is a tweak to the noise of models, Typically EDM based models like 1.X and SDXL, that allows for a larger range of color</p></body></html>", None))
+#endif // QT_CONFIG(tooltip)
         self.noise_offset_input.setText(QCoreApplication.translate("noise_offset_UI", u"0.1", None))
+#if QT_CONFIG(tooltip)
+        self.pyramid_noise_enable.setToolTip(QCoreApplication.translate("noise_offset_UI", u"<html><head/><body><p>Pyramid Noise, otherwise known as Multires Noise is a tweak to the noise, much like Noise Offset, but is less destructive.</p></body></html>", None))
+#endif // QT_CONFIG(tooltip)
         self.pyramid_noise_enable.setText(QCoreApplication.translate("noise_offset_UI", u"Pyramid Noise", None))
+#if QT_CONFIG(tooltip)
+        self.label_2.setToolTip(QCoreApplication.translate("noise_offset_UI", u"<html><head/><body><p>Pyramid Noise, otherwise known as Multires Noise is a tweak to the noise, much like Noise Offset, but is less destructive.</p></body></html>", None))
+#endif // QT_CONFIG(tooltip)
         self.label_2.setText(QCoreApplication.translate("noise_offset_UI", u"Iterations", None))
 #if QT_CONFIG(tooltip)
-        self.pyramid_iteration_input.setToolTip(QCoreApplication.translate("noise_offset_UI", u"<html><head/><body><p>The number of iterations. It is said that the values in 6-10 work best.</p></body></html>", None))
+        self.pyramid_iteration_input.setToolTip(QCoreApplication.translate("noise_offset_UI", u"<html><head/><body><p>Pyramid Noise, otherwise known as Multires Noise is a tweak to the noise, much like Noise Offset, but is less destructive.</p></body></html>", None))
+#endif // QT_CONFIG(tooltip)
+#if QT_CONFIG(tooltip)
+        self.label_3.setToolTip(QCoreApplication.translate("noise_offset_UI", u"<html><head/><body><p>Pyramid Noise, otherwise known as Multires Noise is a tweak to the noise, much like Noise Offset, but is less destructive.</p></body></html>", None))
 #endif // QT_CONFIG(tooltip)
         self.label_3.setText(QCoreApplication.translate("noise_offset_UI", u"Discount", None))
 #if QT_CONFIG(tooltip)
-        self.pyramid_discount_input.setToolTip(QCoreApplication.translate("noise_offset_UI", u"<html><head/><body><p>Not entirely sure what this is, but the recommended value is 0.1-0.3.</p></body></html>", None))
+        self.pyramid_discount_input.setToolTip(QCoreApplication.translate("noise_offset_UI", u"<html><head/><body><p>Pyramid Noise, otherwise known as Multires Noise is a tweak to the noise, much like Noise Offset, but is less destructive.</p></body></html>", None))
 #endif // QT_CONFIG(tooltip)
     # retranslateUi
 

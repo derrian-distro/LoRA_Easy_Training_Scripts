@@ -3,7 +3,7 @@
 ################################################################################
 ## Form generated from reading UI file 'SampleUI.ui'
 ##
-## Created by: Qt User Interface Compiler version 6.6.1
+## Created by: Qt User Interface Compiler version 6.7.1
 ##
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
@@ -73,7 +73,7 @@ class Ui_sample_ui(object):
         self.steps_epochs_selector.addItem("")
         self.steps_epochs_selector.addItem("")
         self.steps_epochs_selector.setObjectName(u"steps_epochs_selector")
-        sizePolicy = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Fixed)
+        sizePolicy = QSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Fixed)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.steps_epochs_selector.sizePolicy().hasHeightForWidth())
@@ -84,7 +84,7 @@ class Ui_sample_ui(object):
 
         self.steps_epoch_input = SpinBox(self.sample_group)
         self.steps_epoch_input.setObjectName(u"steps_epoch_input")
-        sizePolicy1 = QSizePolicy(QSizePolicy.Minimum, QSizePolicy.Fixed)
+        sizePolicy1 = QSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Fixed)
         sizePolicy1.setHorizontalStretch(0)
         sizePolicy1.setVerticalStretch(0)
         sizePolicy1.setHeightForWidth(self.steps_epoch_input.sizePolicy().hasHeightForWidth())
@@ -113,7 +113,7 @@ class Ui_sample_ui(object):
 
         self.sample_prompt_selector = QPushButton(self.sample_group)
         self.sample_prompt_selector.setObjectName(u"sample_prompt_selector")
-        sizePolicy2 = QSizePolicy(QSizePolicy.Maximum, QSizePolicy.Fixed)
+        sizePolicy2 = QSizePolicy(QSizePolicy.Policy.Maximum, QSizePolicy.Policy.Fixed)
         sizePolicy2.setHorizontalStretch(0)
         sizePolicy2.setVerticalStretch(0)
         sizePolicy2.setHeightForWidth(self.sample_prompt_selector.sizePolicy().hasHeightForWidth())
@@ -136,6 +136,9 @@ class Ui_sample_ui(object):
     def retranslateUi(self, sample_ui):
         sample_ui.setWindowTitle(QCoreApplication.translate("sample_ui", u"Form", None))
         self.sample_group.setTitle(QCoreApplication.translate("sample_ui", u"Enable", None))
+#if QT_CONFIG(tooltip)
+        self.sampler_label.setToolTip(QCoreApplication.translate("sample_ui", u"<html><head/><body><p>Sampler is the sampler that is used to generate the sample with, This is roughly equivallent to how you would generate an image on the standard UIs people use</p></body></html>", None))
+#endif // QT_CONFIG(tooltip)
         self.sampler_label.setText(QCoreApplication.translate("sample_ui", u"Sampler ", None))
         self.sampler_input.setItemText(0, QCoreApplication.translate("sample_ui", u"DDIM", None))
         self.sampler_input.setItemText(1, QCoreApplication.translate("sample_ui", u"PNDM", None))
@@ -155,23 +158,32 @@ class Ui_sample_ui(object):
         self.sampler_input.setItemText(15, QCoreApplication.translate("sample_ui", u"K_DPM_2_A", None))
 
 #if QT_CONFIG(tooltip)
-        self.sampler_input.setToolTip(QCoreApplication.translate("sample_ui", u"<html><head/><body><p>The Sampler used when generating test images. I personally suggest using either DDIM or Euler A, however it's really just personal preference.</p></body></html>", None))
+        self.sampler_input.setToolTip(QCoreApplication.translate("sample_ui", u"<html><head/><body><p>Sampler is the sampler that is used to generate the sample with, This is roughly equivallent to how you would generate an image on the standard UIs people use</p></body></html>", None))
+#endif // QT_CONFIG(tooltip)
+#if QT_CONFIG(tooltip)
+        self.steps_label.setToolTip(QCoreApplication.translate("sample_ui", u"<html><head/><body><p>Time Between Sample represents how many steps, or epochs, between each sample. Typically you would want to set this to once every epoch if you do use it</p></body></html>", None))
 #endif // QT_CONFIG(tooltip)
         self.steps_label.setText(QCoreApplication.translate("sample_ui", u"Time Between Sample", None))
         self.steps_epochs_selector.setItemText(0, QCoreApplication.translate("sample_ui", u"Steps Per Sample", None))
         self.steps_epochs_selector.setItemText(1, QCoreApplication.translate("sample_ui", u"Epochs Per Sample", None))
 
 #if QT_CONFIG(tooltip)
-        self.steps_epochs_selector.setToolTip(QCoreApplication.translate("sample_ui", u"<html><head/><body><p>The amount of time between samples. I personally suggest you have it generate a sample every epoch, however, again, personal preference.</p></body></html>", None))
+        self.steps_epochs_selector.setToolTip(QCoreApplication.translate("sample_ui", u"<html><head/><body><p>Time Between Sample represents how many steps, or epochs, between each sample. Typically you would want to set this to once every epoch if you do use it</p></body></html>", None))
 #endif // QT_CONFIG(tooltip)
 #if QT_CONFIG(tooltip)
-        self.steps_epoch_input.setToolTip(QCoreApplication.translate("sample_ui", u"<html><head/><body><p>The amount of time between samples. I personally suggest you have it generate a sample every epoch, however, again, personal preference.</p></body></html>", None))
+        self.steps_epoch_input.setToolTip(QCoreApplication.translate("sample_ui", u"<html><head/><body><p>Time Between Sample represents how many steps, or epochs, between each sample. Typically you would want to set this to once every epoch if you do use it</p></body></html>", None))
+#endif // QT_CONFIG(tooltip)
+#if QT_CONFIG(tooltip)
+        self.text_file_label.setToolTip(QCoreApplication.translate("sample_ui", u"<html><head/><body><p>Prompt text File is the input file that contains all of the prompts that is used to generate the samples. This is required if you want to generate samples</p></body></html>", None))
 #endif // QT_CONFIG(tooltip)
         self.text_file_label.setText(QCoreApplication.translate("sample_ui", u"Prompt Text File", None))
 #if QT_CONFIG(tooltip)
-        self.sample_prompt_txt_file_input.setToolTip(QCoreApplication.translate("sample_ui", u"<html><head/><body><p>The input file that contains all of your prompts. This file must be a txt file and have one prompt per line. you can specify a bunch of args within each line for things like negative prompts, width and height, and more. For documentation on this please visit the sd-scripts github repo.</p></body></html>", None))
+        self.sample_prompt_txt_file_input.setToolTip(QCoreApplication.translate("sample_ui", u"<html><head/><body><p>Prompt text File is the input file that contains all of the prompts that is used to generate the samples. This is required if you want to generate samples</p></body></html>", None))
 #endif // QT_CONFIG(tooltip)
         self.sample_prompt_txt_file_input.setPlaceholderText(QCoreApplication.translate("sample_ui", u"Text File", None))
+#if QT_CONFIG(tooltip)
+        self.sample_prompt_selector.setToolTip(QCoreApplication.translate("sample_ui", u"<html><head/><body><p>Prompt text File is the input file that contains all of the prompts that is used to generate the samples. This is required if you want to generate samples</p></body></html>", None))
+#endif // QT_CONFIG(tooltip)
         self.sample_prompt_selector.setText("")
     # retranslateUi
 

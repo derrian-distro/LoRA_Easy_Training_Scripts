@@ -26,10 +26,10 @@
       <bool>true</bool>
      </property>
      <property name="toolTip">
-      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Suppliments the dataset before training by cropping the face of each image that has one in it. I don't believe this provides extra captions for these files, so this is fairly useless.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Face Crop Creates extra images in the dataset that are crops of faces within the dataset. The ranges represent the size of the crops&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
      </property>
      <property name="title">
-      <string>face crop</string>
+      <string>Face Crop</string>
      </property>
      <property name="checkable">
       <bool>true</bool>
@@ -117,10 +117,10 @@
       <bool>true</bool>
      </property>
      <property name="toolTip">
-      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;During training, captions can be excluded according to the various controls below. Personally they don't really serve much of a purpose, I suggest you don't use it.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Caption Dropout is a way to cut out captions during training. This allows for the uncond portion of the model to be trained, however you don't want to set any of the values too high&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
      </property>
      <property name="title">
-      <string>caption dropout</string>
+      <string>Caption Dropout</string>
      </property>
      <property name="alignment">
       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
@@ -273,10 +273,10 @@
       <bool>true</bool>
      </property>
      <property name="toolTip">
-      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Token warmup is a way to gradually introduce tags as the model trains. Both variables are required.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Token Warmup is a way to add tokens into the training data as the training continues&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
      </property>
      <property name="title">
-      <string>token warmup</string>
+      <string>Token Warmup</string>
      </property>
      <property name="alignment">
       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
