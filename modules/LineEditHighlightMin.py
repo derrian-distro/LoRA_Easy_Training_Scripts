@@ -12,6 +12,11 @@ class LineEditWithHighlightMin(LineEditWithHighlight):
         self.error_sheet = """
             border-color: #dc3545
         """
+        self.dirty = False
+
+    def setText(self, arg__1: str) -> None:
+        self.dirty = True
+        return super().setText(arg__1)
 
     def update_stylesheet(self) -> bool:
         self.isValid = len(self.text().strip()) >= self.min_allowed

@@ -3,7 +3,7 @@
 ################################################################################
 ## Form generated from reading UI file 'SavingUI.ui'
 ##
-## Created by: Qt User Interface Compiler version 6.5.0
+## Created by: Qt User Interface Compiler version 6.7.1
 ##
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
@@ -157,7 +157,7 @@ class Ui_saving_ui(object):
         self.save_last_state_enable = QCheckBox(saving_ui)
         self.save_last_state_enable.setObjectName(u"save_last_state_enable")
         self.save_last_state_enable.setEnabled(False)
-        sizePolicy = QSizePolicy(QSizePolicy.Maximum, QSizePolicy.Fixed)
+        sizePolicy = QSizePolicy(QSizePolicy.Policy.Maximum, QSizePolicy.Policy.Fixed)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.save_last_state_enable.sizePolicy().hasHeightForWidth())
@@ -191,6 +191,28 @@ class Ui_saving_ui(object):
 
         self.formLayout = QFormLayout()
         self.formLayout.setObjectName(u"formLayout")
+        self.resume_enable = QCheckBox(saving_ui)
+        self.resume_enable.setObjectName(u"resume_enable")
+
+        self.formLayout.setWidget(0, QFormLayout.LabelRole, self.resume_enable)
+
+        self.horizontalLayout_5 = QHBoxLayout()
+        self.horizontalLayout_5.setObjectName(u"horizontalLayout_5")
+        self.resume_input = DragDropLineEdit(saving_ui)
+        self.resume_input.setObjectName(u"resume_input")
+        self.resume_input.setEnabled(False)
+
+        self.horizontalLayout_5.addWidget(self.resume_input)
+
+        self.resume_selector = QPushButton(saving_ui)
+        self.resume_selector.setObjectName(u"resume_selector")
+        self.resume_selector.setEnabled(False)
+
+        self.horizontalLayout_5.addWidget(self.resume_selector)
+
+
+        self.formLayout.setLayout(0, QFormLayout.FieldRole, self.horizontalLayout_5)
+
         self.save_only_last_enable = QCheckBox(saving_ui)
         self.save_only_last_enable.setObjectName(u"save_only_last_enable")
 
@@ -220,11 +242,6 @@ class Ui_saving_ui(object):
 
         self.formLayout.setLayout(1, QFormLayout.FieldRole, self.horizontalLayout_3)
 
-        self.save_tags_enable = QCheckBox(saving_ui)
-        self.save_tags_enable.setObjectName(u"save_tags_enable")
-
-        self.formLayout.setWidget(2, QFormLayout.LabelRole, self.save_tags_enable)
-
         self.horizontalLayout_6 = QHBoxLayout()
         self.horizontalLayout_6.setObjectName(u"horizontalLayout_6")
         self.save_tag_input = DragDropLineEdit(saving_ui)
@@ -242,10 +259,10 @@ class Ui_saving_ui(object):
 
         self.formLayout.setLayout(2, QFormLayout.FieldRole, self.horizontalLayout_6)
 
-        self.save_toml_on_train_enable = QCheckBox(saving_ui)
-        self.save_toml_on_train_enable.setObjectName(u"save_toml_on_train_enable")
+        self.save_toml_enable = QCheckBox(saving_ui)
+        self.save_toml_enable.setObjectName(u"save_toml_enable")
 
-        self.formLayout.setWidget(3, QFormLayout.LabelRole, self.save_toml_on_train_enable)
+        self.formLayout.setWidget(3, QFormLayout.LabelRole, self.save_toml_enable)
 
         self.horizontalLayout_7 = QHBoxLayout()
         self.horizontalLayout_7.setObjectName(u"horizontalLayout_7")
@@ -264,27 +281,10 @@ class Ui_saving_ui(object):
 
         self.formLayout.setLayout(3, QFormLayout.FieldRole, self.horizontalLayout_7)
 
-        self.resume_enable = QCheckBox(saving_ui)
-        self.resume_enable.setObjectName(u"resume_enable")
+        self.save_tag_enable = QCheckBox(saving_ui)
+        self.save_tag_enable.setObjectName(u"save_tag_enable")
 
-        self.formLayout.setWidget(0, QFormLayout.LabelRole, self.resume_enable)
-
-        self.horizontalLayout_5 = QHBoxLayout()
-        self.horizontalLayout_5.setObjectName(u"horizontalLayout_5")
-        self.resume_input = DragDropLineEdit(saving_ui)
-        self.resume_input.setObjectName(u"resume_input")
-        self.resume_input.setEnabled(False)
-
-        self.horizontalLayout_5.addWidget(self.resume_input)
-
-        self.resume_selector = QPushButton(saving_ui)
-        self.resume_selector.setObjectName(u"resume_selector")
-        self.resume_selector.setEnabled(False)
-
-        self.horizontalLayout_5.addWidget(self.resume_selector)
-
-
-        self.formLayout.setLayout(0, QFormLayout.FieldRole, self.horizontalLayout_5)
+        self.formLayout.setWidget(2, QFormLayout.LabelRole, self.save_tag_enable)
 
 
         self.gridLayout_2.addLayout(self.formLayout, 1, 1, 1, 1)
@@ -297,13 +297,19 @@ class Ui_saving_ui(object):
 
     def retranslateUi(self, saving_ui):
         saving_ui.setWindowTitle(QCoreApplication.translate("saving_ui", u"Form", None))
+#if QT_CONFIG(tooltip)
+        self.label_2.setToolTip(QCoreApplication.translate("saving_ui", u"<html><head/><body><p>Save Precision is the precision the model is saved at, this doesn't neccessarily have to equal the training precision</p></body></html>", None))
+#endif // QT_CONFIG(tooltip)
         self.label_2.setText(QCoreApplication.translate("saving_ui", u"Save Precision", None))
         self.save_precision_selector.setItemText(0, QCoreApplication.translate("saving_ui", u"fp16", None))
         self.save_precision_selector.setItemText(1, QCoreApplication.translate("saving_ui", u"bf16", None))
         self.save_precision_selector.setItemText(2, QCoreApplication.translate("saving_ui", u"float", None))
 
 #if QT_CONFIG(tooltip)
-        self.save_precision_selector.setToolTip(QCoreApplication.translate("saving_ui", u"<html><head/><body><p>Is the precision that the models are saved in, I suggest you save in fp16 as not all cards support bf16.</p></body></html>", None))
+        self.save_precision_selector.setToolTip(QCoreApplication.translate("saving_ui", u"<html><head/><body><p>Save Precision is the precision the model is saved at, this doesn't neccessarily have to equal the training precision</p></body></html>", None))
+#endif // QT_CONFIG(tooltip)
+#if QT_CONFIG(tooltip)
+        self.label_3.setToolTip(QCoreApplication.translate("saving_ui", u"<html><head/><body><p>Save As is the file type you save the file as. Typically you'll want to save as safetensors</p></body></html>", None))
 #endif // QT_CONFIG(tooltip)
         self.label_3.setText(QCoreApplication.translate("saving_ui", u"Save As", None))
         self.save_as_selector.setItemText(0, QCoreApplication.translate("saving_ui", u"safetensors", None))
@@ -311,11 +317,14 @@ class Ui_saving_ui(object):
         self.save_as_selector.setItemText(2, QCoreApplication.translate("saving_ui", u"ckpt", None))
 
 #if QT_CONFIG(tooltip)
-        self.save_as_selector.setToolTip(QCoreApplication.translate("saving_ui", u"<html><head/><body><p>The type of model it outputs as, Safetensors is just flat out the best choice here.</p></body></html>", None))
+        self.save_as_selector.setToolTip(QCoreApplication.translate("saving_ui", u"<html><head/><body><p>Save As is the file type you save the file as. Typically you'll want to save as safetensors</p></body></html>", None))
+#endif // QT_CONFIG(tooltip)
+#if QT_CONFIG(tooltip)
+        self.save_ratio_enable.setToolTip(QCoreApplication.translate("saving_ui", u"<html><head/><body><p>Save Ratio is the way to limit the number of models saved</p></body></html>", None))
 #endif // QT_CONFIG(tooltip)
         self.save_ratio_enable.setText(QCoreApplication.translate("saving_ui", u"Save Ratio", None))
 #if QT_CONFIG(tooltip)
-        self.save_ratio_input.setToolTip(QCoreApplication.translate("saving_ui", u"<html><head/><body><p>The ratio of models saved. Basically, it will save x amount of models throughout training equal to the number set here, trying to spread them out as evenly as possible, might not work with save frequency, but doesn't crash when both are enabled.</p></body></html>", None))
+        self.save_ratio_input.setToolTip(QCoreApplication.translate("saving_ui", u"<html><head/><body><p>Save Ratio is the way to limit the number of models saved</p></body></html>", None))
 #endif // QT_CONFIG(tooltip)
         self.save_freq_enable.setText(QCoreApplication.translate("saving_ui", u"Save Freq", None))
         self.save_freq_selector.setItemText(0, QCoreApplication.translate("saving_ui", u"Epochs", None))
@@ -327,67 +336,91 @@ class Ui_saving_ui(object):
 #if QT_CONFIG(tooltip)
         self.save_freq_input.setToolTip(QCoreApplication.translate("saving_ui", u"<html><head/><body><p>How often to save models. You can save according to steps or epochs, setting it to epochs and 1 means it will save a model every epoch.</p></body></html>", None))
 #endif // QT_CONFIG(tooltip)
+#if QT_CONFIG(tooltip)
+        self.label.setToolTip(QCoreApplication.translate("saving_ui", u"<html><head/><body><p>Output Folder is the location the models are saved to</p></body></html>", None))
+#endif // QT_CONFIG(tooltip)
         self.label.setText(QCoreApplication.translate("saving_ui", u"Output Folder", None))
 #if QT_CONFIG(tooltip)
-        self.output_folder_input.setToolTip(QCoreApplication.translate("saving_ui", u"<html><head/><body><p>The folder all of the trained epochs (checkpoints) will be output to.</p></body></html>", None))
+        self.output_folder_input.setToolTip(QCoreApplication.translate("saving_ui", u"<html><head/><body><p>Output Folder is the location the models are saved to</p></body></html>", None))
 #endif // QT_CONFIG(tooltip)
         self.output_folder_input.setPlaceholderText(QCoreApplication.translate("saving_ui", u"Output Folder", None))
+#if QT_CONFIG(tooltip)
+        self.output_folder_selector.setToolTip(QCoreApplication.translate("saving_ui", u"<html><head/><body><p>Output Folder is the location the models are saved to</p></body></html>", None))
+#endif // QT_CONFIG(tooltip)
         self.output_folder_selector.setText("")
+#if QT_CONFIG(tooltip)
+        self.output_name_enable.setToolTip(QCoreApplication.translate("saving_ui", u"<html><head/><body><p>Output Name is the base name of the models that get saved</p></body></html>", None))
+#endif // QT_CONFIG(tooltip)
         self.output_name_enable.setText(QCoreApplication.translate("saving_ui", u"Output Name", None))
 #if QT_CONFIG(tooltip)
-        self.output_name_input.setToolTip(QCoreApplication.translate("saving_ui", u"<html><head/><body><p>Replaces the default naming behavior so that it will output this name instead of &quot;last&quot;.</p></body></html>", None))
+        self.output_name_input.setToolTip(QCoreApplication.translate("saving_ui", u"<html><head/><body><p>Output Name is the base name of the models that get saved</p></body></html>", None))
 #endif // QT_CONFIG(tooltip)
         self.output_name_input.setPlaceholderText(QCoreApplication.translate("saving_ui", u"Output Name", None))
 #if QT_CONFIG(tooltip)
-        self.save_state_enable.setToolTip(QCoreApplication.translate("saving_ui", u"<html><head/><body><p>This is how you would save the state of the model in training for resuming later. By default it will save one every time you save an epoch</p></body></html>", None))
+        self.save_state_enable.setToolTip(QCoreApplication.translate("saving_ui", u"<html><head/><body><p>Save State is how you save the training state so you can resume later</p></body></html>", None))
 #endif // QT_CONFIG(tooltip)
         self.save_state_enable.setText(QCoreApplication.translate("saving_ui", u"Save State", None))
 #if QT_CONFIG(tooltip)
-        self.save_last_state_enable.setToolTip(QCoreApplication.translate("saving_ui", u"<html><head/><body><p>Works the exact same way as save last models, only it's for the state folders.</p></body></html>", None))
+        self.save_last_state_enable.setToolTip(QCoreApplication.translate("saving_ui", u"<html><head/><body><p>Save Last State is much like Save Only Last in that it will keep only the last epoch or step number of states</p></body></html>", None))
 #endif // QT_CONFIG(tooltip)
         self.save_last_state_enable.setText(QCoreApplication.translate("saving_ui", u"Save Last State", None))
         self.save_last_state_selector.setItemText(0, QCoreApplication.translate("saving_ui", u"Epochs", None))
         self.save_last_state_selector.setItemText(1, QCoreApplication.translate("saving_ui", u"Steps", None))
 
 #if QT_CONFIG(tooltip)
-        self.save_last_state_selector.setToolTip(QCoreApplication.translate("saving_ui", u"<html><head/><body><p>Works the exact same way as save last models, only it's for the state folders.</p></body></html>", None))
+        self.save_last_state_selector.setToolTip(QCoreApplication.translate("saving_ui", u"<html><head/><body><p>Save Last State is much like Save Only Last in that it will keep only the last epoch or step number of states</p></body></html>", None))
 #endif // QT_CONFIG(tooltip)
 #if QT_CONFIG(tooltip)
-        self.save_last_state_input.setToolTip(QCoreApplication.translate("saving_ui", u"<html><head/><body><p>Works the exact same way as save last models, only it's for the state folders.</p></body></html>", None))
+        self.save_last_state_input.setToolTip(QCoreApplication.translate("saving_ui", u"<html><head/><body><p>Save Last State is much like Save Only Last in that it will keep only the last epoch or step number of states</p></body></html>", None))
+#endif // QT_CONFIG(tooltip)
+#if QT_CONFIG(tooltip)
+        self.resume_enable.setToolTip(QCoreApplication.translate("saving_ui", u"<html><head/><body><p>Resume State resumes training at a previous training, assuming you save the state for that bake</p></body></html>", None))
+#endif // QT_CONFIG(tooltip)
+        self.resume_enable.setText(QCoreApplication.translate("saving_ui", u"Resume State", None))
+#if QT_CONFIG(tooltip)
+        self.resume_input.setToolTip(QCoreApplication.translate("saving_ui", u"<html><head/><body><p>Resume State resumes training at a previous training, assuming you save the state for that bake</p></body></html>", None))
+#endif // QT_CONFIG(tooltip)
+        self.resume_input.setPlaceholderText(QCoreApplication.translate("saving_ui", u"Folder To Resume From", None))
+#if QT_CONFIG(tooltip)
+        self.resume_selector.setToolTip(QCoreApplication.translate("saving_ui", u"<html><head/><body><p>Resume State resumes training at a previous training, assuming you save the state for that bake</p></body></html>", None))
+#endif // QT_CONFIG(tooltip)
+        self.resume_selector.setText("")
+#if QT_CONFIG(tooltip)
+        self.save_only_last_enable.setToolTip(QCoreApplication.translate("saving_ui", u"<html><head/><body><p>Save Only Last is how you save models only after a specific epoch or step count</p></body></html>", None))
 #endif // QT_CONFIG(tooltip)
         self.save_only_last_enable.setText(QCoreApplication.translate("saving_ui", u"Save Only Last", None))
         self.save_last_selector.setItemText(0, QCoreApplication.translate("saving_ui", u"Epochs", None))
         self.save_last_selector.setItemText(1, QCoreApplication.translate("saving_ui", u"Steps", None))
 
 #if QT_CONFIG(tooltip)
-        self.save_last_selector.setToolTip(QCoreApplication.translate("saving_ui", u"<html><head/><body><p>Save only the last x models, either using steps or epochs. I believe it works with save frequency.</p></body></html>", None))
+        self.save_last_selector.setToolTip(QCoreApplication.translate("saving_ui", u"<html><head/><body><p>Save Only Last is how you save models only after a specific epoch or step count</p></body></html>", None))
 #endif // QT_CONFIG(tooltip)
 #if QT_CONFIG(tooltip)
-        self.save_last_input.setToolTip(QCoreApplication.translate("saving_ui", u"<html><head/><body><p>Save only the last x models, either using steps or epochs. I believe it works with save frequency.</p></body></html>", None))
+        self.save_last_input.setToolTip(QCoreApplication.translate("saving_ui", u"<html><head/><body><p>Save Only Last is how you save models only after a specific epoch or step count</p></body></html>", None))
 #endif // QT_CONFIG(tooltip)
 #if QT_CONFIG(tooltip)
-        self.save_tags_enable.setToolTip(QCoreApplication.translate("saving_ui", u"<html><head/><body><p>Saves a txt file that is a formatted list of all of the tags within all subsets provided when training is started</p></body></html>", None))
-#endif // QT_CONFIG(tooltip)
-        self.save_tags_enable.setText(QCoreApplication.translate("saving_ui", u"Save Tag File", None))
-#if QT_CONFIG(tooltip)
-        self.save_tag_input.setToolTip(QCoreApplication.translate("saving_ui", u"<html><head/><body><p>The folder to save the tag file to, defaults to the same as output folder if not filled</p></body></html>", None))
+        self.save_tag_input.setToolTip(QCoreApplication.translate("saving_ui", u"<html><head/><body><p>Save Tag File saves a txt file that contains a list of all tags within the dataset sorted by tag count. If enabled but no folder is provided, The default location will be in a folder called auto_save_store</p></body></html>", None))
 #endif // QT_CONFIG(tooltip)
         self.save_tag_input.setPlaceholderText(QCoreApplication.translate("saving_ui", u"Folder to save to", None))
+#if QT_CONFIG(tooltip)
+        self.save_tag_selector.setToolTip(QCoreApplication.translate("saving_ui", u"<html><head/><body><p>Save Tag File saves a txt file that contains a list of all tags within the dataset sorted by tag count. If enabled but no folder is provided, The default location will be in a folder called auto_save_store</p></body></html>", None))
+#endif // QT_CONFIG(tooltip)
         self.save_tag_selector.setText("")
 #if QT_CONFIG(tooltip)
-        self.save_toml_on_train_enable.setToolTip(QCoreApplication.translate("saving_ui", u"<html><head/><body><p>Saves a toml file when training begins, as a way to prevent accidentally losing args</p></body></html>", None))
+        self.save_toml_enable.setToolTip(QCoreApplication.translate("saving_ui", u"<html><head/><body><p>Save Toml File saves a toml file that contains the configuration of the training. If enabled but no folder is provided, The default location will be in a folder called auto_save_store</p></body></html>", None))
 #endif // QT_CONFIG(tooltip)
-        self.save_toml_on_train_enable.setText(QCoreApplication.translate("saving_ui", u"Save Toml File", None))
+        self.save_toml_enable.setText(QCoreApplication.translate("saving_ui", u"Save Toml File", None))
 #if QT_CONFIG(tooltip)
-        self.save_toml_input.setToolTip(QCoreApplication.translate("saving_ui", u"<html><head/><body><p>The folder to save the toml file to, defaults to the same as output folder if not filled</p></body></html>", None))
+        self.save_toml_input.setToolTip(QCoreApplication.translate("saving_ui", u"<html><head/><body><p>Save Toml File saves a toml file that contains the configuration of the training. If enabled but no folder is provided, The default location will be in a folder called auto_save_store</p></body></html>", None))
 #endif // QT_CONFIG(tooltip)
         self.save_toml_input.setPlaceholderText(QCoreApplication.translate("saving_ui", u"Folder to save to", None))
-        self.save_toml_selector.setText("")
-        self.resume_enable.setText(QCoreApplication.translate("saving_ui", u"Resume State", None))
 #if QT_CONFIG(tooltip)
-        self.resume_input.setToolTip(QCoreApplication.translate("saving_ui", u"<html><head/><body><p>The folder path to a previous state so that you can resume training.</p></body></html>", None))
+        self.save_toml_selector.setToolTip(QCoreApplication.translate("saving_ui", u"<html><head/><body><p>Save Toml File saves a toml file that contains the configuration of the training. If enabled but no folder is provided, The default location will be in a folder called auto_save_store</p></body></html>", None))
 #endif // QT_CONFIG(tooltip)
-        self.resume_input.setPlaceholderText(QCoreApplication.translate("saving_ui", u"Folder To Resume From", None))
-        self.resume_selector.setText("")
+        self.save_toml_selector.setText("")
+#if QT_CONFIG(tooltip)
+        self.save_tag_enable.setToolTip(QCoreApplication.translate("saving_ui", u"<html><head/><body><p>Save Tag File saves a txt file that contains a list of all tags within the dataset sorted by tag count. If enabled but no folder is provided, The default location will be in a folder called auto_save_store</p></body></html>", None))
+#endif // QT_CONFIG(tooltip)
+        self.save_tag_enable.setText(QCoreApplication.translate("saving_ui", u"Save Tag File", None))
     # retranslateUi
 

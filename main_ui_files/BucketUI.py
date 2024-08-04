@@ -1,73 +1,69 @@
-from typing import Union
-
-from PySide6 import QtWidgets, QtCore
+from PySide6.QtWidgets import QWidget
 from ui_files.BucketUI import Ui_bucket_ui
-from modules.CollapsibleWidget import CollapsibleWidget
+from modules.BaseWidget import BaseWidget
 
 
-class BucketWidget(QtWidgets.QWidget):
-    def __init__(self, parent: QtWidgets.QWidget = None) -> None:
-        super(BucketWidget, self).__init__(parent)
-        self.setLayout(QtWidgets.QVBoxLayout())
-        self.colap = CollapsibleWidget(self, "Bucket Args")
-        self.layout().addWidget(self.colap)
-        self.layout().setContentsMargins(9, 0, 9, 0)
-        self.content = QtWidgets.QWidget()
-        self.colap.add_widget(self.content, "main_widget")
-
+class BucketWidget(BaseWidget):
+    def __init__(self, parent: QWidget = None) -> None:
+        super().__init__(parent)
+        self.colap.set_title("Bucket Args")
         self.widget = Ui_bucket_ui()
-        self.widget.setupUi(self.content)
-        self.dataset_args = {"enable_bucket": True, "min_bucket_reso": 256,
-                             "max_bucket_reso": 1024, "bucket_reso_steps": 64}
+
         self.name = "bucket_args"
-        self.widget.bucket_no_upscale.clicked.connect(lambda x: self.edit_args("bucket_no_upscale", x, True))
-        self.widget.min_input.valueChanged.connect(lambda x: self.edit_args("min_bucket_reso", x))
-        self.widget.max_input.valueChanged.connect(lambda x: self.edit_args("max_bucket_reso", x))
-        self.widget.steps_input.valueChanged.connect(lambda x: self.edit_args("bucket_reso_steps", x))
-        self.widget.bucket_group.clicked.connect(self.enable_disable_buckets)
+        self.dataset_args = {
+            "enable_bucket": True,
+            "min_bucket_reso": 256,
+            "max_bucket_reso": 1024,
+            "bucket_reso_steps": 64,
+        }
 
-    @QtCore.Slot(str, object, bool)
-    def edit_args(self, name: str, value: object, optional: bool = False) -> None:
-        if not optional:
-            self.dataset_args[name] = value
+        self.setup_widget()
+        self.setup_connections()
+
+    def setup_widget(self) -> None:
+        super().setup_widget()
+        self.widget.setupUi(self.content)
+
+    def setup_connections(self) -> None:
+        self.widget.bucket_no_upscale.clicked.connect(
+            lambda x: self.edit_dataset_args("bucket_no_upscale", x, True)
+        )
+        self.widget.min_input.valueChanged.connect(
+            lambda x: self.edit_dataset_args("min_bucket_reso", x)
+        )
+        self.widget.max_input.valueChanged.connect(
+            lambda x: self.edit_dataset_args("max_bucket_reso", x)
+        )
+        self.widget.steps_input.valueChanged.connect(
+            lambda x: self.edit_dataset_args("bucket_reso_steps", x)
+        )
+        self.widget.bucket_group.clicked.connect(self.enable_disable)
+
+    def enable_disable(self, checked: bool) -> None:
+        self.dataset_args = {}
+        if not checked:
+            self.edit_dataset_args("enable_bucket", False)
             return
-        if not value or value is False:
-            if name in self.dataset_args:
-                del self.dataset_args[name]
-            return
-        self.dataset_args[name] = value
+        self.edit_dataset_args("enable_bucket", True)
+        self.edit_dataset_args(
+            "bucket_no_upscale", self.widget.bucket_no_upscale.isChecked(), True
+        )
+        self.edit_dataset_args("min_bucket_reso", self.widget.min_input.value())
+        self.edit_dataset_args("max_bucket_reso", self.widget.max_input.value())
+        self.edit_dataset_args("bucket_reso_steps", self.widget.steps_input.value())
 
-    @QtCore.Slot(bool)
-    def enable_disable_buckets(self, checked: bool) -> None:
-        self.dataset_args["enable_bucket"] = checked
+    def load_dataset_args(self, dataset_args: dict) -> bool:
+        dataset_args: dict = dataset_args.get(self.name, {})
 
-    def get_args(self, input_args: dict):
-        pass
+        # update element inputs
+        self.widget.bucket_group.setChecked(dataset_args.get("enable_bucket", False))
+        self.widget.bucket_no_upscale.setChecked(
+            dataset_args.get("bucket_no_upscale", False)
+        )
+        self.widget.min_input.setValue(dataset_args.get("min_bucket_reso", 256))
+        self.widget.max_input.setValue(dataset_args.get("max_bucket_reso", 1024))
+        self.widget.steps_input.setValue(dataset_args.get("bucket_reso_steps", 64))
 
-    def get_dataset_args(self, input_args: dict) -> None:
-        if not self.widget.bucket_group.isChecked():
-            if "bucket_args" in input_args:
-                del input_args['bucket_args']
-            return
-        input_args['bucket_args'] = self.dataset_args
-
-    def load_args(self, args: dict) -> None:
-        if self.name not in args:
-            return
-        args = args[self.name]['dataset_args']
-        self.widget.bucket_no_upscale.setChecked(args.get("bucket_no_upscale", False))
-        self.edit_args('bucket_no_upscale', args.get('bucket_no_upscale', False), True)
-        self.widget.min_input.setValue(args.get("min_bucket_reso", 256))
-        self.edit_args('min_bucket_reso', args.get('min_bucket_reso', 256))
-        self.widget.max_input.setValue(args.get("max_bucket_reso", 1024))
-        self.edit_args('max_bucket_reso', args.get('max_bucket_reso', 1024))
-        self.widget.steps_input.setValue(args.get("bucket_reso_steps", 64))
-        self.edit_args('bucket_reso_steps', args.get('bucket_reso_steps', 64))
-        self.enable_disable_buckets(args['enable_bucket'])
-        self.widget.bucket_group.setChecked(args['enable_bucket'])
-
-    def save_args(self) -> Union[dict, None]:
-        pass
-
-    def save_dataset_args(self) -> Union[dict, None]:
-        return self.dataset_args
+        # edit dataset_args to match
+        self.enable_disable(self.widget.bucket_group.isChecked())
+        return True

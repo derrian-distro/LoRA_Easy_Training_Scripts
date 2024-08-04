@@ -15,7 +15,7 @@
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
-    <widget class="QGroupBox" name="sample_args_box">
+    <widget class="QGroupBox" name="sample_group">
      <property name="title">
       <string>Enable</string>
      </property>
@@ -28,6 +28,9 @@
      <layout class="QFormLayout" name="formLayout">
       <item row="0" column="0">
        <widget class="QLabel" name="sampler_label">
+        <property name="toolTip">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Sampler is the sampler that is used to generate the sample with, This is roughly equivallent to how you would generate an image on the standard UIs people use&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
         <property name="text">
          <string>Sampler </string>
         </property>
@@ -39,7 +42,7 @@
          <enum>Qt::StrongFocus</enum>
         </property>
         <property name="toolTip">
-         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The Sampler used when generating test images. I personally suggest using either DDIM or Euler A, however it's really just personal preference.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Sampler is the sampler that is used to generate the sample with, This is roughly equivallent to how you would generate an image on the standard UIs people use&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
         </property>
         <item>
          <property name="text">
@@ -125,6 +128,9 @@
       </item>
       <item row="1" column="0">
        <widget class="QLabel" name="steps_label">
+        <property name="toolTip">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Time Between Sample represents how many steps, or epochs, between each sample. Typically you would want to set this to once every epoch if you do use it&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
         <property name="text">
          <string>Time Between Sample</string>
         </property>
@@ -144,7 +150,7 @@
            <enum>Qt::StrongFocus</enum>
           </property>
           <property name="toolTip">
-           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The amount of time between samples. I personally suggest you have it generate a sample every epoch, however, again, personal preference.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Time Between Sample represents how many steps, or epochs, between each sample. Typically you would want to set this to once every epoch if you do use it&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
           </property>
           <item>
            <property name="text">
@@ -170,7 +176,7 @@
            <enum>Qt::StrongFocus</enum>
           </property>
           <property name="toolTip">
-           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The amount of time between samples. I personally suggest you have it generate a sample every epoch, however, again, personal preference.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Time Between Sample represents how many steps, or epochs, between each sample. Typically you would want to set this to once every epoch if you do use it&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
           </property>
           <property name="minimum">
            <number>1</number>
@@ -187,6 +193,9 @@
       </item>
       <item row="2" column="0">
        <widget class="QLabel" name="text_file_label">
+        <property name="toolTip">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Prompt text File is the input file that contains all of the prompts that is used to generate the samples. This is required if you want to generate samples&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
         <property name="text">
          <string>Prompt Text File</string>
         </property>
@@ -197,7 +206,7 @@
         <item>
          <widget class="DragDropLineEdit" name="sample_prompt_txt_file_input">
           <property name="toolTip">
-           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The input file that contains all of your prompts. This file must be a txt file and have one prompt per line. you can specify a bunch of args within each line for things like negative prompts, width and height, and more. For documentation on this please visit the sd-scripts github repo.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Prompt text File is the input file that contains all of the prompts that is used to generate the samples. This is required if you want to generate samples&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
           </property>
           <property name="placeholderText">
            <string>Text File</string>
@@ -211,6 +220,9 @@
             <horstretch>0</horstretch>
             <verstretch>0</verstretch>
            </sizepolicy>
+          </property>
+          <property name="toolTip">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Prompt text File is the input file that contains all of the prompts that is used to generate the samples. This is required if you want to generate samples&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
           </property>
           <property name="text">
            <string/>

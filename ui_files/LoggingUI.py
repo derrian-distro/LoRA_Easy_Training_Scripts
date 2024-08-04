@@ -3,7 +3,7 @@
 ################################################################################
 ## Form generated from reading UI file 'LoggingUI.ui'
 ##
-## Created by: Qt User Interface Compiler version 6.5.0
+## Created by: Qt User Interface Compiler version 6.7.1
 ##
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
@@ -113,34 +113,52 @@ class Ui_logging_ui(object):
     def retranslateUi(self, logging_ui):
         logging_ui.setWindowTitle(QCoreApplication.translate("logging_ui", u"Form", None))
         self.logging_group.setTitle(QCoreApplication.translate("logging_ui", u"Enable", None))
+#if QT_CONFIG(tooltip)
+        self.label.setToolTip(QCoreApplication.translate("logging_ui", u"<html><head/><body><p>Log Output Directory is the location the logging folder will be placed at. Note that this is not going to be created if you are logging with wandb</p></body></html>", None))
+#endif // QT_CONFIG(tooltip)
         self.label.setText(QCoreApplication.translate("logging_ui", u"Log Output Directory", None))
 #if QT_CONFIG(tooltip)
-        self.log_output_input.setToolTip(QCoreApplication.translate("logging_ui", u"<html><head/><body><p>The folder that the log folders will be output to.</p></body></html>", None))
+        self.log_output_input.setToolTip(QCoreApplication.translate("logging_ui", u"<html><head/><body><p>Log Output Directory is the location the logging folder will be placed at. Note that this is not going to be created if you are logging with wandb</p></body></html>", None))
 #endif // QT_CONFIG(tooltip)
         self.log_output_input.setPlaceholderText(QCoreApplication.translate("logging_ui", u"Output Directory", None))
+#if QT_CONFIG(tooltip)
+        self.log_output_selector.setToolTip(QCoreApplication.translate("logging_ui", u"<html><head/><body><p>Log Output Directory is the location the logging folder will be placed at. Note that this is not going to be created if you are logging with wandb</p></body></html>", None))
+#endif // QT_CONFIG(tooltip)
         self.log_output_selector.setText("")
+#if QT_CONFIG(tooltip)
+        self.label_2.setToolTip(QCoreApplication.translate("logging_ui", u"<html><head/><body><p>Logging System is the system that is used to log values such as LRs and loss</p></body></html>", None))
+#endif // QT_CONFIG(tooltip)
         self.label_2.setText(QCoreApplication.translate("logging_ui", u"Logging System", None))
         self.log_mode_selector.setItemText(0, QCoreApplication.translate("logging_ui", u"Tensorboard", None))
         self.log_mode_selector.setItemText(1, QCoreApplication.translate("logging_ui", u"Wandb", None))
         self.log_mode_selector.setItemText(2, QCoreApplication.translate("logging_ui", u"All", None))
 
 #if QT_CONFIG(tooltip)
-        self.log_mode_selector.setToolTip(QCoreApplication.translate("logging_ui", u"<html><head/><body><p>The system you use for logging. Tensorboard is local, Wandb is cloud based. You can also opt to log in both of them.</p></body></html>", None))
+        self.log_mode_selector.setToolTip(QCoreApplication.translate("logging_ui", u"<html><head/><body><p>Logging System is the system that is used to log values such as LRs and loss</p></body></html>", None))
 #endif // QT_CONFIG(tooltip)
 #if QT_CONFIG(tooltip)
-        self.log_prefix_input.setToolTip(QCoreApplication.translate("logging_ui", u"<html><head/><body><p>This is the name that gets added to the front of the folder name so that you can tell what log is what.</p></body></html>", None))
+        self.log_prefix_input.setToolTip(QCoreApplication.translate("logging_ui", u"<html><head/><body><p>Prefix For Log Folders prepends the log directory with a user provided prefix. Typically this is used to allow for an easier time differentiating different runs</p></body></html>", None))
 #endif // QT_CONFIG(tooltip)
         self.log_prefix_input.setPlaceholderText(QCoreApplication.translate("logging_ui", u"Prefix", None))
 #if QT_CONFIG(tooltip)
-        self.log_tracker_name_input.setToolTip(QCoreApplication.translate("logging_ui", u"<html><head/><body><p>Is the name of the tracker in the logged data.</p></body></html>", None))
+        self.log_tracker_name_input.setToolTip(QCoreApplication.translate("logging_ui", u"<html><head/><body><p>Name For Log Tracker is the name of the log tracker.</p></body></html>", None))
 #endif // QT_CONFIG(tooltip)
         self.log_tracker_name_input.setPlaceholderText(QCoreApplication.translate("logging_ui", u"Tracker Name", None))
+#if QT_CONFIG(tooltip)
+        self.label_5.setToolTip(QCoreApplication.translate("logging_ui", u"<html><head/><body><p>Wandb API Key is a required field so that sd-scripts is able to interface with your Wandb account to log to it, without this key, it cannot log to Wandb</p></body></html>", None))
+#endif // QT_CONFIG(tooltip)
         self.label_5.setText(QCoreApplication.translate("logging_ui", u"Wandb API Key", None))
 #if QT_CONFIG(tooltip)
-        self.log_wandb_key_input.setToolTip(QCoreApplication.translate("logging_ui", u"<html><head/><body><p>Required if you are using Wandb as it's how you connect to the service.</p></body></html>", None))
+        self.log_wandb_key_input.setToolTip(QCoreApplication.translate("logging_ui", u"<html><head/><body><p>Wandb API Key is a required field so that sd-scripts is able to interface with your Wandb account to log to it, without this key, it cannot log to Wandb</p></body></html>", None))
 #endif // QT_CONFIG(tooltip)
         self.log_wandb_key_input.setPlaceholderText(QCoreApplication.translate("logging_ui", u"API Key", None))
+#if QT_CONFIG(tooltip)
+        self.log_prefix_enable.setToolTip(QCoreApplication.translate("logging_ui", u"<html><head/><body><p>Prefix For Log Folders prepends the log directory with a user provided prefix. Typically this is used to allow for an easier time differentiating different runs</p></body></html>", None))
+#endif // QT_CONFIG(tooltip)
         self.log_prefix_enable.setText(QCoreApplication.translate("logging_ui", u"Prefix For Log Folders", None))
+#if QT_CONFIG(tooltip)
+        self.log_tracker_name_enable.setToolTip(QCoreApplication.translate("logging_ui", u"<html><head/><body><p>Name For Log Tracker is the name of the log tracker.</p></body></html>", None))
+#endif // QT_CONFIG(tooltip)
         self.log_tracker_name_enable.setText(QCoreApplication.translate("logging_ui", u"Name For Log Tracker", None))
     # retranslateUi
 

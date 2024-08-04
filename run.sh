@@ -1,2 +1,4 @@
-source sd_scripts/venv/bin/activate
+#!/bin/bash
+
+source venv/bin/activate
 python main.py

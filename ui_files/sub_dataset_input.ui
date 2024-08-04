@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>523</width>
-    <height>167</height>
+    <height>221</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -32,15 +32,52 @@
    <property name="bottomMargin">
     <number>0</number>
    </property>
-   <item row="1" column="1">
+   <item row="0" column="0" colspan="2">
+    <layout class="QGridLayout" name="image_dir_grid">
+     <property name="horizontalSpacing">
+      <number>8</number>
+     </property>
+     <item row="1" column="1">
+      <widget class="QPushButton" name="image_folder_selector">
+       <property name="toolTip">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The folder that contains images and caption file pairs. The images and captions must be in that folder and not in folders in that folder.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="0" colspan="2">
+      <widget class="QLabel" name="Input_image_dir_label">
+       <property name="toolTip">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The folder that contains images and caption file pairs. The images and captions must be in that folder and not in folders in that folder.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
+       <property name="text">
+        <string>Input Image Dir</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="0">
+      <widget class="DragDropLineEdit" name="image_folder_input">
+       <property name="toolTip">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The folder that contains images and caption file pairs. The images and captions must be in that folder and not in folders in that folder.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
+       <property name="placeholderText">
+        <string>Image Folder</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item row="2" column="1">
     <layout class="QGridLayout" name="gridLayout_2">
      <property name="sizeConstraint">
       <enum>QLayout::SetDefaultConstraint</enum>
      </property>
      <item row="0" column="1" alignment="Qt::AlignLeft">
-      <widget class="QCheckBox" name="flip_aug">
+      <widget class="QCheckBox" name="flip_augment_enable">
        <property name="toolTip">
-        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Flips the latents of the images during training. Works well to reduce bias according to sidedness, but can cause issues if the dataset is asymetric.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Flip Augment Flips the latents of the images during training.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
        </property>
        <property name="text">
         <string>flip augment</string>
@@ -48,9 +85,9 @@
       </widget>
      </item>
      <item row="0" column="0" alignment="Qt::AlignLeft">
-      <widget class="QCheckBox" name="shuffle_captions">
+      <widget class="QCheckBox" name="shuffle_captions_enable">
        <property name="toolTip">
-        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;During training, the captions in the caption files will be shuffed. If you set keep tokens any higher than 0, then tags equal to keep tokens will not be shuffled and stay at the front, great for keeping something like a character name at the front of the file. I suggest you turn this on as it reduces overfitting.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Shuffle Captions will shuffle the captions for each image as it appears. It shuffles according to commas&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
        </property>
        <property name="text">
         <string>shuffle captions</string>
@@ -58,9 +95,9 @@
       </widget>
      </item>
      <item row="1" column="1" alignment="Qt::AlignLeft">
-      <widget class="QCheckBox" name="random_crop">
+      <widget class="QCheckBox" name="random_crop_enable">
        <property name="toolTip">
-        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Randomly crops from a corner vs from the center. Works very well when you have parts of the images that you want to learn that are on the edges. Doesn't work with cache latents.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Random Crop replaces the cropping behavior with a crop that originates from a random location of the image, instead of from the center&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
        </property>
        <property name="text">
         <string>random crop</string>
@@ -68,9 +105,9 @@
       </widget>
      </item>
      <item row="1" column="0" alignment="Qt::AlignLeft">
-      <widget class="QCheckBox" name="color_aug">
+      <widget class="QCheckBox" name="color_augment_enable">
        <property name="toolTip">
-        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Shifts the color of images randomly throughout training. This doesn't change captions however so it's fairly useless. Doesn't work with cache latents.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Color Augment shifts the color of images randomly during training&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
        </property>
        <property name="text">
         <string>color augment</string>
@@ -78,9 +115,9 @@
       </widget>
      </item>
      <item row="2" column="0" colspan="2" alignment="Qt::AlignLeft">
-      <widget class="QCheckBox" name="reg_images">
+      <widget class="QCheckBox" name="regularization_images_enable">
        <property name="toolTip">
-        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Select this if the folder provided is to images that are regularization images.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Regularization Images denotes that this folder is meant to be regularization, not for direct training&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
        </property>
        <property name="text">
         <string>regularization images</string>
@@ -89,20 +126,23 @@
      </item>
     </layout>
    </item>
-   <item row="1" column="0">
+   <item row="2" column="0">
     <layout class="QFormLayout" name="other_form_layout">
      <property name="horizontalSpacing">
       <number>12</number>
      </property>
      <item row="0" column="0">
       <widget class="QLabel" name="repeats_label">
+       <property name="toolTip">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Number of Repeats is the number of times any given image in the folder will be repeated per epoch&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
        <property name="text">
         <string>Number of Repeats</string>
        </property>
       </widget>
      </item>
      <item row="0" column="1">
-      <widget class="SpinBox" name="repeats_spinbox">
+      <widget class="SpinBox" name="repeats_input">
        <property name="maximumSize">
         <size>
          <width>16777215</width>
@@ -113,7 +153,7 @@
         <enum>Qt::StrongFocus</enum>
        </property>
        <property name="toolTip">
-        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;This is the number of times the images in this folder will repeat per epoch. So if you have 30 images in this folder and 4 repeats, it will be treated like as if it has 120 images.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Number of Repeats is the number of times any given image in the folder will be repeated per epoch&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
        </property>
        <property name="minimum">
         <number>1</number>
@@ -125,35 +165,41 @@
      </item>
      <item row="1" column="0">
       <widget class="QLabel" name="keep_tokens_label">
+       <property name="toolTip">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Keep Tokens is what allows you to prevent tokens from randomizing when shuffle captions is selected&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
        <property name="text">
         <string>Keep Tokens</string>
        </property>
       </widget>
      </item>
      <item row="1" column="1">
-      <widget class="SpinBox" name="keep_tokens_spinbox">
+      <widget class="SpinBox" name="keep_tokens_input">
        <property name="focusPolicy">
         <enum>Qt::StrongFocus</enum>
        </property>
        <property name="toolTip">
-        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;This is the number of tokens that get kept at the front of the captions. This is great when you want to have a tag that is always weighted the highest, such as the name of a character or an outfit tag.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Keep Tokens is what allows you to prevent tokens from randomizing when shuffle captions is selected&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
        </property>
       </widget>
      </item>
      <item row="2" column="0">
       <widget class="QLabel" name="caption_label">
+       <property name="toolTip">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Caption Extension is how you tell sd-scripts if your caption files are .txt or .caption&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
        <property name="text">
         <string>Caption Extension</string>
        </property>
       </widget>
      </item>
      <item row="2" column="1">
-      <widget class="ComboBox" name="caption_extension">
+      <widget class="ComboBox" name="caption_extension_selector">
        <property name="focusPolicy">
         <enum>Qt::StrongFocus</enum>
        </property>
        <property name="toolTip">
-        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The file type of the captions, technically can be anything but I only included the two most common types, .caption, and .txt.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Caption Extension is how you tell sd-scripts if your caption files are .txt or .caption&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
        </property>
        <item>
         <property name="text">
@@ -169,48 +215,49 @@
      </item>
     </layout>
    </item>
-   <item row="0" column="0" colspan="2">
-    <layout class="QGridLayout" name="image_dir_grid">
-     <property name="horizontalSpacing">
-      <number>8</number>
-     </property>
+   <item row="4" column="0" colspan="2">
+    <widget class="CollapsibleWidget" name="extra_args" native="true"/>
+   </item>
+   <item row="1" column="0" colspan="2">
+    <layout class="QGridLayout" name="gridLayout_3">
+     <item row="1" column="0">
+      <widget class="DragDropLineEdit" name="masked_image_input">
+       <property name="enabled">
+        <bool>false</bool>
+       </property>
+       <property name="toolTip">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Masked Image Dir is only used when masked loss is checked. This is where the masks for the images in the given folder are to be provided&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
+      </widget>
+     </item>
      <item row="1" column="1">
-      <widget class="QPushButton" name="file_dialog_button">
+      <widget class="QPushButton" name="masked_image_selector">
+       <property name="enabled">
+        <bool>false</bool>
+       </property>
+       <property name="toolTip">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Masked Image Dir is only used when masked loss is checked. This is where the masks for the images in the given folder are to be provided&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
        <property name="text">
         <string/>
        </property>
       </widget>
      </item>
      <item row="0" column="0" colspan="2">
-      <widget class="QLabel" name="Input_image_dir_label">
-       <property name="text">
-        <string>Input Image Dir</string>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="0">
-      <widget class="DragDropLineEdit" name="lineEdit">
+      <widget class="QLabel" name="label">
        <property name="toolTip">
-        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The folder that contains your images and caption files. If the folder is named something like 2_name, then it will automatically set the number of repeats, but only if you use the file dialog or drag and drop.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Masked Image Dir is only used when masked loss is checked. This is where the masks for the images in the given folder are to be provided&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
        </property>
-       <property name="placeholderText">
-        <string>Image Dir</string>
+       <property name="text">
+        <string>Masked Image Dir</string>
        </property>
       </widget>
      </item>
     </layout>
    </item>
-   <item row="3" column="0" colspan="2">
-    <widget class="CollapsibleWidget" name="extra_args" native="true"/>
-   </item>
   </layout>
  </widget>
  <customwidgets>
-  <customwidget>
-   <class>DragDropLineEdit</class>
-   <extends>QLineEdit</extends>
-   <header>modules.DragDropLineEdit.h</header>
-  </customwidget>
   <customwidget>
    <class>SpinBox</class>
    <extends>QSpinBox</extends>
@@ -226,6 +273,11 @@
    <extends>QWidget</extends>
    <header>modules.CollapsibleWidget.h</header>
    <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>DragDropLineEdit</class>
+   <extends>QLineEdit</extends>
+   <header>modules.DragDropLineEdit.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="sizePolicy">
-   <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
     <horstretch>0</horstretch>
     <verstretch>0</verstretch>
    </sizepolicy>
@@ -32,6 +32,18 @@
    <string>Form</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
+   <property name="leftMargin">
+    <number>0</number>
+   </property>
+   <property name="topMargin">
+    <number>0</number>
+   </property>
+   <property name="rightMargin">
+    <number>0</number>
+   </property>
+   <property name="bottomMargin">
+    <number>0</number>
+   </property>
    <item row="0" column="0">
     <widget class="QPushButton" name="top_arrow">
      <property name="sizePolicy">
@@ -85,8 +97,8 @@
           <rect>
            <x>0</x>
            <y>0</y>
-           <width>128</width>
-           <height>355</height>
+           <width>146</width>
+           <height>373</height>
           </rect>
          </property>
          <layout class="QVBoxLayout" name="verticalLayout_2"/>

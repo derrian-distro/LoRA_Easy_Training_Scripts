@@ -1,112 +1,100 @@
-import json
-import os
-from PySide6 import QtWidgets, QtGui, QtCore
+from PySide6.QtGui import QAction
+from PySide6.QtWidgets import QMainWindow, QApplication
 from qt_material import QtStyleTools, apply_stylesheet
-from main_ui_files.MainWidget import MainWidget
 from ui_files.MainUI import Ui_MainWindow
+from main_ui_files.MainUI import MainWidget
+from pathlib import Path
+import json
+from modules.LoraResizePopupUi import LoraResizePopup
 
 
-class MainWindow(QtWidgets.QMainWindow, QtStyleTools):
-    def __init__(self, app: QtWidgets.QApplication = None):
-        super(MainWindow, self).__init__()
+class MainWindow(QMainWindow, QtStyleTools):
+    def __init__(self, app: QApplication = None) -> None:
+        super().__init__()
         self.app = app
-        self.window_ = Ui_MainWindow()
-        self.window_.setupUi(self)
+        self.widget = Ui_MainWindow()
+        self.main_widget = MainWidget()
+        self.dark_themes: list[QAction] = []
+        self.light_themes: list[QAction] = []
+        self.no_theme = QAction("", self)
+
+        self.setup_widget()
+        self.setup_themes()
+        self.setup_connections()
+
+    def setup_widget(self) -> None:
+        self.widget.setupUi(self)
         self.setMinimumWidth(739)
+        screen_size = QApplication.screens()[0].size()
         self.setGeometry(
-            QtWidgets.QApplication.screens()[0].size().width() / 2
-            - (self.geometry().width() / 2),
-            QtWidgets.QApplication.screens()[0].size().height() / 2
-            - (self.geometry().height() / 2),
+            screen_size.width() / 2 - (self.geometry().width() / 2),
+            screen_size.height() / 2 - (self.geometry().height() / 2),
             self.geometry().width() + 10,
             750,
         )
-        self.main_widget = MainWidget()
         self.centralWidget().layout().addWidget(self.main_widget)
 
-        # setup theme actions for menu bar
-        self.dark_themes, self.light_themes, self.no_theme = self.process_themes()
-        for theme in self.dark_themes:
-            self.window_.dark_theme_menu.addAction(theme)
-        for theme in self.light_themes:
-            self.window_.light_theme_menu.addAction(theme)
-
-        # setup theme switching
-        for i in range(len(self.dark_themes)):
-            self.dark_themes[i].triggered.connect(
-                lambda x=False, index=i: self.change_theme(index, False)
-            )
-        for i in range(len(self.light_themes)):
-            self.light_themes[i].triggered.connect(
-                lambda x=False, index=i: self.change_theme(index, True)
-            )
-        self.window_.no_theme_action.triggered.connect(
-            lambda x=False: self.change_theme(0, False, True)
-        )
-
-        # setup TOML saving and loading actions
-        self.window_.save_toml.triggered.connect(self.main_widget.save_toml)
-        self.window_.load_toml.triggered.connect(self.main_widget.load_toml)
-        self.window_.save_runtime_toml.triggered.connect(
-            self.main_widget.save_runtime_toml
-        )
-
-    def process_themes(self) -> tuple[list, list]:
-        themes = os.listdir(os.path.join("css", "themes"))
-        dark_themes = []
-        light_themes = []
-        for theme in themes:
-            is_dark = len(theme.split("dark")) > 1
-            if len(theme.split("500")) > 1:
+    def setup_themes(self) -> None:
+        themes_path = Path("css/themes")
+        for theme in themes_path.iterdir():
+            if len(theme.name.split("500")) > 1:
                 continue
-            if is_dark:
-                dark_themes.append(
-                    QtGui.QAction(theme.split("_")[1].replace(".xml", ""), self)
-                )
+            if len(theme.name.split("dark")) > 1:
+                self.dark_themes.append(QAction(theme.stem.split("_")[1], self))
             else:
-                light_themes.append(
-                    QtGui.QAction(theme.split("_")[1].replace(".xml", ""), self)
-                )
-        no_theme = QtGui.QAction("", self)
-        return dark_themes, light_themes, no_theme
+                self.light_themes.append(QAction(theme.stem.split("_")[1], self))
+        for theme in self.dark_themes:
+            self.widget.dark_theme_menu.addAction(theme)
+        for theme in self.light_themes:
+            self.widget.light_theme_menu.addAction(theme)
 
-    @QtCore.Slot(int, bool, bool)
+    def setup_connections(self) -> None:
+        self.widget.save_toml.triggered.connect(self.main_widget.save_toml)
+        self.widget.load_toml.triggered.connect(self.main_widget.load_toml)
+        for i, action in enumerate(self.dark_themes):
+            action.triggered.connect(
+                lambda _=False, index=i: self.change_theme(index, False)
+            )
+        for i, action in enumerate(self.light_themes):
+            action.triggered.connect(
+                lambda _=False, index=i: self.change_theme(index, True)
+            )
+        self.widget.no_theme_action.triggered.connect(
+            lambda _=False: self.change_theme(0, False, True)
+        )
+        self.widget.lora_resize_action.triggered.connect(self.run_resize)
+        self.widget.set_train_lora_action.triggered.connect(
+            self.main_widget.set_train_lora
+        )
+        self.widget.set_train_ti_action.triggered.connect(self.main_widget.set_train_ti)
+
     def change_theme(
-        self, theme_index: int, is_light: bool, no_theme: bool = False
+        self, index: int, is_light: bool = False, no_theme: bool = False
     ) -> None:
         if no_theme:
+            theme_path = None
             self.app.setStyleSheet("")
         else:
             prefix = "light" if is_light else "dark"
-            name = (
-                self.light_themes[theme_index].text()
-                if is_light
-                else self.dark_themes[theme_index].text()
-            )
+            if is_light:
+                name = self.light_themes[index].text()
+            else:
+                name = self.dark_themes[index].text()
+            theme_path = Path(f"css/themes/{prefix}_{name}.xml")
             apply_stylesheet(
                 self.app,
-                theme=os.path.join("css", "themes", f"{prefix}_{name}.xml"),
+                theme=str(theme_path),
                 invert_secondary=is_light,
             )
-        if os.path.exists("config.json"):
-            with open("config.json", "r") as f:
-                config = json.load(f)
-            config["theme"] = {
-                "location": None
-                if no_theme
-                else os.path.join("css", "themes", f"{prefix}_{name}.xml"),
-                "is_light": is_light,
-            }
-            with open("config.json", "w") as f:
-                json.dump(config, f, indent=4)
-        else:
-            with open("config.json", "w") as f:
-                config = {
-                    "theme": {
-                        "location": None
-                        if no_theme
-                        else os.path.join("css", "themes", f"{prefix}_{name}.xml"),
-                        "is_light": is_light,
-                    }
-                }
-                json.dump(config, f, indent=4)
+        config = Path("config.json")
+        config_dict = json.loads(config.read_text()) if config.exists() else {}
+        config_dict["theme"] = {
+            "location": theme_path.as_posix() if theme_path else None,
+            "is_light": is_light,
+        }
+        config.write_text(json.dumps(config_dict, indent=2))
+
+    def run_resize(self):
+        popup = LoraResizePopup(self)
+        popup.setModal(True)
+        popup.exec()

@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>417</width>
-    <height>355</height>
+    <width>431</width>
+    <height>356</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -66,98 +66,13 @@
        <string>Main Args</string>
       </attribute>
       <layout class="QGridLayout" name="gridLayout">
-       <item row="2" column="1">
-        <layout class="QFormLayout" name="formLayout_2">
-         <item row="0" column="0">
-          <widget class="QLabel" name="conv_dim_label">
-           <property name="enabled">
-            <bool>true</bool>
-           </property>
-           <property name="text">
-            <string>Conv Dimension</string>
-           </property>
-          </widget>
-         </item>
-         <item row="0" column="1">
-          <widget class="SpinBox" name="conv_dim_input">
-           <property name="enabled">
-            <bool>false</bool>
-           </property>
-           <property name="focusPolicy">
-            <enum>Qt::StrongFocus</enum>
-           </property>
-           <property name="toolTip">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The dimension size for the conv layers. These layers carry more style with them, so be careful about setting them too high. I personally suggest you never go higher than 32 with them.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-           </property>
-           <property name="maximum">
-            <number>16777215</number>
-           </property>
-           <property name="value">
-            <number>32</number>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="0">
-          <widget class="QLabel" name="conv_alpha_label">
-           <property name="enabled">
-            <bool>true</bool>
-           </property>
-           <property name="text">
-            <string>Conv Alpha</string>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="1">
-          <widget class="DoubleSpinBox" name="conv_alpha_input">
-           <property name="enabled">
-            <bool>false</bool>
-           </property>
-           <property name="focusPolicy">
-            <enum>Qt::StrongFocus</enum>
-           </property>
-           <property name="toolTip">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The scalar of the conv dims. Much like the normal dim, I suggest you use half conv dim, or 1 if the dim size is 8 or lower.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-           </property>
-           <property name="maximum">
-            <double>16777215.000000000000000</double>
-           </property>
-           <property name="value">
-            <double>16.000000000000000</double>
-           </property>
-          </widget>
-         </item>
-         <item row="2" column="0">
-          <widget class="QLabel" name="max_timestep_label">
-           <property name="text">
-            <string>Max Timestep</string>
-           </property>
-          </widget>
-         </item>
-         <item row="2" column="1">
-          <widget class="SpinBox" name="max_timestep_input">
-           <property name="enabled">
-            <bool>true</bool>
-           </property>
-           <property name="minimum">
-            <number>1</number>
-           </property>
-           <property name="maximum">
-            <number>1000</number>
-           </property>
-           <property name="value">
-            <number>1000</number>
-           </property>
-          </widget>
-         </item>
-        </layout>
-       </item>
-       <item row="1" column="1">
-        <widget class="QLineEdit" name="lycoris_preset_input">
-         <property name="enabled">
-          <bool>false</bool>
-         </property>
+       <item row="1" column="0">
+        <widget class="QLabel" name="label">
          <property name="toolTip">
-          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;If you are using lycoris, this is a way to input a preset, if using a default, just put the name, otherwise put the full path of file location&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;LyCORIS Preset is the preset used by the LyCORIS library. Typically you want to use &amp;quot;full&amp;quot; which is automatically selected when there is nothing provided&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         </property>
+         <property name="text">
+          <string>LyCORIS Preset</string>
          </property>
         </widget>
        </item>
@@ -167,6 +82,9 @@
           <widget class="QCheckBox" name="network_dropout_enable">
            <property name="enabled">
             <bool>true</bool>
+           </property>
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Network Dropout, otherwise known as Neuron Dropout is your standard dropout provided by PyTorch.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
            </property>
            <property name="text">
             <string>Network Dropout</string>
@@ -182,7 +100,7 @@
             <enum>Qt::StrongFocus</enum>
            </property>
            <property name="toolTip">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Is a random chance that on any given step a neuron will be dropped out, encourages the model to diversify it's training &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Network Dropout, otherwise known as Neuron Dropout is your standard dropout provided by PyTorch.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
            </property>
            <property name="maximum">
             <double>1.000000000000000</double>
@@ -197,6 +115,9 @@
          </item>
          <item row="1" column="0">
           <widget class="QCheckBox" name="rank_dropout_enable">
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Rank Dropout is a larger form of dropout, randomly dropping out a full rank&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
            <property name="text">
             <string>Rank Dropout</string>
            </property>
@@ -211,7 +132,7 @@
             <enum>Qt::StrongFocus</enum>
            </property>
            <property name="toolTip">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Dropouts each dim of a lora at the rate specified, This is unproven, use at your own risk.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Rank Dropout is a larger form of dropout, randomly dropping out a full rank&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
            </property>
            <property name="maximum">
             <double>1.000000000000000</double>
@@ -226,6 +147,9 @@
          </item>
          <item row="2" column="0">
           <widget class="QCheckBox" name="module_dropout_enable">
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Module Dropout is a larger form of dropout, randomly dropping out a full module&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
            <property name="text">
             <string>Module Dropout</string>
            </property>
@@ -240,7 +164,7 @@
             <enum>Qt::StrongFocus</enum>
            </property>
            <property name="toolTip">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Drops out each module at the specified probability. Module dropout has not be verified, use at your own risk.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Module Dropout is a larger form of dropout, randomly dropping out a full module&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
            </property>
            <property name="maximum">
             <double>1.000000000000000</double>
@@ -255,6 +179,9 @@
          </item>
          <item row="4" column="0" colspan="2">
           <widget class="QCheckBox" name="lora_fa_enable">
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;LoRA FA is a tweak to the LoRA algorithm that is supposed to reduce the VRAM requirement while keeping all else the same&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
            <property name="text">
             <string>LoRA FA</string>
            </property>
@@ -263,7 +190,7 @@
          <item row="3" column="0">
           <widget class="QCheckBox" name="ip_gamma_enable">
            <property name="toolTip">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Used for regularization, recommended value of 0.1. I'm not sure exactly what this does, but claims to reduce training time while increasing quality.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;IP Noise Gamma is a noise modification that reduces the random noise, allowing what you want to learn, to learn faster&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
            </property>
            <property name="text">
             <string>IP Noise Gamma</string>
@@ -279,7 +206,7 @@
             <enum>Qt::StrongFocus</enum>
            </property>
            <property name="toolTip">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Used for regularization, recommended value of 0.1. I'm not sure exactly what this does, but claims to reduce training time while increasing quality.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;IP Noise Gamma is a noise modification that reduces the random noise, allowing what you want to learn, to learn faster&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
            </property>
            <property name="singleStep">
             <double>0.010000000000000</double>
@@ -291,10 +218,110 @@
          </item>
         </layout>
        </item>
+       <item row="2" column="1">
+        <layout class="QFormLayout" name="formLayout_2">
+         <item row="0" column="0">
+          <widget class="QLabel" name="conv_dim_label">
+           <property name="enabled">
+            <bool>true</bool>
+           </property>
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Conv Dimension represents the size of the Convolutional Dimensions of the model&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="text">
+            <string>Conv Dimension</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="1">
+          <widget class="SpinBox" name="conv_dim_input">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
+           <property name="focusPolicy">
+            <enum>Qt::StrongFocus</enum>
+           </property>
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Conv Dimension represents the size of the Convolutional Dimensions of the model&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="maximum">
+            <number>16777215</number>
+           </property>
+           <property name="value">
+            <number>32</number>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="0">
+          <widget class="QLabel" name="conv_alpha_label">
+           <property name="enabled">
+            <bool>true</bool>
+           </property>
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Conv Alpha represents the alpha of the Conv Dimensions. This Alpha is a scalar on the conv dimension such that alpha / dimension = scalar. For example, and alpha of 16 and a dimension of 32 would result in a scalar of 0.5&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="text">
+            <string>Conv Alpha</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="1">
+          <widget class="DoubleSpinBox" name="conv_alpha_input">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
+           <property name="focusPolicy">
+            <enum>Qt::StrongFocus</enum>
+           </property>
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Conv Alpha represents the alpha of the Conv Dimensions. This Alpha is a scalar on the conv dimension such that alpha / dimension = scalar. For example, and alpha of 16 and a dimension of 32 would result in a scalar of 0.5&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="maximum">
+            <double>16777215.000000000000000</double>
+           </property>
+           <property name="value">
+            <double>16.000000000000000</double>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="0">
+          <widget class="QLabel" name="max_timestep_label">
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Max Timestep represents the lowest timestep to train on. Typically you want to keep this value at 1000, the highest possible timestep. The Max timestep cannot be lower than the Min Timestep&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="text">
+            <string>Max Timestep</string>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="1">
+          <widget class="SpinBox" name="max_timestep_input">
+           <property name="enabled">
+            <bool>true</bool>
+           </property>
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Max Timestep represents the lowest timestep to train on. Typically you want to keep this value at 1000, the highest possible timestep. The Max timestep cannot be lower than the Min Timestep&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="minimum">
+            <number>1</number>
+           </property>
+           <property name="maximum">
+            <number>1000</number>
+           </property>
+           <property name="value">
+            <number>1000</number>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
        <item row="4" column="0">
         <layout class="QFormLayout" name="formLayout_3">
          <item row="0" column="0">
           <widget class="QLabel" name="unet_te_both_label">
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Train on selects if you want to train Both the Text Encoder and the Unet, only the Text Encoder, or only the Unet.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
            <property name="text">
             <string>Train on</string>
            </property>
@@ -324,7 +351,7 @@
             <enum>Qt::StrongFocus</enum>
            </property>
            <property name="toolTip">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;You can train on both the text encoder and unet or only one or the other, most of the time you want to train on both.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Train on selects if you want to train Both the Text Encoder and the Unet, only the Text Encoder, or only the Unet.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
            </property>
            <item>
             <property name="text">
@@ -350,6 +377,9 @@
              <property name="enabled">
               <bool>false</bool>
              </property>
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Cache TE Outputs caches the Text encoder outputs, which reduces the vram requirement. This does, however, prevent you from training the Text Encoder&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
              <property name="text">
               <string>Cache TE Outputs</string>
              </property>
@@ -360,44 +390,15 @@
              <property name="enabled">
               <bool>false</bool>
              </property>
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Caches the Text Encoder outputs to disk, which allows for reuse if you provide the same dataset&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
              <property name="text">
               <string>To Disk</string>
              </property>
             </widget>
            </item>
           </layout>
-         </item>
-         <item row="2" column="0">
-          <widget class="QLabel" name="dylora_unit_label">
-           <property name="enabled">
-            <bool>true</bool>
-           </property>
-           <property name="text">
-            <string>DyLoRA Unit</string>
-           </property>
-          </widget>
-         </item>
-         <item row="2" column="1">
-          <widget class="SpinBox" name="dylora_unit_input">
-           <property name="enabled">
-            <bool>false</bool>
-           </property>
-           <property name="maximumSize">
-            <size>
-             <width>16777215</width>
-             <height>16777215</height>
-            </size>
-           </property>
-           <property name="focusPolicy">
-            <enum>Qt::StrongFocus</enum>
-           </property>
-           <property name="toolTip">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The unit is the unit for dividing rank. so if you have dim 16, unit 4, then it can learn 4 lora models of dims 4, 8, 12, and 16.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-           </property>
-           <property name="value">
-            <number>4</number>
-           </property>
-          </widget>
          </item>
          <item row="3" column="0" colspan="2">
           <layout class="QHBoxLayout" name="horizontalLayout_3">
@@ -407,10 +408,10 @@
               <bool>false</bool>
              </property>
              <property name="toolTip">
-              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Enables Conv CP, which is some form of compression algorithm that further reduces file size, I personally suggest you don't use it&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Tucker, is a form of compression algorithm that reduces the file size&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
              </property>
              <property name="text">
-              <string>Enable Tucker</string>
+              <string>Tucker</string>
              </property>
             </widget>
            </item>
@@ -419,8 +420,24 @@
              <property name="enabled">
               <bool>false</bool>
              </property>
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Train Norm allows the model to train the Normalization Layers&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
              <property name="text">
               <string>Train Norm</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QCheckBox" name="dora_enable">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;DoRA activates Weight Decomoposition&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+             <property name="text">
+              <string>DoRA</string>
              </property>
             </widget>
            </item>
@@ -431,10 +448,65 @@
            <property name="enabled">
             <bool>false</bool>
            </property>
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Rescaled rescales the weights. Specific to Diag-OFT&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
            <property name="text">
-            <string>Rescale</string>
+            <string>Rescaled</string>
            </property>
           </widget>
+         </item>
+         <item row="2" column="0" colspan="2">
+          <layout class="QHBoxLayout" name="horizontalLayout_2">
+           <item>
+            <widget class="QLabel" name="dylora_unit_label">
+             <property name="enabled">
+              <bool>true</bool>
+             </property>
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;DyLoRA Unit is the number to jump by per DyLoRA layer.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+             <property name="text">
+              <string>DyLoRA Unit</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="SpinBox" name="dylora_unit_input">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+             <property name="maximumSize">
+              <size>
+               <width>16777215</width>
+               <height>16777215</height>
+              </size>
+             </property>
+             <property name="focusPolicy">
+              <enum>Qt::StrongFocus</enum>
+             </property>
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;DyLoRA Unit is the number to jump by per DyLoRA layer.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+             <property name="value">
+              <number>4</number>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QCheckBox" name="bypass_mode_enable">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Bypass mode changes the calculations in some way&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+             <property name="text">
+              <string>Bypass Mode</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
          </item>
          <item row="4" column="1">
           <layout class="QHBoxLayout" name="horizontalLayout_4">
@@ -443,8 +515,11 @@
              <property name="enabled">
               <bool>false</bool>
              </property>
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Constrait constrains the weights. Specific to Diag-OFT&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
              <property name="text">
-              <string>Constrain</string>
+              <string>Constraint</string>
              </property>
             </widget>
            </item>
@@ -453,11 +528,121 @@
              <property name="enabled">
               <bool>false</bool>
              </property>
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Constrait constrains the weights. Specific to Diag-OFT&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
             </widget>
            </item>
           </layout>
          </item>
         </layout>
+       </item>
+       <item row="2" column="0">
+        <layout class="QFormLayout" name="formLayout">
+         <item row="0" column="0">
+          <widget class="QLabel" name="network_dim_label">
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Network Dimension represents the size of the Linear Dimensions of the model&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="text">
+            <string>Network Dimension</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="1">
+          <widget class="SpinBox" name="network_dim_input">
+           <property name="maximumSize">
+            <size>
+             <width>16777215</width>
+             <height>16777215</height>
+            </size>
+           </property>
+           <property name="focusPolicy">
+            <enum>Qt::StrongFocus</enum>
+           </property>
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Network Dimension represents the size of the Linear Dimensions of the model&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="minimum">
+            <number>1</number>
+           </property>
+           <property name="maximum">
+            <number>16777215</number>
+           </property>
+           <property name="value">
+            <number>32</number>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="0">
+          <widget class="QLabel" name="network_alpha_label">
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Network Alpha represents the alpha of the Linear Dimensions. This Alpha is a scalar on the network dimension such that alpha / dimension = scalar. For example, and alpha of 16 and a dimension of 32 would result in a scalar of 0.5&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="text">
+            <string>Network Alpha</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="1">
+          <widget class="DoubleSpinBox" name="network_alpha_input">
+           <property name="maximumSize">
+            <size>
+             <width>16777215</width>
+             <height>16777215</height>
+            </size>
+           </property>
+           <property name="focusPolicy">
+            <enum>Qt::StrongFocus</enum>
+           </property>
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Network Alpha represents the alpha of the Linear Dimensions. This Alpha is a scalar on the network dimension such that alpha / dimension = scalar. For example, and alpha of 16 and a dimension of 32 would result in a scalar of 0.5&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="decimals">
+            <number>2</number>
+           </property>
+           <property name="maximum">
+            <double>16777215.000000000000000</double>
+           </property>
+           <property name="value">
+            <double>16.000000000000000</double>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="0">
+          <widget class="QLabel" name="min_timestep_label">
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Min timestep represents the lowest timestep to train on. Typically you want to keep this value at 0&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="text">
+            <string>Min Timestep</string>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="1">
+          <widget class="SpinBox" name="min_timestep_input">
+           <property name="enabled">
+            <bool>true</bool>
+           </property>
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Min timestep represents the lowest timestep to train on. Typically you want to keep this value at 0&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="maximum">
+            <number>999</number>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item row="1" column="1">
+        <widget class="QLineEdit" name="lycoris_preset_input">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
+         <property name="toolTip">
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;LyCORIS Preset is the preset used by the LyCORIS library. Typically you want to use &amp;quot;full&amp;quot; which is automatically selected when there is nothing provided&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         </property>
+        </widget>
        </item>
        <item row="0" column="0" colspan="2">
         <widget class="ComboBox" name="algo_select">
@@ -465,7 +650,7 @@
           <enum>Qt::StrongFocus</enum>
          </property>
          <property name="toolTip">
-          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The algorithm that is used for training, LoRA is the only one that doesn't train on all layers. LoCon is just LoRA that train on all layers LoHa has a ton of compression, and that is basically true for ia3 and Lokr as well. DyLora is a type of LoRA (or LoCon) that basically allows you to train multiple dim sized models in one, it does take a lot longer to train.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The Algorithm that is used during training&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
          </property>
          <item>
           <property name="text">
@@ -504,6 +689,11 @@
          </item>
          <item>
           <property name="text">
+           <string>BOFT</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
            <string>Diag-OFT</string>
           </property>
          </item>
@@ -512,98 +702,6 @@
            <string>Full</string>
           </property>
          </item>
-        </widget>
-       </item>
-       <item row="2" column="0">
-        <layout class="QFormLayout" name="formLayout">
-         <item row="0" column="0">
-          <widget class="QLabel" name="network_dim_label">
-           <property name="text">
-            <string>Network Dimension</string>
-           </property>
-          </widget>
-         </item>
-         <item row="0" column="1">
-          <widget class="SpinBox" name="network_dim_input">
-           <property name="maximumSize">
-            <size>
-             <width>16777215</width>
-             <height>16777215</height>
-            </size>
-           </property>
-           <property name="focusPolicy">
-            <enum>Qt::StrongFocus</enum>
-           </property>
-           <property name="toolTip">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The dimension of the model, the higher the dim the larger the file size. Keep in mind that larger does not mean better. I suggest you keep the dim low.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-           </property>
-           <property name="minimum">
-            <number>1</number>
-           </property>
-           <property name="maximum">
-            <number>16777215</number>
-           </property>
-           <property name="value">
-            <number>32</number>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="0">
-          <widget class="QLabel" name="network_alpha_label">
-           <property name="text">
-            <string>Network Alpha</string>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="1">
-          <widget class="DoubleSpinBox" name="network_alpha_input">
-           <property name="maximumSize">
-            <size>
-             <width>16777215</width>
-             <height>16777215</height>
-            </size>
-           </property>
-           <property name="focusPolicy">
-            <enum>Qt::StrongFocus</enum>
-           </property>
-           <property name="toolTip">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The scalar of the dim. Basically, if you have an alpha of 16 and a dim of 32, then the scalar is 0.5 which is a multiplier on the weights. I suggest you use half dim for alpha, in any case other than less than dim 9, in which I suggest you use alpha 1.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-           </property>
-           <property name="decimals">
-            <number>2</number>
-           </property>
-           <property name="maximum">
-            <double>16777215.000000000000000</double>
-           </property>
-           <property name="value">
-            <double>16.000000000000000</double>
-           </property>
-          </widget>
-         </item>
-         <item row="2" column="0">
-          <widget class="QLabel" name="min_timestep_label">
-           <property name="text">
-            <string>Min Timestep</string>
-           </property>
-          </widget>
-         </item>
-         <item row="2" column="1">
-          <widget class="SpinBox" name="min_timestep_input">
-           <property name="enabled">
-            <bool>true</bool>
-           </property>
-           <property name="maximum">
-            <number>999</number>
-           </property>
-          </widget>
-         </item>
-        </layout>
-       </item>
-       <item row="1" column="0">
-        <widget class="QLabel" name="label">
-         <property name="text">
-          <string>LyCORIS Preset</string>
-         </property>
         </widget>
        </item>
       </layout>
@@ -638,8 +736,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>411</width>
-            <height>323</height>
+            <width>425</width>
+            <height>324</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_3">
@@ -717,6 +815,11 @@
    <header>modules.ScrollOnSelect.h</header>
   </customwidget>
   <customwidget>
+   <class>LineEditWithHighlight</class>
+   <extends>QLineEdit</extends>
+   <header>modules.LineEditHighlight.h</header>
+  </customwidget>
+  <customwidget>
    <class>TabView</class>
    <extends>QTabWidget</extends>
    <header>modules.ScrollOnSelect.h</header>
@@ -727,11 +830,6 @@
    <extends>QWidget</extends>
    <header>modules.CollapsibleWidget.h</header>
    <container>1</container>
-  </customwidget>
-  <customwidget>
-   <class>LineEditWithHighlight</class>
-   <extends>QLineEdit</extends>
-   <header>modules.LineEditHighlight.h</header>
   </customwidget>
  </customwidgets>
  <resources/>
