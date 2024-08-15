@@ -71,6 +71,10 @@ accelerate config will ask you a bunch of questions, answer them like so,
 - bf16
 ```
 
+### NOTE:
+
+if you are using one of the installers, one of the questions it will ask you is "Are you using this locally? (y/n):" make sure you say y if you are going to be training on the computer you are using, This is very important to get correctly because the backend will not install otherwise, and you will be stuck wondering why it is not doing anything.
+
 ## Usage
 
 You can launch the UI using the `run.bat` file if you are on windows, or `run.sh` file if you are on linux.
