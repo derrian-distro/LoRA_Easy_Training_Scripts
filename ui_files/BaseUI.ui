@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>553</width>
-    <height>518</height>
+    <height>548</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -132,7 +132,7 @@
        <item>
         <widget class="QCheckBox" name="xformers_enable">
          <property name="enabled">
-          <bool>true</bool>
+          <bool>false</bool>
          </property>
          <property name="toolTip">
           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;XFormers Is a memory optimization library that drastically reduces VRAM usage while not reducing speed of training very much.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>

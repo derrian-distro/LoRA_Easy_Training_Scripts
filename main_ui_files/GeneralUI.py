@@ -11,6 +11,7 @@ class GeneralWidget(BaseWidget):
     sdxlChecked = Signal(bool)
     cacheLatentsChecked = Signal(bool)
     keepTokensSepChecked = Signal(bool)
+    v2Checked = Signal(bool)
 
     def __init__(self, parent: QWidget = None) -> None:
         super().__init__(parent)
@@ -42,7 +43,7 @@ class GeneralWidget(BaseWidget):
 
         def setup_file(elem: DragDropLineEdit, selector: QPushButton):
             selector_icon = QIcon(str(Path("icons/more-horizontal.svg")))
-            elem.setMode("file", [".ckpt", ".pt", ".safetensors"])
+            elem.setMode("file", [".ckpt", ".pt", ".safetensors", ".sft"])
             elem.highlight = True
             selector.setIcon(selector_icon)
 
@@ -62,58 +63,34 @@ class GeneralWidget(BaseWidget):
                 self.widget.base_model_input, "Base Model For Training", "SD Model"
             )
         )
-        self.widget.vae_input.textChanged.connect(
-            lambda x: self.edit_args("vae", x, optional=True)
-        )
+        self.widget.vae_input.textChanged.connect(lambda x: self.edit_args("vae", x, optional=True))
         self.widget.vae_selector.clicked.connect(
-            lambda: self.set_file_from_dialog(
-                self.widget.vae_input, "External VAE", "VAE file"
-            )
+            lambda: self.set_file_from_dialog(self.widget.vae_input, "External VAE", "VAE file")
         )
-        self.widget.v2_enable.clicked.connect(
-            lambda x: self.change_model_type(x, False)
-        )
-        self.widget.sdxl_enable.clicked.connect(
-            lambda x: self.change_model_type(False, x)
-        )
-        self.widget.no_half_vae_enable.clicked.connect(
-            lambda x: self.edit_args("no_half_vae", x, True)
-        )
-        self.widget.low_ram_enable.clicked.connect(
-            lambda x: self.edit_args("lowram", x, True)
-        )
+        self.widget.v2_enable.clicked.connect(lambda x: self.change_model_type(x, False))
+        self.widget.sdxl_enable.clicked.connect(lambda x: self.change_model_type(False, x))
+        self.widget.no_half_vae_enable.clicked.connect(lambda x: self.edit_args("no_half_vae", x, True))
+        self.widget.low_ram_enable.clicked.connect(lambda x: self.edit_args("lowram", x, True))
         self.widget.v_param_enable.clicked.connect(self.enable_disable_v_param)
         self.widget.v_pred_enable.clicked.connect(
             lambda x: self.edit_args("scale_v_pred_loss_like_noise_pred", x, True)
         )
-        self.widget.FP16_enable.clicked.connect(
-            lambda x: self.change_full_type(x, False)
-        )
-        self.widget.BF16_enable.clicked.connect(
-            lambda x: self.change_full_type(False, x)
-        )
-        self.widget.FP8_enable.clicked.connect(
-            lambda x: self.edit_args("fp8_base", x, True)
-        )
+        self.widget.FP16_enable.clicked.connect(lambda x: self.change_full_type(x, False))
+        self.widget.BF16_enable.clicked.connect(lambda x: self.change_full_type(False, x))
+        self.widget.FP8_enable.clicked.connect(lambda x: self.edit_args("fp8_base", x, True))
         self.widget.width_input.valueChanged.connect(self.change_resolution)
         self.widget.height_enable.clicked.connect(self.change_resolution)
         self.widget.height_input.valueChanged.connect(self.change_resolution)
         self.widget.grad_checkpointing_enable.clicked.connect(
             lambda x: self.edit_args("gradient_checkpointing", x, True)
         )
-        self.widget.grad_accumulation_enable.clicked.connect(
-            self.enable_disable_grad_acc
-        )
+        self.widget.grad_accumulation_enable.clicked.connect(self.enable_disable_grad_acc)
         self.widget.grad_accumulation_input.valueChanged.connect(
             lambda x: self.edit_args("gradient_accumulation_steps", x, True)
         )
         self.widget.seed_input.valueChanged.connect(lambda x: self.edit_args("seed", x))
-        self.widget.batch_size_input.valueChanged.connect(
-            lambda x: self.edit_dataset_args("batch_size", x)
-        )
-        self.widget.clip_skip_input.valueChanged.connect(
-            lambda x: self.edit_args("clip_skip", x)
-        )
+        self.widget.batch_size_input.valueChanged.connect(lambda x: self.edit_dataset_args("batch_size", x))
+        self.widget.clip_skip_input.valueChanged.connect(lambda x: self.edit_args("clip_skip", x))
         self.widget.max_token_selector.currentIndexChanged.connect(
             lambda x: self.edit_args("max_token_length", [225, 150, None][x], True)
         )
@@ -123,25 +100,17 @@ class GeneralWidget(BaseWidget):
         self.widget.mixed_precision_selector.currentTextChanged.connect(
             lambda x: self.edit_args("mixed_precision", x if x != "float" else "no")
         )
-        self.widget.xformers_enable.clicked.connect(
-            lambda x: self.change_optim_type(x, False)
-        )
-        self.widget.sdpa_enable.clicked.connect(
-            lambda x: self.change_optim_type(False, x)
-        )
+        self.widget.xformers_enable.clicked.connect(lambda x: self.change_optim_type(x, False))
+        self.widget.sdpa_enable.clicked.connect(lambda x: self.change_optim_type(False, x))
         self.widget.max_train_selector.currentIndexChanged.connect(self.change_max_mode)
         self.widget.max_train_input.valueChanged.connect(
             lambda: self.change_max_mode(self.widget.max_train_selector.currentIndex())
         )
-        self.widget.cache_latents_enable.clicked.connect(
-            self.enable_disable_cache_latents
-        )
+        self.widget.cache_latents_enable.clicked.connect(self.enable_disable_cache_latents)
         self.widget.cache_latents_to_disk_enable.clicked.connect(
             lambda x: self.edit_args("cache_latents_to_disk", x, True)
         )
-        self.widget.keep_tokens_seperator_enable.clicked.connect(
-            self.enable_disable_keep_tokens_sep
-        )
+        self.widget.keep_tokens_seperator_enable.clicked.connect(self.enable_disable_keep_tokens_sep)
         self.widget.keep_tokens_seperator_input.textChanged.connect(
             lambda x: self.edit_args(
                 "keep_tokens_separator",
@@ -151,9 +120,7 @@ class GeneralWidget(BaseWidget):
         )
         self.widget.comment_enable.clicked.connect(self.enable_disable_comment)
         self.widget.comment_input.textChanged.connect(
-            lambda: self.edit_args(
-                "training_comment", self.widget.comment_input.toPlainText(), True
-            )
+            lambda: self.edit_args("training_comment", self.widget.comment_input.toPlainText(), True)
         )
 
     def check_validity(self, elem: DragDropLineEdit) -> None:
@@ -162,6 +129,18 @@ class GeneralWidget(BaseWidget):
             elem.update_stylesheet()
         else:
             elem.setStyleSheet("")
+
+    def enable_disable_model_type(self, checked: bool) -> None:
+        for arg in ["v2", "sdxl"]:
+            if arg in self.args:
+                del self.args[arg]
+        self.widget.v2_enable.setEnabled(not checked)
+        self.widget.sdxl_enable.setEnabled(not checked)
+        self.widget.v_param_enable.setEnabled(not checked)
+        self.widget.v_pred_enable.setEnabled(not checked)
+        if not checked:
+            self.change_model_type(self.widget.v2_enable.isChecked(), self.widget.sdxl_enable.isChecked())
+            self.enable_disable_v_param(self.widget.v_param_enable.isChecked())
 
     def change_model_type(self, is_v2: bool, is_sdxl: bool) -> None:
         for arg in ["v2", "sdxl", "clip_skip"]:
@@ -173,9 +152,8 @@ class GeneralWidget(BaseWidget):
 
         self.edit_args("v2", is_v2, True)
         self.edit_args("sdxl", is_sdxl, True)
-        self.edit_args(
-            "clip_skip", None if is_sdxl else self.widget.clip_skip_input.value(), True
-        )
+        self.edit_args("clip_skip", None if is_sdxl else self.widget.clip_skip_input.value(), True)
+        self.v2Checked.emit(is_v2)
         self.sdxlChecked.emit(is_sdxl)
 
     def change_full_type(self, is_fp: bool, is_bf: bool) -> None:
@@ -280,66 +258,40 @@ class GeneralWidget(BaseWidget):
         self.widget.comment_input.setEnabled(checked)
         if not checked:
             return
-        self.edit_args(
-            "training_comment", self.widget.comment_input.toPlainText(), True
-        )
+        self.edit_args("training_comment", self.widget.comment_input.toPlainText(), True)
 
     def load_args(self, args: dict) -> bool:
         args = args.get(self.name, {})
 
         # update element inputs
-        self.widget.base_model_input.setText(
-            args.get("pretrained_model_name_or_path", "")
-        )
+        self.widget.base_model_input.setText(args.get("pretrained_model_name_or_path", ""))
         self.widget.vae_input.setText(args.get("vae", ""))
         self.widget.v2_enable.setChecked(args.get("v2", False))
         self.widget.sdxl_enable.setChecked(args.get("sdxl", False))
         self.widget.no_half_vae_enable.setChecked(args.get("no_half_vae", False))
         self.widget.low_ram_enable.setChecked(args.get("lowram", False))
         self.widget.v_param_enable.setChecked(args.get("v_parameterization", False))
-        self.widget.v_pred_enable.setChecked(
-            args.get("scale_v_pred_loss_like_noise_pred", False)
-        )
+        self.widget.v_pred_enable.setChecked(args.get("scale_v_pred_loss_like_noise_pred", False))
         self.widget.FP16_enable.setChecked(args.get("full_fp16", False))
         self.widget.BF16_enable.setChecked(args.get("full_bf16", False))
         self.widget.FP8_enable.setChecked(args.get("fp8_base", False))
-        self.widget.grad_checkpointing_enable.setChecked(
-            args.get("gradient_checkpointing", False)
-        )
-        self.widget.grad_accumulation_enable.setChecked(
-            bool(args.get("gradient_accumulation_steps", False))
-        )
-        self.widget.grad_accumulation_input.setValue(
-            args.get("gradient_accumulation_steps", 1)
-        )
+        self.widget.grad_checkpointing_enable.setChecked(args.get("gradient_checkpointing", False))
+        self.widget.grad_accumulation_enable.setChecked(bool(args.get("gradient_accumulation_steps", False)))
+        self.widget.grad_accumulation_input.setValue(args.get("gradient_accumulation_steps", 1))
         self.widget.seed_input.setValue(args.get("seed", 23))
         self.widget.clip_skip_input.setValue(args.get("clip_skip", 2))
-        self.widget.max_token_selector.setCurrentText(
-            str(args.get("max_token_length", 225))
-        )
+        self.widget.max_token_selector.setCurrentText(str(args.get("max_token_length", 225)))
         self.widget.loss_weight_input.setValue(args.get("prior_loss_weight", 1.0))
         mixed_prec = args.get("mixed_precision", "fp16")
-        self.widget.mixed_precision_selector.setCurrentText(
-            mixed_prec if mixed_prec != "no" else "float"
-        )
+        self.widget.mixed_precision_selector.setCurrentText(mixed_prec if mixed_prec != "no" else "float")
         self.widget.xformers_enable.setChecked(args.get("xformers", False))
         self.widget.sdpa_enable.setChecked(args.get("sdpa", False))
-        self.widget.max_train_selector.setCurrentIndex(
-            0 if args.get("max_train_epochs", None) else 1
-        )
-        self.widget.max_train_input.setValue(
-            args.get("max_train_epochs", args.get("max_train_steps", 1))
-        )
+        self.widget.max_train_selector.setCurrentIndex(0 if args.get("max_train_epochs", None) else 1)
+        self.widget.max_train_input.setValue(args.get("max_train_epochs", args.get("max_train_steps", 1)))
         self.widget.cache_latents_enable.setChecked(args.get("cache_latents", False))
-        self.widget.cache_latents_to_disk_enable.setChecked(
-            args.get("cache_latents_to_disk", False)
-        )
-        self.widget.keep_tokens_seperator_enable.setChecked(
-            bool(args.get("keep_tokens_separator", False))
-        )
-        self.widget.keep_tokens_seperator_input.setText(
-            args.get("keep_tokens_separator", "")
-        )
+        self.widget.cache_latents_to_disk_enable.setChecked(args.get("cache_latents_to_disk", False))
+        self.widget.keep_tokens_seperator_enable.setChecked(bool(args.get("keep_tokens_separator", False)))
+        self.widget.keep_tokens_seperator_input.setText(args.get("keep_tokens_separator", ""))
         self.widget.comment_enable.setChecked(bool(args.get("training_comment", False)))
         self.widget.comment_input.setText(args.get("training_comment", ""))
 
@@ -353,15 +305,11 @@ class GeneralWidget(BaseWidget):
             self.widget.vae_input.text(),
             optional=True,
         )
-        self.change_model_type(
-            self.widget.v2_enable.isChecked(), self.widget.sdxl_enable.isChecked()
-        )
+        self.change_model_type(self.widget.v2_enable.isChecked(), self.widget.sdxl_enable.isChecked())
         self.edit_args("no_half_vae", self.widget.no_half_vae_enable.isChecked(), True)
         self.edit_args("lowram", self.widget.low_ram_enable.isChecked(), True)
         self.enable_disable_v_param(self.widget.v_param_enable.isChecked())
-        self.change_full_type(
-            self.widget.FP16_enable.isChecked(), self.widget.BF16_enable.isChecked()
-        )
+        self.change_full_type(self.widget.FP16_enable.isChecked(), self.widget.BF16_enable.isChecked())
         self.edit_args("fp8_base", self.widget.FP8_enable.isChecked(), True)
         self.edit_args(
             "gradient_checkpointing",
@@ -376,14 +324,10 @@ class GeneralWidget(BaseWidget):
             True,
         )
         self.edit_args("prior_loss_weight", self.widget.loss_weight_input.value())
-        self.change_optim_type(
-            self.widget.xformers_enable.isChecked(), self.widget.sdpa_enable.isChecked()
-        )
+        self.change_optim_type(self.widget.xformers_enable.isChecked(), self.widget.sdpa_enable.isChecked())
         self.change_max_mode(self.widget.max_train_selector.currentIndex())
         self.enable_disable_cache_latents(self.widget.cache_latents_enable.isChecked())
-        self.enable_disable_keep_tokens_sep(
-            self.widget.keep_tokens_seperator_enable.isChecked()
-        )
+        self.enable_disable_keep_tokens_sep(self.widget.keep_tokens_seperator_enable.isChecked())
         self.enable_disable_comment(self.widget.comment_enable.isChecked())
         return True
 
@@ -392,13 +336,9 @@ class GeneralWidget(BaseWidget):
 
         # update element inputs
         resolution = dataset_args.get("resolution", 512)
-        self.widget.width_input.setValue(
-            resolution[0] if isinstance(resolution, list) else resolution
-        )
+        self.widget.width_input.setValue(resolution[0] if isinstance(resolution, list) else resolution)
         self.widget.height_enable.setChecked(isinstance(resolution, list))
-        self.widget.height_input.setValue(
-            resolution[1] if isinstance(resolution, list) else resolution
-        )
+        self.widget.height_input.setValue(resolution[1] if isinstance(resolution, list) else resolution)
         self.widget.batch_size_input.setValue(dataset_args.get("batch_size", 1))
 
         # edit dataset_args to match

@@ -1,5 +1,6 @@
 from PySide6.QtCore import Signal
 from PySide6 import QtWidgets, QtCore
+from main_ui_files.FluxUI import FluxWidget
 from main_ui_files.BucketUI import BucketWidget
 from main_ui_files.GeneralUI import GeneralWidget
 from main_ui_files.LoggingUI import LoggingWidget
@@ -28,6 +29,7 @@ class ArgsWidget(QtWidgets.QWidget):
         self.optimizer_widget = OptimizerWidget()
         self.ti_widget = TextualInversionWidget()
         self.ti_widget.setVisible(False)
+        self.flux_widget = FluxWidget()
 
         self.setup_widget()
         self.setup_args_widgets()
@@ -50,6 +52,19 @@ class ArgsWidget(QtWidgets.QWidget):
         general_args.sdxlChecked.connect(lambda x: self.sdxlChecked.emit(x))
         general_args.cacheLatentsChecked.connect(lambda x: self.cacheLatentsChecked.emit(x))
         general_args.keepTokensSepChecked.connect(lambda x: self.keepTokensSepChecked.emit(x))
+        general_args.v2Checked.connect(
+            lambda x: self.flux_widget.external_enable_disable(
+                x or general_args.widget.sdxl_enable.isChecked()
+            )
+        )
+        general_args.sdxlChecked.connect(
+            lambda x: self.flux_widget.external_enable_disable(x or general_args.widget.v2_enable.isChecked())
+        )
+        self.flux_widget.Toggled.connect(general_args.enable_disable_model_type)
+        self.flux_widget.SplitMode.connect(
+            lambda x: self.network_widget.edit_network_args("train_blocks", x, True)
+        )
+        self.flux_widget.Toggled.connect(self.network_widget.toggle_sdxl)
         self.optimizer_widget.maskedLossChecked.connect(lambda x: self.maskedLossChecked.emit(x))
         self.args_widget_array.append(general_args)
         self.sdxlChecked.connect(self.network_widget.toggle_sdxl)
@@ -61,6 +76,7 @@ class ArgsWidget(QtWidgets.QWidget):
         self.args_widget_array.append(NoiseOffsetWidget())
         self.args_widget_array.append(SampleWidget())
         self.args_widget_array.append(LoggingWidget())
+        self.args_widget_array.append(self.flux_widget)
         self.args_widget_array.append(ExtraArgsWidget())
 
         for widget in self.args_widget_array:

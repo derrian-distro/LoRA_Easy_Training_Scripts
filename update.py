@@ -8,9 +8,7 @@ import os
 def main():
     pip = Path("venv/Scripts/pip.exe" if platform == "win32" else "venv/bin/pip")
     backend_python = Path(
-        "sd_scripts/venv/Scripts/python.exe"
-        if platform == "win32"
-        else "sd_scripts/venv/bin/python"
+        "sd_scripts/venv/Scripts/python.exe" if platform == "win32" else "sd_scripts/venv/bin/python"
     )
     check_call(f"{pip} install -U -r requirements.txt", shell=platform == "linux")
     config = Path("config.json")
