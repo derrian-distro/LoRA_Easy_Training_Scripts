@@ -71,6 +71,7 @@ class GeneralWidget(BaseWidget):
         self.widget.sdxl_enable.clicked.connect(lambda x: self.change_model_type(False, x))
         self.widget.no_half_vae_enable.clicked.connect(lambda x: self.edit_args("no_half_vae", x, True))
         self.widget.low_ram_enable.clicked.connect(lambda x: self.edit_args("lowram", x, True))
+        self.widget.high_vram_enable.clicked.connect(lambda x: self.edit_args("highvram", x, True))
         self.widget.v_param_enable.clicked.connect(self.enable_disable_v_param)
         self.widget.v_pred_enable.clicked.connect(
             lambda x: self.edit_args("scale_v_pred_loss_like_noise_pred", x, True)
@@ -270,6 +271,7 @@ class GeneralWidget(BaseWidget):
         self.widget.sdxl_enable.setChecked(args.get("sdxl", False))
         self.widget.no_half_vae_enable.setChecked(args.get("no_half_vae", False))
         self.widget.low_ram_enable.setChecked(args.get("lowram", False))
+        self.widget.high_vram_enable.setChecked(args.get("highvram", False))
         self.widget.v_param_enable.setChecked(args.get("v_parameterization", False))
         self.widget.v_pred_enable.setChecked(args.get("scale_v_pred_loss_like_noise_pred", False))
         self.widget.FP16_enable.setChecked(args.get("full_fp16", False))
@@ -308,6 +310,7 @@ class GeneralWidget(BaseWidget):
         self.change_model_type(self.widget.v2_enable.isChecked(), self.widget.sdxl_enable.isChecked())
         self.edit_args("no_half_vae", self.widget.no_half_vae_enable.isChecked(), True)
         self.edit_args("lowram", self.widget.low_ram_enable.isChecked(), True)
+        self.edit_args("highvram", self.widget.high_vram_enable.isChecked(), True)
         self.enable_disable_v_param(self.widget.v_param_enable.isChecked())
         self.change_full_type(self.widget.FP16_enable.isChecked(), self.widget.BF16_enable.isChecked())
         self.edit_args("fp8_base", self.widget.FP8_enable.isChecked(), True)

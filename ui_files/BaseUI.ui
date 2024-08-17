@@ -590,6 +590,13 @@
           </property>
          </widget>
         </item>
+        <item>
+         <widget class="QCheckBox" name="high_vram_enable">
+          <property name="text">
+           <string>High VRAM</string>
+          </property>
+         </widget>
+        </item>
        </layout>
       </item>
       <item row="1" column="0">
