@@ -62,7 +62,7 @@ class ArgsWidget(QtWidgets.QWidget):
         )
         self.flux_widget.Toggled.connect(general_args.enable_disable_model_type)
         self.flux_widget.SplitMode.connect(
-            lambda x: self.network_widget.edit_network_args("train_blocks", x, True)
+            lambda x: self.network_widget.edit_network_args("train_blocks", "single" if x else False, True)
         )
         self.flux_widget.Toggled.connect(self.network_widget.toggle_sdxl)
         self.optimizer_widget.maskedLossChecked.connect(lambda x: self.maskedLossChecked.emit(x))
