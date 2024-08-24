@@ -26,7 +26,7 @@ class Ui_flux_ui(object):
     def setupUi(self, flux_ui):
         if not flux_ui.objectName():
             flux_ui.setObjectName(u"flux_ui")
-        flux_ui.resize(507, 316)
+        flux_ui.resize(523, 318)
         self.gridLayout = QGridLayout(flux_ui)
         self.gridLayout.setObjectName(u"gridLayout")
         self.flux_training_box = QGroupBox(flux_ui)
@@ -37,6 +37,11 @@ class Ui_flux_ui(object):
         self.gridLayout_2.setObjectName(u"gridLayout_2")
         self.formLayout_3 = QFormLayout()
         self.formLayout_3.setObjectName(u"formLayout_3")
+        self.label = QLabel(self.flux_training_box)
+        self.label.setObjectName(u"label")
+
+        self.formLayout_3.setWidget(0, QFormLayout.LabelRole, self.label)
+
         self.horizontalLayout = QHBoxLayout()
         self.horizontalLayout.setObjectName(u"horizontalLayout")
         self.ae_model_input = DragDropLineEdit(self.flux_training_box)
@@ -131,7 +136,7 @@ class Ui_flux_ui(object):
         self.discrete_flow_shift_input.setObjectName(u"discrete_flow_shift_input")
         self.discrete_flow_shift_input.setDecimals(4)
         self.discrete_flow_shift_input.setSingleStep(0.010000000000000)
-        self.discrete_flow_shift_input.setValue(3.000000000000000)
+        self.discrete_flow_shift_input.setValue(1.150000000000000)
 
         self.horizontalLayout_4.addWidget(self.discrete_flow_shift_input)
 
@@ -245,7 +250,7 @@ class Ui_flux_ui(object):
         self.guidance_scale_input.setObjectName(u"guidance_scale_input")
         self.guidance_scale_input.setDecimals(4)
         self.guidance_scale_input.setSingleStep(0.100000000000000)
-        self.guidance_scale_input.setValue(3.500000000000000)
+        self.guidance_scale_input.setValue(1.000000000000000)
 
         self.horizontalLayout_13.addWidget(self.guidance_scale_input)
 
@@ -259,6 +264,8 @@ class Ui_flux_ui(object):
 
         self.formLayout_16.setWidget(0, QFormLayout.LabelRole, self.label_13)
 
+        self.horizontalLayout_6 = QHBoxLayout()
+        self.horizontalLayout_6.setObjectName(u"horizontalLayout_6")
         self.model_prediction_type_selector = ComboBox(self.flux_training_box)
         self.model_prediction_type_selector.addItem("")
         self.model_prediction_type_selector.addItem("")
@@ -270,15 +277,20 @@ class Ui_flux_ui(object):
         sizePolicy2.setHeightForWidth(self.model_prediction_type_selector.sizePolicy().hasHeightForWidth())
         self.model_prediction_type_selector.setSizePolicy(sizePolicy2)
 
-        self.formLayout_16.setWidget(0, QFormLayout.FieldRole, self.model_prediction_type_selector)
+        self.horizontalLayout_6.addWidget(self.model_prediction_type_selector)
+
+        self.split_qkv_enable = QCheckBox(self.flux_training_box)
+        self.split_qkv_enable.setObjectName(u"split_qkv_enable")
+        sizePolicy.setHeightForWidth(self.split_qkv_enable.sizePolicy().hasHeightForWidth())
+        self.split_qkv_enable.setSizePolicy(sizePolicy)
+
+        self.horizontalLayout_6.addWidget(self.split_qkv_enable)
+
+
+        self.formLayout_16.setLayout(0, QFormLayout.FieldRole, self.horizontalLayout_6)
 
 
         self.formLayout_3.setLayout(7, QFormLayout.SpanningRole, self.formLayout_16)
-
-        self.label = QLabel(self.flux_training_box)
-        self.label.setObjectName(u"label")
-
-        self.formLayout_3.setWidget(0, QFormLayout.LabelRole, self.label)
 
 
         self.gridLayout_2.addLayout(self.formLayout_3, 0, 0, 1, 1)
@@ -295,6 +307,7 @@ class Ui_flux_ui(object):
     def retranslateUi(self, flux_ui):
         flux_ui.setWindowTitle(QCoreApplication.translate("flux_ui", u"Form", None))
         self.flux_training_box.setTitle(QCoreApplication.translate("flux_ui", u"Train Flux", None))
+        self.label.setText(QCoreApplication.translate("flux_ui", u"Ae Model", None))
         self.ae_model_selector.setText("")
         self.label_2.setText(QCoreApplication.translate("flux_ui", u"Clip L Model", None))
         self.clip_l_model_selector.setText("")
@@ -311,9 +324,9 @@ class Ui_flux_ui(object):
         self.label_7.setText(QCoreApplication.translate("flux_ui", u"Discrete Flow Shift", None))
         self.split_mode_enable.setText(QCoreApplication.translate("flux_ui", u"Split Mode", None))
         self.label_6.setText(QCoreApplication.translate("flux_ui", u"Timestep Sampling", None))
-        self.timestep_sampling_selector.setItemText(0, QCoreApplication.translate("flux_ui", u"Sigma", None))
-        self.timestep_sampling_selector.setItemText(1, QCoreApplication.translate("flux_ui", u"Uniform", None))
-        self.timestep_sampling_selector.setItemText(2, QCoreApplication.translate("flux_ui", u"Sigmoid", None))
+        self.timestep_sampling_selector.setItemText(0, QCoreApplication.translate("flux_ui", u"Sigmoid", None))
+        self.timestep_sampling_selector.setItemText(1, QCoreApplication.translate("flux_ui", u"Sigma", None))
+        self.timestep_sampling_selector.setItemText(2, QCoreApplication.translate("flux_ui", u"Uniform", None))
 
         self.label_5.setText(QCoreApplication.translate("flux_ui", u"Weighting Scheme", None))
         self.weighting_scheme_selector.setItemText(0, QCoreApplication.translate("flux_ui", u"None", None))
@@ -328,10 +341,10 @@ class Ui_flux_ui(object):
         self.label_11.setText(QCoreApplication.translate("flux_ui", u"Sigmoid Scale", None))
         self.label_12.setText(QCoreApplication.translate("flux_ui", u"Guidance Scale", None))
         self.label_13.setText(QCoreApplication.translate("flux_ui", u"Model Pred Type", None))
-        self.model_prediction_type_selector.setItemText(0, QCoreApplication.translate("flux_ui", u"Sigma Scaled", None))
-        self.model_prediction_type_selector.setItemText(1, QCoreApplication.translate("flux_ui", u"Raw", None))
+        self.model_prediction_type_selector.setItemText(0, QCoreApplication.translate("flux_ui", u"Raw", None))
+        self.model_prediction_type_selector.setItemText(1, QCoreApplication.translate("flux_ui", u"Sigma Scaled", None))
         self.model_prediction_type_selector.setItemText(2, QCoreApplication.translate("flux_ui", u"Additive", None))
 
-        self.label.setText(QCoreApplication.translate("flux_ui", u"Ae Model", None))
+        self.split_qkv_enable.setText(QCoreApplication.translate("flux_ui", u"Split QKV", None))
     # retranslateUi
 

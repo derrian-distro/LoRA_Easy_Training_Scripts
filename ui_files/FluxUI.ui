@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>507</width>
-    <height>316</height>
+    <width>523</width>
+    <height>318</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -28,6 +28,13 @@
      <layout class="QGridLayout" name="gridLayout_2">
       <item row="0" column="0">
        <layout class="QFormLayout" name="formLayout_3">
+        <item row="0" column="0">
+         <widget class="QLabel" name="label">
+          <property name="text">
+           <string>Ae Model</string>
+          </property>
+         </widget>
+        </item>
         <item row="0" column="1">
          <layout class="QHBoxLayout" name="horizontalLayout">
           <item>
@@ -150,7 +157,7 @@
              <double>0.010000000000000</double>
             </property>
             <property name="value">
-             <double>3.000000000000000</double>
+             <double>1.150000000000000</double>
             </property>
            </widget>
           </item>
@@ -182,17 +189,17 @@
            <widget class="ComboBox" name="timestep_sampling_selector">
             <item>
              <property name="text">
+              <string>Sigmoid</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
               <string>Sigma</string>
              </property>
             </item>
             <item>
              <property name="text">
               <string>Uniform</string>
-             </property>
-            </item>
-            <item>
-             <property name="text">
-              <string>Sigmoid</string>
              </property>
             </item>
            </widget>
@@ -334,7 +341,7 @@
              <double>0.100000000000000</double>
             </property>
             <property name="value">
-             <double>3.500000000000000</double>
+             <double>1.000000000000000</double>
             </property>
            </widget>
           </item>
@@ -350,38 +357,48 @@
            </widget>
           </item>
           <item row="0" column="1">
-           <widget class="ComboBox" name="model_prediction_type_selector">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
+           <layout class="QHBoxLayout" name="horizontalLayout_6">
             <item>
-             <property name="text">
-              <string>Sigma Scaled</string>
-             </property>
+             <widget class="ComboBox" name="model_prediction_type_selector">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <item>
+               <property name="text">
+                <string>Raw</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>Sigma Scaled</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>Additive</string>
+               </property>
+              </item>
+             </widget>
             </item>
             <item>
-             <property name="text">
-              <string>Raw</string>
-             </property>
+             <widget class="QCheckBox" name="split_qkv_enable">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="text">
+               <string>Split QKV</string>
+              </property>
+             </widget>
             </item>
-            <item>
-             <property name="text">
-              <string>Additive</string>
-             </property>
-            </item>
-           </widget>
+           </layout>
           </item>
          </layout>
-        </item>
-        <item row="0" column="0">
-         <widget class="QLabel" name="label">
-          <property name="text">
-           <string>Ae Model</string>
-          </property>
-         </widget>
         </item>
        </layout>
       </item>

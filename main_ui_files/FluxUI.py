@@ -10,6 +10,7 @@ from pathlib import Path
 class FluxWidget(BaseWidget):
     Toggled = Signal(bool)  # send to general args
     SplitMode = Signal(bool)  # send to network args
+    SplitQKV = Signal(bool)  # send to network args
 
     def __init__(self, parent: QWidget = None) -> None:
         super().__init__(parent)
@@ -73,6 +74,7 @@ class FluxWidget(BaseWidget):
         self.widget.model_prediction_type_selector.currentTextChanged.connect(
             lambda x: self.edit_args("model_prediction_type", x.replace(" ", "_").lower())
         )
+        self.widget.split_qkv_enable.clicked.connect(lambda x: self.SplitQKV.emit(x))
 
     def enable_disable(self, checked: bool) -> None:
         self.args = {}
@@ -93,6 +95,7 @@ class FluxWidget(BaseWidget):
             "model_prediction_type",
             self.widget.model_prediction_type_selector.currentText().replace(" ", "_").lower(),
         )
+        self.SplitQKV.emit(self.widget.split_qkv_enable.isChecked())
 
     def external_enable_disable(self, checked: bool) -> None:
         self.args = {}
@@ -142,6 +145,7 @@ class FluxWidget(BaseWidget):
         )
 
     def load_args(self, args: dict) -> bool:
+        net_args = args.get("network_args", {}).get("network_args", {})
         args: dict = args.get(self.name, {})
 
         self.widget.flux_training_box.setChecked(bool(args))
@@ -166,5 +170,6 @@ class FluxWidget(BaseWidget):
             [x.capitalize() for x in args.get("model_prediction_type", "sigma_scaled").split("_")]
         )
         self.widget.model_prediction_type_selector.setCurrentText(option)
+        self.widget.split_qkv_enable.setChecked(net_args.get("split_qkv", False))
 
         self.enable_disable(self.widget.flux_training_box.isChecked())
