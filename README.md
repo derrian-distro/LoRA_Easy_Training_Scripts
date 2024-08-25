@@ -22,6 +22,7 @@ If you are on windows all you need to do to install the scripts is follow these 
 ```
 git clone https://github.com/derrian-distro/LoRA_Easy_Training_Scripts
 cd LoRA_Easy_Training_Scripts
+git checkout flux
 install.bat
 ```
 
