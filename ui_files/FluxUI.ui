@@ -142,22 +142,22 @@
            </widget>
           </item>
           <item>
-           <widget class="QLabel" name="label_7">
+           <widget class="QLabel" name="label_12">
             <property name="text">
-             <string>Discrete Flow Shift</string>
+             <string>Guidance Scale</string>
             </property>
            </widget>
           </item>
           <item>
-           <widget class="DoubleSpinBox" name="discrete_flow_shift_input">
+           <widget class="DoubleSpinBox" name="guidance_scale_input">
             <property name="decimals">
              <number>4</number>
             </property>
             <property name="singleStep">
-             <double>0.010000000000000</double>
+             <double>0.100000000000000</double>
             </property>
             <property name="value">
-             <double>1.150000000000000</double>
+             <double>1.000000000000000</double>
             </property>
            </widget>
           </item>
@@ -200,6 +200,11 @@
             <item>
              <property name="text">
               <string>Uniform</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Shift</string>
              </property>
             </item>
            </widget>
@@ -326,22 +331,22 @@
            </widget>
           </item>
           <item>
-           <widget class="QLabel" name="label_12">
+           <widget class="QLabel" name="label_7">
             <property name="text">
-             <string>Guidance Scale</string>
+             <string>Discrete Flow Shift</string>
             </property>
            </widget>
           </item>
           <item>
-           <widget class="DoubleSpinBox" name="guidance_scale_input">
+           <widget class="DoubleSpinBox" name="discrete_flow_shift_input">
             <property name="decimals">
              <number>4</number>
             </property>
             <property name="singleStep">
-             <double>0.100000000000000</double>
+             <double>0.010000000000000</double>
             </property>
             <property name="value">
-             <double>1.000000000000000</double>
+             <double>1.150000000000000</double>
             </property>
            </widget>
           </item>
