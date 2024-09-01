@@ -4,9 +4,10 @@ from PySide6 import QtCore, QtWidgets, QtGui
 from modules.LineEditHighlight import LineEditWithHighlight
 
 
+# TODO: rename to ArgItem or something
 class OptimizerItem(QtWidgets.QWidget):
     delete_item = QtCore.Signal(object)
-    item_updated = QtCore.Signal()
+    item_updated = QtCore.Signal(object)
 
     def __init__(
         self,
@@ -16,6 +17,7 @@ class OptimizerItem(QtWidgets.QWidget):
     ):
         super(OptimizerItem, self).__init__(parent)
         self.arg_name = arg_name
+        self.previous_name = arg_name
         self.arg_value = arg_value
         self.arg_name_input = LineEditWithHighlight()
         self.arg_name_input.setToolTip("There is no error checking on this.")
@@ -40,13 +42,15 @@ class OptimizerItem(QtWidgets.QWidget):
 
     @QtCore.Slot(str)
     def name_edited(self, value: str):
+        self.previous_name = self.arg_name
         self.arg_name = value
-        self.item_updated.emit()
+        self.item_updated.emit(self)
 
     @QtCore.Slot(str)
     def value_edited(self, value: str):
+        self.previous_name = self.arg_name
         self.arg_value = value
-        self.item_updated.emit()
+        self.item_updated.emit(self)
 
     @QtCore.Slot()
     def delete_clicked(self):

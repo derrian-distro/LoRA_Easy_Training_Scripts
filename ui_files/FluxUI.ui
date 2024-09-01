@@ -207,6 +207,11 @@
               <string>Shift</string>
              </property>
             </item>
+            <item>
+             <property name="text">
+              <string>Flux Shift</string>
+             </property>
+            </item>
            </widget>
           </item>
           <item>

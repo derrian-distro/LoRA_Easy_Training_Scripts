@@ -1,6 +1,7 @@
 from PySide6 import QtCore
 from PySide6.QtWidgets import QWidget
 from modules.BlockWeightWidgets import BlockWeightWidget, BlockWidget
+from modules.OptimizerItem import OptimizerItem
 from ui_files.NetworkUI import Ui_network_ui
 from modules.BaseWidget import BaseWidget
 from modules.CollapsibleWidget import CollapsibleWidget
@@ -20,6 +21,7 @@ class NetworkWidget(BaseWidget):
             "max_timestep": 1000,
         }
         self.lycoris = False
+        self.network_args: list[OptimizerItem] = []
 
         self.setup_widget()
         self.setup_connections()
@@ -46,6 +48,7 @@ class NetworkWidget(BaseWidget):
                 BlockWidget(mode="float", base_value=16.0, arg_name="conv_block_alphas"),
             ),
         ]
+        self.widget.network_args_item_widget.layout().setAlignment(QtCore.Qt.AlignmentFlag.AlignTop)
 
         for i, elem in enumerate(self.block_widgets):
             elem[0].set_extra("enable")
@@ -116,6 +119,7 @@ class NetworkWidget(BaseWidget):
             lambda x: self.edit_network_args("constraint", self.parse_float(x), True)
         )
         self.widget.lora_fa_enable.clicked.connect(lambda x: self.edit_args("fa", x, True))
+        self.widget.add_network_arg_button.clicked.connect(self.add_network_arg)
 
     def edit_network_args(self, name: str, value: object, optional: bool = False) -> None:
         if "network_args" not in self.args:
@@ -126,6 +130,24 @@ class NetworkWidget(BaseWidget):
             return
 
         self.args["network_args"][name] = value
+
+    def remove_network_arg(self, widget: OptimizerItem):
+        self.layout().removeWidget(widget)
+        self.edit_network_args(widget.arg_name, False, True)
+        widget.deleteLater()
+        self.network_args.remove(widget)
+
+    def add_network_arg(self, arg_name: str = None, arg_value: str = None):
+        self.network_args.append(OptimizerItem(arg_name=arg_name, arg_value=arg_value))
+        self.widget.network_args_item_widget.layout().addWidget(self.network_args[-1])
+        self.network_args[-1].delete_item.connect(self.remove_network_arg)
+        self.network_args[-1].item_updated.connect(self.modify_network_arg)
+
+    def modify_network_arg(self, widget: OptimizerItem):
+        print(widget.arg_name, widget.previous_name, widget.arg_value)
+        if widget.arg_name != widget.previous_name:
+            self.edit_network_args(widget.previous_name, False, True)
+        self.edit_network_args(widget.arg_name, widget.arg_value)
 
     # handles the enable and disable of the following elements according to the algorithm selected from the top:
     # lycoris_preset, conv_dim, conv_alpha, dylora_unit, all dropouts, lora_fa
@@ -420,6 +442,7 @@ class NetworkWidget(BaseWidget):
         self.change_unet_te_only(self.widget.unet_te_both_select.currentIndex())
         self.enable_disable_cache_te(self.widget.cache_te_outputs_enable.isChecked())
         self.enable_disable_ip_gamma(self.widget.ip_gamma_enable.isChecked())
+        self.load_network_args(network_args)
         return True
 
     def load_block_weights(self, network_args: dict) -> None:
@@ -447,3 +470,32 @@ class NetworkWidget(BaseWidget):
             self.block_widgets[4][0].extra_elem.setChecked(True)
             self.block_widgets[4][0].enable_disable(True)
             self.block_widgets[4][1].update_vals(network_args["conv_block_alphas"])
+
+    def load_network_args(self, network_args: dict) -> None:
+        skip_list = [
+            "preset",
+            "conv_dim",
+            "conv_alpha",
+            "rank_dropout",
+            "unit",
+            "module_dropout",
+            "use_tucker",
+            "train_norm",
+            "rescaled",
+            "constraint",
+            "bypass_mode",
+            "algo",
+            "dropout",
+            "dora_wd",
+            "down_lr_weight",
+            "mid_lr_weight",
+            "up_lr_weight",
+        ]
+        for _ in range(len(self.network_args)):
+            self.remove_network_arg(self.network_args[0])
+
+        for arg, value in network_args.items():
+            if arg in skip_list:
+                continue
+            self.add_network_arg(arg, value)
+            self.modify_network_arg(self.network_args[-1])

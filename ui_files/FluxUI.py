@@ -162,6 +162,7 @@ class Ui_flux_ui(object):
         self.timestep_sampling_selector.addItem("")
         self.timestep_sampling_selector.addItem("")
         self.timestep_sampling_selector.addItem("")
+        self.timestep_sampling_selector.addItem("")
         self.timestep_sampling_selector.setObjectName(u"timestep_sampling_selector")
 
         self.horizontalLayout_5.addWidget(self.timestep_sampling_selector)
@@ -329,6 +330,7 @@ class Ui_flux_ui(object):
         self.timestep_sampling_selector.setItemText(1, QCoreApplication.translate("flux_ui", u"Sigma", None))
         self.timestep_sampling_selector.setItemText(2, QCoreApplication.translate("flux_ui", u"Uniform", None))
         self.timestep_sampling_selector.setItemText(3, QCoreApplication.translate("flux_ui", u"Shift", None))
+        self.timestep_sampling_selector.setItemText(4, QCoreApplication.translate("flux_ui", u"Flux Shift", None))
 
         self.label_5.setText(QCoreApplication.translate("flux_ui", u"Weighting Scheme", None))
         self.weighting_scheme_selector.setItemText(0, QCoreApplication.translate("flux_ui", u"None", None))

@@ -109,12 +109,15 @@ class FluxWidget(BaseWidget):
         self.edit_args("split_mode", checked, True)
 
     def change_timestep_sampling_type(self, index: int) -> None:
-        self.widget.sigmoid_scale_input.setEnabled(index == 0)
+        self.widget.sigmoid_scale_input.setEnabled(index in {0, 3, 4})
         self.widget.discrete_flow_shift_input.setEnabled(index == 3)
         for arg in ["sigmoid_scale", "discrete_flow_shift"]:
             if arg in self.args:
                 del self.args[arg]
-        self.edit_args("timestep_sampling", self.widget.timestep_sampling_selector.currentText().lower())
+        self.edit_args(
+            "timestep_sampling",
+            self.widget.timestep_sampling_selector.currentText().lower().replace(" ", "_"),
+        )
         self.edit_args(
             "sigmoid_scale",
             self.widget.sigmoid_scale_input.value() if self.widget.sigmoid_scale_input.isEnabled() else False,
@@ -168,7 +171,7 @@ class FluxWidget(BaseWidget):
         self.widget.discrete_flow_shift_input.setValue(args.get("discrete_flow_shift", 1.15))
         self.widget.split_mode_enable.setChecked(args.get("split_mode", False))
         self.widget.timestep_sampling_selector.setCurrentText(
-            args.get("timestep_sampling", "Sigma").capitalize()
+            " ".join([x.capitalize() for x in args.get("timestep_sampling", "Sigma").split("_")])
         )
         option = " ".join([x.capitalize() for x in args.get("weighting_scheme", "None").split("_")])
         self.widget.weighting_scheme_selector.setCurrentText(option)
