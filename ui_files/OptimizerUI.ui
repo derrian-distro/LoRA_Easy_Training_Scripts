@@ -311,6 +311,21 @@
              <string>Came</string>
             </property>
            </item>
+           <item>
+            <property name="text">
+             <string>Compass</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>LPFAdamW</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>RMSProp</string>
+            </property>
+           </item>
           </widget>
          </item>
          <item row="1" column="0">
@@ -632,8 +647,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>439</width>
-            <height>274</height>
+            <width>98</width>
+            <height>28</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_3"/>
