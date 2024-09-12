@@ -26,7 +26,7 @@ class Ui_optimizer_ui(object):
     def setupUi(self, optimizer_ui):
         if not optimizer_ui.objectName():
             optimizer_ui.setObjectName(u"optimizer_ui")
-        optimizer_ui.resize(463, 354)
+        optimizer_ui.resize(463, 385)
         self.verticalLayout = QVBoxLayout(optimizer_ui)
         self.verticalLayout.setObjectName(u"verticalLayout")
         self.verticalLayout.setContentsMargins(0, 0, 0, 0)
@@ -288,6 +288,21 @@ class Ui_optimizer_ui(object):
 
         self.formLayout_3.setWidget(4, QFormLayout.LabelRole, self.label_2)
 
+        self.label_7 = QLabel(self.optimizer_tab_main)
+        self.label_7.setObjectName(u"label_7")
+
+        self.formLayout_3.setWidget(7, QFormLayout.LabelRole, self.label_7)
+
+        self.d_param_input = DoubleSpinBox(self.optimizer_tab_main)
+        self.d_param_input.setObjectName(u"d_param_input")
+        self.d_param_input.setEnabled(False)
+        self.d_param_input.setDecimals(4)
+        self.d_param_input.setMaximum(1.000000000000000)
+        self.d_param_input.setSingleStep(0.010000000000000)
+        self.d_param_input.setValue(0.900000000000000)
+
+        self.formLayout_3.setWidget(7, QFormLayout.FieldRole, self.d_param_input)
+
 
         self.gridLayout.addLayout(self.formLayout_3, 1, 1, 1, 1)
 
@@ -490,6 +505,7 @@ class Ui_optimizer_ui(object):
         self.label_2.setToolTip(QCoreApplication.translate("optimizer_ui", u"<html><head/><body><p>Max Grad Norm is the maximum gradient after normalization</p></body></html>", None))
 #endif // QT_CONFIG(tooltip)
         self.label_2.setText(QCoreApplication.translate("optimizer_ui", u"Max Grad Norm", None))
+        self.label_7.setText(QCoreApplication.translate("optimizer_ui", u"D Param", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.optimizer_tab_main), QCoreApplication.translate("optimizer_ui", u"Main Args", None))
         self.add_opt_button.setText(QCoreApplication.translate("optimizer_ui", u"Add Optimizer Arg", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.optimizer_tab_args), QCoreApplication.translate("optimizer_ui", u"Optional Args", None))
