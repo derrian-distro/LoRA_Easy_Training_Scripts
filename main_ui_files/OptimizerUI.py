@@ -258,6 +258,7 @@ class OptimizerWidget(BaseWidget):
 
     def load_args(self, args: dict) -> bool:
         args: dict = args.get(self.name, {})
+        scheduler_args: dict = args.get("lr_scheduler_args", {})
 
         # update element inputs
         optimizer_type = args.get("optimizer_type", "AdamW")
@@ -296,7 +297,7 @@ class OptimizerWidget(BaseWidget):
             {"snr": 0, "exponential": 1, "constant": 2}.get(args.get("huber_schedule", "snr").lower(), 0)
         )
         self.widget.huber_param_input.setValue(args.get("huber_c", 0.1))
-        self.widget.d_param_input.setValue(args.get("d", 0.9))
+        self.widget.d_param_input.setValue(scheduler_args.get("d", 0.9))
 
         for _ in range(len(self.opt_args)):
             self.remove_optimizer_arg(self.opt_args[0])
