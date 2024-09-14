@@ -9,6 +9,7 @@ A set of training scripts written in python for use in Kohya's [SD-Scripts](http
 - [Installation](#installation)
   - [Windows](#windows)
   - [Linux](#linux)
+- [Colab](#colab)
 - [Usage](#usage)
 - [Configuration](#configuration)
 - [Changelog](#changelog)
@@ -68,6 +69,11 @@ accelerate config will ask you a bunch of questions, answer them like so,
 - all
 - bf16
 ```
+
+## Colab
+
+If you wish to train LoRAs but you lack the hardware, you can use this [Google Colab](https://colab.research.google.com/github/Jelosus2/Lora_Easy_Training_Colab/blob/main/Lora_Easy_Training_Colab.ipynb) created by [Jelosus2](https://github.com/Jelosus2) to be able to train them.
+Additionaly, you can check the [guide](https://civitai.com/articles/4409/almost-local-lora-training-guide) if you have trouble setting all up. **Note:** You still need to git clone the repo and install the UI on your local machine. Be sure to answer the prompt "Are you using this locally? (y/n):" with "n".
 
 ## Usage
 
