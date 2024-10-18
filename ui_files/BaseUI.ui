@@ -132,7 +132,7 @@
        <item>
         <widget class="QCheckBox" name="xformers_enable">
          <property name="enabled">
-          <bool>false</bool>
+          <bool>true</bool>
          </property>
          <property name="toolTip">
           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;XFormers Is a memory optimization library that drastically reduces VRAM usage while not reducing speed of training very much.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>

@@ -3,7 +3,7 @@
 ################################################################################
 ## Form generated from reading UI file 'BaseUI.ui'
 ##
-## Created by: Qt User Interface Compiler version 6.7.2
+## Created by: Qt User Interface Compiler version 6.8.0
 ##
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
@@ -93,7 +93,7 @@ class Ui_base_args_ui(object):
         self.horizontalLayout_7.setObjectName(u"horizontalLayout_7")
         self.xformers_enable = QCheckBox(base_args_ui)
         self.xformers_enable.setObjectName(u"xformers_enable")
-        self.xformers_enable.setEnabled(False)
+        self.xformers_enable.setEnabled(True)
         self.xformers_enable.setChecked(False)
 
         self.horizontalLayout_7.addWidget(self.xformers_enable)
