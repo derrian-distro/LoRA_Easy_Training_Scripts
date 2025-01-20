@@ -123,6 +123,32 @@ class MainWidget(QWidget):
             self.train_mode = TrainingModes.TI
             self.args_widget.set_ti_training()
 
+    def perform_easy_naming(self, args:dict) -> dict:
+        """
+        Replaces the baseName variable with the easy_name variable in various saving and logging paths.
+        """
+        base_name_var = r"${baseName}"
+
+        saving_args = args.get("saving_args", {})
+        easy_name = saving_args.get("easy_name", "")
+
+        if "output_dir" in saving_args:
+            saving_args["output_dir"] = saving_args["output_dir"].replace(base_name_var, easy_name)
+        if "output_name" in saving_args:
+            saving_args["output_name"] = saving_args["output_name"].replace(base_name_var, easy_name)
+        if "tag_file_location" in saving_args:
+            saving_args["tag_file_location"] = saving_args["tag_file_location"].replace(base_name_var, easy_name)
+        if "save_toml_location" in saving_args:
+            saving_args["save_toml_location"] = saving_args["save_toml_location"].replace(base_name_var, easy_name)
+        if "resume" in saving_args:
+            saving_args["resume"] = saving_args["resume"].replace(base_name_var, easy_name)
+
+        logging_args = args.get("logging_args", {})
+        if "log_prefix" in logging_args:
+            logging_args["log_prefix"] = logging_args["log_prefix"].replace(base_name_var, easy_name)
+
+        return args
+
     def process_toml(self, file_name: Path | None = None) -> tuple[dict, dict]:
         loaded_args = TomlFunctions.load_toml(file_name)
         if not loaded_args:
@@ -142,6 +168,7 @@ class MainWidget(QWidget):
                 args[arg] = val["args"]
             if "dataset_args" in val:
                 dataset_args[arg] = val["dataset_args"]
+        
         return args, dataset_args, train_mode
 
     def start_training(self) -> None:
@@ -173,7 +200,10 @@ class MainWidget(QWidget):
 
     def train_helper(self, url: str, train_toml: Path) -> bool:
         args, dataset_args, train_mode = self.process_toml(train_toml)
-        final_args = {"args": args, "dataset": dataset_args}
+        final_args = {
+            "args": self.perform_easy_naming(args), 
+            "dataset": dataset_args
+        }
         config = json.loads(Path("config.json").read_text())
         try:
             response = requests.post(
