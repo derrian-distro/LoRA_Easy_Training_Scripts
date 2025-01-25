@@ -3,7 +3,7 @@
 ################################################################################
 ## Form generated from reading UI file 'OptimizerUI.ui'
 ##
-## Created by: Qt User Interface Compiler version 6.7.2
+## Created by: Qt User Interface Compiler version 6.8.1
 ##
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
@@ -134,6 +134,7 @@ class Ui_optimizer_ui(object):
         self.formLayout.setWidget(0, QFormLayout.LabelRole, self.optimizer_type_label)
 
         self.optimizer_type_selector = ComboBox(self.optimizer_tab_main)
+        self.optimizer_type_selector.addItem("")
         self.optimizer_type_selector.addItem("")
         self.optimizer_type_selector.addItem("")
         self.optimizer_type_selector.addItem("")
@@ -322,7 +323,7 @@ class Ui_optimizer_ui(object):
         self.scrollArea.setWidgetResizable(True)
         self.optimizer_item_widget = QWidget()
         self.optimizer_item_widget.setObjectName(u"optimizer_item_widget")
-        self.optimizer_item_widget.setGeometry(QRect(0, 0, 98, 28))
+        self.optimizer_item_widget.setGeometry(QRect(0, 0, 66, 18))
         self.verticalLayout_3 = QVBoxLayout(self.optimizer_item_widget)
         self.verticalLayout_3.setObjectName(u"verticalLayout_3")
         self.scrollArea.setWidget(self.optimizer_item_widget)
@@ -423,6 +424,7 @@ class Ui_optimizer_ui(object):
         self.optimizer_type_selector.setItemText(12, QCoreApplication.translate("optimizer_ui", u"Compass", None))
         self.optimizer_type_selector.setItemText(13, QCoreApplication.translate("optimizer_ui", u"LPFAdamW", None))
         self.optimizer_type_selector.setItemText(14, QCoreApplication.translate("optimizer_ui", u"RMSProp", None))
+        self.optimizer_type_selector.setItemText(15, QCoreApplication.translate("optimizer_ui", u"RAdamScheduleFree", None))
 
 #if QT_CONFIG(tooltip)
         self.optimizer_type_selector.setToolTip(QCoreApplication.translate("optimizer_ui", u"<html><head/><body><p>Optimizer Type is the Optimizer that will be used during training</p></body></html>", None))

@@ -3,7 +3,7 @@
 ################################################################################
 ## Form generated from reading UI file 'FluxUI.ui'
 ##
-## Created by: Qt User Interface Compiler version 6.7.2
+## Created by: Qt User Interface Compiler version 6.8.1
 ##
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
@@ -26,7 +26,7 @@ class Ui_flux_ui(object):
     def setupUi(self, flux_ui):
         if not flux_ui.objectName():
             flux_ui.setObjectName(u"flux_ui")
-        flux_ui.resize(523, 318)
+        flux_ui.resize(529, 317)
         self.gridLayout = QGridLayout(flux_ui)
         self.gridLayout.setObjectName(u"gridLayout")
         self.flux_training_box = QGroupBox(flux_ui)
@@ -259,40 +259,50 @@ class Ui_flux_ui(object):
 
         self.formLayout_3.setLayout(6, QFormLayout.SpanningRole, self.horizontalLayout_13)
 
-        self.formLayout_16 = QFormLayout()
-        self.formLayout_16.setObjectName(u"formLayout_16")
-        self.label_13 = QLabel(self.flux_training_box)
-        self.label_13.setObjectName(u"label_13")
-
-        self.formLayout_16.setWidget(0, QFormLayout.LabelRole, self.label_13)
-
-        self.horizontalLayout_6 = QHBoxLayout()
-        self.horizontalLayout_6.setObjectName(u"horizontalLayout_6")
-        self.model_prediction_type_selector = ComboBox(self.flux_training_box)
-        self.model_prediction_type_selector.addItem("")
-        self.model_prediction_type_selector.addItem("")
-        self.model_prediction_type_selector.addItem("")
-        self.model_prediction_type_selector.setObjectName(u"model_prediction_type_selector")
-        sizePolicy2 = QSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Fixed)
-        sizePolicy2.setHorizontalStretch(0)
-        sizePolicy2.setVerticalStretch(0)
-        sizePolicy2.setHeightForWidth(self.model_prediction_type_selector.sizePolicy().hasHeightForWidth())
-        self.model_prediction_type_selector.setSizePolicy(sizePolicy2)
-
-        self.horizontalLayout_6.addWidget(self.model_prediction_type_selector)
-
         self.split_qkv_enable = QCheckBox(self.flux_training_box)
         self.split_qkv_enable.setObjectName(u"split_qkv_enable")
         sizePolicy.setHeightForWidth(self.split_qkv_enable.sizePolicy().hasHeightForWidth())
         self.split_qkv_enable.setSizePolicy(sizePolicy)
 
-        self.horizontalLayout_6.addWidget(self.split_qkv_enable)
+        self.formLayout_3.setWidget(7, QFormLayout.LabelRole, self.split_qkv_enable)
+
+        self.horizontalLayout_6 = QHBoxLayout()
+        self.horizontalLayout_6.setObjectName(u"horizontalLayout_6")
+        self.label_13 = QLabel(self.flux_training_box)
+        self.label_13.setObjectName(u"label_13")
+        sizePolicy2 = QSizePolicy(QSizePolicy.Policy.Maximum, QSizePolicy.Policy.Preferred)
+        sizePolicy2.setHorizontalStretch(0)
+        sizePolicy2.setVerticalStretch(0)
+        sizePolicy2.setHeightForWidth(self.label_13.sizePolicy().hasHeightForWidth())
+        self.label_13.setSizePolicy(sizePolicy2)
+
+        self.horizontalLayout_6.addWidget(self.label_13)
+
+        self.model_prediction_type_selector = ComboBox(self.flux_training_box)
+        self.model_prediction_type_selector.addItem("")
+        self.model_prediction_type_selector.addItem("")
+        self.model_prediction_type_selector.addItem("")
+        self.model_prediction_type_selector.setObjectName(u"model_prediction_type_selector")
+        sizePolicy3 = QSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Fixed)
+        sizePolicy3.setHorizontalStretch(0)
+        sizePolicy3.setVerticalStretch(0)
+        sizePolicy3.setHeightForWidth(self.model_prediction_type_selector.sizePolicy().hasHeightForWidth())
+        self.model_prediction_type_selector.setSizePolicy(sizePolicy3)
+
+        self.horizontalLayout_6.addWidget(self.model_prediction_type_selector)
+
+        self.blocks_to_swap_enable = QCheckBox(self.flux_training_box)
+        self.blocks_to_swap_enable.setObjectName(u"blocks_to_swap_enable")
+
+        self.horizontalLayout_6.addWidget(self.blocks_to_swap_enable)
+
+        self.blocks_to_swap_input = SpinBox(self.flux_training_box)
+        self.blocks_to_swap_input.setObjectName(u"blocks_to_swap_input")
+
+        self.horizontalLayout_6.addWidget(self.blocks_to_swap_input)
 
 
-        self.formLayout_16.setLayout(0, QFormLayout.FieldRole, self.horizontalLayout_6)
-
-
-        self.formLayout_3.setLayout(7, QFormLayout.SpanningRole, self.formLayout_16)
+        self.formLayout_3.setLayout(7, QFormLayout.FieldRole, self.horizontalLayout_6)
 
 
         self.gridLayout_2.addLayout(self.formLayout_3, 0, 0, 1, 1)
@@ -344,11 +354,12 @@ class Ui_flux_ui(object):
         self.label_10.setText(QCoreApplication.translate("flux_ui", u"Mode Scale", None))
         self.label_11.setText(QCoreApplication.translate("flux_ui", u"Sigmoid Scale", None))
         self.label_7.setText(QCoreApplication.translate("flux_ui", u"Discrete Flow Shift", None))
+        self.split_qkv_enable.setText(QCoreApplication.translate("flux_ui", u"Split QKV", None))
         self.label_13.setText(QCoreApplication.translate("flux_ui", u"Model Pred Type", None))
         self.model_prediction_type_selector.setItemText(0, QCoreApplication.translate("flux_ui", u"Raw", None))
         self.model_prediction_type_selector.setItemText(1, QCoreApplication.translate("flux_ui", u"Sigma Scaled", None))
         self.model_prediction_type_selector.setItemText(2, QCoreApplication.translate("flux_ui", u"Additive", None))
 
-        self.split_qkv_enable.setText(QCoreApplication.translate("flux_ui", u"Split QKV", None))
+        self.blocks_to_swap_enable.setText(QCoreApplication.translate("flux_ui", u"Blocks To Swap", None))
     # retranslateUi
 
