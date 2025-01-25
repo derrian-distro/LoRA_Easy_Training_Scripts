@@ -39,9 +39,7 @@ class MainWidget(QWidget):
         self.subset_widget.add_empty_subset("subset 1")
         config = Path("config.json")
         config_dict = json.loads(config.read_text()) if config.exists() else {}
-        self.backend_url_input.setText(
-            config_dict.get("backend_url", "http://127.0.0.1:8000")
-        )
+        self.backend_url_input.setText(config_dict.get("backend_url", "http://127.0.0.1:8000"))
         self.backend_url_input.setPlaceholderText("Backend Server URL")
         self.tab_widget.addTab(self.args_widget, "Main Args")
         self.tab_widget.addTab(self.subset_widget, "Subset Args")
@@ -61,15 +59,9 @@ class MainWidget(QWidget):
         )
 
     def setup_connections(self) -> None:
-        self.args_widget.cacheLatentsChecked.connect(
-            self.subset_widget.enable_disable_cache_latents
-        )
-        self.args_widget.keepTokensSepChecked.connect(
-            self.subset_widget.enable_disable_variable_keep_tokens
-        )
-        self.args_widget.maskedLossChecked.connect(
-            self.subset_widget.enable_disable_masked_loss
-        )
+        self.args_widget.cacheLatentsChecked.connect(self.subset_widget.enable_disable_cache_latents)
+        self.args_widget.keepTokensSepChecked.connect(self.subset_widget.enable_disable_variable_keep_tokens)
+        self.args_widget.maskedLossChecked.connect(self.subset_widget.enable_disable_masked_loss)
         self.queue_widget.saveQueue.connect(lambda x: self.save_toml(Path(x)))
         self.queue_widget.loadQueue.connect(lambda x: self.load_toml(Path(x)))
         self.begin_training_button.clicked.connect(self.start_training)
@@ -176,9 +168,7 @@ class MainWidget(QWidget):
         final_args = {"args": args, "dataset": dataset_args}
         config = json.loads(Path("config.json").read_text())
         try:
-            response = requests.post(
-                f"{url}/validate", json=True, data=json.dumps(final_args)
-            )
+            response = requests.post(f"{url}/validate", json=True, data=json.dumps(final_args))
         except ConnectionError as e:
             print(e)
             return False
@@ -202,8 +192,9 @@ class MainWidget(QWidget):
             )
         os.remove(train_toml)
         is_sdxl = str(args.get("general_args").get("sdxl", False))
+        is_flux = str(bool(args.get("flux_args")))
         response = requests.get(
-            f"{url}/train", params={"train_mode": train_mode.value, "sdxl": is_sdxl}
+            f"{url}/train", params={"train_mode": train_mode.value, "sdxl": is_sdxl, "flux": is_flux}
         )
         training = True
         while training:
@@ -239,9 +230,7 @@ class MainWidget(QWidget):
             output_location = output_location.parent
         output_location = output_location.joinpath(f"{output_name}.txt")
         with output_location.open("w", encoding="utf-8") as f:
-            f.write(
-                "Below is a list of keywords used during the training of this model:\n"
-            )
+            f.write("Below is a list of keywords used during the training of this model:\n")
             for k, v in tags.items():
                 f.write(f"[{v}] {k}\n")
 

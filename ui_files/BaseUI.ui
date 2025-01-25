@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>553</width>
-    <height>518</height>
+    <height>548</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -587,6 +587,13 @@
           </property>
           <property name="text">
            <string>Low RAM</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QCheckBox" name="high_vram_enable">
+          <property name="text">
+           <string>High VRAM</string>
           </property>
          </widget>
         </item>

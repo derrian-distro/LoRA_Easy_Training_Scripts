@@ -70,6 +70,7 @@ class OptimizerWidget(BaseWidget):
         )
         self.widget.huber_param_input.valueChanged.connect(lambda x: self.edit_args("huber_c", round(x, 4)))
         self.widget.add_opt_button.clicked.connect(self.add_optimizer_arg)
+        self.widget.d_param_input.valueChanged.connect(lambda x: self.edit_lr_args("d", round(x, 4)))
 
     def edit_lr(self, name: str, value: str, optional: bool = False) -> None:
         try:
@@ -140,6 +141,7 @@ class OptimizerWidget(BaseWidget):
         self.widget.poly_power_input.setEnabled(False)
         self.widget.min_lr_input.setEnabled(False)
         self.widget.gamma_input.setEnabled(False)
+        self.widget.d_param_input.setEnabled(False)
 
         if value == "cosine_with_restarts":
             self.widget.cosine_restart_input.setEnabled(True)
@@ -171,6 +173,7 @@ class OptimizerWidget(BaseWidget):
             self.widget.cosine_restart_input.setEnabled(True)
             self.widget.min_lr_input.setEnabled(True)
             self.widget.gamma_input.setEnabled(True)
+            self.widget.d_param_input.setEnabled(True)
             self.edit_args(
                 "lr_scheduler_type",
                 "LoraEasyCustomOptimizer.RexAnnealingWarmRestarts.RexAnnealingWarmRestarts",
@@ -182,6 +185,7 @@ class OptimizerWidget(BaseWidget):
                 True,
             )
             self.edit_lr_args("gamma", 1 - self.widget.gamma_input.value(), True)
+            self.edit_lr_args("d", self.widget.d_param_input.value(), True)
             return
         elif value == "polynomial":
             self.widget.poly_power_input.setEnabled(True)
@@ -254,6 +258,7 @@ class OptimizerWidget(BaseWidget):
 
     def load_args(self, args: dict) -> bool:
         args: dict = args.get(self.name, {})
+        scheduler_args: dict = args.get("lr_scheduler_args", {})
 
         # update element inputs
         optimizer_type = args.get("optimizer_type", "AdamW")
@@ -292,6 +297,7 @@ class OptimizerWidget(BaseWidget):
             {"snr": 0, "exponential": 1, "constant": 2}.get(args.get("huber_schedule", "snr").lower(), 0)
         )
         self.widget.huber_param_input.setValue(args.get("huber_c", 0.1))
+        self.widget.d_param_input.setValue(scheduler_args.get("d", 0.9))
 
         for _ in range(len(self.opt_args)):
             self.remove_optimizer_arg(self.opt_args[0])

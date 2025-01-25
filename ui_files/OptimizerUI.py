@@ -3,7 +3,7 @@
 ################################################################################
 ## Form generated from reading UI file 'OptimizerUI.ui'
 ##
-## Created by: Qt User Interface Compiler version 6.7.1
+## Created by: Qt User Interface Compiler version 6.8.1
 ##
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
@@ -26,7 +26,7 @@ class Ui_optimizer_ui(object):
     def setupUi(self, optimizer_ui):
         if not optimizer_ui.objectName():
             optimizer_ui.setObjectName(u"optimizer_ui")
-        optimizer_ui.resize(463, 354)
+        optimizer_ui.resize(463, 385)
         self.verticalLayout = QVBoxLayout(optimizer_ui)
         self.verticalLayout.setObjectName(u"verticalLayout")
         self.verticalLayout.setContentsMargins(0, 0, 0, 0)
@@ -134,6 +134,10 @@ class Ui_optimizer_ui(object):
         self.formLayout.setWidget(0, QFormLayout.LabelRole, self.optimizer_type_label)
 
         self.optimizer_type_selector = ComboBox(self.optimizer_tab_main)
+        self.optimizer_type_selector.addItem("")
+        self.optimizer_type_selector.addItem("")
+        self.optimizer_type_selector.addItem("")
+        self.optimizer_type_selector.addItem("")
         self.optimizer_type_selector.addItem("")
         self.optimizer_type_selector.addItem("")
         self.optimizer_type_selector.addItem("")
@@ -285,6 +289,21 @@ class Ui_optimizer_ui(object):
 
         self.formLayout_3.setWidget(4, QFormLayout.LabelRole, self.label_2)
 
+        self.label_7 = QLabel(self.optimizer_tab_main)
+        self.label_7.setObjectName(u"label_7")
+
+        self.formLayout_3.setWidget(7, QFormLayout.LabelRole, self.label_7)
+
+        self.d_param_input = DoubleSpinBox(self.optimizer_tab_main)
+        self.d_param_input.setObjectName(u"d_param_input")
+        self.d_param_input.setEnabled(False)
+        self.d_param_input.setDecimals(4)
+        self.d_param_input.setMaximum(1.000000000000000)
+        self.d_param_input.setSingleStep(0.010000000000000)
+        self.d_param_input.setValue(0.900000000000000)
+
+        self.formLayout_3.setWidget(7, QFormLayout.FieldRole, self.d_param_input)
+
 
         self.gridLayout.addLayout(self.formLayout_3, 1, 1, 1, 1)
 
@@ -304,7 +323,7 @@ class Ui_optimizer_ui(object):
         self.scrollArea.setWidgetResizable(True)
         self.optimizer_item_widget = QWidget()
         self.optimizer_item_widget.setObjectName(u"optimizer_item_widget")
-        self.optimizer_item_widget.setGeometry(QRect(0, 0, 439, 274))
+        self.optimizer_item_widget.setGeometry(QRect(0, 0, 66, 18))
         self.verticalLayout_3 = QVBoxLayout(self.optimizer_item_widget)
         self.verticalLayout_3.setObjectName(u"verticalLayout_3")
         self.scrollArea.setWidget(self.optimizer_item_widget)
@@ -402,6 +421,10 @@ class Ui_optimizer_ui(object):
         self.optimizer_type_selector.setItemText(9, QCoreApplication.translate("optimizer_ui", u"AdaFactor", None))
         self.optimizer_type_selector.setItemText(10, QCoreApplication.translate("optimizer_ui", u"Prodigy", None))
         self.optimizer_type_selector.setItemText(11, QCoreApplication.translate("optimizer_ui", u"Came", None))
+        self.optimizer_type_selector.setItemText(12, QCoreApplication.translate("optimizer_ui", u"Compass", None))
+        self.optimizer_type_selector.setItemText(13, QCoreApplication.translate("optimizer_ui", u"LPFAdamW", None))
+        self.optimizer_type_selector.setItemText(14, QCoreApplication.translate("optimizer_ui", u"RMSProp", None))
+        self.optimizer_type_selector.setItemText(15, QCoreApplication.translate("optimizer_ui", u"RAdamScheduleFree", None))
 
 #if QT_CONFIG(tooltip)
         self.optimizer_type_selector.setToolTip(QCoreApplication.translate("optimizer_ui", u"<html><head/><body><p>Optimizer Type is the Optimizer that will be used during training</p></body></html>", None))
@@ -484,6 +507,7 @@ class Ui_optimizer_ui(object):
         self.label_2.setToolTip(QCoreApplication.translate("optimizer_ui", u"<html><head/><body><p>Max Grad Norm is the maximum gradient after normalization</p></body></html>", None))
 #endif // QT_CONFIG(tooltip)
         self.label_2.setText(QCoreApplication.translate("optimizer_ui", u"Max Grad Norm", None))
+        self.label_7.setText(QCoreApplication.translate("optimizer_ui", u"D Param", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.optimizer_tab_main), QCoreApplication.translate("optimizer_ui", u"Main Args", None))
         self.add_opt_button.setText(QCoreApplication.translate("optimizer_ui", u"Add Optimizer Arg", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.optimizer_tab_args), QCoreApplication.translate("optimizer_ui", u"Optional Args", None))

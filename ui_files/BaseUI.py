@@ -3,7 +3,7 @@
 ################################################################################
 ## Form generated from reading UI file 'BaseUI.ui'
 ##
-## Created by: Qt User Interface Compiler version 6.7.1
+## Created by: Qt User Interface Compiler version 6.8.0
 ##
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
@@ -27,7 +27,7 @@ class Ui_base_args_ui(object):
     def setupUi(self, base_args_ui):
         if not base_args_ui.objectName():
             base_args_ui.setObjectName(u"base_args_ui")
-        base_args_ui.resize(553, 518)
+        base_args_ui.resize(553, 548)
         self.gridLayout_3 = QGridLayout(base_args_ui)
         self.gridLayout_3.setObjectName(u"gridLayout_3")
         self.formLayout_6 = QFormLayout()
@@ -340,6 +340,11 @@ class Ui_base_args_ui(object):
 
         self.horizontalLayout_2.addWidget(self.low_ram_enable)
 
+        self.high_vram_enable = QCheckBox(self.base_model_box)
+        self.high_vram_enable.setObjectName(u"high_vram_enable")
+
+        self.horizontalLayout_2.addWidget(self.high_vram_enable)
+
 
         self.formLayout_3.setLayout(2, QFormLayout.SpanningRole, self.horizontalLayout_2)
 
@@ -549,6 +554,7 @@ class Ui_base_args_ui(object):
         self.low_ram_enable.setToolTip(QCoreApplication.translate("base_args_ui", u"<html><head/><body><p>Enable this if it is crashing due to you running out of system RAM. Typically, this would only be used when interfacing with Google Colab</p></body></html>", None))
 #endif // QT_CONFIG(tooltip)
         self.low_ram_enable.setText(QCoreApplication.translate("base_args_ui", u"Low RAM", None))
+        self.high_vram_enable.setText(QCoreApplication.translate("base_args_ui", u"High VRAM", None))
 #if QT_CONFIG(tooltip)
         self.label_11.setToolTip(QCoreApplication.translate("base_args_ui", u"<html><head/><body><p>An external VAE. Typically used if the VAE in the base model is of poor quality</p></body></html>", None))
 #endif // QT_CONFIG(tooltip)

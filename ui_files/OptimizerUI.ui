@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>463</width>
-    <height>354</height>
+    <height>385</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -311,6 +311,26 @@
              <string>Came</string>
             </property>
            </item>
+           <item>
+            <property name="text">
+             <string>Compass</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>LPFAdamW</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>RMSProp</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>RAdamScheduleFree</string>
+            </property>
+           </item>
           </widget>
          </item>
          <item row="1" column="0">
@@ -603,6 +623,32 @@
            </property>
           </widget>
          </item>
+         <item row="7" column="0">
+          <widget class="QLabel" name="label_7">
+           <property name="text">
+            <string>D Param</string>
+           </property>
+          </widget>
+         </item>
+         <item row="7" column="1">
+          <widget class="DoubleSpinBox" name="d_param_input">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
+           <property name="decimals">
+            <number>4</number>
+           </property>
+           <property name="maximum">
+            <double>1.000000000000000</double>
+           </property>
+           <property name="singleStep">
+            <double>0.010000000000000</double>
+           </property>
+           <property name="value">
+            <double>0.900000000000000</double>
+           </property>
+          </widget>
+         </item>
         </layout>
        </item>
       </layout>
@@ -632,8 +678,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>439</width>
-            <height>274</height>
+            <width>66</width>
+            <height>18</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_3"/>

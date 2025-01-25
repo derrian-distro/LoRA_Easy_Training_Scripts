@@ -3,7 +3,7 @@
 ################################################################################
 ## Form generated from reading UI file 'NetworkUI.ui'
 ##
-## Created by: Qt User Interface Compiler version 6.7.1
+## Created by: Qt User Interface Compiler version 6.7.2
 ##
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
@@ -16,8 +16,9 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
 from PySide6.QtWidgets import (QApplication, QCheckBox, QFormLayout, QGridLayout,
-    QHBoxLayout, QLabel, QLineEdit, QScrollArea,
-    QSizePolicy, QTabWidget, QVBoxLayout, QWidget)
+    QHBoxLayout, QLabel, QLineEdit, QPushButton,
+    QScrollArea, QSizePolicy, QTabWidget, QVBoxLayout,
+    QWidget)
 
 from modules.CollapsibleWidget import CollapsibleWidget
 from modules.LineEditHighlight import LineEditWithHighlight
@@ -408,6 +409,28 @@ class Ui_network_ui(object):
         self.verticalLayout_2.addWidget(self.block_weight_scroll_area)
 
         self.tabWidget.addTab(self.block_weight_tab, "")
+        self.network_args_tab = QWidget()
+        self.network_args_tab.setObjectName(u"network_args_tab")
+        self.verticalLayout_4 = QVBoxLayout(self.network_args_tab)
+        self.verticalLayout_4.setObjectName(u"verticalLayout_4")
+        self.add_network_arg_button = QPushButton(self.network_args_tab)
+        self.add_network_arg_button.setObjectName(u"add_network_arg_button")
+
+        self.verticalLayout_4.addWidget(self.add_network_arg_button)
+
+        self.scrollArea = QScrollArea(self.network_args_tab)
+        self.scrollArea.setObjectName(u"scrollArea")
+        self.scrollArea.setWidgetResizable(True)
+        self.network_args_item_widget = QWidget()
+        self.network_args_item_widget.setObjectName(u"network_args_item_widget")
+        self.network_args_item_widget.setGeometry(QRect(0, 0, 407, 276))
+        self.verticalLayout_5 = QVBoxLayout(self.network_args_item_widget)
+        self.verticalLayout_5.setObjectName(u"verticalLayout_5")
+        self.scrollArea.setWidget(self.network_args_item_widget)
+
+        self.verticalLayout_4.addWidget(self.scrollArea)
+
+        self.tabWidget.addTab(self.network_args_tab, "")
 
         self.verticalLayout.addWidget(self.tabWidget)
 
@@ -572,5 +595,7 @@ class Ui_network_ui(object):
 #endif // QT_CONFIG(tooltip)
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.main_tab), QCoreApplication.translate("network_ui", u"Main Args", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.block_weight_tab), QCoreApplication.translate("network_ui", u"Block Weights", None))
+        self.add_network_arg_button.setText(QCoreApplication.translate("network_ui", u"Add Network Arg", None))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.network_args_tab), QCoreApplication.translate("network_ui", u"Network Args", None))
     # retranslateUi
 

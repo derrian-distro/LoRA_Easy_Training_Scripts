@@ -794,6 +794,38 @@
        </item>
       </layout>
      </widget>
+     <widget class="QWidget" name="network_args_tab">
+      <attribute name="title">
+       <string>Network Args</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="verticalLayout_4">
+       <item>
+        <widget class="QPushButton" name="add_network_arg_button">
+         <property name="text">
+          <string>Add Network Arg</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QScrollArea" name="scrollArea">
+         <property name="widgetResizable">
+          <bool>true</bool>
+         </property>
+         <widget class="QWidget" name="network_args_item_widget">
+          <property name="geometry">
+           <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>407</width>
+            <height>276</height>
+           </rect>
+          </property>
+          <layout class="QVBoxLayout" name="verticalLayout_5"/>
+         </widget>
+        </widget>
+       </item>
+      </layout>
+     </widget>
     </widget>
    </item>
   </layout>

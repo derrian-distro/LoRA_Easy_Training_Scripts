@@ -32,12 +32,18 @@ after that, it will begin installing, asking a few questions along the way. Just
 
 If you are on linux all you need to do to install the scripts is open up a shell within the folder that you want to install to then type the following line,
 
+If you are using python 3.10
 ```
-if you are using python 3.10
-sh -c "$(wget https://raw.githubusercontent.com/derrian-distro/LoRA_Easy_Training_Scripts/main/install310.sh -O -)"
+git clone https://github.com/derrian-distro/LoRA_Easy_Training_Scripts
+cd LoRA_Easy_Training_Scripts
+install310.sh
+```
 
-if you are using python 3.11
-sh -c "$(wget https://raw.githubusercontent.com/derrian-distro/LoRA_Easy_Training_Scripts/main/install311.sh -O -)"
+If you are using python 3.11
+```
+git clone https://github.com/derrian-distro/LoRA_Easy_Training_Scripts
+cd LoRA_Easy_Training_Scripts
+install311.sh
 ```
 
 Manual method below for those that want it.
