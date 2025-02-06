@@ -173,20 +173,20 @@
         </size>
        </property>
        <property name="toolTip">
-        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Easily rename all instances of ${baseName} variable in files/folders under Saving and Logging&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Easily rename all instances of ${replace} variable in files/folders under Saving and Logging&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
        </property>
        <property name="text">
-        <string>Easy Naming</string>
+        <string>Name Replace</string>
        </property>
       </widget>
      </item>
      <item row="0" column="1">
-      <widget class="LineEditWithHighlight" name="easy_naming_text_input">
+      <widget class="LineEditWithHighlight" name="name_replace_text_input">
        <property name="toolTip">
-        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;What to replace all instances of ${baseName} with. To use, add ${baseName} in each desired textbox&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;What to replace all instances of ${replace} with. To use, add ${replace} in each desired textbox&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
        </property>
        <property name="placeholderText">
-        <string>Base name for model</string>
+        <string>[Optional] Output name replacement string</string>
        </property>
       </widget>
      </item>

@@ -116,10 +116,10 @@ class Ui_saving_ui(object):
 
         self.formLayout_2.setWidget(0, QFormLayout.LabelRole, self.easy_naming_label)
 
-        self.easy_naming_text_input = LineEditWithHighlight(saving_ui)
-        self.easy_naming_text_input.setObjectName(u"easy_naming_text_input")
+        self.name_replace_text_input = LineEditWithHighlight(saving_ui)
+        self.name_replace_text_input.setObjectName(u"name_replace_text_input")
 
-        self.formLayout_2.setWidget(0, QFormLayout.FieldRole, self.easy_naming_text_input)
+        self.formLayout_2.setWidget(0, QFormLayout.FieldRole, self.name_replace_text_input)
 
 
         self.gridLayout_2.addLayout(self.formLayout_2, 0, 0, 1, 2)
@@ -346,13 +346,13 @@ class Ui_saving_ui(object):
 #endif // QT_CONFIG(tooltip)
         self.output_name_input.setPlaceholderText(QCoreApplication.translate("saving_ui", u"Output Name", None))
 #if QT_CONFIG(tooltip)
-        self.easy_naming_label.setToolTip(QCoreApplication.translate("saving_ui", u"<html><head/><body><p>Easily rename all instances of ${baseName} variable in files/folders under Saving and Logging</p></body></html>", None))
+        self.easy_naming_label.setToolTip(QCoreApplication.translate("saving_ui", u"<html><head/><body><p>Easily rename all instances of ${replace} variable in files/folders under Saving and Logging</p></body></html>", None))
 #endif // QT_CONFIG(tooltip)
-        self.easy_naming_label.setText(QCoreApplication.translate("saving_ui", u"Easy Naming", None))
+        self.easy_naming_label.setText(QCoreApplication.translate("saving_ui", u"Name Replace", None))
 #if QT_CONFIG(tooltip)
-        self.easy_naming_text_input.setToolTip(QCoreApplication.translate("saving_ui", u"<html><head/><body><p>What to replace all instances of ${baseName} with. To use, add ${baseName} in each desired textbox</p></body></html>", None))
+        self.name_replace_text_input.setToolTip(QCoreApplication.translate("saving_ui", u"<html><head/><body><p>What to replace all instances of ${replace} with. To use, add ${replace} in each desired textbox</p></body></html>", None))
 #endif // QT_CONFIG(tooltip)
-        self.easy_naming_text_input.setPlaceholderText(QCoreApplication.translate("saving_ui", u"Base name for model", None))
+        self.name_replace_text_input.setPlaceholderText(QCoreApplication.translate("saving_ui", u"[Optional] Output name replacement string", None))
 #if QT_CONFIG(tooltip)
         self.resume_enable.setToolTip(QCoreApplication.translate("saving_ui", u"<html><head/><body><p>Resume State resumes training at a previous training, assuming you save the state for that bake</p></body></html>", None))
 #endif // QT_CONFIG(tooltip)
