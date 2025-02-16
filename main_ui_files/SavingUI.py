@@ -29,7 +29,7 @@ class SavingWidget(BaseWidget):
             elem.highlight = True
             elem.allow_empty = True
             selector.setIcon(selector_icon)
-
+        
         setup_folder(
             self.widget.output_folder_input, self.widget.output_folder_selector
         )
@@ -41,6 +41,9 @@ class SavingWidget(BaseWidget):
         self.widget.save_toml_input.skip_validation_check = True
 
     def setup_connections(self) -> None:
+        self.widget.name_replace_text_input.textChanged.connect(
+            lambda x: self.edit_args("easy_name", x, optional=True)
+        )
         self.widget.output_folder_input.textChanged.connect(
             lambda x: self.edit_args("output_dir", x, optional=True)
         )
@@ -272,6 +275,7 @@ class SavingWidget(BaseWidget):
         args: dict = args.get(self.name, {})
 
         # update element inputs
+        self.widget.name_replace_text_input.setText(args.get("name_replace", ""))
         self.widget.output_folder_input.setText(args.get("output_dir", ""))
         self.widget.output_name_enable.setChecked(bool(args.get("output_name", False)))
         self.widget.output_name_input.setText(args.get("output_name", ""))
@@ -326,6 +330,7 @@ class SavingWidget(BaseWidget):
         )
 
         # edit args to match
+        self.edit_args("name_replace", self.widget.name_replace_text_input.text(), True)
         self.edit_args(
             "output_dir",
             self.widget.output_folder_input.text(),

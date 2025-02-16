@@ -200,6 +200,17 @@ betas = "0.9,0.99"
 
 As you can see everything is sectioned off into their own sections. Generally they are seperated into two groups, args, and dataset_args, this is because of the nature of the config and dataset_confg files within sd-scripts. Generally speaking, the only section that you might want to edit that doesn't correspond to a UI element (for now) is the `[optimizer_args.args.optimizer_args]` section, which you can add, delete, or change options for the optimizer, A proper UI for it will come later, once I figure out how I want to set it up.
 
+## Development
+
+```bash
+# Use this edit the UI
+pip install pyqt6-tools # Install
+pyqt6-tools designer # Run
+
+# After editing a .ui file, compile it to a .py file in the ui_files/ directory
+pyside6-uic ui_files/SavingUI.ui -o ui_files/SavingUI.py
+```
+
 ## Changelog
 
 changelog of the old scripts are all in that branch [here](https://github.com/derrian-distro/LoRA_Easy_Training_Scripts/tree/old-scripts#changelog)
