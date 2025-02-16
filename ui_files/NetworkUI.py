@@ -3,7 +3,7 @@
 ################################################################################
 ## Form generated from reading UI file 'NetworkUI.ui'
 ##
-## Created by: Qt User Interface Compiler version 6.7.2
+## Created by: Qt User Interface Compiler version 6.8.2
 ##
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
@@ -28,7 +28,7 @@ class Ui_network_ui(object):
     def setupUi(self, network_ui):
         if not network_ui.objectName():
             network_ui.setObjectName(u"network_ui")
-        network_ui.resize(431, 356)
+        network_ui.resize(432, 356)
         sizePolicy = QSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Preferred)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -41,13 +41,13 @@ class Ui_network_ui(object):
         self.tabWidget = TabView(network_ui)
         self.tabWidget.setObjectName(u"tabWidget")
         self.tabWidget.setEnabled(True)
-        self.tabWidget.setFocusPolicy(Qt.NoFocus)
-        self.tabWidget.setTabPosition(QTabWidget.North)
-        self.tabWidget.setTabShape(QTabWidget.Rounded)
+        self.tabWidget.setFocusPolicy(Qt.FocusPolicy.NoFocus)
+        self.tabWidget.setTabPosition(QTabWidget.TabPosition.North)
+        self.tabWidget.setTabShape(QTabWidget.TabShape.Rounded)
         self.tabWidget.setUsesScrollButtons(False)
         self.main_tab = QWidget()
         self.main_tab.setObjectName(u"main_tab")
-        self.main_tab.setFocusPolicy(Qt.NoFocus)
+        self.main_tab.setFocusPolicy(Qt.FocusPolicy.NoFocus)
         self.gridLayout = QGridLayout(self.main_tab)
         self.gridLayout.setObjectName(u"gridLayout")
         self.label = QLabel(self.main_tab)
@@ -66,7 +66,7 @@ class Ui_network_ui(object):
         self.network_dropout_input = DoubleSpinBox(self.main_tab)
         self.network_dropout_input.setObjectName(u"network_dropout_input")
         self.network_dropout_input.setEnabled(False)
-        self.network_dropout_input.setFocusPolicy(Qt.StrongFocus)
+        self.network_dropout_input.setFocusPolicy(Qt.FocusPolicy.StrongFocus)
         self.network_dropout_input.setMaximum(1.000000000000000)
         self.network_dropout_input.setSingleStep(0.010000000000000)
         self.network_dropout_input.setValue(0.100000000000000)
@@ -81,7 +81,7 @@ class Ui_network_ui(object):
         self.rank_dropout_input = DoubleSpinBox(self.main_tab)
         self.rank_dropout_input.setObjectName(u"rank_dropout_input")
         self.rank_dropout_input.setEnabled(False)
-        self.rank_dropout_input.setFocusPolicy(Qt.StrongFocus)
+        self.rank_dropout_input.setFocusPolicy(Qt.FocusPolicy.StrongFocus)
         self.rank_dropout_input.setMaximum(1.000000000000000)
         self.rank_dropout_input.setSingleStep(0.010000000000000)
         self.rank_dropout_input.setValue(0.100000000000000)
@@ -96,7 +96,7 @@ class Ui_network_ui(object):
         self.module_dropout_input = DoubleSpinBox(self.main_tab)
         self.module_dropout_input.setObjectName(u"module_dropout_input")
         self.module_dropout_input.setEnabled(False)
-        self.module_dropout_input.setFocusPolicy(Qt.StrongFocus)
+        self.module_dropout_input.setFocusPolicy(Qt.FocusPolicy.StrongFocus)
         self.module_dropout_input.setMaximum(1.000000000000000)
         self.module_dropout_input.setSingleStep(0.010000000000000)
         self.module_dropout_input.setValue(0.100000000000000)
@@ -116,7 +116,7 @@ class Ui_network_ui(object):
         self.ip_gamma_input = DoubleSpinBox(self.main_tab)
         self.ip_gamma_input.setObjectName(u"ip_gamma_input")
         self.ip_gamma_input.setEnabled(False)
-        self.ip_gamma_input.setFocusPolicy(Qt.StrongFocus)
+        self.ip_gamma_input.setFocusPolicy(Qt.FocusPolicy.StrongFocus)
         self.ip_gamma_input.setSingleStep(0.010000000000000)
         self.ip_gamma_input.setValue(0.100000000000000)
 
@@ -136,7 +136,7 @@ class Ui_network_ui(object):
         self.conv_dim_input = SpinBox(self.main_tab)
         self.conv_dim_input.setObjectName(u"conv_dim_input")
         self.conv_dim_input.setEnabled(False)
-        self.conv_dim_input.setFocusPolicy(Qt.StrongFocus)
+        self.conv_dim_input.setFocusPolicy(Qt.FocusPolicy.StrongFocus)
         self.conv_dim_input.setMaximum(16777215)
         self.conv_dim_input.setValue(32)
 
@@ -151,7 +151,7 @@ class Ui_network_ui(object):
         self.conv_alpha_input = DoubleSpinBox(self.main_tab)
         self.conv_alpha_input.setObjectName(u"conv_alpha_input")
         self.conv_alpha_input.setEnabled(False)
-        self.conv_alpha_input.setFocusPolicy(Qt.StrongFocus)
+        self.conv_alpha_input.setFocusPolicy(Qt.FocusPolicy.StrongFocus)
         self.conv_alpha_input.setMaximum(16777215.000000000000000)
         self.conv_alpha_input.setValue(16.000000000000000)
 
@@ -193,7 +193,7 @@ class Ui_network_ui(object):
         self.unet_te_both_select.setSizePolicy(sizePolicy1)
         self.unet_te_both_select.setMinimumSize(QSize(0, 0))
         self.unet_te_both_select.setMaximumSize(QSize(16777215, 16777215))
-        self.unet_te_both_select.setFocusPolicy(Qt.StrongFocus)
+        self.unet_te_both_select.setFocusPolicy(Qt.FocusPolicy.StrongFocus)
 
         self.formLayout_3.setWidget(0, QFormLayout.FieldRole, self.unet_te_both_select)
 
@@ -255,7 +255,7 @@ class Ui_network_ui(object):
         self.dylora_unit_input.setObjectName(u"dylora_unit_input")
         self.dylora_unit_input.setEnabled(False)
         self.dylora_unit_input.setMaximumSize(QSize(16777215, 16777215))
-        self.dylora_unit_input.setFocusPolicy(Qt.StrongFocus)
+        self.dylora_unit_input.setFocusPolicy(Qt.FocusPolicy.StrongFocus)
         self.dylora_unit_input.setValue(4)
 
         self.horizontalLayout_2.addWidget(self.dylora_unit_input)
@@ -299,7 +299,7 @@ class Ui_network_ui(object):
         self.network_dim_input = SpinBox(self.main_tab)
         self.network_dim_input.setObjectName(u"network_dim_input")
         self.network_dim_input.setMaximumSize(QSize(16777215, 16777215))
-        self.network_dim_input.setFocusPolicy(Qt.StrongFocus)
+        self.network_dim_input.setFocusPolicy(Qt.FocusPolicy.StrongFocus)
         self.network_dim_input.setMinimum(1)
         self.network_dim_input.setMaximum(16777215)
         self.network_dim_input.setValue(32)
@@ -314,7 +314,7 @@ class Ui_network_ui(object):
         self.network_alpha_input = DoubleSpinBox(self.main_tab)
         self.network_alpha_input.setObjectName(u"network_alpha_input")
         self.network_alpha_input.setMaximumSize(QSize(16777215, 16777215))
-        self.network_alpha_input.setFocusPolicy(Qt.StrongFocus)
+        self.network_alpha_input.setFocusPolicy(Qt.FocusPolicy.StrongFocus)
         self.network_alpha_input.setDecimals(2)
         self.network_alpha_input.setMaximum(16777215.000000000000000)
         self.network_alpha_input.setValue(16.000000000000000)
@@ -354,14 +354,14 @@ class Ui_network_ui(object):
         self.algo_select.addItem("")
         self.algo_select.addItem("")
         self.algo_select.setObjectName(u"algo_select")
-        self.algo_select.setFocusPolicy(Qt.StrongFocus)
+        self.algo_select.setFocusPolicy(Qt.FocusPolicy.StrongFocus)
 
         self.gridLayout.addWidget(self.algo_select, 0, 0, 1, 2)
 
         self.tabWidget.addTab(self.main_tab, "")
         self.block_weight_tab = QWidget()
         self.block_weight_tab.setObjectName(u"block_weight_tab")
-        self.block_weight_tab.setFocusPolicy(Qt.NoFocus)
+        self.block_weight_tab.setFocusPolicy(Qt.FocusPolicy.NoFocus)
         self.verticalLayout_2 = QVBoxLayout(self.block_weight_tab)
         self.verticalLayout_2.setObjectName(u"verticalLayout_2")
         self.verticalLayout_2.setContentsMargins(0, 0, 0, 0)
@@ -370,7 +370,7 @@ class Ui_network_ui(object):
         self.block_weight_scroll_area.setWidgetResizable(True)
         self.block_weight_scroll_widget = QWidget()
         self.block_weight_scroll_widget.setObjectName(u"block_weight_scroll_widget")
-        self.block_weight_scroll_widget.setGeometry(QRect(0, 0, 425, 324))
+        self.block_weight_scroll_widget.setGeometry(QRect(0, 0, 84, 74))
         self.verticalLayout_3 = QVBoxLayout(self.block_weight_scroll_widget)
         self.verticalLayout_3.setObjectName(u"verticalLayout_3")
         self.verticalLayout_3.setContentsMargins(0, 0, 0, 0)
@@ -413,17 +413,39 @@ class Ui_network_ui(object):
         self.network_args_tab.setObjectName(u"network_args_tab")
         self.verticalLayout_4 = QVBoxLayout(self.network_args_tab)
         self.verticalLayout_4.setObjectName(u"verticalLayout_4")
+        self.horizontalLayout_5 = QHBoxLayout()
+        self.horizontalLayout_5.setObjectName(u"horizontalLayout_5")
         self.add_network_arg_button = QPushButton(self.network_args_tab)
         self.add_network_arg_button.setObjectName(u"add_network_arg_button")
 
-        self.verticalLayout_4.addWidget(self.add_network_arg_button)
+        self.horizontalLayout_5.addWidget(self.add_network_arg_button)
+
+        self.save_network_args_button = QPushButton(self.network_args_tab)
+        self.save_network_args_button.setObjectName(u"save_network_args_button")
+        sizePolicy2 = QSizePolicy(QSizePolicy.Policy.Maximum, QSizePolicy.Policy.Fixed)
+        sizePolicy2.setHorizontalStretch(0)
+        sizePolicy2.setVerticalStretch(0)
+        sizePolicy2.setHeightForWidth(self.save_network_args_button.sizePolicy().hasHeightForWidth())
+        self.save_network_args_button.setSizePolicy(sizePolicy2)
+
+        self.horizontalLayout_5.addWidget(self.save_network_args_button)
+
+        self.load_network_args_button = QPushButton(self.network_args_tab)
+        self.load_network_args_button.setObjectName(u"load_network_args_button")
+        sizePolicy2.setHeightForWidth(self.load_network_args_button.sizePolicy().hasHeightForWidth())
+        self.load_network_args_button.setSizePolicy(sizePolicy2)
+
+        self.horizontalLayout_5.addWidget(self.load_network_args_button)
+
+
+        self.verticalLayout_4.addLayout(self.horizontalLayout_5)
 
         self.scrollArea = QScrollArea(self.network_args_tab)
         self.scrollArea.setObjectName(u"scrollArea")
         self.scrollArea.setWidgetResizable(True)
         self.network_args_item_widget = QWidget()
         self.network_args_item_widget.setObjectName(u"network_args_item_widget")
-        self.network_args_item_widget.setGeometry(QRect(0, 0, 407, 276))
+        self.network_args_item_widget.setGeometry(QRect(0, 0, 408, 274))
         self.verticalLayout_5 = QVBoxLayout(self.network_args_item_widget)
         self.verticalLayout_5.setObjectName(u"verticalLayout_5")
         self.scrollArea.setWidget(self.network_args_item_widget)
@@ -596,6 +618,8 @@ class Ui_network_ui(object):
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.main_tab), QCoreApplication.translate("network_ui", u"Main Args", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.block_weight_tab), QCoreApplication.translate("network_ui", u"Block Weights", None))
         self.add_network_arg_button.setText(QCoreApplication.translate("network_ui", u"Add Network Arg", None))
+        self.save_network_args_button.setText("")
+        self.load_network_args_button.setText("")
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.network_args_tab), QCoreApplication.translate("network_ui", u"Network Args", None))
     # retranslateUi
 

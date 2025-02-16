@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>431</width>
+    <width>432</width>
     <height>356</height>
    </rect>
   </property>
@@ -44,13 +44,13 @@
       <bool>true</bool>
      </property>
      <property name="focusPolicy">
-      <enum>Qt::NoFocus</enum>
+      <enum>Qt::FocusPolicy::NoFocus</enum>
      </property>
      <property name="tabPosition">
-      <enum>QTabWidget::North</enum>
+      <enum>QTabWidget::TabPosition::North</enum>
      </property>
      <property name="tabShape">
-      <enum>QTabWidget::Rounded</enum>
+      <enum>QTabWidget::TabShape::Rounded</enum>
      </property>
      <property name="currentIndex">
       <number>0</number>
@@ -60,7 +60,7 @@
      </property>
      <widget class="QWidget" name="main_tab">
       <property name="focusPolicy">
-       <enum>Qt::NoFocus</enum>
+       <enum>Qt::FocusPolicy::NoFocus</enum>
       </property>
       <attribute name="title">
        <string>Main Args</string>
@@ -97,7 +97,7 @@
             <bool>false</bool>
            </property>
            <property name="focusPolicy">
-            <enum>Qt::StrongFocus</enum>
+            <enum>Qt::FocusPolicy::StrongFocus</enum>
            </property>
            <property name="toolTip">
             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Network Dropout, otherwise known as Neuron Dropout is your standard dropout provided by PyTorch.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -129,7 +129,7 @@
             <bool>false</bool>
            </property>
            <property name="focusPolicy">
-            <enum>Qt::StrongFocus</enum>
+            <enum>Qt::FocusPolicy::StrongFocus</enum>
            </property>
            <property name="toolTip">
             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Rank Dropout is a larger form of dropout, randomly dropping out a full rank&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -161,7 +161,7 @@
             <bool>false</bool>
            </property>
            <property name="focusPolicy">
-            <enum>Qt::StrongFocus</enum>
+            <enum>Qt::FocusPolicy::StrongFocus</enum>
            </property>
            <property name="toolTip">
             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Module Dropout is a larger form of dropout, randomly dropping out a full module&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -203,7 +203,7 @@
             <bool>false</bool>
            </property>
            <property name="focusPolicy">
-            <enum>Qt::StrongFocus</enum>
+            <enum>Qt::FocusPolicy::StrongFocus</enum>
            </property>
            <property name="toolTip">
             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;IP Noise Gamma is a noise modification that reduces the random noise, allowing what you want to learn, to learn faster&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -239,7 +239,7 @@
             <bool>false</bool>
            </property>
            <property name="focusPolicy">
-            <enum>Qt::StrongFocus</enum>
+            <enum>Qt::FocusPolicy::StrongFocus</enum>
            </property>
            <property name="toolTip">
             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Conv Dimension represents the size of the Convolutional Dimensions of the model&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -271,7 +271,7 @@
             <bool>false</bool>
            </property>
            <property name="focusPolicy">
-            <enum>Qt::StrongFocus</enum>
+            <enum>Qt::FocusPolicy::StrongFocus</enum>
            </property>
            <property name="toolTip">
             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Conv Alpha represents the alpha of the Conv Dimensions. This Alpha is a scalar on the conv dimension such that alpha / dimension = scalar. For example, and alpha of 16 and a dimension of 32 would result in a scalar of 0.5&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -348,7 +348,7 @@
             </size>
            </property>
            <property name="focusPolicy">
-            <enum>Qt::StrongFocus</enum>
+            <enum>Qt::FocusPolicy::StrongFocus</enum>
            </property>
            <property name="toolTip">
             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Train on selects if you want to train Both the Text Encoder and the Unet, only the Text Encoder, or only the Unet.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -483,7 +483,7 @@
               </size>
              </property>
              <property name="focusPolicy">
-              <enum>Qt::StrongFocus</enum>
+              <enum>Qt::FocusPolicy::StrongFocus</enum>
              </property>
              <property name="toolTip">
               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;DyLoRA Unit is the number to jump by per DyLoRA layer.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -558,7 +558,7 @@
             </size>
            </property>
            <property name="focusPolicy">
-            <enum>Qt::StrongFocus</enum>
+            <enum>Qt::FocusPolicy::StrongFocus</enum>
            </property>
            <property name="toolTip">
             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Network Dimension represents the size of the Linear Dimensions of the model&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -593,7 +593,7 @@
             </size>
            </property>
            <property name="focusPolicy">
-            <enum>Qt::StrongFocus</enum>
+            <enum>Qt::FocusPolicy::StrongFocus</enum>
            </property>
            <property name="toolTip">
             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Network Alpha represents the alpha of the Linear Dimensions. This Alpha is a scalar on the network dimension such that alpha / dimension = scalar. For example, and alpha of 16 and a dimension of 32 would result in a scalar of 0.5&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -647,7 +647,7 @@
        <item row="0" column="0" colspan="2">
         <widget class="ComboBox" name="algo_select">
          <property name="focusPolicy">
-          <enum>Qt::StrongFocus</enum>
+          <enum>Qt::FocusPolicy::StrongFocus</enum>
          </property>
          <property name="toolTip">
           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The Algorithm that is used during training&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -708,7 +708,7 @@
      </widget>
      <widget class="QWidget" name="block_weight_tab">
       <property name="focusPolicy">
-       <enum>Qt::NoFocus</enum>
+       <enum>Qt::FocusPolicy::NoFocus</enum>
       </property>
       <attribute name="title">
        <string>Block Weights</string>
@@ -736,8 +736,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>425</width>
-            <height>324</height>
+            <width>84</width>
+            <height>74</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_3">
@@ -800,11 +800,41 @@
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout_4">
        <item>
-        <widget class="QPushButton" name="add_network_arg_button">
-         <property name="text">
-          <string>Add Network Arg</string>
-         </property>
-        </widget>
+        <layout class="QHBoxLayout" name="horizontalLayout_5">
+         <item>
+          <widget class="QPushButton" name="add_network_arg_button">
+           <property name="text">
+            <string>Add Network Arg</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="save_network_args_button">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="load_network_args_button">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+          </widget>
+         </item>
+        </layout>
        </item>
        <item>
         <widget class="QScrollArea" name="scrollArea">
@@ -816,8 +846,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>407</width>
-            <height>276</height>
+            <width>408</width>
+            <height>274</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_5"/>

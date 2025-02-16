@@ -1,10 +1,15 @@
+import json
+from pathlib import Path
+
 from PySide6 import QtCore
-from PySide6.QtWidgets import QWidget
+from PySide6.QtGui import QIcon
+from PySide6.QtWidgets import QCheckBox, QFileDialog, QMessageBox, QWidget
+
+from modules.BaseWidget import BaseWidget
 from modules.BlockWeightWidgets import BlockWeightWidget, BlockWidget
+from modules.CollapsibleWidget import CollapsibleWidget
 from modules.OptimizerItem import OptimizerItem
 from ui_files.NetworkUI import Ui_network_ui
-from modules.BaseWidget import BaseWidget
-from modules.CollapsibleWidget import CollapsibleWidget
 
 
 class NetworkWidget(BaseWidget):
@@ -48,6 +53,10 @@ class NetworkWidget(BaseWidget):
                 BlockWidget(mode="float", base_value=16.0, arg_name="conv_block_alphas"),
             ),
         ]
+        load_args_icon = QIcon(str(Path("icons/folder.svg")))
+        self.widget.load_network_args_button.setIcon(load_args_icon)
+        save_args_icon = QIcon(str(Path("icons/save.svg")))
+        self.widget.save_network_args_button.setIcon(save_args_icon)
         self.widget.network_args_item_widget.layout().setAlignment(QtCore.Qt.AlignmentFlag.AlignTop)
 
         for i, elem in enumerate(self.block_widgets):
@@ -120,6 +129,8 @@ class NetworkWidget(BaseWidget):
         )
         self.widget.lora_fa_enable.clicked.connect(lambda x: self.edit_args("fa", x, True))
         self.widget.add_network_arg_button.clicked.connect(self.add_network_arg)
+        self.widget.load_network_args_button.clicked.connect(self.load_optional_args)
+        self.widget.save_network_args_button.clicked.connect(self.save_optional_args)
 
     def edit_network_args(self, name: str, value: object, optional: bool = False) -> None:
         if "network_args" not in self.args:
@@ -144,7 +155,6 @@ class NetworkWidget(BaseWidget):
         self.network_args[-1].item_updated.connect(self.modify_network_arg)
 
     def modify_network_arg(self, widget: OptimizerItem):
-        print(widget.arg_name, widget.previous_name, widget.arg_value)
         if widget.arg_name != widget.previous_name:
             self.edit_network_args(widget.previous_name, False, True)
         self.edit_network_args(widget.arg_name, widget.arg_value)
@@ -369,6 +379,70 @@ class NetworkWidget(BaseWidget):
         if not active:
             return
         self.edit_network_args(name, weights, True)
+
+    def load_optional_args(self):
+        def update_config(checked: bool):
+            config_path = Path("config.json")
+            if not config_path.exists():
+                config_path.write_text(json.dumps({}))
+            config = json.loads(config_path.read_text())
+            config["skip_network_args_warning"] = checked
+            config_path.write_text(json.dumps(config))
+
+        config: dict = json.loads(Path("config.json").read_text())
+        file_name, _ = QFileDialog.getOpenFileName(
+            self,
+            "Load Network Args",
+            dir="",
+            filter="Network Args (*.json)",
+        )
+        if not file_name:
+            return
+        args = json.loads(Path(file_name).read_text())
+
+        if not isinstance(args, dict) or not args:
+            if not config.get("skip_network_args_warning", False):
+                checkbox = QCheckBox("Don't show this message again")
+                checkbox.clicked.connect(update_config)
+                message = QMessageBox(
+                    QMessageBox.Icon.Warning,
+                    "No Network Args Found",
+                    "No network args found in the file. Are you sure you want to load the file?",
+                    QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No,
+                    self,
+                )
+                message.setCheckBox(checkbox)
+                result = message.exec()
+                if result == QMessageBox.StandardButton.No:
+                    return
+            args = {}
+        for _ in range(len(self.network_args)):
+            self.remove_network_arg(self.network_args[0])
+        for arg in args:
+            if not isinstance(args[arg], str):
+                continue
+            self.add_network_arg()
+            self.network_args[-1].arg_name_input.setText(str(arg))
+            self.network_args[-1].arg_value_input.setText(str(args[arg]))
+
+    def save_optional_args(self):
+        file_name, _ = QFileDialog.getSaveFileName(
+            self,
+            "Save Network Args",
+            dir="",
+            filter="Network Args (*.json)",
+        )
+        if not file_name:
+            return
+
+        args = {}
+        for network_arg in self.network_args:
+            name, value = network_arg.get_arg()
+            if not name or not value:
+                continue
+            args[name] = value
+
+        Path(file_name).write_text(json.dumps(args))
 
     def load_args(self, args: dict) -> bool:
         args: dict = args.get(self.name, {})

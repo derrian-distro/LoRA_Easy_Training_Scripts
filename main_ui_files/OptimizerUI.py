@@ -1,9 +1,14 @@
-from PySide6.QtCore import Slot, Signal
+import json
+from pathlib import Path
+
 from PySide6 import QtCore
-from PySide6.QtWidgets import QWidget
-from ui_files.OptimizerUI import Ui_optimizer_ui
+from PySide6.QtCore import Signal
+from PySide6.QtGui import QIcon
+from PySide6.QtWidgets import QCheckBox, QFileDialog, QMessageBox, QWidget
+
 from modules.BaseWidget import BaseWidget
 from modules.OptimizerItem import OptimizerItem
+from ui_files.OptimizerUI import Ui_optimizer_ui
 
 
 class OptimizerWidget(BaseWidget):
@@ -31,6 +36,10 @@ class OptimizerWidget(BaseWidget):
         super().setup_widget()
         self.widget.setupUi(self.content)
         self.widget.optimizer_item_widget.layout().setAlignment(QtCore.Qt.AlignmentFlag.AlignTop)
+        load_args_icon = QIcon(str(Path("icons/folder.svg")))
+        self.widget.load_opt_args_button.setIcon(load_args_icon)
+        save_args_icon = QIcon(str(Path("icons/save.svg")))
+        self.widget.save_opt_args_button.setIcon(save_args_icon)
         for opt_arg in self.opt_args:
             self.widget.optimizer_item_widget.layout().addWidget(opt_arg)
             opt_arg.delete_item.connect(self.remove_optimizer_arg)
@@ -70,6 +79,8 @@ class OptimizerWidget(BaseWidget):
         )
         self.widget.huber_param_input.valueChanged.connect(lambda x: self.edit_args("huber_c", round(x, 4)))
         self.widget.add_opt_button.clicked.connect(self.add_optimizer_arg)
+        self.widget.load_opt_args_button.clicked.connect(self.load_optional_args)
+        self.widget.save_opt_args_button.clicked.connect(self.save_optional_args)
         self.widget.d_param_input.valueChanged.connect(lambda x: self.edit_lr_args("d", round(x, 4)))
 
     def edit_lr(self, name: str, value: str, optional: bool = False) -> None:
@@ -93,7 +104,6 @@ class OptimizerWidget(BaseWidget):
                 return
         self.args["lr_scheduler_args"][name] = value
 
-    @Slot(object)
     def remove_optimizer_arg(self, widget: OptimizerItem):
         self.layout().removeWidget(widget)
         if "optimizer_args" in self.args and widget.arg_name in self.args["optimizer_args"]:
@@ -102,14 +112,12 @@ class OptimizerWidget(BaseWidget):
         self.opt_args.remove(widget)
         self.modify_optimizer_args()
 
-    @Slot()
     def add_optimizer_arg(self):
         self.opt_args.append(OptimizerItem())
         self.widget.optimizer_item_widget.layout().addWidget(self.opt_args[-1])
         self.opt_args[-1].delete_item.connect(self.remove_optimizer_arg)
         self.opt_args[-1].item_updated.connect(self.modify_optimizer_args)
 
-    @Slot()
     def modify_optimizer_args(self):
         if len(self.opt_args) == 0:
             self.edit_args("optimizer_args", None, True)
@@ -121,11 +129,9 @@ class OptimizerWidget(BaseWidget):
                 continue
             self.args["optimizer_args"][name] = value
 
-    @Slot(str)
     def change_optimizer(self, value: str) -> None:
         self.edit_args("optimizer_type", value)
 
-    @Slot(str)
     def change_scheduler(self, value: str) -> None:
         value = value.replace(" ", "_")
         args = [
@@ -206,7 +212,6 @@ class OptimizerWidget(BaseWidget):
         self.edit_args("huber_schedule", self.widget.huber_schedule_selector.currentText().lower())
         self.edit_args("huber_c", round(self.widget.huber_param_input.value(), 4))
 
-    @Slot(bool)
     def enable_disable_warmup(self, checked: bool) -> None:
         if "warmup_ratio" in self.args:
             del self.args["warmup_ratio"]
@@ -215,7 +220,6 @@ class OptimizerWidget(BaseWidget):
             return
         self.edit_args("warmup_ratio", self.widget.warmup_input.value(), True)
 
-    @Slot(bool)
     def enable_disable_unet(self, checked: bool) -> None:
         if "unet_lr" in self.args:
             del self.args["unet_lr"]
@@ -224,7 +228,6 @@ class OptimizerWidget(BaseWidget):
             return
         self.edit_lr("unet_lr", self.widget.unet_lr_input.text(), True)
 
-    @Slot(bool)
     def enable_disable_te(self, checked: bool) -> None:
         if "text_encoder_lr" in self.args:
             del self.args["text_encoder_lr"]
@@ -233,7 +236,6 @@ class OptimizerWidget(BaseWidget):
             return
         self.edit_lr("text_encoder_lr", self.widget.te_lr_input.text(), True)
 
-    @Slot(bool)
     def enable_disable_scale_weight_norms(self, checked: bool) -> None:
         if "scale_weight_norms" in self.args:
             del self.args["scale_weight_norms"]
@@ -242,7 +244,6 @@ class OptimizerWidget(BaseWidget):
             return
         self.edit_args("scale_weight_norms", self.widget.scale_weight_input.value(), True)
 
-    @Slot(bool)
     def enable_disable_min_snr_gamma(self, checked: bool) -> None:
         if "min_snr_gamma" in self.args:
             del self.args["min_snr_gamma"]
@@ -251,10 +252,73 @@ class OptimizerWidget(BaseWidget):
             return
         self.edit_args("min_snr_gamma", self.widget.min_snr_input.value(), True)
 
-    @Slot(bool)
     def enable_disable_masked_loss(self, checked: bool) -> None:
         self.edit_args("masked_loss", checked, True)
         self.maskedLossChecked.emit(checked)
+
+    def load_optional_args(self):
+        def update_config(checked: bool):
+            config_path = Path("config.json")
+            if not config_path.exists():
+                config_path.write_text(json.dumps({}))
+            config = json.loads(config_path.read_text())
+            config["skip_optimizer_args_warning"] = checked
+            config_path.write_text(json.dumps(config))
+
+        config: dict = json.loads(Path("config.json").read_text())
+        file_name, _ = QFileDialog.getOpenFileName(
+            self,
+            "Load Optimizer Args",
+            dir="",
+            filter="Optimizer Args (*.json)",
+        )
+        if not file_name:
+            return
+        args = json.loads(Path(file_name).read_text())
+
+        if not isinstance(args, dict) or not args:
+            if not config.get("skip_optimizer_args_warning", False):
+                checkbox = QCheckBox("Don't show this message again")
+                checkbox.clicked.connect(update_config)
+                message = QMessageBox(
+                    QMessageBox.Icon.Warning,
+                    "No Optimizer Args Found",
+                    "No optimizer args found in the file. Are you sure you want to load the file?",
+                    QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No,
+                    self,
+                )
+                message.setCheckBox(checkbox)
+                result = message.exec()
+                if result == QMessageBox.StandardButton.No:
+                    return
+            args = {}
+        for _ in range(len(self.opt_args)):
+            self.remove_optimizer_arg(self.opt_args[0])
+        for arg in args:
+            if not isinstance(args[arg], str):
+                continue
+            self.add_optimizer_arg()
+            self.opt_args[-1].arg_name_input.setText(str(arg))
+            self.opt_args[-1].arg_value_input.setText(str(args[arg]))
+
+    def save_optional_args(self):
+        file_name, _ = QFileDialog.getSaveFileName(
+            self,
+            "Save Optimizer Args",
+            dir="",
+            filter="Optimizer Args (*.json)",
+        )
+        if not file_name:
+            return
+
+        args = {}
+        for opt_arg in self.opt_args:
+            name, value = opt_arg.get_arg()
+            if not name or not value:
+                continue
+            args[name] = value
+
+        Path(file_name).write_text(json.dumps(args))
 
     def load_args(self, args: dict) -> bool:
         args: dict = args.get(self.name, {})

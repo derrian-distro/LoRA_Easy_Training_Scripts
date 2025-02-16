@@ -26,7 +26,7 @@ class SavingWidget(BaseWidget):
         self.widget.setupUi(self.content)
 
         def setup_folder(elem: DragDropLineEdit, selector: QPushButton):
-            selector_icon = QIcon(str(Path("icons/more-horizontal.svg")))
+            selector_icon = QIcon(str(Path("icons/folder.svg")))
             elem.setMode("folder")
             elem.highlight = True
             elem.allow_empty = True

@@ -1,10 +1,12 @@
 import json
 from pathlib import Path
+
+import requests
 from PySide6 import QtWidgets
 from PySide6.QtGui import QIcon
-import requests
-from ui_files.LoraResizePopupUI import Ui_lora_resize_ui
+
 from modules.BaseDialog import BaseDialog
+from ui_files.LoraResizePopupUI import Ui_lora_resize_ui
 
 
 class LoraResizePopup(BaseDialog):
@@ -23,43 +25,29 @@ class LoraResizePopup(BaseDialog):
         self.widget.setupUi(self)
         self.widget.model_input.setMode("file", [".ckpt", ".safetensors"])
         self.widget.model_input.highlight = True
-        self.widget.model_input_selector.setIcon(
-            QIcon(str(Path("icons/more-horizontal.svg")))
-        )
+        self.widget.model_input_selector.setIcon(QIcon(str(Path("icons/folder.svg"))))
         self.widget.output_folder_input.setMode("folder")
-        self.widget.output_folder_selector.setIcon(
-            QIcon(str(Path("icons/more-horizontal.svg")))
-        )
+        self.widget.output_folder_selector.setIcon(QIcon(str(Path("icons/folder.svg"))))
 
     def setup_connections(self) -> None:
-        self.widget.model_input.textChanged.connect(
-            lambda x: self.edit_args("model", x)
-        )
+        self.widget.model_input.textChanged.connect(lambda x: self.edit_args("model", x))
         self.widget.model_input_selector.clicked.connect(
-            lambda: self.set_file_from_dialog(
-                self.widget.model_input, "Model To Resize", "lora files"
-            )
+            lambda: self.set_file_from_dialog(self.widget.model_input, "Model To Resize", "lora files")
         )
         self.widget.save_precision_select.currentTextChanged.connect(
             lambda x: self.edit_args("save_precision", x)
         )
-        self.widget.new_rank_input.valueChanged.connect(
-            lambda x: self.edit_args("new_rank", x)
-        )
+        self.widget.new_rank_input.valueChanged.connect(lambda x: self.edit_args("new_rank", x))
         self.widget.new_conv_enable.clicked.connect(self.enable_disable_conv_dims)
         self.widget.new_conv_rank_input.valueChanged.connect(
             lambda x: self.edit_args("new_conv_rank", x, True)
         )
-        self.widget.output_folder_enable.clicked.connect(
-            self.enable_disable_output_folder
-        )
+        self.widget.output_folder_enable.clicked.connect(self.enable_disable_output_folder)
         self.widget.output_folder_input.textChanged.connect(
             lambda x: self.edit_args("output_folder", x, True)
         )
         self.widget.output_folder_selector.clicked.connect(
-            lambda: self.set_folder_from_dialog(
-                self.widget.output_folder_input, "Output Folder"
-            )
+            lambda: self.set_folder_from_dialog(self.widget.output_folder_input, "Output Folder")
         )
         self.widget.output_name_enable.clicked.connect(self.enable_disable_output_name)
         self.widget.output_name_input.textChanged.connect(
@@ -75,15 +63,9 @@ class LoraResizePopup(BaseDialog):
         self.widget.use_gpu_enable.clicked.connect(
             lambda x: self.edit_args("device", "cuda" if x else False, True)
         )
-        self.widget.verbose_enable.clicked.connect(
-            lambda x: self.edit_args("verbose", x, True)
-        )
-        self.widget.remove_conv_dims_enable.clicked.connect(
-            lambda x: self.edit_args("del_conv", x, True)
-        )
-        self.widget.remove_linear_dims_enable.clicked.connect(
-            lambda x: self.edit_args("del_linear", x, True)
-        )
+        self.widget.verbose_enable.clicked.connect(lambda x: self.edit_args("verbose", x, True))
+        self.widget.remove_conv_dims_enable.clicked.connect(lambda x: self.edit_args("del_conv", x, True))
+        self.widget.remove_linear_dims_enable.clicked.connect(lambda x: self.edit_args("del_linear", x, True))
         self.widget.begin_resize_button.clicked.connect(self.start_resize)
 
     def enable_disable_conv_dims(self, toggle: bool) -> None:
@@ -125,9 +107,7 @@ class LoraResizePopup(BaseDialog):
         self.widget.new_rank_label.setText("Max Rank")
         self.widget.new_conv_enable.setText("Max Conv Rank")
         self.edit_args("dynamic_method", self.widget.dynamic_param_select.currentText())
-        self.edit_args(
-            "dynamic_param", round(self.widget.dynamic_param_input.value(), 4)
-        )
+        self.edit_args("dynamic_param", round(self.widget.dynamic_param_input.value(), 4))
 
     def start_resize(self) -> None:
         if "model" not in self.args:
