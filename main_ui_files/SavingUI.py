@@ -1,10 +1,12 @@
+from pathlib import Path
+
 from PySide6.QtCore import Slot
 from PySide6.QtGui import QIcon
-from PySide6.QtWidgets import QWidget, QPushButton
-from ui_files.SavingUI import Ui_saving_ui
+from PySide6.QtWidgets import QPushButton, QWidget
+
 from modules.BaseWidget import BaseWidget
-from pathlib import Path
 from modules.DragDropLineEdit import DragDropLineEdit
+from ui_files.SavingUI import Ui_saving_ui
 
 
 class SavingWidget(BaseWidget):
@@ -29,10 +31,8 @@ class SavingWidget(BaseWidget):
             elem.highlight = True
             elem.allow_empty = True
             selector.setIcon(selector_icon)
-        
-        setup_folder(
-            self.widget.output_folder_input, self.widget.output_folder_selector
-        )
+
+        setup_folder(self.widget.output_folder_input, self.widget.output_folder_selector)
         self.widget.output_folder_input.allow_empty = False
         setup_folder(self.widget.resume_input, self.widget.resume_selector)
         setup_folder(self.widget.save_tag_input, self.widget.save_tag_selector)
@@ -48,33 +48,21 @@ class SavingWidget(BaseWidget):
             lambda x: self.edit_args("output_dir", x, optional=True)
         )
         self.widget.output_folder_selector.clicked.connect(
-            lambda: self.set_folder_from_dialog(
-                self.widget.output_folder_input, "Output Folder"
-            )
+            lambda: self.set_folder_from_dialog(self.widget.output_folder_input, "Output Folder")
         )
         self.widget.output_name_enable.clicked.connect(self.enable_disable_output_name)
-        self.widget.output_name_input.textChanged.connect(
-            lambda x: self.edit_args("output_name", x, True)
-        )
+        self.widget.output_name_input.textChanged.connect(lambda x: self.edit_args("output_name", x, True))
         self.widget.save_precision_selector.currentTextChanged.connect(
             lambda x: self.edit_args("save_precision", x)
         )
         self.widget.resume_enable.clicked.connect(self.enable_disable_resume)
-        self.widget.resume_input.textChanged.connect(
-            lambda x: self.edit_args("resume", x, optional=True)
-        )
+        self.widget.resume_input.textChanged.connect(lambda x: self.edit_args("resume", x, optional=True))
         self.widget.resume_selector.clicked.connect(
-            lambda: self.set_folder_from_dialog(
-                self.widget.resume_input, "Folder To Resume From"
-            )
+            lambda: self.set_folder_from_dialog(self.widget.resume_input, "Folder To Resume From")
         )
-        self.widget.save_as_selector.currentTextChanged.connect(
-            lambda x: self.edit_args("save_model_as", x)
-        )
+        self.widget.save_as_selector.currentTextChanged.connect(lambda x: self.edit_args("save_model_as", x))
         self.widget.save_only_last_enable.clicked.connect(self.enable_disable_last)
-        self.widget.save_last_selector.currentIndexChanged.connect(
-            self.change_last_type
-        )
+        self.widget.save_last_selector.currentIndexChanged.connect(self.change_last_type)
         self.widget.save_last_input.valueChanged.connect(
             lambda: self.change_last_type(self.widget.save_last_selector.currentIndex())
         )
@@ -96,9 +84,7 @@ class SavingWidget(BaseWidget):
             )
         )
         self.widget.save_freq_enable.clicked.connect(self.enable_disable_freq)
-        self.widget.save_freq_selector.currentIndexChanged.connect(
-            self.change_freq_type
-        )
+        self.widget.save_freq_selector.currentIndexChanged.connect(self.change_freq_type)
         self.widget.save_freq_input.valueChanged.connect(
             lambda: self.change_freq_type(self.widget.save_freq_selector.currentIndex())
         )
@@ -107,21 +93,13 @@ class SavingWidget(BaseWidget):
             lambda x: self.edit_args("save_toml_location", x, optional=True)
         )
         self.widget.save_toml_selector.clicked.connect(
-            lambda: self.set_folder_from_dialog(
-                self.widget.save_toml_input, "Folder to save toml file"
-            )
+            lambda: self.set_folder_from_dialog(self.widget.save_toml_input, "Folder to save toml file")
         )
         self.widget.save_state_enable.clicked.connect(self.enable_disable_save_state)
-        self.widget.save_last_state_enable.clicked.connect(
-            self.enable_disable_last_state
-        )
-        self.widget.save_last_state_selector.currentIndexChanged.connect(
-            self.change_state_type
-        )
+        self.widget.save_last_state_enable.clicked.connect(self.enable_disable_last_state)
+        self.widget.save_last_state_selector.currentIndexChanged.connect(self.change_state_type)
         self.widget.save_last_state_input.valueChanged.connect(
-            lambda: self.change_state_type(
-                self.widget.save_last_selector.currentIndex()
-            )
+            lambda: self.change_state_type(self.widget.save_last_selector.currentIndex())
         )
 
     def check_validity(self, elem: DragDropLineEdit) -> None:
@@ -275,39 +253,27 @@ class SavingWidget(BaseWidget):
         args: dict = args.get(self.name, {})
 
         # update element inputs
-        self.widget.name_replace_text_input.setText(args.get("name_replace", ""))
+        self.widget.name_replace_text_input.setText(args.get("easy_name", ""))
         self.widget.output_folder_input.setText(args.get("output_dir", ""))
         self.widget.output_name_enable.setChecked(bool(args.get("output_name", False)))
         self.widget.output_name_input.setText(args.get("output_name", ""))
-        self.widget.save_precision_selector.setCurrentText(
-            args.get("save_precision", "fp16")
-        )
+        self.widget.save_precision_selector.setCurrentText(args.get("save_precision", "fp16"))
         self.widget.resume_enable.setChecked(bool(args.get("resume", False)))
         self.widget.resume_input.setText(args.get("resume", ""))
-        self.widget.save_as_selector.setCurrentText(
-            args.get("save_model_as", "safetensors")
-        )
+        self.widget.save_as_selector.setCurrentText(args.get("save_model_as", "safetensors"))
         self.widget.save_only_last_enable.setChecked(
             bool(args.get("save_last_n_epochs", args.get("save_last_n_steps", False)))
         )
-        self.widget.save_last_selector.setCurrentIndex(
-            0 if args.get("save_last_n_epochs") else 1
-        )
-        self.widget.save_last_input.setValue(
-            args.get("save_last_n_epochs", args.get("save_last_n_steps", 1))
-        )
-        self.widget.save_ratio_enable.setChecked(
-            bool(args.get("save_n_epoch_ratio", False))
-        )
+        self.widget.save_last_selector.setCurrentIndex(0 if args.get("save_last_n_epochs") else 1)
+        self.widget.save_last_input.setValue(args.get("save_last_n_epochs", args.get("save_last_n_steps", 1)))
+        self.widget.save_ratio_enable.setChecked(bool(args.get("save_n_epoch_ratio", False)))
         self.widget.save_ratio_input.setValue(args.get("save_n_epoch_ratio", 1))
         self.widget.save_tag_enable.setChecked(bool(args.get("tag_occurrence", False)))
         self.widget.save_tag_input.setText(args.get("tag_file_location", ""))
         self.widget.save_freq_enable.setChecked(
             bool(args.get("save_every_n_epochs", args.get("save_every_n_steps", False)))
         )
-        self.widget.save_freq_selector.setCurrentIndex(
-            0 if args.get("save_every_n_epochs") else 1
-        )
+        self.widget.save_freq_selector.setCurrentIndex(0 if args.get("save_every_n_epochs") else 1)
         self.widget.save_freq_input.setValue(
             args.get("save_every_n_epochs", args.get("save_every_n_steps", 1))
         )
@@ -322,23 +288,19 @@ class SavingWidget(BaseWidget):
                 )
             )
         )
-        self.widget.save_last_state_selector.setCurrentIndex(
-            0 if args.get("save_last_n_epochs_state") else 1
-        )
+        self.widget.save_last_state_selector.setCurrentIndex(0 if args.get("save_last_n_epochs_state") else 1)
         self.widget.save_last_state_input.setValue(
             args.get("save_last_n_epochs_state", args.get("save_last_n_steps_state", 1))
         )
 
         # edit args to match
-        self.edit_args("name_replace", self.widget.name_replace_text_input.text(), True)
+        self.edit_args("easy_name", self.widget.name_replace_text_input.text(), True)
         self.edit_args(
             "output_dir",
             self.widget.output_folder_input.text(),
         )
         self.enable_disable_output_name(self.widget.output_name_enable.isChecked())
-        self.edit_args(
-            "save_precision", self.widget.save_precision_selector.currentText()
-        )
+        self.edit_args("save_precision", self.widget.save_precision_selector.currentText())
         self.enable_disable_resume(self.widget.resume_enable.isChecked())
         self.edit_args("save_model_as", self.widget.save_as_selector.currentText())
         self.enable_disable_last(self.widget.save_only_last_enable.isChecked())

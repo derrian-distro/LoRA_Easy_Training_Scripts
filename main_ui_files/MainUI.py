@@ -1,20 +1,22 @@
 import contextlib
 import json
 import os
-from PySide6 import QtWidgets
-from PySide6.QtWidgets import QWidget, QGridLayout, QPushButton
-from main_ui_files.ArgsListUI import ArgsWidget
-from main_ui_files.SubsetListUI import SubsetListWidget
-from modules import ScrollOnSelect, TomlFunctions
-from modules.LineEditHighlight import LineEditWithHighlight
-from main_ui_files.QueueUI import QueueWidget
-from modules.Enums import TrainingModes
+import shutil
 from pathlib import Path
 from threading import Thread
-import requests
-from requests.exceptions import ConnectionError
 from time import sleep
-import shutil
+
+import requests
+from PySide6 import QtWidgets
+from PySide6.QtWidgets import QGridLayout, QPushButton, QWidget
+from requests.exceptions import ConnectionError
+
+from main_ui_files.ArgsListUI import ArgsWidget
+from main_ui_files.QueueUI import QueueWidget
+from main_ui_files.SubsetListUI import SubsetListWidget
+from modules import ScrollOnSelect, TomlFunctions
+from modules.Enums import TrainingModes
+from modules.LineEditHighlight import LineEditWithHighlight
 
 
 class MainWidget(QWidget):
@@ -115,23 +117,26 @@ class MainWidget(QWidget):
             self.train_mode = TrainingModes.TI
             self.args_widget.set_ti_training()
 
-    def perform_name_replace(self, args:dict) -> dict:
+    def perform_name_replace(self, args: dict) -> dict:
         """
         Replaces the $replace variable with the name_replace variable in various saving and logging paths.
         """
         template_str = r"${replace}"
-
         saving_args = args.get("saving_args", {})
-        replace_str = saving_args.get("name_replace", "")
+        replace_str = saving_args.get("easy_name", "")
 
         if "output_dir" in saving_args:
             saving_args["output_dir"] = saving_args["output_dir"].replace(template_str, replace_str)
         if "output_name" in saving_args:
             saving_args["output_name"] = saving_args["output_name"].replace(template_str, replace_str)
         if "tag_file_location" in saving_args:
-            saving_args["tag_file_location"] = saving_args["tag_file_location"].replace(template_str, replace_str)
+            saving_args["tag_file_location"] = saving_args["tag_file_location"].replace(
+                template_str, replace_str
+            )
         if "save_toml_location" in saving_args:
-            saving_args["save_toml_location"] = saving_args["save_toml_location"].replace(template_str, replace_str)
+            saving_args["save_toml_location"] = saving_args["save_toml_location"].replace(
+                template_str, replace_str
+            )
         if "resume" in saving_args:
             saving_args["resume"] = saving_args["resume"].replace(template_str, replace_str)
 
@@ -160,7 +165,7 @@ class MainWidget(QWidget):
                 args[arg] = val["args"]
             if "dataset_args" in val:
                 dataset_args[arg] = val["dataset_args"]
-        
+
         return args, dataset_args, train_mode
 
     def start_training(self) -> None:
@@ -192,10 +197,7 @@ class MainWidget(QWidget):
 
     def train_helper(self, url: str, train_toml: Path) -> bool:
         args, dataset_args, train_mode = self.process_toml(train_toml)
-        final_args = {
-            "args": self.perform_name_replace(args), 
-            "dataset": dataset_args
-        }
+        final_args = {"args": self.perform_name_replace(args), "dataset": dataset_args}
         config = json.loads(Path("config.json").read_text())
         try:
             response = requests.post(f"{url}/validate", json=True, data=json.dumps(final_args))
