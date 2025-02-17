@@ -57,6 +57,14 @@ class NetworkWidget(BaseWidget):
         self.widget.load_network_args_button.setIcon(load_args_icon)
         save_args_icon = QIcon(str(Path("icons/save.svg")))
         self.widget.save_network_args_button.setIcon(save_args_icon)
+        selector_icon = QIcon(str(Path("icons/folder.svg")))
+        self.widget.network_weight_file_input.setMode("file", [".safetensors", ".ckpt", ".pt", ".sft"])
+        self.widget.network_weight_file_input.highlight = True
+        self.widget.network_weight_file_selector.setIcon(selector_icon)
+        self.widget.network_dim_file_input.setMode("file", [".safetensors", ".ckpt", ".pt", ".sft"])
+        self.widget.network_dim_file_input.highlight = True
+        self.widget.network_dim_file_selector.setIcon(selector_icon)
+
         self.widget.network_args_item_widget.layout().setAlignment(QtCore.Qt.AlignmentFlag.AlignTop)
 
         for i, elem in enumerate(self.block_widgets):
@@ -131,6 +139,22 @@ class NetworkWidget(BaseWidget):
         self.widget.add_network_arg_button.clicked.connect(self.add_network_arg)
         self.widget.load_network_args_button.clicked.connect(self.load_optional_args)
         self.widget.save_network_args_button.clicked.connect(self.save_optional_args)
+        self.widget.network_weight_file_input.textChanged.connect(
+            lambda x: self.edit_args("network_weights", x, True)
+        )
+        self.widget.network_weight_file_selector.clicked.connect(
+            lambda: self.set_file_from_dialog(
+                self.widget.network_weight_file_input, "Network Weights", "LoRA Model"
+            )
+        )
+        self.widget.network_dim_file_input.textChanged.connect(
+            lambda x: self.edit_args("dim_from_weights", x, True)
+        )
+        self.widget.network_dim_file_selector.clicked.connect(
+            lambda: self.set_file_from_dialog(
+                self.widget.network_dim_file_input, "Network Dims", "LoRA Model"
+            )
+        )
 
     def edit_network_args(self, name: str, value: object, optional: bool = False) -> None:
         if "network_args" not in self.args:
@@ -503,6 +527,8 @@ class NetworkWidget(BaseWidget):
         self.widget.constrain_enable.setChecked(bool(network_args.get("constraint", False)))
         self.widget.constrain_input.setText(str(network_args.get("constraint", "")))
         self.widget.lora_fa_enable.setEnabled(args.get("fa", False))
+        self.widget.network_weight_file_input.setText(args.get("network_weights", ""))
+        self.widget.network_dim_file_input.setText(args.get("dim_from_weights", ""))
 
         # update block widgets
         self.load_block_weights(network_args)
@@ -516,6 +542,8 @@ class NetworkWidget(BaseWidget):
         self.change_unet_te_only(self.widget.unet_te_both_select.currentIndex())
         self.enable_disable_cache_te(self.widget.cache_te_outputs_enable.isChecked())
         self.enable_disable_ip_gamma(self.widget.ip_gamma_enable.isChecked())
+        self.edit_args("network_weights", self.widget.network_weight_file_input.text(), True)
+        self.edit_args("dim_from_weights", self.widget.network_dim_file_input.text(), True)
         self.load_network_args(network_args)
         return True
 

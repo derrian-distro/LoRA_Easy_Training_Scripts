@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>432</width>
-    <height>356</height>
+    <height>422</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -66,15 +66,102 @@
        <string>Main Args</string>
       </attribute>
       <layout class="QGridLayout" name="gridLayout">
-       <item row="1" column="0">
-        <widget class="QLabel" name="label">
-         <property name="toolTip">
-          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;LyCORIS Preset is the preset used by the LyCORIS library. Typically you want to use &amp;quot;full&amp;quot; which is automatically selected when there is nothing provided&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-         </property>
-         <property name="text">
-          <string>LyCORIS Preset</string>
-         </property>
-        </widget>
+       <item row="2" column="0">
+        <layout class="QFormLayout" name="formLayout">
+         <item row="0" column="0">
+          <widget class="QLabel" name="network_dim_label">
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Network Dimension represents the size of the Linear Dimensions of the model&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="text">
+            <string>Network Dimension</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="1">
+          <widget class="SpinBox" name="network_dim_input">
+           <property name="maximumSize">
+            <size>
+             <width>16777215</width>
+             <height>16777215</height>
+            </size>
+           </property>
+           <property name="focusPolicy">
+            <enum>Qt::FocusPolicy::StrongFocus</enum>
+           </property>
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Network Dimension represents the size of the Linear Dimensions of the model&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="minimum">
+            <number>1</number>
+           </property>
+           <property name="maximum">
+            <number>16777215</number>
+           </property>
+           <property name="value">
+            <number>32</number>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="0">
+          <widget class="QLabel" name="network_alpha_label">
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Network Alpha represents the alpha of the Linear Dimensions. This Alpha is a scalar on the network dimension such that alpha / dimension = scalar. For example, and alpha of 16 and a dimension of 32 would result in a scalar of 0.5&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="text">
+            <string>Network Alpha</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="1">
+          <widget class="DoubleSpinBox" name="network_alpha_input">
+           <property name="maximumSize">
+            <size>
+             <width>16777215</width>
+             <height>16777215</height>
+            </size>
+           </property>
+           <property name="focusPolicy">
+            <enum>Qt::FocusPolicy::StrongFocus</enum>
+           </property>
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Network Alpha represents the alpha of the Linear Dimensions. This Alpha is a scalar on the network dimension such that alpha / dimension = scalar. For example, and alpha of 16 and a dimension of 32 would result in a scalar of 0.5&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="decimals">
+            <number>2</number>
+           </property>
+           <property name="maximum">
+            <double>16777215.000000000000000</double>
+           </property>
+           <property name="value">
+            <double>16.000000000000000</double>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="0">
+          <widget class="QLabel" name="min_timestep_label">
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Min timestep represents the lowest timestep to train on. Typically you want to keep this value at 0&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="text">
+            <string>Min Timestep</string>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="1">
+          <widget class="SpinBox" name="min_timestep_input">
+           <property name="enabled">
+            <bool>true</bool>
+           </property>
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Min timestep represents the lowest timestep to train on. Typically you want to keep this value at 0&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="maximum">
+            <number>999</number>
+           </property>
+          </widget>
+         </item>
+        </layout>
        </item>
        <item row="4" column="1">
         <layout class="QFormLayout" name="formLayout_4">
@@ -218,102 +305,15 @@
          </item>
         </layout>
        </item>
-       <item row="2" column="1">
-        <layout class="QFormLayout" name="formLayout_2">
-         <item row="0" column="0">
-          <widget class="QLabel" name="conv_dim_label">
-           <property name="enabled">
-            <bool>true</bool>
-           </property>
-           <property name="toolTip">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Conv Dimension represents the size of the Convolutional Dimensions of the model&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-           </property>
-           <property name="text">
-            <string>Conv Dimension</string>
-           </property>
-          </widget>
-         </item>
-         <item row="0" column="1">
-          <widget class="SpinBox" name="conv_dim_input">
-           <property name="enabled">
-            <bool>false</bool>
-           </property>
-           <property name="focusPolicy">
-            <enum>Qt::FocusPolicy::StrongFocus</enum>
-           </property>
-           <property name="toolTip">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Conv Dimension represents the size of the Convolutional Dimensions of the model&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-           </property>
-           <property name="maximum">
-            <number>16777215</number>
-           </property>
-           <property name="value">
-            <number>32</number>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="0">
-          <widget class="QLabel" name="conv_alpha_label">
-           <property name="enabled">
-            <bool>true</bool>
-           </property>
-           <property name="toolTip">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Conv Alpha represents the alpha of the Conv Dimensions. This Alpha is a scalar on the conv dimension such that alpha / dimension = scalar. For example, and alpha of 16 and a dimension of 32 would result in a scalar of 0.5&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-           </property>
-           <property name="text">
-            <string>Conv Alpha</string>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="1">
-          <widget class="DoubleSpinBox" name="conv_alpha_input">
-           <property name="enabled">
-            <bool>false</bool>
-           </property>
-           <property name="focusPolicy">
-            <enum>Qt::FocusPolicy::StrongFocus</enum>
-           </property>
-           <property name="toolTip">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Conv Alpha represents the alpha of the Conv Dimensions. This Alpha is a scalar on the conv dimension such that alpha / dimension = scalar. For example, and alpha of 16 and a dimension of 32 would result in a scalar of 0.5&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-           </property>
-           <property name="maximum">
-            <double>16777215.000000000000000</double>
-           </property>
-           <property name="value">
-            <double>16.000000000000000</double>
-           </property>
-          </widget>
-         </item>
-         <item row="2" column="0">
-          <widget class="QLabel" name="max_timestep_label">
-           <property name="toolTip">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Max Timestep represents the lowest timestep to train on. Typically you want to keep this value at 1000, the highest possible timestep. The Max timestep cannot be lower than the Min Timestep&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-           </property>
-           <property name="text">
-            <string>Max Timestep</string>
-           </property>
-          </widget>
-         </item>
-         <item row="2" column="1">
-          <widget class="SpinBox" name="max_timestep_input">
-           <property name="enabled">
-            <bool>true</bool>
-           </property>
-           <property name="toolTip">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Max Timestep represents the lowest timestep to train on. Typically you want to keep this value at 1000, the highest possible timestep. The Max timestep cannot be lower than the Min Timestep&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-           </property>
-           <property name="minimum">
-            <number>1</number>
-           </property>
-           <property name="maximum">
-            <number>1000</number>
-           </property>
-           <property name="value">
-            <number>1000</number>
-           </property>
-          </widget>
-         </item>
-        </layout>
+       <item row="1" column="1">
+        <widget class="QLineEdit" name="lycoris_preset_input">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
+         <property name="toolTip">
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;LyCORIS Preset is the preset used by the LyCORIS library. Typically you want to use &amp;quot;full&amp;quot; which is automatically selected when there is nothing provided&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         </property>
+        </widget>
        </item>
        <item row="4" column="0">
         <layout class="QFormLayout" name="formLayout_3">
@@ -537,34 +537,41 @@
          </item>
         </layout>
        </item>
-       <item row="2" column="0">
-        <layout class="QFormLayout" name="formLayout">
+       <item row="1" column="0">
+        <widget class="QLabel" name="label">
+         <property name="toolTip">
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;LyCORIS Preset is the preset used by the LyCORIS library. Typically you want to use &amp;quot;full&amp;quot; which is automatically selected when there is nothing provided&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         </property>
+         <property name="text">
+          <string>LyCORIS Preset</string>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="1">
+        <layout class="QFormLayout" name="formLayout_2">
          <item row="0" column="0">
-          <widget class="QLabel" name="network_dim_label">
+          <widget class="QLabel" name="conv_dim_label">
+           <property name="enabled">
+            <bool>true</bool>
+           </property>
            <property name="toolTip">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Network Dimension represents the size of the Linear Dimensions of the model&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Conv Dimension represents the size of the Convolutional Dimensions of the model&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
            </property>
            <property name="text">
-            <string>Network Dimension</string>
+            <string>Conv Dimension</string>
            </property>
           </widget>
          </item>
          <item row="0" column="1">
-          <widget class="SpinBox" name="network_dim_input">
-           <property name="maximumSize">
-            <size>
-             <width>16777215</width>
-             <height>16777215</height>
-            </size>
+          <widget class="SpinBox" name="conv_dim_input">
+           <property name="enabled">
+            <bool>false</bool>
            </property>
            <property name="focusPolicy">
             <enum>Qt::FocusPolicy::StrongFocus</enum>
            </property>
            <property name="toolTip">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Network Dimension represents the size of the Linear Dimensions of the model&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-           </property>
-           <property name="minimum">
-            <number>1</number>
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Conv Dimension represents the size of the Convolutional Dimensions of the model&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
            </property>
            <property name="maximum">
             <number>16777215</number>
@@ -575,31 +582,28 @@
           </widget>
          </item>
          <item row="1" column="0">
-          <widget class="QLabel" name="network_alpha_label">
+          <widget class="QLabel" name="conv_alpha_label">
+           <property name="enabled">
+            <bool>true</bool>
+           </property>
            <property name="toolTip">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Network Alpha represents the alpha of the Linear Dimensions. This Alpha is a scalar on the network dimension such that alpha / dimension = scalar. For example, and alpha of 16 and a dimension of 32 would result in a scalar of 0.5&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Conv Alpha represents the alpha of the Conv Dimensions. This Alpha is a scalar on the conv dimension such that alpha / dimension = scalar. For example, and alpha of 16 and a dimension of 32 would result in a scalar of 0.5&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
            </property>
            <property name="text">
-            <string>Network Alpha</string>
+            <string>Conv Alpha</string>
            </property>
           </widget>
          </item>
          <item row="1" column="1">
-          <widget class="DoubleSpinBox" name="network_alpha_input">
-           <property name="maximumSize">
-            <size>
-             <width>16777215</width>
-             <height>16777215</height>
-            </size>
+          <widget class="DoubleSpinBox" name="conv_alpha_input">
+           <property name="enabled">
+            <bool>false</bool>
            </property>
            <property name="focusPolicy">
             <enum>Qt::FocusPolicy::StrongFocus</enum>
            </property>
            <property name="toolTip">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Network Alpha represents the alpha of the Linear Dimensions. This Alpha is a scalar on the network dimension such that alpha / dimension = scalar. For example, and alpha of 16 and a dimension of 32 would result in a scalar of 0.5&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-           </property>
-           <property name="decimals">
-            <number>2</number>
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Conv Alpha represents the alpha of the Conv Dimensions. This Alpha is a scalar on the conv dimension such that alpha / dimension = scalar. For example, and alpha of 16 and a dimension of 32 would result in a scalar of 0.5&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
            </property>
            <property name="maximum">
             <double>16777215.000000000000000</double>
@@ -610,39 +614,35 @@
           </widget>
          </item>
          <item row="2" column="0">
-          <widget class="QLabel" name="min_timestep_label">
+          <widget class="QLabel" name="max_timestep_label">
            <property name="toolTip">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Min timestep represents the lowest timestep to train on. Typically you want to keep this value at 0&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Max Timestep represents the lowest timestep to train on. Typically you want to keep this value at 1000, the highest possible timestep. The Max timestep cannot be lower than the Min Timestep&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
            </property>
            <property name="text">
-            <string>Min Timestep</string>
+            <string>Max Timestep</string>
            </property>
           </widget>
          </item>
          <item row="2" column="1">
-          <widget class="SpinBox" name="min_timestep_input">
+          <widget class="SpinBox" name="max_timestep_input">
            <property name="enabled">
             <bool>true</bool>
            </property>
            <property name="toolTip">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Min timestep represents the lowest timestep to train on. Typically you want to keep this value at 0&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Max Timestep represents the lowest timestep to train on. Typically you want to keep this value at 1000, the highest possible timestep. The Max timestep cannot be lower than the Min Timestep&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="minimum">
+            <number>1</number>
            </property>
            <property name="maximum">
-            <number>999</number>
+            <number>1000</number>
+           </property>
+           <property name="value">
+            <number>1000</number>
            </property>
           </widget>
          </item>
         </layout>
-       </item>
-       <item row="1" column="1">
-        <widget class="QLineEdit" name="lycoris_preset_input">
-         <property name="enabled">
-          <bool>false</bool>
-         </property>
-         <property name="toolTip">
-          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;LyCORIS Preset is the preset used by the LyCORIS library. Typically you want to use &amp;quot;full&amp;quot; which is automatically selected when there is nothing provided&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-         </property>
-        </widget>
        </item>
        <item row="0" column="0" colspan="2">
         <widget class="ComboBox" name="algo_select">
@@ -704,6 +704,64 @@
          </item>
         </widget>
        </item>
+       <item row="5" column="0" colspan="2">
+        <layout class="QFormLayout" name="formLayout_5">
+         <item row="0" column="0">
+          <widget class="QLabel" name="label_2">
+           <property name="text">
+            <string>Weights From Network</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="1">
+          <layout class="QHBoxLayout" name="horizontalLayout_6">
+           <item>
+            <widget class="DragDropLineEdit" name="network_weight_file_input"/>
+           </item>
+           <item>
+            <widget class="QPushButton" name="network_weight_file_selector">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="text">
+              <string/>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item row="1" column="0">
+          <widget class="QLabel" name="label_3">
+           <property name="text">
+            <string>Dims From Network</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="1">
+          <layout class="QHBoxLayout" name="horizontalLayout_7">
+           <item>
+            <widget class="DragDropLineEdit" name="network_dim_file_input"/>
+           </item>
+           <item>
+            <widget class="QPushButton" name="network_dim_file_selector">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="text">
+              <string/>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+        </layout>
+       </item>
       </layout>
      </widget>
      <widget class="QWidget" name="block_weight_tab">
@@ -736,8 +794,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>84</width>
-            <height>74</height>
+            <width>426</width>
+            <height>568</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_3">
@@ -847,7 +905,7 @@
             <x>0</x>
             <y>0</y>
             <width>408</width>
-            <height>274</height>
+            <height>518</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_5"/>
@@ -892,6 +950,11 @@
    <extends>QWidget</extends>
    <header>modules.CollapsibleWidget.h</header>
    <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>DragDropLineEdit</class>
+   <extends>QLineEdit</extends>
+   <header>modules.DragDropLineEdit.h</header>
   </customwidget>
  </customwidgets>
  <resources/>
