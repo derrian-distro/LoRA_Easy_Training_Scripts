@@ -29,16 +29,16 @@
      <item row="0" column="1">
       <widget class="SpinBox" name="seed_input">
        <property name="focusPolicy">
-        <enum>Qt::StrongFocus</enum>
+        <enum>Qt::FocusPolicy::StrongFocus</enum>
        </property>
        <property name="toolTip">
         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The random seed that is used to do all randomization within the training process.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
        </property>
        <property name="minimum">
-        <number>0</number>
+        <number>-2147483647</number>
        </property>
        <property name="maximum">
-        <number>16777215</number>
+        <number>2147483647</number>
        </property>
        <property name="value">
         <number>23</number>
@@ -58,7 +58,7 @@
      <item row="1" column="1">
       <widget class="SpinBox" name="clip_skip_input">
        <property name="focusPolicy">
-        <enum>Qt::StrongFocus</enum>
+        <enum>Qt::FocusPolicy::StrongFocus</enum>
        </property>
        <property name="toolTip">
         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The number of layers to skip while training. Generally, for SD1.X models, clip skip is either set to 1 or 2. SDXL doesn't need clip skip, however&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -84,7 +84,7 @@
      <item row="2" column="1">
       <widget class="DoubleSpinBox" name="loss_weight_input">
        <property name="focusPolicy">
-        <enum>Qt::StrongFocus</enum>
+        <enum>Qt::FocusPolicy::StrongFocus</enum>
        </property>
        <property name="toolTip">
         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Prior Loss Weight is the weight of the Prior Loss. Prior Loss is a loss specifically designed to help the model not erase concepts while it trains in new concepts. The weight is how much of an effect the Prior Loss has.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -178,7 +178,7 @@
       <item row="0" column="1">
        <widget class="SpinBox" name="width_input">
         <property name="focusPolicy">
-         <enum>Qt::StrongFocus</enum>
+         <enum>Qt::FocusPolicy::StrongFocus</enum>
         </property>
         <property name="toolTip">
          <string/>
@@ -200,7 +200,7 @@
          <bool>false</bool>
         </property>
         <property name="focusPolicy">
-         <enum>Qt::StrongFocus</enum>
+         <enum>Qt::FocusPolicy::StrongFocus</enum>
         </property>
         <property name="toolTip">
          <string/>
@@ -241,7 +241,7 @@
      <item row="0" column="1">
       <widget class="SpinBox" name="batch_size_input">
        <property name="focusPolicy">
-        <enum>Qt::StrongFocus</enum>
+        <enum>Qt::FocusPolicy::StrongFocus</enum>
        </property>
        <property name="toolTip">
         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Batch Size represents the maximum number of images within any given Batch. Due to bucketing, a Batch may not always be a full batch, as it is only possible to batch from the same bucket&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -264,7 +264,7 @@
      <item row="1" column="1">
       <widget class="ComboBox" name="max_token_selector">
        <property name="focusPolicy">
-        <enum>Qt::StrongFocus</enum>
+        <enum>Qt::FocusPolicy::StrongFocus</enum>
        </property>
        <property name="toolTip">
         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Max Token Length represents the largest size a training prompt can be. Note that tokens are not the same as words.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -299,7 +299,7 @@
      <item row="2" column="1">
       <widget class="ComboBox" name="mixed_precision_selector">
        <property name="focusPolicy">
-        <enum>Qt::StrongFocus</enum>
+        <enum>Qt::FocusPolicy::StrongFocus</enum>
        </property>
        <property name="toolTip">
         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Training Precision, otherwise known as Mixed Precision, is the main precision that is trained at. Generally, there are parts of the model that trains better at FP32 (full), so mixed precision allows for such parts to be in full precision while keeping the majority in a lower, more VRAM friendly precision.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -336,7 +336,7 @@
        <item>
         <widget class="ComboBox" name="max_train_selector">
          <property name="focusPolicy">
-          <enum>Qt::StrongFocus</enum>
+          <enum>Qt::FocusPolicy::StrongFocus</enum>
          </property>
          <property name="toolTip">
           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Max Training Time can be in epochs or in steps. The step calculation for epochs will match perfectly with how sd-scripts calculates their steps if used.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -356,7 +356,7 @@
        <item>
         <widget class="SpinBox" name="max_train_input">
          <property name="focusPolicy">
-          <enum>Qt::StrongFocus</enum>
+          <enum>Qt::FocusPolicy::StrongFocus</enum>
          </property>
          <property name="toolTip">
           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Max Training Time can be in epochs or in steps. The step calculation for epochs will match perfectly with how sd-scripts calculates their steps if used.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -417,7 +417,7 @@
            <bool>false</bool>
           </property>
           <property name="focusPolicy">
-           <enum>Qt::StrongFocus</enum>
+           <enum>Qt::FocusPolicy::StrongFocus</enum>
           </property>
           <property name="toolTip">
            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Gradient Accumulation is a tweak that does X gradient Accumulation steps for each batch, as such, you can treat it like an extension of your batch size. For example, Gradient Accumulation steps of 2, with a batch size of 4 would give you 2 batches of 4 per step, effectively making it a batch size of 8. One benefit to Gradient Accumulation that you do not have with straight batch size is that the batches may be from different buckets.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
