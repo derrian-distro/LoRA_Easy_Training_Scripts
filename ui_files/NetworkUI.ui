@@ -708,6 +708,9 @@
         <layout class="QFormLayout" name="formLayout_5">
          <item row="0" column="0">
           <widget class="QLabel" name="label_2">
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Use an existing LoRA to apply to the base model as weights, effectively allowing you to begin training from a previous epoch, or LoRA&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
            <property name="text">
             <string>Weights From Network</string>
            </property>
@@ -716,7 +719,11 @@
          <item row="0" column="1">
           <layout class="QHBoxLayout" name="horizontalLayout_6">
            <item>
-            <widget class="DragDropLineEdit" name="network_weight_file_input"/>
+            <widget class="DragDropLineEdit" name="network_weight_file_input">
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Use an existing LoRA to apply to the base model as weights, effectively allowing you to begin training from a previous epoch, or LoRA&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+            </widget>
            </item>
            <item>
             <widget class="QPushButton" name="network_weight_file_selector">
@@ -725,6 +732,9 @@
                <horstretch>0</horstretch>
                <verstretch>0</verstretch>
               </sizepolicy>
+             </property>
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Use an existing LoRA to apply to the base model as weights, effectively allowing you to begin training from a previous epoch, or LoRA&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
              </property>
              <property name="text">
               <string/>
@@ -735,6 +745,9 @@
          </item>
          <item row="1" column="0">
           <widget class="QLabel" name="label_3">
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Use an existing LoRA to select the dims for this new LoRA. This method of selecting dims allows for more dynamic dims, similar to using the block weights&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
            <property name="text">
             <string>Dims From Network</string>
            </property>
@@ -743,7 +756,11 @@
          <item row="1" column="1">
           <layout class="QHBoxLayout" name="horizontalLayout_7">
            <item>
-            <widget class="DragDropLineEdit" name="network_dim_file_input"/>
+            <widget class="DragDropLineEdit" name="network_dim_file_input">
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Use an existing LoRA to select the dims for this new LoRA. This method of selecting dims allows for more dynamic dims, similar to using the block weights&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+            </widget>
            </item>
            <item>
             <widget class="QPushButton" name="network_dim_file_selector">
@@ -752,6 +769,9 @@
                <horstretch>0</horstretch>
                <verstretch>0</verstretch>
               </sizepolicy>
+             </property>
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Use an existing LoRA to select the dims for this new LoRA. This method of selecting dims allows for more dynamic dims, similar to using the block weights&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
              </property>
              <property name="text">
               <string/>
@@ -794,8 +814,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>426</width>
-            <height>568</height>
+            <width>98</width>
+            <height>74</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_3">
@@ -904,8 +924,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>408</width>
-            <height>518</height>
+            <width>98</width>
+            <height>28</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_5"/>
