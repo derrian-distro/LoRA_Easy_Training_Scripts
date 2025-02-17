@@ -132,52 +132,37 @@ class LoraResizePopup(BaseDialog):
         self.edit_args("dynamic_param", round(self.widget.dynamic_param_input.value(), 4))
 
     def start_resize(self) -> None:
+        lora_files = []
+
         if "batch_process" in self.args:
-            # Handle batch processing
             batch_folder = Path(self.args["batch_process"])
             if not batch_folder.exists() or not batch_folder.is_dir():
                 return
-
-            # Get all .safetensors and .ckpt files in the folder
-            lora_files = []
             lora_files.extend(batch_folder.glob("*.safetensors"))
             lora_files.extend(batch_folder.glob("*.ckpt"))
-
-            for lora_file in lora_files:
-                # Create args for each file
-                file_args = [
-                    f"--save_to={self.get_output_name(prefix=self.args['output_name'], model=lora_file)}"
-                ]
-                for key, value in self.args.items():
-                    if key in ["output_name", "output_folder", "batch_process", "model"]:
-                        continue
-                    if value is True:
-                        file_args.append(f"--{key}")
-                    else:
-                        file_args.append(f"--{key}={value}")
-                # Add the current file
-                file_args.append(f"--model={lora_file.as_posix()}")
-                self.resize_queue.append(file_args)
-
         elif "model" in self.args:
-            # Handle single file (existing logic)
-            args = [
-                f"--save_to={self.get_output_name(output_name=self.args['output_name'], model=self.args['model'])}"
-            ]
-            for key, value in self.args.items():
-                if key in ["output_name", "output_folder"]:
-                    continue
-                if key == "model":
-                    value = Path(value).as_posix()
-                if value is True:
-                    args.append(f"--{key}")
-                else:
-                    args.append(f"--{key}={value}")
-            self.resize_queue.append(args)
+            lora_files.append(Path(self.args["model"]))
         else:
             return
 
-        # Start the resize thread if not already running
+        for lora_file in lora_files:
+            output_name = self.args.get("output_name")
+            prefix = output_name if "batch_process" in self.args else None
+            file_args = [
+                f"--save_to={self.get_output_name(prefix=prefix, output_name=output_name if "batch_process" not in self.args else None, model=lora_file)}"
+            ]
+
+            for key, value in self.args.items():
+                if key in ["output_name", "output_folder", "batch_process", "model"]:
+                    continue
+                if value is True:
+                    file_args.append(f"--{key}")
+                else:
+                    file_args.append(f"--{key}={value}")
+
+            file_args.append(f"--model={lora_file.as_posix()}")
+            self.resize_queue.append(file_args)
+
         if not self.resize_thread or not self.resize_thread.is_alive():
             self.resize_thread = Thread(target=self.process_resize_queue, daemon=True)
             self.resize_thread.start()
@@ -188,19 +173,17 @@ class LoraResizePopup(BaseDialog):
         url = config_dict.get("backend_url", "http://127.0.0.1:8000")
 
         while self.resize_queue:
-            # Check if backend is busy
             try:
                 status_response = requests.get(f"{url}/is_training", timeout=5)
                 if status_response.status_code == 200:
                     status_data = status_response.json()
                     if status_data.get("training", False):
-                        time.sleep(1)  # Wait before checking again
+                        time.sleep(1)
                         continue
             except (ConnectionError, requests.exceptions.Timeout):
                 print("Failed to check backend status")
                 return
 
-            # Process next item in queue
             args = self.resize_queue[0]
             if self.resize_helper(args):
                 self.resize_queue.pop(0)
@@ -222,7 +205,7 @@ class LoraResizePopup(BaseDialog):
             print(e)
             return False
         except requests.exceptions.Timeout:
-            return True  # Timeout is expected as the operation starts
+            return True
         if response.status_code != 200:
             print(f"Failed to resize: {response.text}")
             return False
