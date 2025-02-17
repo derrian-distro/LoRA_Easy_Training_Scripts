@@ -3,7 +3,7 @@
 ################################################################################
 ## Form generated from reading UI file 'LoraResizePopupUI.ui'
 ##
-## Created by: Qt User Interface Compiler version 6.7.1
+## Created by: Qt User Interface Compiler version 6.8.2
 ##
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
@@ -27,7 +27,7 @@ class Ui_lora_resize_ui(object):
     def setupUi(self, lora_resize_ui):
         if not lora_resize_ui.objectName():
             lora_resize_ui.setObjectName(u"lora_resize_ui")
-        lora_resize_ui.resize(483, 293)
+        lora_resize_ui.resize(483, 387)
         self.gridLayout = QGridLayout(lora_resize_ui)
         self.gridLayout.setObjectName(u"gridLayout")
         self.formLayout = QFormLayout()
@@ -37,10 +37,25 @@ class Ui_lora_resize_ui(object):
 
         self.formLayout.setWidget(0, QFormLayout.LabelRole, self.label_3)
 
+        self.horizontalLayout = QHBoxLayout()
+        self.horizontalLayout.setObjectName(u"horizontalLayout")
+        self.model_input = DragDropLineEdit(lora_resize_ui)
+        self.model_input.setObjectName(u"model_input")
+
+        self.horizontalLayout.addWidget(self.model_input)
+
+        self.model_selector = QPushButton(lora_resize_ui)
+        self.model_selector.setObjectName(u"model_selector")
+
+        self.horizontalLayout.addWidget(self.model_selector)
+
+
+        self.formLayout.setLayout(0, QFormLayout.FieldRole, self.horizontalLayout)
+
         self.label = QLabel(lora_resize_ui)
         self.label.setObjectName(u"label")
 
-        self.formLayout.setWidget(1, QFormLayout.LabelRole, self.label)
+        self.formLayout.setWidget(2, QFormLayout.LabelRole, self.label)
 
         self.save_precision_select = ComboBox(lora_resize_ui)
         self.save_precision_select.addItem("")
@@ -48,24 +63,24 @@ class Ui_lora_resize_ui(object):
         self.save_precision_select.addItem("")
         self.save_precision_select.setObjectName(u"save_precision_select")
 
-        self.formLayout.setWidget(1, QFormLayout.FieldRole, self.save_precision_select)
+        self.formLayout.setWidget(2, QFormLayout.FieldRole, self.save_precision_select)
 
         self.new_rank_label = QLabel(lora_resize_ui)
         self.new_rank_label.setObjectName(u"new_rank_label")
 
-        self.formLayout.setWidget(2, QFormLayout.LabelRole, self.new_rank_label)
+        self.formLayout.setWidget(3, QFormLayout.LabelRole, self.new_rank_label)
 
         self.new_rank_input = SpinBox(lora_resize_ui)
         self.new_rank_input.setObjectName(u"new_rank_input")
         self.new_rank_input.setMinimum(1)
         self.new_rank_input.setValue(4)
 
-        self.formLayout.setWidget(2, QFormLayout.FieldRole, self.new_rank_input)
+        self.formLayout.setWidget(3, QFormLayout.FieldRole, self.new_rank_input)
 
         self.new_conv_enable = QCheckBox(lora_resize_ui)
         self.new_conv_enable.setObjectName(u"new_conv_enable")
 
-        self.formLayout.setWidget(3, QFormLayout.LabelRole, self.new_conv_enable)
+        self.formLayout.setWidget(4, QFormLayout.LabelRole, self.new_conv_enable)
 
         self.new_conv_rank_input = SpinBox(lora_resize_ui)
         self.new_conv_rank_input.setObjectName(u"new_conv_rank_input")
@@ -73,7 +88,12 @@ class Ui_lora_resize_ui(object):
         self.new_conv_rank_input.setMinimum(1)
         self.new_conv_rank_input.setValue(1)
 
-        self.formLayout.setWidget(3, QFormLayout.FieldRole, self.new_conv_rank_input)
+        self.formLayout.setWidget(4, QFormLayout.FieldRole, self.new_conv_rank_input)
+
+        self.output_folder_enable = QCheckBox(lora_resize_ui)
+        self.output_folder_enable.setObjectName(u"output_folder_enable")
+
+        self.formLayout.setWidget(5, QFormLayout.LabelRole, self.output_folder_enable)
 
         self.horizontalLayout_2 = QHBoxLayout()
         self.horizontalLayout_2.setObjectName(u"horizontalLayout_2")
@@ -90,18 +110,23 @@ class Ui_lora_resize_ui(object):
         self.horizontalLayout_2.addWidget(self.output_folder_selector)
 
 
-        self.formLayout.setLayout(4, QFormLayout.FieldRole, self.horizontalLayout_2)
+        self.formLayout.setLayout(5, QFormLayout.FieldRole, self.horizontalLayout_2)
+
+        self.output_name_enable = QCheckBox(lora_resize_ui)
+        self.output_name_enable.setObjectName(u"output_name_enable")
+
+        self.formLayout.setWidget(6, QFormLayout.LabelRole, self.output_name_enable)
 
         self.output_name_input = LineEditWithHighlight(lora_resize_ui)
         self.output_name_input.setObjectName(u"output_name_input")
         self.output_name_input.setEnabled(False)
 
-        self.formLayout.setWidget(5, QFormLayout.FieldRole, self.output_name_input)
+        self.formLayout.setWidget(6, QFormLayout.FieldRole, self.output_name_input)
 
         self.dynamic_param_enable = QCheckBox(lora_resize_ui)
         self.dynamic_param_enable.setObjectName(u"dynamic_param_enable")
 
-        self.formLayout.setWidget(6, QFormLayout.LabelRole, self.dynamic_param_enable)
+        self.formLayout.setWidget(7, QFormLayout.LabelRole, self.dynamic_param_enable)
 
         self.horizontalLayout_3 = QHBoxLayout()
         self.horizontalLayout_3.setObjectName(u"horizontalLayout_3")
@@ -126,7 +151,7 @@ class Ui_lora_resize_ui(object):
         self.horizontalLayout_3.addWidget(self.dynamic_param_input)
 
 
-        self.formLayout.setLayout(6, QFormLayout.FieldRole, self.horizontalLayout_3)
+        self.formLayout.setLayout(7, QFormLayout.FieldRole, self.horizontalLayout_3)
 
         self.horizontalLayout_4 = QHBoxLayout()
         self.horizontalLayout_4.setObjectName(u"horizontalLayout_4")
@@ -152,32 +177,34 @@ class Ui_lora_resize_ui(object):
         self.horizontalLayout_4.addWidget(self.remove_linear_dims_enable)
 
 
-        self.formLayout.setLayout(7, QFormLayout.SpanningRole, self.horizontalLayout_4)
+        self.formLayout.setLayout(8, QFormLayout.SpanningRole, self.horizontalLayout_4)
 
-        self.horizontalLayout = QHBoxLayout()
-        self.horizontalLayout.setObjectName(u"horizontalLayout")
-        self.model_input = DragDropLineEdit(lora_resize_ui)
-        self.model_input.setObjectName(u"model_input")
+        self.batch_enable = QCheckBox(lora_resize_ui)
+        self.batch_enable.setObjectName(u"batch_enable")
 
-        self.horizontalLayout.addWidget(self.model_input)
+        self.formLayout.setWidget(1, QFormLayout.LabelRole, self.batch_enable)
 
-        self.model_input_selector = QPushButton(lora_resize_ui)
-        self.model_input_selector.setObjectName(u"model_input_selector")
+        self.horizontalLayout_5 = QHBoxLayout()
+        self.horizontalLayout_5.setObjectName(u"horizontalLayout_5")
+        self.batch_input = DragDropLineEdit(lora_resize_ui)
+        self.batch_input.setObjectName(u"batch_input")
+        self.batch_input.setEnabled(False)
 
-        self.horizontalLayout.addWidget(self.model_input_selector)
+        self.horizontalLayout_5.addWidget(self.batch_input)
+
+        self.batch_selector = QPushButton(lora_resize_ui)
+        self.batch_selector.setObjectName(u"batch_selector")
+        self.batch_selector.setEnabled(False)
+        sizePolicy = QSizePolicy(QSizePolicy.Policy.Maximum, QSizePolicy.Policy.Fixed)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.batch_selector.sizePolicy().hasHeightForWidth())
+        self.batch_selector.setSizePolicy(sizePolicy)
+
+        self.horizontalLayout_5.addWidget(self.batch_selector)
 
 
-        self.formLayout.setLayout(0, QFormLayout.FieldRole, self.horizontalLayout)
-
-        self.output_folder_enable = QCheckBox(lora_resize_ui)
-        self.output_folder_enable.setObjectName(u"output_folder_enable")
-
-        self.formLayout.setWidget(4, QFormLayout.LabelRole, self.output_folder_enable)
-
-        self.output_name_enable = QCheckBox(lora_resize_ui)
-        self.output_name_enable.setObjectName(u"output_name_enable")
-
-        self.formLayout.setWidget(5, QFormLayout.LabelRole, self.output_name_enable)
+        self.formLayout.setLayout(1, QFormLayout.FieldRole, self.horizontalLayout_5)
 
 
         self.gridLayout.addLayout(self.formLayout, 0, 0, 1, 1)
@@ -199,6 +226,13 @@ class Ui_lora_resize_ui(object):
         self.label_3.setToolTip(QCoreApplication.translate("lora_resize_ui", u"<html><head/><body><p>Model is the base model to resize</p></body></html>", None))
 #endif // QT_CONFIG(tooltip)
         self.label_3.setText(QCoreApplication.translate("lora_resize_ui", u"Model", None))
+#if QT_CONFIG(tooltip)
+        self.model_input.setToolTip(QCoreApplication.translate("lora_resize_ui", u"<html><head/><body><p>Model is the base model to resize</p></body></html>", None))
+#endif // QT_CONFIG(tooltip)
+#if QT_CONFIG(tooltip)
+        self.model_selector.setToolTip(QCoreApplication.translate("lora_resize_ui", u"<html><head/><body><p>Model is the base model to resize</p></body></html>", None))
+#endif // QT_CONFIG(tooltip)
+        self.model_selector.setText("")
 #if QT_CONFIG(tooltip)
         self.label.setToolTip(QCoreApplication.translate("lora_resize_ui", u"<html><head/><body><p>Save Precision is the precision the model is saved in. Typically the resized model is saved in the same precision as the original</p></body></html>", None))
 #endif // QT_CONFIG(tooltip)
@@ -225,6 +259,10 @@ class Ui_lora_resize_ui(object):
         self.new_conv_rank_input.setToolTip(QCoreApplication.translate("lora_resize_ui", u"<html><head/><body><p>New Conv Rank means one of two things, either it represents the actual rank it is resized to, or it represents the max rank it can be for a dynamic resize</p></body></html>", None))
 #endif // QT_CONFIG(tooltip)
 #if QT_CONFIG(tooltip)
+        self.output_folder_enable.setToolTip(QCoreApplication.translate("lora_resize_ui", u"<html><head/><body><p>Output Folder is the location the new resized model is saved to</p></body></html>", None))
+#endif // QT_CONFIG(tooltip)
+        self.output_folder_enable.setText(QCoreApplication.translate("lora_resize_ui", u"Output Folder", None))
+#if QT_CONFIG(tooltip)
         self.output_folder_input.setToolTip(QCoreApplication.translate("lora_resize_ui", u"<html><head/><body><p>Output Folder is the location the new resized model is saved to</p></body></html>", None))
 #endif // QT_CONFIG(tooltip)
 #if QT_CONFIG(tooltip)
@@ -232,7 +270,11 @@ class Ui_lora_resize_ui(object):
 #endif // QT_CONFIG(tooltip)
         self.output_folder_selector.setText("")
 #if QT_CONFIG(tooltip)
-        self.output_name_input.setToolTip(QCoreApplication.translate("lora_resize_ui", u"<html><head/><body><p>Output Name is the base name of the new resized model. The utility will automatically append the settings for the resize to the end of the name.</p></body></html>", None))
+        self.output_name_enable.setToolTip(QCoreApplication.translate("lora_resize_ui", u"<html><head/><body><p>Output Name is the base name of the new resized model. The utility will automatically append the settings for the resize to the end of the name. This will act as a prefix if batch process is enabled</p></body></html>", None))
+#endif // QT_CONFIG(tooltip)
+        self.output_name_enable.setText(QCoreApplication.translate("lora_resize_ui", u"Output Name", None))
+#if QT_CONFIG(tooltip)
+        self.output_name_input.setToolTip(QCoreApplication.translate("lora_resize_ui", u"<html><head/><body><p>Output Name is the base name of the new resized model. The utility will automatically append the settings for the resize to the end of the name. This will act as a prefix if batch process is enabled</p></body></html>", None))
 #endif // QT_CONFIG(tooltip)
 #if QT_CONFIG(tooltip)
         self.dynamic_param_enable.setToolTip(QCoreApplication.translate("lora_resize_ui", u"<html><head/><body><p>Dynamic Method enables resizing via one of the dynamic methods. All of the methods have a dynamic value which represent the amount to shave off during the resize, the closer to 1, the less it removes. 0.99 effectively removes all empty weights, but nothing else, making it the least lossy choice.</p></body></html>", None))
@@ -265,20 +307,16 @@ class Ui_lora_resize_ui(object):
 #endif // QT_CONFIG(tooltip)
         self.remove_linear_dims_enable.setText(QCoreApplication.translate("lora_resize_ui", u"Remove Linear Dims", None))
 #if QT_CONFIG(tooltip)
-        self.model_input.setToolTip(QCoreApplication.translate("lora_resize_ui", u"<html><head/><body><p>Model is the base model to resize</p></body></html>", None))
+        self.batch_enable.setToolTip(QCoreApplication.translate("lora_resize_ui", u"<html><head/><body><p>Folder Input for resizing multiple lora using the same setting</p></body></html>", None))
+#endif // QT_CONFIG(tooltip)
+        self.batch_enable.setText(QCoreApplication.translate("lora_resize_ui", u"Batch Folder", None))
+#if QT_CONFIG(tooltip)
+        self.batch_input.setToolTip(QCoreApplication.translate("lora_resize_ui", u"<html><head/><body><p>Folder Input for resizing multiple lora using the same setting</p></body></html>", None))
 #endif // QT_CONFIG(tooltip)
 #if QT_CONFIG(tooltip)
-        self.model_input_selector.setToolTip(QCoreApplication.translate("lora_resize_ui", u"<html><head/><body><p>Model is the base model to resize</p></body></html>", None))
+        self.batch_selector.setToolTip(QCoreApplication.translate("lora_resize_ui", u"<html><head/><body><p>Folder Input for resizing multiple lora using the same setting</p></body></html>", None))
 #endif // QT_CONFIG(tooltip)
-        self.model_input_selector.setText("")
-#if QT_CONFIG(tooltip)
-        self.output_folder_enable.setToolTip(QCoreApplication.translate("lora_resize_ui", u"<html><head/><body><p>Output Folder is the location the new resized model is saved to</p></body></html>", None))
-#endif // QT_CONFIG(tooltip)
-        self.output_folder_enable.setText(QCoreApplication.translate("lora_resize_ui", u"Output Folder", None))
-#if QT_CONFIG(tooltip)
-        self.output_name_enable.setToolTip(QCoreApplication.translate("lora_resize_ui", u"<html><head/><body><p>Output Name is the base name of the new resized model. The utility will automatically append the settings for the resize to the end of the name.</p></body></html>", None))
-#endif // QT_CONFIG(tooltip)
-        self.output_name_enable.setText(QCoreApplication.translate("lora_resize_ui", u"Output Name", None))
+        self.batch_selector.setText("")
         self.begin_resize_button.setText(QCoreApplication.translate("lora_resize_ui", u"Start Resizing", None))
     # retranslateUi
 
