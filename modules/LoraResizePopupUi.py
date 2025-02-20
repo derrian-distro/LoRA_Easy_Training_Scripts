@@ -149,7 +149,7 @@ class LoraResizePopup(BaseDialog):
             output_name = self.args.get("output_name")
             prefix = output_name if "batch_process" in self.args else None
             file_args = [
-                f"--save_to={self.get_output_name(prefix=prefix, output_name=output_name if "batch_process" not in self.args else None, model=lora_file)}"
+                f"--save_to={self.get_output_name(prefix=prefix, output_name=output_name if 'batch_process' not in self.args else None, model=lora_file)}"
             ]
 
             for key, value in self.args.items():
