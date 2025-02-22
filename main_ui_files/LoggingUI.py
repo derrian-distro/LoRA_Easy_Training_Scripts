@@ -1,11 +1,13 @@
+from pathlib import Path
+
 from PySide6.QtCore import Slot
 from PySide6.QtGui import QIcon
 from PySide6.QtWidgets import QWidget
+
+from modules.BaseWidget import BaseWidget
 from modules.DragDropLineEdit import DragDropLineEdit
 from modules.LineEditHighlight import LineEditWithHighlight
 from ui_files.LoggingUI import Ui_logging_ui
-from modules.BaseWidget import BaseWidget
-from pathlib import Path
 
 
 class LoggingWidget(BaseWidget):
@@ -27,45 +29,29 @@ class LoggingWidget(BaseWidget):
         self.widget.log_wandb_key_input.setEnabled(False)
         self.widget.log_prefix_input.setEnabled(False)
         self.widget.log_tracker_name_input.setEnabled(False)
-        self.widget.log_output_selector.setIcon(
-            QIcon(str(Path("icons/more-horizontal.svg")))
-        )
+        self.widget.log_output_selector.setIcon(QIcon(str(Path("icons/folder.svg"))))
 
     def setup_connections(self) -> None:
         self.widget.logging_group.clicked.connect(self.enable_disable)
-        self.widget.log_mode_selector.currentIndexChanged.connect(
-            self.change_log_system
-        )
-        self.widget.log_output_input.textChanged.connect(
-            lambda x: self.edit_args("logging_dir", x)
-        )
+        self.widget.log_mode_selector.currentIndexChanged.connect(self.change_log_system)
+        self.widget.log_output_input.textChanged.connect(lambda x: self.edit_args("logging_dir", x))
         self.widget.log_output_input.editingFinished.connect(
             lambda: self.check_validity(self.widget.log_output_input)
         )
         self.widget.log_output_selector.clicked.connect(
-            lambda: self.set_folder_from_dialog(
-                self.widget.log_output_input, "Open Logging Directory"
-            )
+            lambda: self.set_folder_from_dialog(self.widget.log_output_input, "Open Logging Directory")
         )
         self.widget.log_prefix_enable.clicked.connect(
-            lambda x: self.enable_disable_lineEdit(
-                x, self.widget.log_prefix_input, "log_prefix"
-            )
+            lambda x: self.enable_disable_lineEdit(x, self.widget.log_prefix_input, "log_prefix")
         )
-        self.widget.log_prefix_input.textChanged.connect(
-            lambda x: self.edit_args("log_prefix", x, True)
-        )
+        self.widget.log_prefix_input.textChanged.connect(lambda x: self.edit_args("log_prefix", x, True))
         self.widget.log_tracker_name_enable.clicked.connect(
-            lambda x: self.enable_disable_lineEdit(
-                x, self.widget.log_tracker_name_input, "log_tracker_name"
-            )
+            lambda x: self.enable_disable_lineEdit(x, self.widget.log_tracker_name_input, "log_tracker_name")
         )
         self.widget.log_tracker_name_input.textChanged.connect(
             lambda x: self.edit_args("log_tracker_name", x, True)
         )
-        self.widget.log_wandb_key_input.textChanged.connect(
-            lambda x: self.edit_args("wandb_api_key", x)
-        )
+        self.widget.log_wandb_key_input.textChanged.connect(lambda x: self.edit_args("wandb_api_key", x))
 
     def check_validity(self, elem: DragDropLineEdit) -> None:
         elem.dirty = True
@@ -82,13 +68,9 @@ class LoggingWidget(BaseWidget):
             return
         self.edit_args("logging_dir", self.widget.log_output_input.text())
         if self.widget.log_prefix_enable.isChecked():
-            self.enable_disable_lineEdit(
-                True, self.widget.log_prefix_input, "log_prefix"
-            )
+            self.enable_disable_lineEdit(True, self.widget.log_prefix_input, "log_prefix")
         if self.widget.log_tracker_name_enable.isChecked():
-            self.enable_disable_lineEdit(
-                True, self.widget.log_tracker_name_input, "log_tracker_name"
-            )
+            self.enable_disable_lineEdit(True, self.widget.log_tracker_name_input, "log_tracker_name")
         self.change_log_system(self.widget.log_mode_selector.currentIndex())
         if self.widget.log_output_input.dirty:
             self.widget.log_output_input.update_stylesheet()
@@ -102,13 +84,9 @@ class LoggingWidget(BaseWidget):
             self.widget.log_wandb_key_input.text() if index != 0 else None,
             True,
         )
-        self.edit_args(
-            "log_with", self.widget.log_mode_selector.currentText().lower(), True
-        )
+        self.edit_args("log_with", self.widget.log_mode_selector.currentText().lower(), True)
 
-    def enable_disable_lineEdit(
-        self, checked: bool, elem: LineEditWithHighlight, name: str
-    ) -> None:
+    def enable_disable_lineEdit(self, checked: bool, elem: LineEditWithHighlight, name: str) -> None:
         elem.setEnabled(checked)
         self.edit_args(name, elem.text() if checked else None, True)
 
@@ -117,9 +95,7 @@ class LoggingWidget(BaseWidget):
 
         # update element inputs
         self.widget.logging_group.setChecked(bool(args.get("log_with", False)))
-        self.widget.log_mode_selector.setCurrentText(
-            args.get("log_with", "tensorboard").capitalize()
-        )
+        self.widget.log_mode_selector.setCurrentText(args.get("log_with", "tensorboard").capitalize())
         self.widget.log_output_input.setText(args.get("logging_dir", ""))
         self.widget.log_prefix_enable.setChecked("log_prefix" in args)
         self.widget.log_prefix_input.setText(args.get("log_prefix", ""))

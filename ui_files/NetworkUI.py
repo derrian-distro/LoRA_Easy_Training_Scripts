@@ -3,7 +3,7 @@
 ################################################################################
 ## Form generated from reading UI file 'NetworkUI.ui'
 ##
-## Created by: Qt User Interface Compiler version 6.7.2
+## Created by: Qt User Interface Compiler version 6.8.2
 ##
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
@@ -21,6 +21,7 @@ from PySide6.QtWidgets import (QApplication, QCheckBox, QFormLayout, QGridLayout
     QWidget)
 
 from modules.CollapsibleWidget import CollapsibleWidget
+from modules.DragDropLineEdit import DragDropLineEdit
 from modules.LineEditHighlight import LineEditWithHighlight
 from modules.ScrollOnSelect import (ComboBox, DoubleSpinBox, SpinBox, TabView)
 
@@ -28,7 +29,7 @@ class Ui_network_ui(object):
     def setupUi(self, network_ui):
         if not network_ui.objectName():
             network_ui.setObjectName(u"network_ui")
-        network_ui.resize(431, 356)
+        network_ui.resize(432, 422)
         sizePolicy = QSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Preferred)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -41,19 +42,61 @@ class Ui_network_ui(object):
         self.tabWidget = TabView(network_ui)
         self.tabWidget.setObjectName(u"tabWidget")
         self.tabWidget.setEnabled(True)
-        self.tabWidget.setFocusPolicy(Qt.NoFocus)
-        self.tabWidget.setTabPosition(QTabWidget.North)
-        self.tabWidget.setTabShape(QTabWidget.Rounded)
+        self.tabWidget.setFocusPolicy(Qt.FocusPolicy.NoFocus)
+        self.tabWidget.setTabPosition(QTabWidget.TabPosition.North)
+        self.tabWidget.setTabShape(QTabWidget.TabShape.Rounded)
         self.tabWidget.setUsesScrollButtons(False)
         self.main_tab = QWidget()
         self.main_tab.setObjectName(u"main_tab")
-        self.main_tab.setFocusPolicy(Qt.NoFocus)
+        self.main_tab.setFocusPolicy(Qt.FocusPolicy.NoFocus)
         self.gridLayout = QGridLayout(self.main_tab)
         self.gridLayout.setObjectName(u"gridLayout")
-        self.label = QLabel(self.main_tab)
-        self.label.setObjectName(u"label")
+        self.formLayout = QFormLayout()
+        self.formLayout.setObjectName(u"formLayout")
+        self.network_dim_label = QLabel(self.main_tab)
+        self.network_dim_label.setObjectName(u"network_dim_label")
 
-        self.gridLayout.addWidget(self.label, 1, 0, 1, 1)
+        self.formLayout.setWidget(0, QFormLayout.LabelRole, self.network_dim_label)
+
+        self.network_dim_input = SpinBox(self.main_tab)
+        self.network_dim_input.setObjectName(u"network_dim_input")
+        self.network_dim_input.setMaximumSize(QSize(16777215, 16777215))
+        self.network_dim_input.setFocusPolicy(Qt.FocusPolicy.StrongFocus)
+        self.network_dim_input.setMinimum(1)
+        self.network_dim_input.setMaximum(16777215)
+        self.network_dim_input.setValue(32)
+
+        self.formLayout.setWidget(0, QFormLayout.FieldRole, self.network_dim_input)
+
+        self.network_alpha_label = QLabel(self.main_tab)
+        self.network_alpha_label.setObjectName(u"network_alpha_label")
+
+        self.formLayout.setWidget(1, QFormLayout.LabelRole, self.network_alpha_label)
+
+        self.network_alpha_input = DoubleSpinBox(self.main_tab)
+        self.network_alpha_input.setObjectName(u"network_alpha_input")
+        self.network_alpha_input.setMaximumSize(QSize(16777215, 16777215))
+        self.network_alpha_input.setFocusPolicy(Qt.FocusPolicy.StrongFocus)
+        self.network_alpha_input.setDecimals(2)
+        self.network_alpha_input.setMaximum(16777215.000000000000000)
+        self.network_alpha_input.setValue(16.000000000000000)
+
+        self.formLayout.setWidget(1, QFormLayout.FieldRole, self.network_alpha_input)
+
+        self.min_timestep_label = QLabel(self.main_tab)
+        self.min_timestep_label.setObjectName(u"min_timestep_label")
+
+        self.formLayout.setWidget(2, QFormLayout.LabelRole, self.min_timestep_label)
+
+        self.min_timestep_input = SpinBox(self.main_tab)
+        self.min_timestep_input.setObjectName(u"min_timestep_input")
+        self.min_timestep_input.setEnabled(True)
+        self.min_timestep_input.setMaximum(999)
+
+        self.formLayout.setWidget(2, QFormLayout.FieldRole, self.min_timestep_input)
+
+
+        self.gridLayout.addLayout(self.formLayout, 2, 0, 1, 1)
 
         self.formLayout_4 = QFormLayout()
         self.formLayout_4.setObjectName(u"formLayout_4")
@@ -66,7 +109,7 @@ class Ui_network_ui(object):
         self.network_dropout_input = DoubleSpinBox(self.main_tab)
         self.network_dropout_input.setObjectName(u"network_dropout_input")
         self.network_dropout_input.setEnabled(False)
-        self.network_dropout_input.setFocusPolicy(Qt.StrongFocus)
+        self.network_dropout_input.setFocusPolicy(Qt.FocusPolicy.StrongFocus)
         self.network_dropout_input.setMaximum(1.000000000000000)
         self.network_dropout_input.setSingleStep(0.010000000000000)
         self.network_dropout_input.setValue(0.100000000000000)
@@ -81,7 +124,7 @@ class Ui_network_ui(object):
         self.rank_dropout_input = DoubleSpinBox(self.main_tab)
         self.rank_dropout_input.setObjectName(u"rank_dropout_input")
         self.rank_dropout_input.setEnabled(False)
-        self.rank_dropout_input.setFocusPolicy(Qt.StrongFocus)
+        self.rank_dropout_input.setFocusPolicy(Qt.FocusPolicy.StrongFocus)
         self.rank_dropout_input.setMaximum(1.000000000000000)
         self.rank_dropout_input.setSingleStep(0.010000000000000)
         self.rank_dropout_input.setValue(0.100000000000000)
@@ -96,7 +139,7 @@ class Ui_network_ui(object):
         self.module_dropout_input = DoubleSpinBox(self.main_tab)
         self.module_dropout_input.setObjectName(u"module_dropout_input")
         self.module_dropout_input.setEnabled(False)
-        self.module_dropout_input.setFocusPolicy(Qt.StrongFocus)
+        self.module_dropout_input.setFocusPolicy(Qt.FocusPolicy.StrongFocus)
         self.module_dropout_input.setMaximum(1.000000000000000)
         self.module_dropout_input.setSingleStep(0.010000000000000)
         self.module_dropout_input.setValue(0.100000000000000)
@@ -116,7 +159,7 @@ class Ui_network_ui(object):
         self.ip_gamma_input = DoubleSpinBox(self.main_tab)
         self.ip_gamma_input.setObjectName(u"ip_gamma_input")
         self.ip_gamma_input.setEnabled(False)
-        self.ip_gamma_input.setFocusPolicy(Qt.StrongFocus)
+        self.ip_gamma_input.setFocusPolicy(Qt.FocusPolicy.StrongFocus)
         self.ip_gamma_input.setSingleStep(0.010000000000000)
         self.ip_gamma_input.setValue(0.100000000000000)
 
@@ -125,54 +168,11 @@ class Ui_network_ui(object):
 
         self.gridLayout.addLayout(self.formLayout_4, 4, 1, 1, 1)
 
-        self.formLayout_2 = QFormLayout()
-        self.formLayout_2.setObjectName(u"formLayout_2")
-        self.conv_dim_label = QLabel(self.main_tab)
-        self.conv_dim_label.setObjectName(u"conv_dim_label")
-        self.conv_dim_label.setEnabled(True)
+        self.lycoris_preset_input = QLineEdit(self.main_tab)
+        self.lycoris_preset_input.setObjectName(u"lycoris_preset_input")
+        self.lycoris_preset_input.setEnabled(False)
 
-        self.formLayout_2.setWidget(0, QFormLayout.LabelRole, self.conv_dim_label)
-
-        self.conv_dim_input = SpinBox(self.main_tab)
-        self.conv_dim_input.setObjectName(u"conv_dim_input")
-        self.conv_dim_input.setEnabled(False)
-        self.conv_dim_input.setFocusPolicy(Qt.StrongFocus)
-        self.conv_dim_input.setMaximum(16777215)
-        self.conv_dim_input.setValue(32)
-
-        self.formLayout_2.setWidget(0, QFormLayout.FieldRole, self.conv_dim_input)
-
-        self.conv_alpha_label = QLabel(self.main_tab)
-        self.conv_alpha_label.setObjectName(u"conv_alpha_label")
-        self.conv_alpha_label.setEnabled(True)
-
-        self.formLayout_2.setWidget(1, QFormLayout.LabelRole, self.conv_alpha_label)
-
-        self.conv_alpha_input = DoubleSpinBox(self.main_tab)
-        self.conv_alpha_input.setObjectName(u"conv_alpha_input")
-        self.conv_alpha_input.setEnabled(False)
-        self.conv_alpha_input.setFocusPolicy(Qt.StrongFocus)
-        self.conv_alpha_input.setMaximum(16777215.000000000000000)
-        self.conv_alpha_input.setValue(16.000000000000000)
-
-        self.formLayout_2.setWidget(1, QFormLayout.FieldRole, self.conv_alpha_input)
-
-        self.max_timestep_label = QLabel(self.main_tab)
-        self.max_timestep_label.setObjectName(u"max_timestep_label")
-
-        self.formLayout_2.setWidget(2, QFormLayout.LabelRole, self.max_timestep_label)
-
-        self.max_timestep_input = SpinBox(self.main_tab)
-        self.max_timestep_input.setObjectName(u"max_timestep_input")
-        self.max_timestep_input.setEnabled(True)
-        self.max_timestep_input.setMinimum(1)
-        self.max_timestep_input.setMaximum(1000)
-        self.max_timestep_input.setValue(1000)
-
-        self.formLayout_2.setWidget(2, QFormLayout.FieldRole, self.max_timestep_input)
-
-
-        self.gridLayout.addLayout(self.formLayout_2, 2, 1, 1, 1)
+        self.gridLayout.addWidget(self.lycoris_preset_input, 1, 1, 1, 1)
 
         self.formLayout_3 = QFormLayout()
         self.formLayout_3.setObjectName(u"formLayout_3")
@@ -193,7 +193,7 @@ class Ui_network_ui(object):
         self.unet_te_both_select.setSizePolicy(sizePolicy1)
         self.unet_te_both_select.setMinimumSize(QSize(0, 0))
         self.unet_te_both_select.setMaximumSize(QSize(16777215, 16777215))
-        self.unet_te_both_select.setFocusPolicy(Qt.StrongFocus)
+        self.unet_te_both_select.setFocusPolicy(Qt.FocusPolicy.StrongFocus)
 
         self.formLayout_3.setWidget(0, QFormLayout.FieldRole, self.unet_te_both_select)
 
@@ -255,7 +255,7 @@ class Ui_network_ui(object):
         self.dylora_unit_input.setObjectName(u"dylora_unit_input")
         self.dylora_unit_input.setEnabled(False)
         self.dylora_unit_input.setMaximumSize(QSize(16777215, 16777215))
-        self.dylora_unit_input.setFocusPolicy(Qt.StrongFocus)
+        self.dylora_unit_input.setFocusPolicy(Qt.FocusPolicy.StrongFocus)
         self.dylora_unit_input.setValue(4)
 
         self.horizontalLayout_2.addWidget(self.dylora_unit_input)
@@ -289,58 +289,59 @@ class Ui_network_ui(object):
 
         self.gridLayout.addLayout(self.formLayout_3, 4, 0, 1, 1)
 
-        self.formLayout = QFormLayout()
-        self.formLayout.setObjectName(u"formLayout")
-        self.network_dim_label = QLabel(self.main_tab)
-        self.network_dim_label.setObjectName(u"network_dim_label")
+        self.label = QLabel(self.main_tab)
+        self.label.setObjectName(u"label")
 
-        self.formLayout.setWidget(0, QFormLayout.LabelRole, self.network_dim_label)
+        self.gridLayout.addWidget(self.label, 1, 0, 1, 1)
 
-        self.network_dim_input = SpinBox(self.main_tab)
-        self.network_dim_input.setObjectName(u"network_dim_input")
-        self.network_dim_input.setMaximumSize(QSize(16777215, 16777215))
-        self.network_dim_input.setFocusPolicy(Qt.StrongFocus)
-        self.network_dim_input.setMinimum(1)
-        self.network_dim_input.setMaximum(16777215)
-        self.network_dim_input.setValue(32)
+        self.formLayout_2 = QFormLayout()
+        self.formLayout_2.setObjectName(u"formLayout_2")
+        self.conv_dim_label = QLabel(self.main_tab)
+        self.conv_dim_label.setObjectName(u"conv_dim_label")
+        self.conv_dim_label.setEnabled(True)
 
-        self.formLayout.setWidget(0, QFormLayout.FieldRole, self.network_dim_input)
+        self.formLayout_2.setWidget(0, QFormLayout.LabelRole, self.conv_dim_label)
 
-        self.network_alpha_label = QLabel(self.main_tab)
-        self.network_alpha_label.setObjectName(u"network_alpha_label")
+        self.conv_dim_input = SpinBox(self.main_tab)
+        self.conv_dim_input.setObjectName(u"conv_dim_input")
+        self.conv_dim_input.setEnabled(False)
+        self.conv_dim_input.setFocusPolicy(Qt.FocusPolicy.StrongFocus)
+        self.conv_dim_input.setMaximum(16777215)
+        self.conv_dim_input.setValue(32)
 
-        self.formLayout.setWidget(1, QFormLayout.LabelRole, self.network_alpha_label)
+        self.formLayout_2.setWidget(0, QFormLayout.FieldRole, self.conv_dim_input)
 
-        self.network_alpha_input = DoubleSpinBox(self.main_tab)
-        self.network_alpha_input.setObjectName(u"network_alpha_input")
-        self.network_alpha_input.setMaximumSize(QSize(16777215, 16777215))
-        self.network_alpha_input.setFocusPolicy(Qt.StrongFocus)
-        self.network_alpha_input.setDecimals(2)
-        self.network_alpha_input.setMaximum(16777215.000000000000000)
-        self.network_alpha_input.setValue(16.000000000000000)
+        self.conv_alpha_label = QLabel(self.main_tab)
+        self.conv_alpha_label.setObjectName(u"conv_alpha_label")
+        self.conv_alpha_label.setEnabled(True)
 
-        self.formLayout.setWidget(1, QFormLayout.FieldRole, self.network_alpha_input)
+        self.formLayout_2.setWidget(1, QFormLayout.LabelRole, self.conv_alpha_label)
 
-        self.min_timestep_label = QLabel(self.main_tab)
-        self.min_timestep_label.setObjectName(u"min_timestep_label")
+        self.conv_alpha_input = DoubleSpinBox(self.main_tab)
+        self.conv_alpha_input.setObjectName(u"conv_alpha_input")
+        self.conv_alpha_input.setEnabled(False)
+        self.conv_alpha_input.setFocusPolicy(Qt.FocusPolicy.StrongFocus)
+        self.conv_alpha_input.setMaximum(16777215.000000000000000)
+        self.conv_alpha_input.setValue(16.000000000000000)
 
-        self.formLayout.setWidget(2, QFormLayout.LabelRole, self.min_timestep_label)
+        self.formLayout_2.setWidget(1, QFormLayout.FieldRole, self.conv_alpha_input)
 
-        self.min_timestep_input = SpinBox(self.main_tab)
-        self.min_timestep_input.setObjectName(u"min_timestep_input")
-        self.min_timestep_input.setEnabled(True)
-        self.min_timestep_input.setMaximum(999)
+        self.max_timestep_label = QLabel(self.main_tab)
+        self.max_timestep_label.setObjectName(u"max_timestep_label")
 
-        self.formLayout.setWidget(2, QFormLayout.FieldRole, self.min_timestep_input)
+        self.formLayout_2.setWidget(2, QFormLayout.LabelRole, self.max_timestep_label)
+
+        self.max_timestep_input = SpinBox(self.main_tab)
+        self.max_timestep_input.setObjectName(u"max_timestep_input")
+        self.max_timestep_input.setEnabled(True)
+        self.max_timestep_input.setMinimum(1)
+        self.max_timestep_input.setMaximum(1000)
+        self.max_timestep_input.setValue(1000)
+
+        self.formLayout_2.setWidget(2, QFormLayout.FieldRole, self.max_timestep_input)
 
 
-        self.gridLayout.addLayout(self.formLayout, 2, 0, 1, 1)
-
-        self.lycoris_preset_input = QLineEdit(self.main_tab)
-        self.lycoris_preset_input.setObjectName(u"lycoris_preset_input")
-        self.lycoris_preset_input.setEnabled(False)
-
-        self.gridLayout.addWidget(self.lycoris_preset_input, 1, 1, 1, 1)
+        self.gridLayout.addLayout(self.formLayout_2, 2, 1, 1, 1)
 
         self.algo_select = ComboBox(self.main_tab)
         self.algo_select.addItem("")
@@ -354,14 +355,66 @@ class Ui_network_ui(object):
         self.algo_select.addItem("")
         self.algo_select.addItem("")
         self.algo_select.setObjectName(u"algo_select")
-        self.algo_select.setFocusPolicy(Qt.StrongFocus)
+        self.algo_select.setFocusPolicy(Qt.FocusPolicy.StrongFocus)
 
         self.gridLayout.addWidget(self.algo_select, 0, 0, 1, 2)
+
+        self.formLayout_5 = QFormLayout()
+        self.formLayout_5.setObjectName(u"formLayout_5")
+        self.label_2 = QLabel(self.main_tab)
+        self.label_2.setObjectName(u"label_2")
+
+        self.formLayout_5.setWidget(0, QFormLayout.LabelRole, self.label_2)
+
+        self.horizontalLayout_6 = QHBoxLayout()
+        self.horizontalLayout_6.setObjectName(u"horizontalLayout_6")
+        self.network_weight_file_input = DragDropLineEdit(self.main_tab)
+        self.network_weight_file_input.setObjectName(u"network_weight_file_input")
+
+        self.horizontalLayout_6.addWidget(self.network_weight_file_input)
+
+        self.network_weight_file_selector = QPushButton(self.main_tab)
+        self.network_weight_file_selector.setObjectName(u"network_weight_file_selector")
+        sizePolicy2 = QSizePolicy(QSizePolicy.Policy.Maximum, QSizePolicy.Policy.Fixed)
+        sizePolicy2.setHorizontalStretch(0)
+        sizePolicy2.setVerticalStretch(0)
+        sizePolicy2.setHeightForWidth(self.network_weight_file_selector.sizePolicy().hasHeightForWidth())
+        self.network_weight_file_selector.setSizePolicy(sizePolicy2)
+
+        self.horizontalLayout_6.addWidget(self.network_weight_file_selector)
+
+
+        self.formLayout_5.setLayout(0, QFormLayout.FieldRole, self.horizontalLayout_6)
+
+        self.label_3 = QLabel(self.main_tab)
+        self.label_3.setObjectName(u"label_3")
+
+        self.formLayout_5.setWidget(1, QFormLayout.LabelRole, self.label_3)
+
+        self.horizontalLayout_7 = QHBoxLayout()
+        self.horizontalLayout_7.setObjectName(u"horizontalLayout_7")
+        self.network_dim_file_input = DragDropLineEdit(self.main_tab)
+        self.network_dim_file_input.setObjectName(u"network_dim_file_input")
+
+        self.horizontalLayout_7.addWidget(self.network_dim_file_input)
+
+        self.network_dim_file_selector = QPushButton(self.main_tab)
+        self.network_dim_file_selector.setObjectName(u"network_dim_file_selector")
+        sizePolicy2.setHeightForWidth(self.network_dim_file_selector.sizePolicy().hasHeightForWidth())
+        self.network_dim_file_selector.setSizePolicy(sizePolicy2)
+
+        self.horizontalLayout_7.addWidget(self.network_dim_file_selector)
+
+
+        self.formLayout_5.setLayout(1, QFormLayout.FieldRole, self.horizontalLayout_7)
+
+
+        self.gridLayout.addLayout(self.formLayout_5, 5, 0, 1, 2)
 
         self.tabWidget.addTab(self.main_tab, "")
         self.block_weight_tab = QWidget()
         self.block_weight_tab.setObjectName(u"block_weight_tab")
-        self.block_weight_tab.setFocusPolicy(Qt.NoFocus)
+        self.block_weight_tab.setFocusPolicy(Qt.FocusPolicy.NoFocus)
         self.verticalLayout_2 = QVBoxLayout(self.block_weight_tab)
         self.verticalLayout_2.setObjectName(u"verticalLayout_2")
         self.verticalLayout_2.setContentsMargins(0, 0, 0, 0)
@@ -370,7 +423,7 @@ class Ui_network_ui(object):
         self.block_weight_scroll_area.setWidgetResizable(True)
         self.block_weight_scroll_widget = QWidget()
         self.block_weight_scroll_widget.setObjectName(u"block_weight_scroll_widget")
-        self.block_weight_scroll_widget.setGeometry(QRect(0, 0, 425, 324))
+        self.block_weight_scroll_widget.setGeometry(QRect(0, 0, 98, 74))
         self.verticalLayout_3 = QVBoxLayout(self.block_weight_scroll_widget)
         self.verticalLayout_3.setObjectName(u"verticalLayout_3")
         self.verticalLayout_3.setContentsMargins(0, 0, 0, 0)
@@ -413,17 +466,36 @@ class Ui_network_ui(object):
         self.network_args_tab.setObjectName(u"network_args_tab")
         self.verticalLayout_4 = QVBoxLayout(self.network_args_tab)
         self.verticalLayout_4.setObjectName(u"verticalLayout_4")
+        self.horizontalLayout_5 = QHBoxLayout()
+        self.horizontalLayout_5.setObjectName(u"horizontalLayout_5")
         self.add_network_arg_button = QPushButton(self.network_args_tab)
         self.add_network_arg_button.setObjectName(u"add_network_arg_button")
 
-        self.verticalLayout_4.addWidget(self.add_network_arg_button)
+        self.horizontalLayout_5.addWidget(self.add_network_arg_button)
+
+        self.save_network_args_button = QPushButton(self.network_args_tab)
+        self.save_network_args_button.setObjectName(u"save_network_args_button")
+        sizePolicy2.setHeightForWidth(self.save_network_args_button.sizePolicy().hasHeightForWidth())
+        self.save_network_args_button.setSizePolicy(sizePolicy2)
+
+        self.horizontalLayout_5.addWidget(self.save_network_args_button)
+
+        self.load_network_args_button = QPushButton(self.network_args_tab)
+        self.load_network_args_button.setObjectName(u"load_network_args_button")
+        sizePolicy2.setHeightForWidth(self.load_network_args_button.sizePolicy().hasHeightForWidth())
+        self.load_network_args_button.setSizePolicy(sizePolicy2)
+
+        self.horizontalLayout_5.addWidget(self.load_network_args_button)
+
+
+        self.verticalLayout_4.addLayout(self.horizontalLayout_5)
 
         self.scrollArea = QScrollArea(self.network_args_tab)
         self.scrollArea.setObjectName(u"scrollArea")
         self.scrollArea.setWidgetResizable(True)
         self.network_args_item_widget = QWidget()
         self.network_args_item_widget.setObjectName(u"network_args_item_widget")
-        self.network_args_item_widget.setGeometry(QRect(0, 0, 407, 276))
+        self.network_args_item_widget.setGeometry(QRect(0, 0, 98, 28))
         self.verticalLayout_5 = QVBoxLayout(self.network_args_item_widget)
         self.verticalLayout_5.setObjectName(u"verticalLayout_5")
         self.scrollArea.setWidget(self.network_args_item_widget)
@@ -446,9 +518,26 @@ class Ui_network_ui(object):
     def retranslateUi(self, network_ui):
         network_ui.setWindowTitle(QCoreApplication.translate("network_ui", u"Form", None))
 #if QT_CONFIG(tooltip)
-        self.label.setToolTip(QCoreApplication.translate("network_ui", u"<html><head/><body><p>LyCORIS Preset is the preset used by the LyCORIS library. Typically you want to use &quot;full&quot; which is automatically selected when there is nothing provided</p></body></html>", None))
+        self.network_dim_label.setToolTip(QCoreApplication.translate("network_ui", u"<html><head/><body><p>Network Dimension represents the size of the Linear Dimensions of the model</p></body></html>", None))
 #endif // QT_CONFIG(tooltip)
-        self.label.setText(QCoreApplication.translate("network_ui", u"LyCORIS Preset", None))
+        self.network_dim_label.setText(QCoreApplication.translate("network_ui", u"Network Dimension", None))
+#if QT_CONFIG(tooltip)
+        self.network_dim_input.setToolTip(QCoreApplication.translate("network_ui", u"<html><head/><body><p>Network Dimension represents the size of the Linear Dimensions of the model</p></body></html>", None))
+#endif // QT_CONFIG(tooltip)
+#if QT_CONFIG(tooltip)
+        self.network_alpha_label.setToolTip(QCoreApplication.translate("network_ui", u"<html><head/><body><p>Network Alpha represents the alpha of the Linear Dimensions. This Alpha is a scalar on the network dimension such that alpha / dimension = scalar. For example, and alpha of 16 and a dimension of 32 would result in a scalar of 0.5</p></body></html>", None))
+#endif // QT_CONFIG(tooltip)
+        self.network_alpha_label.setText(QCoreApplication.translate("network_ui", u"Network Alpha", None))
+#if QT_CONFIG(tooltip)
+        self.network_alpha_input.setToolTip(QCoreApplication.translate("network_ui", u"<html><head/><body><p>Network Alpha represents the alpha of the Linear Dimensions. This Alpha is a scalar on the network dimension such that alpha / dimension = scalar. For example, and alpha of 16 and a dimension of 32 would result in a scalar of 0.5</p></body></html>", None))
+#endif // QT_CONFIG(tooltip)
+#if QT_CONFIG(tooltip)
+        self.min_timestep_label.setToolTip(QCoreApplication.translate("network_ui", u"<html><head/><body><p>Min timestep represents the lowest timestep to train on. Typically you want to keep this value at 0</p></body></html>", None))
+#endif // QT_CONFIG(tooltip)
+        self.min_timestep_label.setText(QCoreApplication.translate("network_ui", u"Min Timestep", None))
+#if QT_CONFIG(tooltip)
+        self.min_timestep_input.setToolTip(QCoreApplication.translate("network_ui", u"<html><head/><body><p>Min timestep represents the lowest timestep to train on. Typically you want to keep this value at 0</p></body></html>", None))
+#endif // QT_CONFIG(tooltip)
 #if QT_CONFIG(tooltip)
         self.network_dropout_enable.setToolTip(QCoreApplication.translate("network_ui", u"<html><head/><body><p>Network Dropout, otherwise known as Neuron Dropout is your standard dropout provided by PyTorch.</p></body></html>", None))
 #endif // QT_CONFIG(tooltip)
@@ -482,25 +571,7 @@ class Ui_network_ui(object):
         self.ip_gamma_input.setToolTip(QCoreApplication.translate("network_ui", u"<html><head/><body><p>IP Noise Gamma is a noise modification that reduces the random noise, allowing what you want to learn, to learn faster</p></body></html>", None))
 #endif // QT_CONFIG(tooltip)
 #if QT_CONFIG(tooltip)
-        self.conv_dim_label.setToolTip(QCoreApplication.translate("network_ui", u"<html><head/><body><p>Conv Dimension represents the size of the Convolutional Dimensions of the model</p></body></html>", None))
-#endif // QT_CONFIG(tooltip)
-        self.conv_dim_label.setText(QCoreApplication.translate("network_ui", u"Conv Dimension", None))
-#if QT_CONFIG(tooltip)
-        self.conv_dim_input.setToolTip(QCoreApplication.translate("network_ui", u"<html><head/><body><p>Conv Dimension represents the size of the Convolutional Dimensions of the model</p></body></html>", None))
-#endif // QT_CONFIG(tooltip)
-#if QT_CONFIG(tooltip)
-        self.conv_alpha_label.setToolTip(QCoreApplication.translate("network_ui", u"<html><head/><body><p>Conv Alpha represents the alpha of the Conv Dimensions. This Alpha is a scalar on the conv dimension such that alpha / dimension = scalar. For example, and alpha of 16 and a dimension of 32 would result in a scalar of 0.5</p></body></html>", None))
-#endif // QT_CONFIG(tooltip)
-        self.conv_alpha_label.setText(QCoreApplication.translate("network_ui", u"Conv Alpha", None))
-#if QT_CONFIG(tooltip)
-        self.conv_alpha_input.setToolTip(QCoreApplication.translate("network_ui", u"<html><head/><body><p>Conv Alpha represents the alpha of the Conv Dimensions. This Alpha is a scalar on the conv dimension such that alpha / dimension = scalar. For example, and alpha of 16 and a dimension of 32 would result in a scalar of 0.5</p></body></html>", None))
-#endif // QT_CONFIG(tooltip)
-#if QT_CONFIG(tooltip)
-        self.max_timestep_label.setToolTip(QCoreApplication.translate("network_ui", u"<html><head/><body><p>Max Timestep represents the lowest timestep to train on. Typically you want to keep this value at 1000, the highest possible timestep. The Max timestep cannot be lower than the Min Timestep</p></body></html>", None))
-#endif // QT_CONFIG(tooltip)
-        self.max_timestep_label.setText(QCoreApplication.translate("network_ui", u"Max Timestep", None))
-#if QT_CONFIG(tooltip)
-        self.max_timestep_input.setToolTip(QCoreApplication.translate("network_ui", u"<html><head/><body><p>Max Timestep represents the lowest timestep to train on. Typically you want to keep this value at 1000, the highest possible timestep. The Max timestep cannot be lower than the Min Timestep</p></body></html>", None))
+        self.lycoris_preset_input.setToolTip(QCoreApplication.translate("network_ui", u"<html><head/><body><p>LyCORIS Preset is the preset used by the LyCORIS library. Typically you want to use &quot;full&quot; which is automatically selected when there is nothing provided</p></body></html>", None))
 #endif // QT_CONFIG(tooltip)
 #if QT_CONFIG(tooltip)
         self.unet_te_both_label.setToolTip(QCoreApplication.translate("network_ui", u"<html><head/><body><p>Train on selects if you want to train Both the Text Encoder and the Unet, only the Text Encoder, or only the Unet.</p></body></html>", None))
@@ -556,28 +627,29 @@ class Ui_network_ui(object):
         self.constrain_input.setToolTip(QCoreApplication.translate("network_ui", u"<html><head/><body><p>Constrait constrains the weights. Specific to Diag-OFT</p></body></html>", None))
 #endif // QT_CONFIG(tooltip)
 #if QT_CONFIG(tooltip)
-        self.network_dim_label.setToolTip(QCoreApplication.translate("network_ui", u"<html><head/><body><p>Network Dimension represents the size of the Linear Dimensions of the model</p></body></html>", None))
+        self.label.setToolTip(QCoreApplication.translate("network_ui", u"<html><head/><body><p>LyCORIS Preset is the preset used by the LyCORIS library. Typically you want to use &quot;full&quot; which is automatically selected when there is nothing provided</p></body></html>", None))
 #endif // QT_CONFIG(tooltip)
-        self.network_dim_label.setText(QCoreApplication.translate("network_ui", u"Network Dimension", None))
+        self.label.setText(QCoreApplication.translate("network_ui", u"LyCORIS Preset", None))
 #if QT_CONFIG(tooltip)
-        self.network_dim_input.setToolTip(QCoreApplication.translate("network_ui", u"<html><head/><body><p>Network Dimension represents the size of the Linear Dimensions of the model</p></body></html>", None))
+        self.conv_dim_label.setToolTip(QCoreApplication.translate("network_ui", u"<html><head/><body><p>Conv Dimension represents the size of the Convolutional Dimensions of the model</p></body></html>", None))
 #endif // QT_CONFIG(tooltip)
+        self.conv_dim_label.setText(QCoreApplication.translate("network_ui", u"Conv Dimension", None))
 #if QT_CONFIG(tooltip)
-        self.network_alpha_label.setToolTip(QCoreApplication.translate("network_ui", u"<html><head/><body><p>Network Alpha represents the alpha of the Linear Dimensions. This Alpha is a scalar on the network dimension such that alpha / dimension = scalar. For example, and alpha of 16 and a dimension of 32 would result in a scalar of 0.5</p></body></html>", None))
-#endif // QT_CONFIG(tooltip)
-        self.network_alpha_label.setText(QCoreApplication.translate("network_ui", u"Network Alpha", None))
-#if QT_CONFIG(tooltip)
-        self.network_alpha_input.setToolTip(QCoreApplication.translate("network_ui", u"<html><head/><body><p>Network Alpha represents the alpha of the Linear Dimensions. This Alpha is a scalar on the network dimension such that alpha / dimension = scalar. For example, and alpha of 16 and a dimension of 32 would result in a scalar of 0.5</p></body></html>", None))
+        self.conv_dim_input.setToolTip(QCoreApplication.translate("network_ui", u"<html><head/><body><p>Conv Dimension represents the size of the Convolutional Dimensions of the model</p></body></html>", None))
 #endif // QT_CONFIG(tooltip)
 #if QT_CONFIG(tooltip)
-        self.min_timestep_label.setToolTip(QCoreApplication.translate("network_ui", u"<html><head/><body><p>Min timestep represents the lowest timestep to train on. Typically you want to keep this value at 0</p></body></html>", None))
+        self.conv_alpha_label.setToolTip(QCoreApplication.translate("network_ui", u"<html><head/><body><p>Conv Alpha represents the alpha of the Conv Dimensions. This Alpha is a scalar on the conv dimension such that alpha / dimension = scalar. For example, and alpha of 16 and a dimension of 32 would result in a scalar of 0.5</p></body></html>", None))
 #endif // QT_CONFIG(tooltip)
-        self.min_timestep_label.setText(QCoreApplication.translate("network_ui", u"Min Timestep", None))
+        self.conv_alpha_label.setText(QCoreApplication.translate("network_ui", u"Conv Alpha", None))
 #if QT_CONFIG(tooltip)
-        self.min_timestep_input.setToolTip(QCoreApplication.translate("network_ui", u"<html><head/><body><p>Min timestep represents the lowest timestep to train on. Typically you want to keep this value at 0</p></body></html>", None))
+        self.conv_alpha_input.setToolTip(QCoreApplication.translate("network_ui", u"<html><head/><body><p>Conv Alpha represents the alpha of the Conv Dimensions. This Alpha is a scalar on the conv dimension such that alpha / dimension = scalar. For example, and alpha of 16 and a dimension of 32 would result in a scalar of 0.5</p></body></html>", None))
 #endif // QT_CONFIG(tooltip)
 #if QT_CONFIG(tooltip)
-        self.lycoris_preset_input.setToolTip(QCoreApplication.translate("network_ui", u"<html><head/><body><p>LyCORIS Preset is the preset used by the LyCORIS library. Typically you want to use &quot;full&quot; which is automatically selected when there is nothing provided</p></body></html>", None))
+        self.max_timestep_label.setToolTip(QCoreApplication.translate("network_ui", u"<html><head/><body><p>Max Timestep represents the lowest timestep to train on. Typically you want to keep this value at 1000, the highest possible timestep. The Max timestep cannot be lower than the Min Timestep</p></body></html>", None))
+#endif // QT_CONFIG(tooltip)
+        self.max_timestep_label.setText(QCoreApplication.translate("network_ui", u"Max Timestep", None))
+#if QT_CONFIG(tooltip)
+        self.max_timestep_input.setToolTip(QCoreApplication.translate("network_ui", u"<html><head/><body><p>Max Timestep represents the lowest timestep to train on. Typically you want to keep this value at 1000, the highest possible timestep. The Max timestep cannot be lower than the Min Timestep</p></body></html>", None))
 #endif // QT_CONFIG(tooltip)
         self.algo_select.setItemText(0, QCoreApplication.translate("network_ui", u"LoRA", None))
         self.algo_select.setItemText(1, QCoreApplication.translate("network_ui", u"LoCon", None))
@@ -593,9 +665,33 @@ class Ui_network_ui(object):
 #if QT_CONFIG(tooltip)
         self.algo_select.setToolTip(QCoreApplication.translate("network_ui", u"<html><head/><body><p>The Algorithm that is used during training</p></body></html>", None))
 #endif // QT_CONFIG(tooltip)
+#if QT_CONFIG(tooltip)
+        self.label_2.setToolTip(QCoreApplication.translate("network_ui", u"<html><head/><body><p>Use an existing LoRA to apply to the base model as weights, effectively allowing you to begin training from a previous epoch, or LoRA</p></body></html>", None))
+#endif // QT_CONFIG(tooltip)
+        self.label_2.setText(QCoreApplication.translate("network_ui", u"Weights From Network", None))
+#if QT_CONFIG(tooltip)
+        self.network_weight_file_input.setToolTip(QCoreApplication.translate("network_ui", u"<html><head/><body><p>Use an existing LoRA to apply to the base model as weights, effectively allowing you to begin training from a previous epoch, or LoRA</p></body></html>", None))
+#endif // QT_CONFIG(tooltip)
+#if QT_CONFIG(tooltip)
+        self.network_weight_file_selector.setToolTip(QCoreApplication.translate("network_ui", u"<html><head/><body><p>Use an existing LoRA to apply to the base model as weights, effectively allowing you to begin training from a previous epoch, or LoRA</p></body></html>", None))
+#endif // QT_CONFIG(tooltip)
+        self.network_weight_file_selector.setText("")
+#if QT_CONFIG(tooltip)
+        self.label_3.setToolTip(QCoreApplication.translate("network_ui", u"<html><head/><body><p>Use an existing LoRA to select the dims for this new LoRA. This method of selecting dims allows for more dynamic dims, similar to using the block weights</p></body></html>", None))
+#endif // QT_CONFIG(tooltip)
+        self.label_3.setText(QCoreApplication.translate("network_ui", u"Dims From Network", None))
+#if QT_CONFIG(tooltip)
+        self.network_dim_file_input.setToolTip(QCoreApplication.translate("network_ui", u"<html><head/><body><p>Use an existing LoRA to select the dims for this new LoRA. This method of selecting dims allows for more dynamic dims, similar to using the block weights</p></body></html>", None))
+#endif // QT_CONFIG(tooltip)
+#if QT_CONFIG(tooltip)
+        self.network_dim_file_selector.setToolTip(QCoreApplication.translate("network_ui", u"<html><head/><body><p>Use an existing LoRA to select the dims for this new LoRA. This method of selecting dims allows for more dynamic dims, similar to using the block weights</p></body></html>", None))
+#endif // QT_CONFIG(tooltip)
+        self.network_dim_file_selector.setText("")
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.main_tab), QCoreApplication.translate("network_ui", u"Main Args", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.block_weight_tab), QCoreApplication.translate("network_ui", u"Block Weights", None))
         self.add_network_arg_button.setText(QCoreApplication.translate("network_ui", u"Add Network Arg", None))
+        self.save_network_args_button.setText("")
+        self.load_network_args_button.setText("")
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.network_args_tab), QCoreApplication.translate("network_ui", u"Network Args", None))
     # retranslateUi
 

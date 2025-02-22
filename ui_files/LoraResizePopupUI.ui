@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>483</width>
-    <height>293</height>
+    <height>387</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -26,7 +26,28 @@
        </property>
       </widget>
      </item>
-     <item row="1" column="0">
+     <item row="0" column="1">
+      <layout class="QHBoxLayout" name="horizontalLayout">
+       <item>
+        <widget class="DragDropLineEdit" name="model_input">
+         <property name="toolTip">
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Model is the base model to resize&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="model_selector">
+         <property name="toolTip">
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Model is the base model to resize&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item row="2" column="0">
       <widget class="QLabel" name="label">
        <property name="toolTip">
         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Save Precision is the precision the model is saved in. Typically the resized model is saved in the same precision as the original&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -36,7 +57,7 @@
        </property>
       </widget>
      </item>
-     <item row="1" column="1">
+     <item row="2" column="1">
       <widget class="ComboBox" name="save_precision_select">
        <property name="toolTip">
         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Save Precision is the precision the model is saved in. Typically the resized model is saved in the same precision as the original&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -58,7 +79,7 @@
        </item>
       </widget>
      </item>
-     <item row="2" column="0">
+     <item row="3" column="0">
       <widget class="QLabel" name="new_rank_label">
        <property name="toolTip">
         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;New Rank means one of two things, either it represents the actual rank it is resized to, or it represents the max rank it can be for a dynamic resize&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -68,7 +89,7 @@
        </property>
       </widget>
      </item>
-     <item row="2" column="1">
+     <item row="3" column="1">
       <widget class="SpinBox" name="new_rank_input">
        <property name="toolTip">
         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;New Rank means one of two things, either it represents the actual rank it is resized to, or it represents the max rank it can be for a dynamic resize&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -81,7 +102,7 @@
        </property>
       </widget>
      </item>
-     <item row="3" column="0">
+     <item row="4" column="0">
       <widget class="QCheckBox" name="new_conv_enable">
        <property name="toolTip">
         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;New Conv Rank means one of two things, either it represents the actual rank it is resized to, or it represents the max rank it can be for a dynamic resize&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -91,7 +112,7 @@
        </property>
       </widget>
      </item>
-     <item row="3" column="1">
+     <item row="4" column="1">
       <widget class="SpinBox" name="new_conv_rank_input">
        <property name="enabled">
         <bool>false</bool>
@@ -107,7 +128,17 @@
        </property>
       </widget>
      </item>
-     <item row="4" column="1">
+     <item row="5" column="0">
+      <widget class="QCheckBox" name="output_folder_enable">
+       <property name="toolTip">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Output Folder is the location the new resized model is saved to&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
+       <property name="text">
+        <string>Output Folder</string>
+       </property>
+      </widget>
+     </item>
+     <item row="5" column="1">
       <layout class="QHBoxLayout" name="horizontalLayout_2">
        <item>
         <widget class="DragDropLineEdit" name="output_folder_input">
@@ -134,17 +165,27 @@
        </item>
       </layout>
      </item>
-     <item row="5" column="1">
+     <item row="6" column="0">
+      <widget class="QCheckBox" name="output_name_enable">
+       <property name="toolTip">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Output Name is the base name of the new resized model. The utility will automatically append the settings for the resize to the end of the name. This will act as a prefix if batch process is enabled&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
+       <property name="text">
+        <string>Output Name</string>
+       </property>
+      </widget>
+     </item>
+     <item row="6" column="1">
       <widget class="LineEditWithHighlight" name="output_name_input">
        <property name="enabled">
         <bool>false</bool>
        </property>
        <property name="toolTip">
-        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Output Name is the base name of the new resized model. The utility will automatically append the settings for the resize to the end of the name.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Output Name is the base name of the new resized model. The utility will automatically append the settings for the resize to the end of the name. This will act as a prefix if batch process is enabled&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
        </property>
       </widget>
      </item>
-     <item row="6" column="0">
+     <item row="7" column="0">
       <widget class="QCheckBox" name="dynamic_param_enable">
        <property name="toolTip">
         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Dynamic Method enables resizing via one of the dynamic methods. All of the methods have a dynamic value which represent the amount to shave off during the resize, the closer to 1, the less it removes. 0.99 effectively removes all empty weights, but nothing else, making it the least lossy choice.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -154,7 +195,7 @@
        </property>
       </widget>
      </item>
-     <item row="6" column="1">
+     <item row="7" column="1">
       <layout class="QHBoxLayout" name="horizontalLayout_3">
        <item>
         <widget class="ComboBox" name="dynamic_param_select">
@@ -208,7 +249,7 @@
        </item>
       </layout>
      </item>
-     <item row="7" column="0" colspan="2">
+     <item row="8" column="0" colspan="2">
       <layout class="QHBoxLayout" name="horizontalLayout_4">
        <item>
         <widget class="QCheckBox" name="use_gpu_enable">
@@ -255,19 +296,41 @@
        </item>
       </layout>
      </item>
-     <item row="0" column="1">
-      <layout class="QHBoxLayout" name="horizontalLayout">
+     <item row="1" column="0">
+      <widget class="QCheckBox" name="batch_enable">
+       <property name="toolTip">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Folder Input for resizing multiple lora using the same setting&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
+       <property name="text">
+        <string>Batch Folder</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="1">
+      <layout class="QHBoxLayout" name="horizontalLayout_5">
        <item>
-        <widget class="DragDropLineEdit" name="model_input">
+        <widget class="DragDropLineEdit" name="batch_input">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
          <property name="toolTip">
-          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Model is the base model to resize&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Folder Input for resizing multiple lora using the same setting&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
          </property>
         </widget>
        </item>
        <item>
-        <widget class="QPushButton" name="model_input_selector">
+        <widget class="QPushButton" name="batch_selector">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
          <property name="toolTip">
-          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Model is the base model to resize&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Folder Input for resizing multiple lora using the same setting&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
          </property>
          <property name="text">
           <string/>
@@ -275,26 +338,6 @@
         </widget>
        </item>
       </layout>
-     </item>
-     <item row="4" column="0">
-      <widget class="QCheckBox" name="output_folder_enable">
-       <property name="toolTip">
-        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Output Folder is the location the new resized model is saved to&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-       </property>
-       <property name="text">
-        <string>Output Folder</string>
-       </property>
-      </widget>
-     </item>
-     <item row="5" column="0">
-      <widget class="QCheckBox" name="output_name_enable">
-       <property name="toolTip">
-        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Output Name is the base name of the new resized model. The utility will automatically append the settings for the resize to the end of the name.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-       </property>
-       <property name="text">
-        <string>Output Name</string>
-       </property>
-      </widget>
      </item>
     </layout>
    </item>
@@ -324,14 +367,14 @@
    <header>modules.ScrollOnSelect.h</header>
   </customwidget>
   <customwidget>
-   <class>DragDropLineEdit</class>
-   <extends>QLineEdit</extends>
-   <header>modules.DragDropLineEdit.h</header>
-  </customwidget>
-  <customwidget>
    <class>LineEditWithHighlight</class>
    <extends>QLineEdit</extends>
    <header>modules.LineEditHighlight.h</header>
+  </customwidget>
+  <customwidget>
+   <class>DragDropLineEdit</class>
+   <extends>QLineEdit</extends>
+   <header>modules.DragDropLineEdit.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

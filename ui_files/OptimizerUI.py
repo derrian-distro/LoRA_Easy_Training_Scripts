@@ -3,7 +3,7 @@
 ################################################################################
 ## Form generated from reading UI file 'OptimizerUI.ui'
 ##
-## Created by: Qt User Interface Compiler version 6.8.1
+## Created by: Qt User Interface Compiler version 6.8.2
 ##
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
@@ -32,10 +32,10 @@ class Ui_optimizer_ui(object):
         self.verticalLayout.setContentsMargins(0, 0, 0, 0)
         self.tabWidget = TabView(optimizer_ui)
         self.tabWidget.setObjectName(u"tabWidget")
-        self.tabWidget.setFocusPolicy(Qt.StrongFocus)
+        self.tabWidget.setFocusPolicy(Qt.FocusPolicy.StrongFocus)
         self.optimizer_tab_main = QWidget()
         self.optimizer_tab_main.setObjectName(u"optimizer_tab_main")
-        self.optimizer_tab_main.setFocusPolicy(Qt.StrongFocus)
+        self.optimizer_tab_main.setFocusPolicy(Qt.FocusPolicy.StrongFocus)
         self.gridLayout = QGridLayout(self.optimizer_tab_main)
         self.gridLayout.setObjectName(u"gridLayout")
         self.formLayout_2 = QFormLayout()
@@ -91,7 +91,7 @@ class Ui_optimizer_ui(object):
         self.scale_weight_input = DoubleSpinBox(self.optimizer_tab_main)
         self.scale_weight_input.setObjectName(u"scale_weight_input")
         self.scale_weight_input.setEnabled(False)
-        self.scale_weight_input.setFocusPolicy(Qt.StrongFocus)
+        self.scale_weight_input.setFocusPolicy(Qt.FocusPolicy.StrongFocus)
         self.scale_weight_input.setValue(1.000000000000000)
 
         self.formLayout_2.setWidget(4, QFormLayout.FieldRole, self.scale_weight_input)
@@ -104,7 +104,7 @@ class Ui_optimizer_ui(object):
         self.min_snr_input = SpinBox(self.optimizer_tab_main)
         self.min_snr_input.setObjectName(u"min_snr_input")
         self.min_snr_input.setEnabled(False)
-        self.min_snr_input.setFocusPolicy(Qt.StrongFocus)
+        self.min_snr_input.setFocusPolicy(Qt.FocusPolicy.StrongFocus)
         self.min_snr_input.setValue(5)
 
         self.formLayout_2.setWidget(5, QFormLayout.FieldRole, self.min_snr_input)
@@ -151,7 +151,7 @@ class Ui_optimizer_ui(object):
         self.optimizer_type_selector.addItem("")
         self.optimizer_type_selector.addItem("")
         self.optimizer_type_selector.setObjectName(u"optimizer_type_selector")
-        self.optimizer_type_selector.setFocusPolicy(Qt.StrongFocus)
+        self.optimizer_type_selector.setFocusPolicy(Qt.FocusPolicy.StrongFocus)
 
         self.formLayout.setWidget(0, QFormLayout.FieldRole, self.optimizer_type_selector)
 
@@ -171,7 +171,7 @@ class Ui_optimizer_ui(object):
         self.lr_scheduler_selector.addItem("")
         self.lr_scheduler_selector.addItem("")
         self.lr_scheduler_selector.setObjectName(u"lr_scheduler_selector")
-        self.lr_scheduler_selector.setFocusPolicy(Qt.StrongFocus)
+        self.lr_scheduler_selector.setFocusPolicy(Qt.FocusPolicy.StrongFocus)
 
         self.formLayout.setWidget(1, QFormLayout.FieldRole, self.lr_scheduler_selector)
 
@@ -201,7 +201,7 @@ class Ui_optimizer_ui(object):
         self.warmup_input = DoubleSpinBox(self.optimizer_tab_main)
         self.warmup_input.setObjectName(u"warmup_input")
         self.warmup_input.setEnabled(False)
-        self.warmup_input.setFocusPolicy(Qt.StrongFocus)
+        self.warmup_input.setFocusPolicy(Qt.FocusPolicy.StrongFocus)
         self.warmup_input.setMaximum(1.000000000000000)
         self.warmup_input.setSingleStep(0.010000000000000)
 
@@ -215,7 +215,7 @@ class Ui_optimizer_ui(object):
         self.cosine_restart_input = SpinBox(self.optimizer_tab_main)
         self.cosine_restart_input.setObjectName(u"cosine_restart_input")
         self.cosine_restart_input.setEnabled(False)
-        self.cosine_restart_input.setFocusPolicy(Qt.StrongFocus)
+        self.cosine_restart_input.setFocusPolicy(Qt.FocusPolicy.StrongFocus)
         self.cosine_restart_input.setMinimum(1)
 
         self.formLayout_3.setWidget(1, QFormLayout.FieldRole, self.cosine_restart_input)
@@ -228,7 +228,7 @@ class Ui_optimizer_ui(object):
         self.poly_power_input = DoubleSpinBox(self.optimizer_tab_main)
         self.poly_power_input.setObjectName(u"poly_power_input")
         self.poly_power_input.setEnabled(False)
-        self.poly_power_input.setFocusPolicy(Qt.StrongFocus)
+        self.poly_power_input.setFocusPolicy(Qt.FocusPolicy.StrongFocus)
         self.poly_power_input.setSingleStep(0.010000000000000)
         self.poly_power_input.setValue(1.000000000000000)
 
@@ -310,20 +310,42 @@ class Ui_optimizer_ui(object):
         self.tabWidget.addTab(self.optimizer_tab_main, "")
         self.optimizer_tab_args = QWidget()
         self.optimizer_tab_args.setObjectName(u"optimizer_tab_args")
-        self.optimizer_tab_args.setFocusPolicy(Qt.StrongFocus)
+        self.optimizer_tab_args.setFocusPolicy(Qt.FocusPolicy.StrongFocus)
         self.verticalLayout_2 = QVBoxLayout(self.optimizer_tab_args)
         self.verticalLayout_2.setObjectName(u"verticalLayout_2")
+        self.horizontalLayout_3 = QHBoxLayout()
+        self.horizontalLayout_3.setObjectName(u"horizontalLayout_3")
         self.add_opt_button = QPushButton(self.optimizer_tab_args)
         self.add_opt_button.setObjectName(u"add_opt_button")
 
-        self.verticalLayout_2.addWidget(self.add_opt_button)
+        self.horizontalLayout_3.addWidget(self.add_opt_button)
+
+        self.save_opt_args_button = QPushButton(self.optimizer_tab_args)
+        self.save_opt_args_button.setObjectName(u"save_opt_args_button")
+        sizePolicy = QSizePolicy(QSizePolicy.Policy.Maximum, QSizePolicy.Policy.Fixed)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.save_opt_args_button.sizePolicy().hasHeightForWidth())
+        self.save_opt_args_button.setSizePolicy(sizePolicy)
+
+        self.horizontalLayout_3.addWidget(self.save_opt_args_button)
+
+        self.load_opt_args_button = QPushButton(self.optimizer_tab_args)
+        self.load_opt_args_button.setObjectName(u"load_opt_args_button")
+        sizePolicy.setHeightForWidth(self.load_opt_args_button.sizePolicy().hasHeightForWidth())
+        self.load_opt_args_button.setSizePolicy(sizePolicy)
+
+        self.horizontalLayout_3.addWidget(self.load_opt_args_button)
+
+
+        self.verticalLayout_2.addLayout(self.horizontalLayout_3)
 
         self.scrollArea = QScrollArea(self.optimizer_tab_args)
         self.scrollArea.setObjectName(u"scrollArea")
         self.scrollArea.setWidgetResizable(True)
         self.optimizer_item_widget = QWidget()
         self.optimizer_item_widget.setObjectName(u"optimizer_item_widget")
-        self.optimizer_item_widget.setGeometry(QRect(0, 0, 66, 18))
+        self.optimizer_item_widget.setGeometry(QRect(0, 0, 439, 303))
         self.verticalLayout_3 = QVBoxLayout(self.optimizer_item_widget)
         self.verticalLayout_3.setObjectName(u"verticalLayout_3")
         self.scrollArea.setWidget(self.optimizer_item_widget)
@@ -510,6 +532,8 @@ class Ui_optimizer_ui(object):
         self.label_7.setText(QCoreApplication.translate("optimizer_ui", u"D Param", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.optimizer_tab_main), QCoreApplication.translate("optimizer_ui", u"Main Args", None))
         self.add_opt_button.setText(QCoreApplication.translate("optimizer_ui", u"Add Optimizer Arg", None))
+        self.save_opt_args_button.setText("")
+        self.load_opt_args_button.setText("")
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.optimizer_tab_args), QCoreApplication.translate("optimizer_ui", u"Optional Args", None))
     # retranslateUi
 

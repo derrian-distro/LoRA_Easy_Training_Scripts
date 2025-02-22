@@ -1,10 +1,12 @@
+from pathlib import Path
+
 from PySide6.QtCore import Slot
+from PySide6.QtGui import QIcon
 from PySide6.QtWidgets import QWidget
+
+from modules.BaseWidget import BaseWidget
 from modules.DragDropLineEdit import DragDropLineEdit
 from ui_files.SampleUI import Ui_sample_ui
-from modules.BaseWidget import BaseWidget
-from PySide6.QtGui import QIcon
-from pathlib import Path
 
 
 class SampleWidget(BaseWidget):
@@ -21,9 +23,7 @@ class SampleWidget(BaseWidget):
     def setup_widget(self) -> None:
         super().setup_widget()
         self.widget.setupUi(self.content)
-        self.widget.sample_prompt_selector.setIcon(
-            QIcon(str(Path("icons/more-horizontal.svg")))
-        )
+        self.widget.sample_prompt_selector.setIcon(QIcon(str(Path("icons/folder.svg"))))
         self.widget.sample_prompt_txt_file_input.setMode("file", [".txt"])
         self.widget.sample_prompt_txt_file_input.highlight = True
 
@@ -32,13 +32,9 @@ class SampleWidget(BaseWidget):
         self.widget.sampler_input.currentTextChanged.connect(
             lambda x: self.edit_args("sample_sampler", x.lower())
         )
-        self.widget.steps_epochs_selector.currentIndexChanged.connect(
-            self.change_steps_epochs
-        )
+        self.widget.steps_epochs_selector.currentIndexChanged.connect(self.change_steps_epochs)
         self.widget.steps_epoch_input.valueChanged.connect(
-            lambda: self.change_steps_epochs(
-                self.widget.steps_epochs_selector.currentIndex()
-            )
+            lambda: self.change_steps_epochs(self.widget.steps_epochs_selector.currentIndex())
         )
         self.widget.sample_prompt_txt_file_input.textChanged.connect(
             lambda x: self.edit_args(
@@ -71,9 +67,7 @@ class SampleWidget(BaseWidget):
         if not checked:
             self.widget.sample_prompt_txt_file_input.setStyleSheet("")
             return
-        self.edit_args(
-            "sample_sampler", self.widget.sampler_input.currentText().lower()
-        )
+        self.edit_args("sample_sampler", self.widget.sampler_input.currentText().lower())
         self.change_steps_epochs(self.widget.steps_epochs_selector.currentIndex())
         self.edit_args(
             "sample_prompts",
@@ -95,12 +89,8 @@ class SampleWidget(BaseWidget):
 
         # update element inputs
         self.widget.sample_group.setChecked(bool(args.get("sample_sampler", False)))
-        self.widget.sampler_input.setCurrentText(
-            args.get("sample_sampler", "DDIM").upper()
-        )
-        self.widget.steps_epochs_selector.setCurrentIndex(
-            0 if "sample_every_n_steps" in args else 1
-        )
+        self.widget.sampler_input.setCurrentText(args.get("sample_sampler", "DDIM").upper())
+        self.widget.steps_epochs_selector.setCurrentIndex(0 if "sample_every_n_steps" in args else 1)
         self.widget.steps_epoch_input.setValue(
             args.get("sample_every_n_steps", args.get("sample_every_n_epochs", 1))
         )

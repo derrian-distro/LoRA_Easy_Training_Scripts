@@ -29,14 +29,14 @@
    <item>
     <widget class="TabView" name="tabWidget">
      <property name="focusPolicy">
-      <enum>Qt::StrongFocus</enum>
+      <enum>Qt::FocusPolicy::StrongFocus</enum>
      </property>
      <property name="currentIndex">
       <number>0</number>
      </property>
      <widget class="QWidget" name="optimizer_tab_main">
       <property name="focusPolicy">
-       <enum>Qt::StrongFocus</enum>
+       <enum>Qt::FocusPolicy::StrongFocus</enum>
       </property>
       <attribute name="title">
        <string>Main Args</string>
@@ -158,7 +158,7 @@
             <bool>false</bool>
            </property>
            <property name="focusPolicy">
-            <enum>Qt::StrongFocus</enum>
+            <enum>Qt::FocusPolicy::StrongFocus</enum>
            </property>
            <property name="toolTip">
             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Scale Weight Norms is a way to scale the weights to prevent any one weight from getting too large to the rest&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -184,7 +184,7 @@
             <bool>false</bool>
            </property>
            <property name="focusPolicy">
-            <enum>Qt::StrongFocus</enum>
+            <enum>Qt::FocusPolicy::StrongFocus</enum>
            </property>
            <property name="toolTip">
             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Min SNR Gamma is a way to remove random noise during training. A lower value is stronger&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -246,7 +246,7 @@
          <item row="0" column="1">
           <widget class="ComboBox" name="optimizer_type_selector">
            <property name="focusPolicy">
-            <enum>Qt::StrongFocus</enum>
+            <enum>Qt::FocusPolicy::StrongFocus</enum>
            </property>
            <property name="toolTip">
             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Optimizer Type is the Optimizer that will be used during training&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -346,7 +346,7 @@
          <item row="1" column="1">
           <widget class="ComboBox" name="lr_scheduler_selector">
            <property name="focusPolicy">
-            <enum>Qt::StrongFocus</enum>
+            <enum>Qt::FocusPolicy::StrongFocus</enum>
            </property>
            <property name="toolTip">
             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;LR Scheduler is the Scheduler for the learning rate during the training&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -450,7 +450,7 @@
             <bool>false</bool>
            </property>
            <property name="focusPolicy">
-            <enum>Qt::StrongFocus</enum>
+            <enum>Qt::FocusPolicy::StrongFocus</enum>
            </property>
            <property name="toolTip">
             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Warmup Ratio is the ratio of steps that is warmup steps in comparison to the total number of steps. If you are using one of the &amp;quot;warm&amp;quot; schedulers, the warmup is spread evenly across each of the cycles&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -479,7 +479,7 @@
             <bool>false</bool>
            </property>
            <property name="focusPolicy">
-            <enum>Qt::StrongFocus</enum>
+            <enum>Qt::FocusPolicy::StrongFocus</enum>
            </property>
            <property name="toolTip">
             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Number of Cycles. 1 means there won't be any restarts during the training&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -505,7 +505,7 @@
             <bool>false</bool>
            </property>
            <property name="focusPolicy">
-            <enum>Qt::StrongFocus</enum>
+            <enum>Qt::FocusPolicy::StrongFocus</enum>
            </property>
            <property name="toolTip">
             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Polynomial Power is the value of the Polynomial for the Polynomial Scheduler&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -655,18 +655,48 @@
      </widget>
      <widget class="QWidget" name="optimizer_tab_args">
       <property name="focusPolicy">
-       <enum>Qt::StrongFocus</enum>
+       <enum>Qt::FocusPolicy::StrongFocus</enum>
       </property>
       <attribute name="title">
        <string>Optional Args</string>
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout_2">
        <item>
-        <widget class="QPushButton" name="add_opt_button">
-         <property name="text">
-          <string>Add Optimizer Arg</string>
-         </property>
-        </widget>
+        <layout class="QHBoxLayout" name="horizontalLayout_3">
+         <item>
+          <widget class="QPushButton" name="add_opt_button">
+           <property name="text">
+            <string>Add Optimizer Arg</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="save_opt_args_button">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="load_opt_args_button">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+          </widget>
+         </item>
+        </layout>
        </item>
        <item>
         <widget class="QScrollArea" name="scrollArea">
@@ -678,8 +708,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>66</width>
-            <height>18</height>
+            <width>439</width>
+            <height>303</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_3"/>

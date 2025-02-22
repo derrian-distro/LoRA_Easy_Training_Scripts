@@ -29,7 +29,7 @@ class FluxWidget(BaseWidget):
         self.widget.setupUi(self.content)
 
         def setup_file(elem: DragDropLineEdit, selector: QPushButton):
-            selector_icon = QIcon(str(Path("icons/more-horizontal.svg")))
+            selector_icon = QIcon(str(Path("icons/folder.svg")))
             elem.setMode("file", [".ckpt", ".pt", ".safetensors", ".sft"])
             elem.highlight = True
             selector.setIcon(selector_icon)
@@ -46,14 +46,22 @@ class FluxWidget(BaseWidget):
         )
         self.widget.clip_l_model_input.textChanged.connect(lambda x: self.edit_args("clip_l", x))
         self.widget.clip_l_model_selector.clicked.connect(
-            lambda: self.set_file_from_dialog(self.widget.clip_l_model_input, "Clip L Model For Training", "Clip Model")
+            lambda: self.set_file_from_dialog(
+                self.widget.clip_l_model_input, "Clip L Model For Training", "Clip Model"
+            )
         )
         self.widget.t5_model_input.textChanged.connect(lambda x: self.edit_args("t5xxl", x))
         self.widget.t5_model_selector.clicked.connect(
-            lambda: self.set_file_from_dialog(self.widget.t5_model_input, "T5XXL Model For Training", "T5 Model")
+            lambda: self.set_file_from_dialog(
+                self.widget.t5_model_input, "T5XXL Model For Training", "T5 Model"
+            )
         )
-        self.widget.t5_max_token_input.valueChanged.connect(lambda x: self.edit_args("t5xxl_max_token_length", x))
-        self.widget.discrete_flow_shift_input.valueChanged.connect(lambda x: self.edit_args("discrete_flow_shift", x))
+        self.widget.t5_max_token_input.valueChanged.connect(
+            lambda x: self.edit_args("t5xxl_max_token_length", x)
+        )
+        self.widget.discrete_flow_shift_input.valueChanged.connect(
+            lambda x: self.edit_args("discrete_flow_shift", x)
+        )
         self.widget.apply_t5_attention_mask_enable.clicked.connect(
             lambda x: self.edit_args("apply_t5_attn_mask", x, True)
         )
@@ -70,7 +78,9 @@ class FluxWidget(BaseWidget):
         )
         self.widget.split_qkv_enable.clicked.connect(lambda x: self.SplitQKV.emit(x))
         self.widget.blocks_to_swap_enable.clicked.connect(self.blocks_to_swap_toggle)
-        self.widget.blocks_to_swap_input.valueChanged.connect(lambda x: self.edit_args("blocks_to_swap", x, True))
+        self.widget.blocks_to_swap_input.valueChanged.connect(
+            lambda x: self.edit_args("blocks_to_swap", x, True)
+        )
 
     def enable_disable(self, checked: bool) -> None:
         self.args = {}
@@ -185,7 +195,9 @@ class FluxWidget(BaseWidget):
         self.widget.mode_scale_input.setValue(args.get("mode_scale", 1.29))
         self.widget.sigmoid_scale_input.setValue(args.get("sigmoid_scale", 1.0))
         self.widget.guidance_scale_input.setValue(args.get("guidance_scale", 3.5))
-        option = " ".join([x.capitalize() for x in args.get("model_prediction_type", "sigma_scaled").split("_")])
+        option = " ".join(
+            [x.capitalize() for x in args.get("model_prediction_type", "sigma_scaled").split("_")]
+        )
         self.widget.model_prediction_type_selector.setCurrentText(option)
         self.widget.split_qkv_enable.setChecked(net_args.get("split_qkv", False))
         self.widget.blocks_to_swap_enable.setChecked(bool(args.get("blocks_to_swap", False)))

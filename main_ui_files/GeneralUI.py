@@ -1,10 +1,12 @@
 from pathlib import Path
+
 from PySide6.QtCore import Signal
 from PySide6.QtGui import QIcon
-from PySide6.QtWidgets import QWidget, QPushButton
-from ui_files.BaseUI import Ui_base_args_ui
+from PySide6.QtWidgets import QPushButton, QWidget
+
 from modules.BaseWidget import BaseWidget
 from modules.DragDropLineEdit import DragDropLineEdit
+from ui_files.BaseUI import Ui_base_args_ui
 
 
 class GeneralWidget(BaseWidget):
@@ -42,7 +44,7 @@ class GeneralWidget(BaseWidget):
         self.widget.setupUi(self.content)
 
         def setup_file(elem: DragDropLineEdit, selector: QPushButton):
-            selector_icon = QIcon(str(Path("icons/more-horizontal.svg")))
+            selector_icon = QIcon(str(Path("icons/folder.svg")))
             elem.setMode("file", [".ckpt", ".pt", ".safetensors", ".sft"])
             elem.highlight = True
             selector.setIcon(selector_icon)
