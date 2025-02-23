@@ -3,7 +3,7 @@
 ################################################################################
 ## Form generated from reading UI file 'MainUI.ui'
 ##
-## Created by: Qt User Interface Compiler version 6.7.0
+## Created by: Qt User Interface Compiler version 6.8.2
 ##
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
@@ -23,7 +23,7 @@ class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
-        MainWindow.resize(889, 600)
+        MainWindow.resize(925, 600)
         self.save_toml = QAction(MainWindow)
         self.save_toml.setObjectName(u"save_toml")
         self.load_toml = QAction(MainWindow)
@@ -56,7 +56,7 @@ class Ui_MainWindow(object):
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QMenuBar(MainWindow)
         self.menubar.setObjectName(u"menubar")
-        self.menubar.setGeometry(QRect(0, 0, 889, 21))
+        self.menubar.setGeometry(QRect(0, 0, 925, 21))
         self.menuFile = QMenu(self.menubar)
         self.menuFile.setObjectName(u"menuFile")
         self.menuTheme = QMenu(self.menubar)

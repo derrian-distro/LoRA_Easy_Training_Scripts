@@ -1,7 +1,6 @@
 from pathlib import Path
 
-from PySide6 import QtWidgets, QtGui
-from PySide6 import QtCore
+from PySide6 import QtCore, QtGui, QtWidgets
 
 
 class CollapsibleWidget(QtWidgets.QWidget):
@@ -19,6 +18,8 @@ class CollapsibleWidget(QtWidgets.QWidget):
         self.has_remove = remove_elem
         self.has_enable = enable
         self.widget_list = {}
+        self.extra_elem = None
+        self.duplicate_elem = None
         self.setLayout(QtWidgets.QGridLayout())
 
         self.content = QtWidgets.QWidget()
@@ -72,6 +73,19 @@ class CollapsibleWidget(QtWidgets.QWidget):
             )
             self.extra_elem.setIcon(QtGui.QIcon(str(Path("icons/trash-2.svg"))))
             self.layout().addWidget(self.extra_elem, 0, 1, 1, 1)
+            self.layout().addWidget(self.content, 1, 0, 1, 2)
+
+    def set_duplicate(self):
+        self.duplicate_elem = QtWidgets.QPushButton()
+        self.duplicate_elem.setSizePolicy(
+            QtWidgets.QSizePolicy.Policy.Maximum, QtWidgets.QSizePolicy.Policy.Fixed
+        )
+        self.duplicate_elem.setIcon(QtGui.QIcon(str(Path("icons/copy.svg"))))
+        if self.extra_elem is not None:
+            self.layout().addWidget(self.duplicate_elem, 0, 2, 1, 1)
+            self.layout().addWidget(self.content, 1, 0, 1, 3)
+        else:
+            self.layout().addWidget(self.duplicate_elem, 0, 1, 1, 1)
             self.layout().addWidget(self.content, 1, 0, 1, 2)
 
     @QtCore.Slot()
