@@ -87,6 +87,10 @@ if you are using one of the installers, one of the questions it will ask you is 
 If you wish to train LoRAs but you lack the hardware, you can use this [Google Colab](https://colab.research.google.com/github/Jelosus2/Lora_Easy_Training_Colab/blob/main/Lora_Easy_Training_Colab.ipynb) created by [Jelosus2](https://github.com/Jelosus2) to be able to train them.
 Additionaly, you can check the [guide](https://civitai.com/articles/4409/almost-local-lora-training-guide) if you have trouble setting all up. **Note:** You still need to git clone the repo and install the UI on your local machine. Be sure to answer the prompt "Are you using this locally? (y/n):" with "n".
 
+## Docker
+
+There was a docker image created for the LoRA_Easy_Training_Scripts_Backend for easy deploying on server based systems created by [dragoneris](https://hub.docker.com/r/dragoneris/lorabackend). It should come setup for easy use.
+
 ## Usage
 
 You can launch the UI using the `run.bat` file if you are on windows, or `run.sh` file if you are on linux.
