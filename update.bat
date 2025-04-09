@@ -2,5 +2,7 @@
 cd /d %~dp0
 
 git pull
-python update.py
+git submodule update --init --recursive
+cd backend
+python updater.py
 pause
