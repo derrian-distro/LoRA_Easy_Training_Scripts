@@ -1,4 +1,4 @@
 pyside6
-qt-material
+qt-material==2.14
 toml
 requests

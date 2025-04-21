@@ -3,7 +3,7 @@
 ################################################################################
 ## Form generated from reading UI file 'NetworkUI.ui'
 ##
-## Created by: Qt User Interface Compiler version 6.8.2
+## Created by: Qt User Interface Compiler version 6.9.0
 ##
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
@@ -56,7 +56,7 @@ class Ui_network_ui(object):
         self.network_dim_label = QLabel(self.main_tab)
         self.network_dim_label.setObjectName(u"network_dim_label")
 
-        self.formLayout.setWidget(0, QFormLayout.LabelRole, self.network_dim_label)
+        self.formLayout.setWidget(0, QFormLayout.ItemRole.LabelRole, self.network_dim_label)
 
         self.network_dim_input = SpinBox(self.main_tab)
         self.network_dim_input.setObjectName(u"network_dim_input")
@@ -66,12 +66,12 @@ class Ui_network_ui(object):
         self.network_dim_input.setMaximum(16777215)
         self.network_dim_input.setValue(32)
 
-        self.formLayout.setWidget(0, QFormLayout.FieldRole, self.network_dim_input)
+        self.formLayout.setWidget(0, QFormLayout.ItemRole.FieldRole, self.network_dim_input)
 
         self.network_alpha_label = QLabel(self.main_tab)
         self.network_alpha_label.setObjectName(u"network_alpha_label")
 
-        self.formLayout.setWidget(1, QFormLayout.LabelRole, self.network_alpha_label)
+        self.formLayout.setWidget(1, QFormLayout.ItemRole.LabelRole, self.network_alpha_label)
 
         self.network_alpha_input = DoubleSpinBox(self.main_tab)
         self.network_alpha_input.setObjectName(u"network_alpha_input")
@@ -81,19 +81,19 @@ class Ui_network_ui(object):
         self.network_alpha_input.setMaximum(16777215.000000000000000)
         self.network_alpha_input.setValue(16.000000000000000)
 
-        self.formLayout.setWidget(1, QFormLayout.FieldRole, self.network_alpha_input)
+        self.formLayout.setWidget(1, QFormLayout.ItemRole.FieldRole, self.network_alpha_input)
 
         self.min_timestep_label = QLabel(self.main_tab)
         self.min_timestep_label.setObjectName(u"min_timestep_label")
 
-        self.formLayout.setWidget(2, QFormLayout.LabelRole, self.min_timestep_label)
+        self.formLayout.setWidget(2, QFormLayout.ItemRole.LabelRole, self.min_timestep_label)
 
         self.min_timestep_input = SpinBox(self.main_tab)
         self.min_timestep_input.setObjectName(u"min_timestep_input")
         self.min_timestep_input.setEnabled(True)
         self.min_timestep_input.setMaximum(999)
 
-        self.formLayout.setWidget(2, QFormLayout.FieldRole, self.min_timestep_input)
+        self.formLayout.setWidget(2, QFormLayout.ItemRole.FieldRole, self.min_timestep_input)
 
 
         self.gridLayout.addLayout(self.formLayout, 2, 0, 1, 1)
@@ -104,7 +104,7 @@ class Ui_network_ui(object):
         self.network_dropout_enable.setObjectName(u"network_dropout_enable")
         self.network_dropout_enable.setEnabled(True)
 
-        self.formLayout_4.setWidget(0, QFormLayout.LabelRole, self.network_dropout_enable)
+        self.formLayout_4.setWidget(0, QFormLayout.ItemRole.LabelRole, self.network_dropout_enable)
 
         self.network_dropout_input = DoubleSpinBox(self.main_tab)
         self.network_dropout_input.setObjectName(u"network_dropout_input")
@@ -114,12 +114,12 @@ class Ui_network_ui(object):
         self.network_dropout_input.setSingleStep(0.010000000000000)
         self.network_dropout_input.setValue(0.100000000000000)
 
-        self.formLayout_4.setWidget(0, QFormLayout.FieldRole, self.network_dropout_input)
+        self.formLayout_4.setWidget(0, QFormLayout.ItemRole.FieldRole, self.network_dropout_input)
 
         self.rank_dropout_enable = QCheckBox(self.main_tab)
         self.rank_dropout_enable.setObjectName(u"rank_dropout_enable")
 
-        self.formLayout_4.setWidget(1, QFormLayout.LabelRole, self.rank_dropout_enable)
+        self.formLayout_4.setWidget(1, QFormLayout.ItemRole.LabelRole, self.rank_dropout_enable)
 
         self.rank_dropout_input = DoubleSpinBox(self.main_tab)
         self.rank_dropout_input.setObjectName(u"rank_dropout_input")
@@ -129,12 +129,12 @@ class Ui_network_ui(object):
         self.rank_dropout_input.setSingleStep(0.010000000000000)
         self.rank_dropout_input.setValue(0.100000000000000)
 
-        self.formLayout_4.setWidget(1, QFormLayout.FieldRole, self.rank_dropout_input)
+        self.formLayout_4.setWidget(1, QFormLayout.ItemRole.FieldRole, self.rank_dropout_input)
 
         self.module_dropout_enable = QCheckBox(self.main_tab)
         self.module_dropout_enable.setObjectName(u"module_dropout_enable")
 
-        self.formLayout_4.setWidget(2, QFormLayout.LabelRole, self.module_dropout_enable)
+        self.formLayout_4.setWidget(2, QFormLayout.ItemRole.LabelRole, self.module_dropout_enable)
 
         self.module_dropout_input = DoubleSpinBox(self.main_tab)
         self.module_dropout_input.setObjectName(u"module_dropout_input")
@@ -144,17 +144,17 @@ class Ui_network_ui(object):
         self.module_dropout_input.setSingleStep(0.010000000000000)
         self.module_dropout_input.setValue(0.100000000000000)
 
-        self.formLayout_4.setWidget(2, QFormLayout.FieldRole, self.module_dropout_input)
+        self.formLayout_4.setWidget(2, QFormLayout.ItemRole.FieldRole, self.module_dropout_input)
 
         self.lora_fa_enable = QCheckBox(self.main_tab)
         self.lora_fa_enable.setObjectName(u"lora_fa_enable")
 
-        self.formLayout_4.setWidget(4, QFormLayout.SpanningRole, self.lora_fa_enable)
+        self.formLayout_4.setWidget(4, QFormLayout.ItemRole.SpanningRole, self.lora_fa_enable)
 
         self.ip_gamma_enable = QCheckBox(self.main_tab)
         self.ip_gamma_enable.setObjectName(u"ip_gamma_enable")
 
-        self.formLayout_4.setWidget(3, QFormLayout.LabelRole, self.ip_gamma_enable)
+        self.formLayout_4.setWidget(3, QFormLayout.ItemRole.LabelRole, self.ip_gamma_enable)
 
         self.ip_gamma_input = DoubleSpinBox(self.main_tab)
         self.ip_gamma_input.setObjectName(u"ip_gamma_input")
@@ -163,7 +163,7 @@ class Ui_network_ui(object):
         self.ip_gamma_input.setSingleStep(0.010000000000000)
         self.ip_gamma_input.setValue(0.100000000000000)
 
-        self.formLayout_4.setWidget(3, QFormLayout.FieldRole, self.ip_gamma_input)
+        self.formLayout_4.setWidget(3, QFormLayout.ItemRole.FieldRole, self.ip_gamma_input)
 
 
         self.gridLayout.addLayout(self.formLayout_4, 4, 1, 1, 1)
@@ -179,7 +179,7 @@ class Ui_network_ui(object):
         self.unet_te_both_label = QLabel(self.main_tab)
         self.unet_te_both_label.setObjectName(u"unet_te_both_label")
 
-        self.formLayout_3.setWidget(0, QFormLayout.LabelRole, self.unet_te_both_label)
+        self.formLayout_3.setWidget(0, QFormLayout.ItemRole.LabelRole, self.unet_te_both_label)
 
         self.unet_te_both_select = ComboBox(self.main_tab)
         self.unet_te_both_select.addItem("")
@@ -195,7 +195,7 @@ class Ui_network_ui(object):
         self.unet_te_both_select.setMaximumSize(QSize(16777215, 16777215))
         self.unet_te_both_select.setFocusPolicy(Qt.FocusPolicy.StrongFocus)
 
-        self.formLayout_3.setWidget(0, QFormLayout.FieldRole, self.unet_te_both_select)
+        self.formLayout_3.setWidget(0, QFormLayout.ItemRole.FieldRole, self.unet_te_both_select)
 
         self.horizontalLayout = QHBoxLayout()
         self.horizontalLayout.setObjectName(u"horizontalLayout")
@@ -212,7 +212,7 @@ class Ui_network_ui(object):
         self.horizontalLayout.addWidget(self.cache_te_to_disk_enable)
 
 
-        self.formLayout_3.setLayout(1, QFormLayout.SpanningRole, self.horizontalLayout)
+        self.formLayout_3.setLayout(1, QFormLayout.ItemRole.SpanningRole, self.horizontalLayout)
 
         self.horizontalLayout_3 = QHBoxLayout()
         self.horizontalLayout_3.setObjectName(u"horizontalLayout_3")
@@ -234,14 +234,20 @@ class Ui_network_ui(object):
 
         self.horizontalLayout_3.addWidget(self.dora_enable)
 
+        self.dora_on_output_enable = QCheckBox(self.main_tab)
+        self.dora_on_output_enable.setObjectName(u"dora_on_output_enable")
+        self.dora_on_output_enable.setEnabled(False)
 
-        self.formLayout_3.setLayout(3, QFormLayout.SpanningRole, self.horizontalLayout_3)
+        self.horizontalLayout_3.addWidget(self.dora_on_output_enable)
+
+
+        self.formLayout_3.setLayout(3, QFormLayout.ItemRole.SpanningRole, self.horizontalLayout_3)
 
         self.rescale_enable = QCheckBox(self.main_tab)
         self.rescale_enable.setObjectName(u"rescale_enable")
         self.rescale_enable.setEnabled(False)
 
-        self.formLayout_3.setWidget(4, QFormLayout.LabelRole, self.rescale_enable)
+        self.formLayout_3.setWidget(4, QFormLayout.ItemRole.LabelRole, self.rescale_enable)
 
         self.horizontalLayout_2 = QHBoxLayout()
         self.horizontalLayout_2.setObjectName(u"horizontalLayout_2")
@@ -267,7 +273,7 @@ class Ui_network_ui(object):
         self.horizontalLayout_2.addWidget(self.bypass_mode_enable)
 
 
-        self.formLayout_3.setLayout(2, QFormLayout.SpanningRole, self.horizontalLayout_2)
+        self.formLayout_3.setLayout(2, QFormLayout.ItemRole.SpanningRole, self.horizontalLayout_2)
 
         self.horizontalLayout_4 = QHBoxLayout()
         self.horizontalLayout_4.setObjectName(u"horizontalLayout_4")
@@ -284,7 +290,7 @@ class Ui_network_ui(object):
         self.horizontalLayout_4.addWidget(self.constrain_input)
 
 
-        self.formLayout_3.setLayout(4, QFormLayout.FieldRole, self.horizontalLayout_4)
+        self.formLayout_3.setLayout(4, QFormLayout.ItemRole.FieldRole, self.horizontalLayout_4)
 
 
         self.gridLayout.addLayout(self.formLayout_3, 4, 0, 1, 1)
@@ -300,7 +306,7 @@ class Ui_network_ui(object):
         self.conv_dim_label.setObjectName(u"conv_dim_label")
         self.conv_dim_label.setEnabled(True)
 
-        self.formLayout_2.setWidget(0, QFormLayout.LabelRole, self.conv_dim_label)
+        self.formLayout_2.setWidget(0, QFormLayout.ItemRole.LabelRole, self.conv_dim_label)
 
         self.conv_dim_input = SpinBox(self.main_tab)
         self.conv_dim_input.setObjectName(u"conv_dim_input")
@@ -309,13 +315,13 @@ class Ui_network_ui(object):
         self.conv_dim_input.setMaximum(16777215)
         self.conv_dim_input.setValue(32)
 
-        self.formLayout_2.setWidget(0, QFormLayout.FieldRole, self.conv_dim_input)
+        self.formLayout_2.setWidget(0, QFormLayout.ItemRole.FieldRole, self.conv_dim_input)
 
         self.conv_alpha_label = QLabel(self.main_tab)
         self.conv_alpha_label.setObjectName(u"conv_alpha_label")
         self.conv_alpha_label.setEnabled(True)
 
-        self.formLayout_2.setWidget(1, QFormLayout.LabelRole, self.conv_alpha_label)
+        self.formLayout_2.setWidget(1, QFormLayout.ItemRole.LabelRole, self.conv_alpha_label)
 
         self.conv_alpha_input = DoubleSpinBox(self.main_tab)
         self.conv_alpha_input.setObjectName(u"conv_alpha_input")
@@ -324,12 +330,12 @@ class Ui_network_ui(object):
         self.conv_alpha_input.setMaximum(16777215.000000000000000)
         self.conv_alpha_input.setValue(16.000000000000000)
 
-        self.formLayout_2.setWidget(1, QFormLayout.FieldRole, self.conv_alpha_input)
+        self.formLayout_2.setWidget(1, QFormLayout.ItemRole.FieldRole, self.conv_alpha_input)
 
         self.max_timestep_label = QLabel(self.main_tab)
         self.max_timestep_label.setObjectName(u"max_timestep_label")
 
-        self.formLayout_2.setWidget(2, QFormLayout.LabelRole, self.max_timestep_label)
+        self.formLayout_2.setWidget(2, QFormLayout.ItemRole.LabelRole, self.max_timestep_label)
 
         self.max_timestep_input = SpinBox(self.main_tab)
         self.max_timestep_input.setObjectName(u"max_timestep_input")
@@ -338,7 +344,7 @@ class Ui_network_ui(object):
         self.max_timestep_input.setMaximum(1000)
         self.max_timestep_input.setValue(1000)
 
-        self.formLayout_2.setWidget(2, QFormLayout.FieldRole, self.max_timestep_input)
+        self.formLayout_2.setWidget(2, QFormLayout.ItemRole.FieldRole, self.max_timestep_input)
 
 
         self.gridLayout.addLayout(self.formLayout_2, 2, 1, 1, 1)
@@ -364,7 +370,7 @@ class Ui_network_ui(object):
         self.label_2 = QLabel(self.main_tab)
         self.label_2.setObjectName(u"label_2")
 
-        self.formLayout_5.setWidget(0, QFormLayout.LabelRole, self.label_2)
+        self.formLayout_5.setWidget(0, QFormLayout.ItemRole.LabelRole, self.label_2)
 
         self.horizontalLayout_6 = QHBoxLayout()
         self.horizontalLayout_6.setObjectName(u"horizontalLayout_6")
@@ -384,12 +390,12 @@ class Ui_network_ui(object):
         self.horizontalLayout_6.addWidget(self.network_weight_file_selector)
 
 
-        self.formLayout_5.setLayout(0, QFormLayout.FieldRole, self.horizontalLayout_6)
+        self.formLayout_5.setLayout(0, QFormLayout.ItemRole.FieldRole, self.horizontalLayout_6)
 
         self.label_3 = QLabel(self.main_tab)
         self.label_3.setObjectName(u"label_3")
 
-        self.formLayout_5.setWidget(1, QFormLayout.LabelRole, self.label_3)
+        self.formLayout_5.setWidget(1, QFormLayout.ItemRole.LabelRole, self.label_3)
 
         self.horizontalLayout_7 = QHBoxLayout()
         self.horizontalLayout_7.setObjectName(u"horizontalLayout_7")
@@ -406,7 +412,7 @@ class Ui_network_ui(object):
         self.horizontalLayout_7.addWidget(self.network_dim_file_selector)
 
 
-        self.formLayout_5.setLayout(1, QFormLayout.FieldRole, self.horizontalLayout_7)
+        self.formLayout_5.setLayout(1, QFormLayout.ItemRole.FieldRole, self.horizontalLayout_7)
 
 
         self.gridLayout.addLayout(self.formLayout_5, 5, 0, 1, 2)
@@ -423,7 +429,7 @@ class Ui_network_ui(object):
         self.block_weight_scroll_area.setWidgetResizable(True)
         self.block_weight_scroll_widget = QWidget()
         self.block_weight_scroll_widget.setObjectName(u"block_weight_scroll_widget")
-        self.block_weight_scroll_widget.setGeometry(QRect(0, 0, 98, 74))
+        self.block_weight_scroll_widget.setGeometry(QRect(0, 0, 98, 66))
         self.verticalLayout_3 = QVBoxLayout(self.block_weight_scroll_widget)
         self.verticalLayout_3.setObjectName(u"verticalLayout_3")
         self.verticalLayout_3.setContentsMargins(0, 0, 0, 0)
@@ -604,6 +610,10 @@ class Ui_network_ui(object):
         self.dora_enable.setToolTip(QCoreApplication.translate("network_ui", u"<html><head/><body><p>DoRA activates Weight Decomoposition</p></body></html>", None))
 #endif // QT_CONFIG(tooltip)
         self.dora_enable.setText(QCoreApplication.translate("network_ui", u"DoRA", None))
+#if QT_CONFIG(tooltip)
+        self.dora_on_output_enable.setToolTip(QCoreApplication.translate("network_ui", u"<html><head/><body><p>Check this if you want your DoRA to follow the paper implementation</p></body></html>", None))
+#endif // QT_CONFIG(tooltip)
+        self.dora_on_output_enable.setText(QCoreApplication.translate("network_ui", u"On Output", None))
 #if QT_CONFIG(tooltip)
         self.rescale_enable.setToolTip(QCoreApplication.translate("network_ui", u"<html><head/><body><p>Rescaled rescales the weights. Specific to Diag-OFT</p></body></html>", None))
 #endif // QT_CONFIG(tooltip)

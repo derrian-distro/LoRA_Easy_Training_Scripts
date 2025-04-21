@@ -2,7 +2,8 @@ import json
 import os
 from typing import Union
 
-from PySide6 import QtWidgets, QtCore
+from PySide6 import QtCore, QtWidgets
+
 from modules import ScrollOnSelect
 
 
@@ -29,40 +30,24 @@ class BlockWidget(QtWidgets.QWidget):
         self.down_widgets = [
             (
                 QtWidgets.QLabel(),
-                (
-                    ScrollOnSelect.SpinBox()
-                    if mode == "int"
-                    else ScrollOnSelect.DoubleSpinBox()
-                ),
+                (ScrollOnSelect.SpinBox() if mode == "int" else ScrollOnSelect.DoubleSpinBox()),
             )
             for _ in range(12)
         ]
         self.mid_widget = (
             QtWidgets.QLabel(),
-            (
-                ScrollOnSelect.SpinBox()
-                if mode == "int"
-                else ScrollOnSelect.DoubleSpinBox()
-            ),
+            (ScrollOnSelect.SpinBox() if mode == "int" else ScrollOnSelect.DoubleSpinBox()),
         )
         self.up_widgets = [
             (
                 QtWidgets.QLabel(),
-                (
-                    ScrollOnSelect.SpinBox()
-                    if mode == "int"
-                    else ScrollOnSelect.DoubleSpinBox()
-                ),
+                (ScrollOnSelect.SpinBox() if mode == "int" else ScrollOnSelect.DoubleSpinBox()),
             )
             for _ in range(12)
         ]
 
         self.down_preset = ScrollOnSelect.ComboBox()
-        self.base_value = (
-            ScrollOnSelect.SpinBox()
-            if mode == "int"
-            else ScrollOnSelect.DoubleSpinBox()
-        )
+        self.base_value = ScrollOnSelect.SpinBox() if mode == "int" else ScrollOnSelect.DoubleSpinBox()
         self.base_value.setValue(base_value or 0)
         self.up_preset = ScrollOnSelect.ComboBox()
         self.presets = self.setup_presets()
@@ -96,9 +81,7 @@ class BlockWidget(QtWidgets.QWidget):
             )
             self.down_widgets[i][1].setValue(self.base_value.value())
             self.edit_args(i, self.base_value.value())
-            self.down_widgets[i][1].valueChanged.connect(
-                lambda x, index=i: self.edit_args(index, x)
-            )
+            self.down_widgets[i][1].valueChanged.connect(lambda x, index=i: self.edit_args(index, x))
             self.main_layout.addWidget(self.down_widgets[i][0], i + 1, 0, 1, 1)
             self.main_layout.addWidget(self.down_widgets[i][1], i + 1, 1, 1, 1)
         self.mid_widget[0].setText("MID")
@@ -118,26 +101,20 @@ class BlockWidget(QtWidgets.QWidget):
             )
             self.up_widgets[i][1].setValue(self.base_value.value())
             self.edit_args(i + 13, self.base_value.value())
-            self.up_widgets[i][1].valueChanged.connect(
-                lambda x, index=i: self.edit_args(index + 13, x)
-            )
+            self.up_widgets[i][1].valueChanged.connect(lambda x, index=i: self.edit_args(index + 13, x))
             self.main_layout.addWidget(self.up_widgets[i][0], 12 - i, 4, 1, 1)
             self.main_layout.addWidget(self.up_widgets[i][1], 12 - i, 5, 1, 1)
         self.setLayout(self.main_layout)
 
     def setup_presets(self):
         try:
-            with open(
-                os.path.join("block_weight_presets", "block_weights_preset.json"), "r"
-            ) as f:
+            with open(os.path.join("block_weight_presets", "block_weights_preset.json"), "r") as f:
                 presets = json.load(f)
                 for key in presets.keys():
                     self.up_preset.addItem(key)
                     self.down_preset.addItem(key)
                 self.up_preset.activated.connect(lambda x: self.modify_values(x, False))
-                self.down_preset.activated.connect(
-                    lambda x: self.modify_values(x, True)
-                )
+                self.down_preset.activated.connect(lambda x: self.modify_values(x, True))
                 return presets
         except FileNotFoundError:
             print("Preset file not found, skipping presets...")
@@ -155,11 +132,7 @@ class BlockWidget(QtWidgets.QWidget):
     def modify_values(self, index: int, down: bool):
         value = f"{'down' if down else 'up'}_lr_weight"
         values = [
-            (
-                int(s * self.base_value.value())
-                if self.mode == "int"
-                else s * self.base_value.value()
-            )
+            (int(s * self.base_value.value()) if self.mode == "int" else s * self.base_value.value())
             for s in self.presets[self.up_preset.itemText(index)][value]
         ]
         for i, val in enumerate(self.down_widgets if down else self.up_widgets):
@@ -170,7 +143,7 @@ class BlockWidget(QtWidgets.QWidget):
         self.enabled = checked
         self.edited.emit(self.vals, self.arg_name, self.enabled)
 
-    def update_vals(self, new_vals: list[int] | list[float]) -> None:
+    def update_vals(self, new_vals: Union[list[int], list[float]]) -> None:
         for i, down_val in enumerate(new_vals[:12]):
             self.down_widgets[i][1].setValue(down_val)
         self.mid_widget[1].setValue(new_vals[12])
@@ -197,20 +170,14 @@ class BlockWeightWidget(BlockWidget):
         for i, elem in enumerate(self.up_widgets):
             elem[1].setValue(1)
             elem[1].valueChanged.disconnect()
-            elem[1].valueChanged.connect(
-                lambda x, index=i: self.edit_args(index, x, "up_lr_weight")
-            )
+            elem[1].valueChanged.connect(lambda x, index=i: self.edit_args(index, x, "up_lr_weight"))
         self.mid_widget[1].setValue(1)
         self.mid_widget[1].valueChanged.disconnect()
-        self.mid_widget[1].valueChanged.connect(
-            lambda x: self.edit_args(12, x, "mid_lr_weight")
-        )
+        self.mid_widget[1].valueChanged.connect(lambda x: self.edit_args(12, x, "mid_lr_weight"))
         for i, elem in enumerate(self.down_widgets):
             elem[1].setValue(1)
             elem[1].valueChanged.disconnect()
-            elem[1].valueChanged.connect(
-                lambda x, index=i: self.edit_args(index, x, "down_lr_weight")
-            )
+            elem[1].valueChanged.connect(lambda x, index=i: self.edit_args(index, x, "down_lr_weight"))
 
     @QtCore.Slot(int, object, str)
     def edit_args(self, index: int, value: Union[int, float], section: str = None):
@@ -226,9 +193,7 @@ class BlockWeightWidget(BlockWidget):
         self.enabled = checked
         self.edited.emit(self.vals, self.enabled)
 
-    def update_vals(
-        self, down_vals: list[float], mid_val: float, up_vals: list[float]
-    ) -> None:
+    def update_vals(self, down_vals: list[float], mid_val: float, up_vals: list[float]) -> None:
         for i, down_val in enumerate(down_vals):
             self.down_widgets[i][1].setValue(down_val)
         self.mid_widget[1].setValue(mid_val)

@@ -18,6 +18,7 @@ class SubsetWidget(BaseWidget):
         super().__init__(parent)
         self.colap.set_title(display_name)
         self.colap.set_extra("remove")
+        self.colap.set_duplicate()
         self.widget = Ui_sub_dataset_input()
         self.extra_content = QWidget()
         self.extra_widget = Ui_sub_dataset_extra_input()

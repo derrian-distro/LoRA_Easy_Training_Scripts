@@ -1,7 +1,9 @@
-from pathlib import Path
 import time
+from pathlib import Path
+
 from PySide6 import QtCore
-from PySide6.QtWidgets import QWidget, QVBoxLayout, QFileDialog
+from PySide6.QtWidgets import QFileDialog, QVBoxLayout, QWidget
+
 from main_ui_files.SubsetUI import SubsetWidget
 from ui_files.SubsetListUI import Ui_subset_list_ui
 
@@ -15,9 +17,7 @@ class SubsetListWidget(QWidget):
         self.layout().addWidget(self.content)
         self.widget = Ui_subset_list_ui()
         self.widget.setupUi(self.content)
-        self.widget.subset_scroll_area_content.layout().setAlignment(
-            QtCore.Qt.AlignmentFlag.AlignTop
-        )
+        self.widget.subset_scroll_area_content.layout().setAlignment(QtCore.Qt.AlignmentFlag.AlignTop)
         self.widget.subset_scroll_area.setWidgetResizable(True)
         self.masked_loss_checked = False
         self.cache_latents_checked = False
@@ -38,12 +38,11 @@ class SubsetListWidget(QWidget):
             name = display_name
         subset = SubsetWidget(display_name=display_name, name=name)
         subset.colap.extra_elem.clicked.connect(lambda: self.remove_subset(subset))
+        subset.colap.duplicate_elem.clicked.connect(lambda: self.duplicate_subset(subset))
         subset.edited.connect(self.update_args)
 
         subset.enable_disable_masked_loss(self.masked_loss_checked)
-        subset.enable_disable_random_crop(
-            any([self.masked_loss_checked, self.cache_latents_checked])
-        )
+        subset.enable_disable_random_crop(any([self.masked_loss_checked, self.cache_latents_checked]))
         subset.enable_disable_color_aug(self.cache_latents_checked)
         subset.enable_disable_keep_tokens(self.variable_keep_tokens_checked)
         if not self.elements:
@@ -63,10 +62,12 @@ class SubsetListWidget(QWidget):
         if val.widget() is not None:
             val.widget().deleteLater()
 
+    def duplicate_subset(self, elem: SubsetWidget) -> None:
+        new_elem = self.add_empty_subset(elem.name)
+        new_elem.load_dataset_args(elem.dataset_args)
+
     def add_from_root_folder(self) -> None:
-        root_folder_path = QFileDialog.getExistingDirectory(
-            self, "Root folder containing subset folders"
-        )
+        root_folder_path = QFileDialog.getExistingDirectory(self, "Root folder containing subset folders")
         if not root_folder_path or not Path(root_folder_path).is_dir():
             return
         root_folder_path = Path(root_folder_path)

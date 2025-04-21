@@ -1,8 +1,8 @@
 import json
-from pathlib import Path
-import sys
-import subprocess
 import os
+import subprocess
+import sys
+from pathlib import Path
 
 
 def check_version_and_platform() -> bool:

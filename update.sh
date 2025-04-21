@@ -1,5 +1,9 @@
 #!/bin/bash
 
 git pull
+git submodule update --init --recursive
 source venv/bin/activate
-python update.py
+cd backend
+python updater.py
+
+deactivate
