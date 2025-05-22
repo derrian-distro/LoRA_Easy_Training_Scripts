@@ -32,18 +32,18 @@ after that, it will begin installing, asking a few questions along the way. Just
 
 If you are on linux all you need to do to install the scripts is open up a shell within the folder that you want to install to then type the following line,
 
-If you are using python 3.10
-```
-git clone https://github.com/derrian-distro/LoRA_Easy_Training_Scripts
-cd LoRA_Easy_Training_Scripts
-install310.sh
-```
-
 If you are using python 3.11
 ```
 git clone https://github.com/derrian-distro/LoRA_Easy_Training_Scripts
 cd LoRA_Easy_Training_Scripts
 install311.sh
+```
+
+If you are using python 3.12
+```
+git clone https://github.com/derrian-distro/LoRA_Easy_Training_Scripts
+cd LoRA_Easy_Training_Scripts
+install312.sh
 ```
 
 Manual method below for those that want it.
@@ -54,7 +54,7 @@ cd LoRA_Easy_Training_Scripts
 git submodule init
 git submodule update
 cd sd_scripts
-python3.10 -m venv venv //python3.10 and 3.11 both work
+python3.11 -m venv venv //python3.11 and 3.12 both work
 source venv/bin/activate
 pip install torch torchvision --index-url https://download.pytorch.org/whl/cu121
 pip install -r requirements.txt

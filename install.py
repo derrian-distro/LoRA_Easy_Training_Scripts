@@ -7,7 +7,7 @@ from pathlib import Path
 
 def check_version_and_platform() -> bool:
     version = sys.version_info
-    if not (False if version.major != 3 and version.minor < 10 else sys.platform in ["win32", "linux"]):
+    if not (False if version.major != 3 and version.minor < 11 else sys.platform in ["win32", "linux"]):
         print("ERROR: you have too old of a python version")
         return False
     return True
