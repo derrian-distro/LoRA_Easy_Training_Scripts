@@ -3,7 +3,7 @@
 ################################################################################
 ## Form generated from reading UI file 'MainUI.ui'
 ##
-## Created by: Qt User Interface Compiler version 6.8.2
+## Created by: Qt User Interface Compiler version 6.9.0
 ##
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
@@ -56,7 +56,7 @@ class Ui_MainWindow(object):
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QMenuBar(MainWindow)
         self.menubar.setObjectName(u"menubar")
-        self.menubar.setGeometry(QRect(0, 0, 925, 21))
+        self.menubar.setGeometry(QRect(0, 0, 925, 17))
         self.menuFile = QMenu(self.menubar)
         self.menuFile.setObjectName(u"menuFile")
         self.menuTheme = QMenu(self.menubar)
@@ -75,8 +75,8 @@ class Ui_MainWindow(object):
         self.menubar.addAction(self.menuTheme.menuAction())
         self.menubar.addAction(self.menuUtils.menuAction())
         self.menubar.addAction(self.menuTrainMode.menuAction())
-        self.menuFile.addAction(self.save_toml)
         self.menuFile.addAction(self.load_toml)
+        self.menuFile.addAction(self.save_toml)
         self.menuTheme.addAction(self.dark_theme_menu.menuAction())
         self.menuTheme.addAction(self.light_theme_menu.menuAction())
         self.menuTheme.addAction(self.no_theme_action)
