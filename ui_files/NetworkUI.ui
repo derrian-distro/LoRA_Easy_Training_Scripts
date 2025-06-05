@@ -441,19 +441,6 @@
              </property>
             </widget>
            </item>
-           <item>
-            <widget class="QCheckBox" name="dora_on_output_enable">
-             <property name="enabled">
-              <bool>false</bool>
-             </property>
-             <property name="toolTip">
-              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Check this if you want your DoRA to follow the paper implementation&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-             </property>
-             <property name="text">
-              <string>On Output</string>
-             </property>
-            </widget>
-           </item>
           </layout>
          </item>
          <item row="4" column="0">

@@ -234,12 +234,6 @@ class Ui_network_ui(object):
 
         self.horizontalLayout_3.addWidget(self.dora_enable)
 
-        self.dora_on_output_enable = QCheckBox(self.main_tab)
-        self.dora_on_output_enable.setObjectName(u"dora_on_output_enable")
-        self.dora_on_output_enable.setEnabled(False)
-
-        self.horizontalLayout_3.addWidget(self.dora_on_output_enable)
-
 
         self.formLayout_3.setLayout(3, QFormLayout.ItemRole.SpanningRole, self.horizontalLayout_3)
 
@@ -610,10 +604,6 @@ class Ui_network_ui(object):
         self.dora_enable.setToolTip(QCoreApplication.translate("network_ui", u"<html><head/><body><p>DoRA activates Weight Decomoposition</p></body></html>", None))
 #endif // QT_CONFIG(tooltip)
         self.dora_enable.setText(QCoreApplication.translate("network_ui", u"DoRA", None))
-#if QT_CONFIG(tooltip)
-        self.dora_on_output_enable.setToolTip(QCoreApplication.translate("network_ui", u"<html><head/><body><p>Check this if you want your DoRA to follow the paper implementation</p></body></html>", None))
-#endif // QT_CONFIG(tooltip)
-        self.dora_on_output_enable.setText(QCoreApplication.translate("network_ui", u"On Output", None))
 #if QT_CONFIG(tooltip)
         self.rescale_enable.setToolTip(QCoreApplication.translate("network_ui", u"<html><head/><body><p>Rescaled rescales the weights. Specific to Diag-OFT</p></body></html>", None))
 #endif // QT_CONFIG(tooltip)

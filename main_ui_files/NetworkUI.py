@@ -117,9 +117,6 @@ class NetworkWidget(BaseWidget):
         self.widget.bypass_mode_enable.clicked.connect(
             lambda x: self.toggle_dora_bypass(self.widget.dora_enable.isChecked(), x)
         )
-        self.widget.dora_on_output_enable.clicked.connect(
-            lambda x: self.edit_network_args("wd_on_output", x, True)
-        )
         self.widget.module_dropout_enable.clicked.connect(self.enable_disable_module_dropout)
         self.widget.module_dropout_input.valueChanged.connect(
             lambda x: self.edit_network_args("module_dropout", x, True)
@@ -351,7 +348,6 @@ class NetworkWidget(BaseWidget):
             not bypass
             and self.widget.algo_select.currentText().lower() in {"locon (lycoris)", "loha", "lokr"}
         )
-        self.widget.dora_on_output_enable.setEnabled(dora)
         self.widget.bypass_mode_enable.setEnabled(not dora)
         self.edit_network_args("dora_wd", dora if self.widget.dora_enable.isEnabled() else False, True)
         self.edit_network_args(
@@ -525,7 +521,6 @@ class NetworkWidget(BaseWidget):
         self.widget.cp_enable.setChecked(network_args.get("use_tucker", False))
         self.widget.train_norm_enable.setChecked(network_args.get("train_norm", False))
         self.widget.dora_enable.setChecked(network_args.get("dora_wd", False))
-        self.widget.dora_on_output_enable.setChecked(network_args.get("wd_on_output", False))
         self.widget.ip_gamma_enable.setChecked(bool(args.get("ip_noise_gamma", False)))
         self.widget.ip_gamma_input.setValue(args.get("ip_noise_gamma", 0.1))
         self.widget.rescale_enable.setChecked(network_args.get("rescaled", False))
