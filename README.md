@@ -18,7 +18,7 @@ A set of training scripts written in python for use in Kohya's [SD-Scripts](http
 
 ### Windows
 
-If you are on windows all you need to do to install the scripts is follow these commands. Open up a command line within the folder that you want to install to then type these one line at a time
+If you are on windows all you need to do to install the scripts is follow these commands. Open up a command line within the folder that you want to install to then type these one line at a time. Python 3.11 and 3.12 are supported, but 3.12 is recommended.
 
 ```
 git clone https://github.com/derrian-distro/LoRA_Easy_Training_Scripts
